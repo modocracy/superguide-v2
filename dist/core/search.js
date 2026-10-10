@@ -49,4 +49,7 @@ export function search(items, query, fields) {
     .map(entry => entry.item);
 }
 
+/** Searchable names of a primary, secondary or throwable: Korean, English with and without its code, the code, and aliases. */
+export const personalNames = item => [item.name, item.en, item.en?.replace(/^\S+\s/, ''), item.code, ...(item.aliases || [])].filter(Boolean);
+
 export const stratagemFields = item => ({ names: [item.name, item.en, ...(item.aliases || [])], text: [item.code, item.summary, ...(item.tags || []), ...(item.variants || []).map(variant => variant.name)] });

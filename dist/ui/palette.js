@@ -1,6 +1,6 @@
 // Global search across stratagems, enemies, structures and faction guides.
 import { stratagems, categoryOf } from '../core/catalog.js';
-import { search, stratagemFields } from '../core/search.js';
+import { search, stratagemFields, personalNames } from '../core/search.js';
 import { html, render, $ } from './dom.js';
 import { L, T, lang } from '../core/i18n.js';
 
@@ -17,7 +17,7 @@ export async function createPalette(ctx) {
   const withEn = (text, en) => lang === 'en' ? text : `${text} · ${en}`;
   const groups = [
     { id: 'stratagems', name: L('스트라타젬', 'Stratagems'), items: stratagems.map(item => ({ fields: stratagemFields(item), label: T(item.name), sub: withEn(categoryOf(item.category).name, item.en), image: wikiIcons[item.id]?.src, route: { view: 'arsenal', id: item.id } })) },
-    { id: 'gear', name: L('장비', 'Gear'), items: personalWeapons.map(item => ({ fields: { names: [item.name, item.en, item.en?.replace(/^\S+\s/, ''), item.code].filter(Boolean), text: [GEAR_GROUP[item.category]] }, label: displayName(item), sub: withEn(GEAR_GROUP[item.category], item.en), image: weaponImages[item.id]?.src, route: { view: 'gear', id: item.id } })) },
+    { id: 'gear', name: L('장비', 'Gear'), items: personalWeapons.map(item => ({ fields: { names: personalNames(item), text: [GEAR_GROUP[item.category]] }, label: displayName(item), sub: withEn(GEAR_GROUP[item.category], item.en), image: weaponImages[item.id]?.src, route: { view: 'gear', id: item.id } })) },
     { id: 'enemies', name: L('적', 'Enemies'), items: enemies.map(item => ({ fields: { names: [item.name, T(item.name), item.id.replaceAll('-', ' ')], text: [item.faction, T(item.faction)] }, label: T(item.name), sub: `${T(item.faction)} · ${L('무기별 탄수 비교', 'shots to kill by weapon')}`, image: pickerEnemyImages[item.id]?.src, route: { view: 'enemy', id: item.id } })) },
     { id: 'structures', name: L('시설', 'Structures'), items: structures.map(item => ({ fields: { names: [item.name, T(item.name)], text: [item.faction, T(item.faction), item.tip, T(item.tip)] }, label: T(item.name), sub: `${T(item.faction)} · ${L('철거 방법', 'how to demolish')}`, image: pickerStructureImages[item.id]?.src, route: { view: 'demolition', query: { s: item.id } } })) },
     { id: 'factions', name: L('팩션', 'Factions'), items: factionGuides.map(item => ({ fields: { names: [item.name, item.en], text: [item.intro, T(item.intro)] }, label: T(item.name), sub: `${T(factionSides.find(side => side.id === item.side).name)} · ${L('추천 장비', 'recommended loadout')}`, image: factionSides.find(side => side.id === item.side).icon, route: { view: 'factions', id: item.id } })) },

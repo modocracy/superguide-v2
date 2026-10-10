@@ -6,7 +6,7 @@ import { personalWeapons, personalWeaponsCheckedAt } from '../../data/personal-w
 import { personalProfiles } from '../../data/personal-profiles.js';
 import { weaponImages } from '../../data/weapon-images.js';
 import { apBandOf } from '../../core/catalog.js';
-import { search } from '../../core/search.js';
+import { search, personalNames } from '../../core/search.js';
 import { num } from '../../core/explain.js';
 import { html, raw, render, $, $$, icon, badge, external } from '../dom.js';
 import { blastFigure } from '../blast.js';
@@ -96,7 +96,7 @@ function card(w) {
 
 // --- Browse ------------------------------------------------------------------------
 const typesOf = cat => orderTypes(new Set(personalWeapons.filter(w => w.category === cat).map(w => w.type)));
-const fields = w => ({ names: [w.name, w.en, w.en?.replace(/^\S+\s/, ''), w.code].filter(Boolean), text: [typeName(w.type), groupOf(w.category).name] });
+const fields = w => ({ names: personalNames(w), text: [typeName(w.type), groupOf(w.category).name] });
 
 function visibleItems() {
   // A search looks across every group, so "세열" finds the grenade from the rifle list.

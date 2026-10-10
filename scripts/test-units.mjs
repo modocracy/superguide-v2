@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { stratagems, categories, apBands, apBandOf } from '../dist/core/catalog.js';
-import { search, stratagemFields, initials, normalize } from '../dist/core/search.js';
+import { search, stratagemFields, personalNames, initials, normalize } from '../dist/core/search.js';
+import { personalWeapons } from '../dist/data/personal-weapons.js';
 import { parseRoute, formatRoute } from '../dist/core/route.js';
 import { josa, countText, outcomeOf, reasonText } from '../dist/core/explain.js';
 import { enemies, weaponProfiles, unsupportedWeapons } from '../dist/data/combat-data.js';
@@ -77,6 +78,7 @@ const names = query => search(stratagems, query, stratagemFields).map(item => it
 ok(names('ㄱㄷㅈㅁ')[0] === '궤도 정밀 타격', 'initial-consonant search');
 ok(names('도밀타')[0] === '궤도 정밀 타격', 'any-order syllables');
 ok(names('반톤')[0] === '이글 500kg 폭탄', 'alias search');
+ok(search(personalWeapons, '석궁', item => ({ names: personalNames(item), text: [] }))[0]?.id === 'exploding-crossbow', 'weapon alias: 석궁 finds the Exploding Crossbow');
 ok(names('500').length === 1, 'digits do not match in any order');
 ok(names('AC-8')[0] === '오토캐넌', 'code search');
 ok(initials('궤도 정밀') === 'ㄱㄷㅈㅁ', 'initials');

@@ -7,7 +7,7 @@ import { wikiIcons } from '../../data/wiki-icons.js';
 import { pickerEnemyImages } from '../../data/selector-images.js';
 import { SIZE_NAMES } from '../../core/enemy-size.js';
 import { stratagems, stratagemById, categories, categoryOf } from '../../core/catalog.js';
-import { search, stratagemFields } from '../../core/search.js';
+import { search, stratagemFields, personalNames } from '../../core/search.js';
 import { num, outcomeOf, unitText } from '../../core/explain.js';
 import { L, T, lang } from '../../core/i18n.js';
 import { html, raw, render, $, $$, icon, badge } from '../dom.js';
@@ -51,7 +51,7 @@ function slotTile(slot) {
 
 // --- Slot picker sheet -------------------------------------------------------------
 // Candidates grouped by kind: weapon subtypes (data order) or stratagem categories.
-const weaponFields = w => ({ names: [w.name, w.en, w.en?.replace(/^\S+\s/, ''), w.code].filter(Boolean), text: [typeName(w.type)] });
+const weaponFields = w => ({ names: personalNames(w), text: [typeName(w.type)] });
 function pickerGroups(slot) {
   if (slot.stratagem != null) {
     const taken = new Set(env.loadout.st.filter((id, index) => id && index !== slot.stratagem));

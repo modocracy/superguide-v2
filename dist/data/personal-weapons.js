@@ -722,6 +722,7 @@ export const personalWeapons = [
     throwableCapacity: null,
     notes: ['하위 분류가 없어 위키 인포박스 weapon_type=Explosives을 사용했습니다.'],
     infoboxConflicts: [],
+    aliases: ['석궁'],
     direct: 270,
     durable: 50,
     ap: 3,
