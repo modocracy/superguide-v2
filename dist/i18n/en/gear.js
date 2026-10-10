@@ -76,7 +76,6 @@ export default {
   "하부 부착 무기는 variants로 전개하고 원본 연결은 attacks 및 linkedAttacks에 보존했습니다.": "Underbarrel attachments are expanded into variants; the original links are preserved in attacks and linkedAttacks.",
   "주 총열과 하부 산탄총을 전환해 사용합니다. 두 공격의 피해는 합산하지 않습니다.": "Switch between the main barrel and the underbarrel shotgun. Damage from the two attacks is not combined.",
   "전술 재장전 시간 미확인: 인포박스 tac_reload_time=(필드 없음 또는 비어 있음). 낱발 첫 삽입 시간은 전체 전술 재장전 시간으로 대체하지 않습니다.": "Tactical reload time unverified: infobox tac_reload_time=(field missing or empty). The time to insert the first single round is not used as a stand-in for the full tactical reload time.",
-  "한국어 이름은 db/source/korean_names.json에서 제식 번호와 연결된 출처를 확인하지 못해 null입니다.": "The Korean name is null because no source linking it to the designation was found in db/source/korean_names.json.",
   "재장전 세부 표기: reload_time=3.33s (8mm)<br>2.5s(40mm). 대표값=3.33s (8mm); 그 외 구성별 수치는 reloadDetails에 보존합니다.": "Reload details: reload_time=3.33s (8mm)<br>2.5s(40mm). Representative value=3.33s (8mm); values for the other configurations are preserved in reloadDetails.",
   "재장전 세부 표기: tac_reload_time=1.95s (8mm). 대표값=1.95s (8mm); 그 외 구성별 수치는 reloadDetails에 보존합니다.": "Reload details: tac_reload_time=1.95s (8mm). Representative value=1.95s (8mm); values for the other configurations are preserved in reloadDetails.",
   "주 총열과 하부 유탄 발사기를 전환해 사용합니다. 탄약과 처치 탄수는 따로 계산합니다.": "Switch between the main barrel and the underbarrel grenade launcher. Ammo and shots to kill are calculated separately.",

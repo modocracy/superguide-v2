@@ -21,6 +21,8 @@ const slug = value => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
 const number = value => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
 const keys = new Map(Object.keys(data.weapons).map(key => [normalize(key), key]));
 const aliases = { 'CQC-73 Entrenchment Tool': 'CQC-72 ENTRENCHMENT TOOL' };
+// Korean names for weapons the Namu Wiki snapshot has no heading for, chosen by the site owner.
+export const manualKoreanNames = { 'AR-32': { name: '퍼시파이어', reason: '나무위키 스냅샷에 제목이 없어 사이트 관리자가 지정한 이름' } };
 const titles = Object.keys(roster).flatMap(key => categories[key].map(p => p.title));
 export const koreanMatches = matchKoreanNames(koreanSource.pages, titles);
 const dataTitles = titles.map(title => aliases[title] ?? keys.get(normalize(title)) ?? title);
@@ -178,7 +180,8 @@ const weapons = Object.entries(roster).flatMap(([categoryName, category]) =>
     const reload = reloading.reload?.value ?? null;
     const reloadTactical = reloading.tactical?.value ?? null;
     const korean = koreanMatches.names[code];
-    const name = korean?.name ?? null;
+    const manualName = korean ? null : manualKoreanNames[code];
+    const name = korean?.name ?? manualName?.name ?? null;
     const attacks = weapon.attacks ?? [];
     const primaryAttack = attacks.find(attack => attack.level === 1) ?? attacks[0];
     const notes = [];
@@ -257,7 +260,7 @@ const weapons = Object.entries(roster).flatMap(([categoryName, category]) =>
     if (weapon.roundtype === 'rounds') notes.push('낱발 예비탄은 spareRounds에 보존하며 spareMags로 환산하지 않습니다.');
     const result = {
       id, category, type, en: member.title, code, name,
-      nameSource: name === null ? null : { file: 'db/source/korean_names.json', code, ...korean },
+      nameSource: name === null ? null : korean ? { file: 'db/source/korean_names.json', code, ...korean } : { file: 'scripts/build-weapons.mjs', code, manual: true, reason: manualName.reason },
       fieldSources: { type: infoboxType ? pageRef('weapon_type') : types.length ? { file: 'db/source/wiki_categories.json', category: types[0] } : null, fuse: fuse === null ? null : pageRef('fuse'), reload: reload === null ? null : pageRef(reloadField), reloadTactical: reloadTactical === null ? null : pageRef('tac_reload_time'),
         dot: extras.dot.raw === null ? null : pageRef('damage'), heatCapacity: extras.heatCapacity.raw === null ? null : pageRef('capacity'),
         swingsPerMinute: extras.swingsPerMinute === null ? null : pageRef('fire_rate'), rpmModes: extras.rpmModes.length ? pageRef('fire_rate') : null,

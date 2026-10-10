@@ -810,8 +810,8 @@ export const weapons = [
     type: 'assault-rifles',
     en: 'AR-32 Pacifier',
     code: 'AR-32',
-    name: null,
-    nameSource: null,
+    name: '퍼시파이어',
+    nameSource: { file: 'scripts/build-weapons.mjs', code: 'AR-32', manual: true, reason: '나무위키 스냅샷에 제목이 없어 사이트 관리자가 지정한 이름' },
     fieldSources: {
       type: {
         file: 'db/source/wiki_pages.json',
@@ -920,7 +920,7 @@ export const weapons = [
       { type: 'status', name: 'Stun Medium', parent: 'AR-32_P', level: 2 },
     ],
     linkedAttacks: [],
-    notes: ['한국어 이름은 db/source/korean_names.json에서 제식 번호와 연결된 출처를 확인하지 못해 null입니다.'],
+    notes: [],
     variants: [],
     infoboxConflicts: [],
   },

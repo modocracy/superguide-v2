@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { weapons, weaponsSource } from '../db/weapons.js';
-import { parseInfobox, plainWiki, seconds, chargeDamage, reloadTimes, koreanMatches } from './build-weapons.mjs';
+import { parseInfobox, plainWiki, seconds, chargeDamage, reloadTimes, koreanMatches, manualKoreanNames } from './build-weapons.mjs';
 import { extractHeadings, compactKoreanPage, matchKoreanNames, normalizeCode } from './fetch-weapons-source.mjs';
 import { infoboxExtras, infoboxDisagreements } from './weapon-infobox.mjs';
 
@@ -188,8 +188,10 @@ for (const weapon of weapons) {
   assert.equal(weapon.sourceRevision, categories[roster[weapon.category]].find(m => m.title === weapon.en).revision);
   assert(weapon.name === null || typeof weapon.name === 'string' && weapon.name.trim().length > 0);
   const korean = koreanMatches.names[weapon.code];
-  assert.equal(weapon.name, korean?.name ?? null);
-  if (weapon.name !== null) {
+  const manual = korean ? null : manualKoreanNames[weapon.code];
+  assert.equal(weapon.name, korean?.name ?? manual?.name ?? null);
+  if (manual) assert.deepEqual(weapon.nameSource, { file: 'scripts/build-weapons.mjs', code: weapon.code, manual: true, reason: manual.reason });
+  else if (weapon.name !== null) {
     assert.deepEqual(weapon.nameSource, { file: 'db/source/korean_names.json', code: weapon.code, ...korean });
     assert(normalizeCode(korean.evidence).startsWith(normalizeCode(korean.matchedCode ?? weapon.code)) && korean.evidence.includes(weapon.name));
     assert(koreanSource.pages.some(p => p.source === korean.source && p.retrievedAt === korean.retrievedAt && p.status === 200 && p.headings.includes(korean.evidence)));
