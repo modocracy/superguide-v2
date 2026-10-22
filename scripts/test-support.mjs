@@ -9,6 +9,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { weaponProfiles, unsupportedWeapons } from '../dist/data/combat-data.js';
 import { support } from '../dist/data/data-support.js';
+import { demolitionProfiles } from '../dist/data/demolition-data.js';
 
 const snapshot = JSON.parse(await readFile(new URL('../db/source/weapons_data.json', import.meta.url), 'utf8'));
 const { damage, projectile, explosion, beam, arc, spray, weapons } = snapshot.data;
@@ -178,6 +179,14 @@ for (const item of support) {
     compareHit(prefix, spec, { hit: { direct: row.direct, ap: row.ap } }, prefix);
     compareBlast(prefix, spec, { blast: { damage: row.splash, ap: row.splash ? row.splashAp : undefined, innerRadius: row.innerRadius, radius: row.radius } }, prefix);
   }
+}
+// Demolition force of direct-hit rifles against the datamine's demo value. The Apex
+// and Nova take theirs from the datamine (the wiki Demolition summary lacks them);
+// the Anti-Materiel Rifle's summary value 20 shows the two sources agree.
+for (const [weaponId, projectileId] of [['anti-materiel', 'APW-1_P'], ['apex', 'AMW-20_P'], ['nova', 'LAS-44_P']]) {
+  const hit = hitOf(['projectile', projectileId], `demolition:${weaponId}`);
+  const force = demolitionProfiles[weaponId]?.modes[0]?.direct;
+  if (hit) ok(force === hit.demo, `demolition:${weaponId}: force ${force}, datamine demo ${hit.demo}`);
 }
 for (const key of Object.keys(reviewed)) ok(seenReviewed.has(key), `${key}: reviewed entry matches no compared value; remove it`);
 for (const key of Object.keys(notCompared)) {

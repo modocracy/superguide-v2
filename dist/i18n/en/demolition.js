@@ -89,6 +89,8 @@ export default {
   "시설이 중심 17 m 안에 들어오는 조건입니다. 호출이 허용되는 임무 구역에서 장전해야 합니다.": "Assumes the structure is within 17 m of the center. It has to be armed in a mission area where it can be called in.",
   "실제로 장전되어 다음에 발사될 탄종을 고르세요. 여기서 고른다고 게임의 발사 순서가 바뀌지는 않습니다.": "Pick the shell type that is actually loaded and will fire next. Choosing it here does not change the in-game firing order.",
   "이 무기의 탄환 철거력은 확인 중입니다. 확인된 피해 수치로 체력 파괴 경로만 계산합니다. 과충전 자폭·장비 파괴 폭발은 제외합니다.": "This weapon's bullet demolition force is still being verified. Only the health route is calculated, using verified damage values. Overcharge self-detonation and equipment-destruction explosions are excluded.",
+  "철거력 15는 위키 데이터마이닝 값입니다. 위키 철거 문서의 종합표에는 아직 이 무기가 없습니다.": "Demolition force 15 is the wiki's datamined value. The wiki Demolition page's summary table does not list this weapon yet.",
+  "철거력 17은 위키 데이터마이닝 값입니다. 위키 철거 문서의 종합표에는 아직 이 무기가 없습니다.": "Demolition force 17 is the wiki's datamined value. The wiki Demolition page's summary table does not list this weapon yet.",
   "잠긴 화물 컨테이너에 공격을 맞히세요. 두 명이 버튼을 눌러 여는 벙커와는 다릅니다.": "Hit the locked cargo container. It is not the bunker that two players open by pressing buttons.",
   "안테나가 달린 방송탑 본체를 노리세요.": "Target the broadcast tower body with the antenna on it.",
   "임무에서 지정한 연구 시설 가까이에 폭발 중심을 맞추세요.": "Center the blast close to the research building the mission marks.",

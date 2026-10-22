@@ -53,6 +53,10 @@ export const demolitionProfiles = {
   'quasar': profile(shot(30, 30, { damage: combatDamage('quasar', 'standard') })),
   'commando': profile(shot(30, 30, { damage: combatDamage('commando', 'standard') })),
   'anti-materiel': profile(shot(20, null, { damage: combatDamage('anti-materiel', 'standard') })),
+  // Not yet in the wiki Demolition summary (revision 138005); the force is the
+  // datamine's demo value, which matches that summary for the Anti-Materiel Rifle (20).
+  'apex': profile(shot(15, null, { damage: combatDamage('apex', 'standard') }), { source: wiki('Module:Decodedata-Attacks/weapons_data.json'), note: '철거력 15는 위키 데이터마이닝 값입니다. 위키 철거 문서의 종합표에는 아직 이 무기가 없습니다.' }),
+  'nova': profile(shot(17, null, { damage: combatDamage('nova', 'standard') }), { source: wiki('Module:Decodedata-Attacks/weapons_data.json'), note: '철거력 17은 위키 데이터마이닝 값입니다. 위키 철거 문서의 종합표에는 아직 이 무기가 없습니다.' }),
   'spear': profile(shot(40, 30, { damage: damage(4000, 4000, 7, 200, 3) }), { source: wiki('FAF-14_Spear'), conditionalAim: true, note: indirect }),
   'laser-cannon': profile(shot(20, null, { directLabel: '광선', note: '광선이 실제로 닿아야 합니다. 지속 피해는 발 단위로 계산하지 않습니다.' })),
   'arc-thrower': profile(shot(20, null, { directLabel: '전격' }), { conditionalAim: true, note: indirect }),
