@@ -47,11 +47,12 @@ const warrior = (id, name, hp, headHp, limbHp) => ({
     part('leg', '다리 한쪽', limbHp, 1, 0, 100, 40, false, 'break', '다리 하나를 끊어 이동을 방해할 수 있습니다. 절단 자체는 즉사 조건이 아닙니다.', { sourcePart: 'Legs (4)' }),
   ],
 });
-// Spewer parts match Wiki Anatomy (checked 2026-09-28); the spinal plates
-// and legs were added then. `anatomy` carries each page's revision.
+// Spewer parts match Wiki Anatomy (first checked 2026-09-28, when the spinal
+// plates and legs were added). `anatomy` carries each page's revision and,
+// when re-checked later, its own anatomyCheckedAt.
 const spewer = (id, name, page, armor, note, revision, family = id, anatomy = {}) => ({
   id, name, faction: '테르미니드', source: wiki(page), sourceRevision: revision, family,
-  main: main(750, armor, 50, 0), note, ...anatomy, anatomyCheckedAt: '2026-09-28',
+  main: main(750, armor, 50, 0), note, anatomyCheckedAt: '2026-09-28', ...anatomy,
   parts: [
     part('head', '머리', 300, armor, 0, 100, 100, true, 'kill', '앞쪽 머리 외피를 노리세요. 머리와 아래의 입은 장갑 수치가 다릅니다.', { sourcePart: 'Head' }),
     part('mouth', '입', 250, 0, 0, 100, 100, true, 'kill', '정면 아래쪽 입 자체를 직접 맞히세요. 위쪽 머리 장갑에 맞은 탄과 구분합니다.', { sourcePart: 'Mouth' }),
@@ -65,7 +66,7 @@ const spewer = (id, name, page, armor, note, revision, family = id, anatomy = {}
 // (checked 2026-09-28). The upper arm was added then.
 const voteless = (id, name, hp, headHp, forearmHp, upperArmHp, table) => ({
   id, name, faction: '일루미닛', source: wiki('Voteless'), sourceRevision: 135187, family: 'voteless',
-  anatomyRevision: 135187, anatomyCheckedAt: '2026-09-28', anatomyTable: table, anatomyTables: [table],
+  anatomyRevision: 138050, anatomyCheckedAt: '2026-10-22', anatomyTable: table, anatomyTables: [table],
   main: main(hp, 0, 0, 0, 100),
   note: '체형별 체력이 다릅니다. 머리는 치명 부위입니다. 다리를 잃고도 기어올 수 있어 다리 파괴는 즉사로 취급하지 않습니다. 본체 체력 소진 후의 출혈도 반영합니다.',
   parts: [
@@ -81,9 +82,9 @@ const originalEnemies = [
     id: 'charger', name: '차저', faction: '테르미니드', source: wiki('Charger'),
     main: main(2400, 4, 100, 25, 750),
     note: '머리 파괴는 즉사, 후방 복부 파괴는 출혈을 유발합니다. 다리는 장갑과 살점을 따로 계산합니다.',
-    // Every part matches Wiki Anatomy revision 136850 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 137700 (checked 2026-10-22).
     // Parts after the first three were added then.
-    anatomyRevision: 136850, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 137700, anatomyCheckedAt: '2026-10-22',
     parts: [
       part('head', '머리', 1200, 4, 75, 25, 70, false, 'kill', '정면 머리 중앙을 노리세요. 등 장갑에 빗맞으면 다른 부위입니다.', { sourcePart: 'Head' }),
       part('butt', '후방 복부', 950, 0, 80, 25, 150, false, 'bleed', '돌진을 피한 뒤 뒤쪽의 드러난 복부를 쏘세요. 파괴 후에도 바로 죽지 않을 수 있습니다.', { sourcePart: 'Butt' }),
@@ -95,9 +96,9 @@ const originalEnemies = [
     id: 'behemoth', name: '베히모스 차저', faction: '테르미니드', source: wiki('Charger_Behemoth'),
     main: main(3000, 4, 100, 25, 1000),
     note: '일반 차저보다 머리와 앞다리 장갑이 튼튼합니다. 같은 부위에 연속으로 맞히는 조건입니다.',
-    // Every part matches Wiki Anatomy revision 136856 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 137702 (checked 2026-10-22).
     // Parts after the first three were added then.
-    anatomyRevision: 136856, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 137702, anatomyCheckedAt: '2026-10-22',
     parts: [
       part('head', '머리', 1600, 4, 100, 25, 70, false, 'kill', '정면 머리를 노리세요. 일반 차저의 탄수를 그대로 적용하지 마세요.', { sourcePart: 'Head' }),
       part('butt', '후방 복부', 950, 0, 100, 25, 50, false, 'bleed', '뒤쪽 복부를 부수면 출혈이 시작됩니다. 장갑은 없지만 내구도가 높습니다.', { sourcePart: 'Butt' }),
@@ -109,10 +110,10 @@ const originalEnemies = [
     id: 'bile-titan', name: '바일 타이탄', faction: '테르미니드', source: wiki('Bile_Titan'),
     main: main(6500, 4, 100, 50),
     note: '담즙낭을 부수는 것과 처치는 다릅니다. 노출된 복부의 탄수에는 외피를 제거하는 공격이 포함되지 않습니다.',
-    // Every part matches Wiki Anatomy revision 136862 (checked 2026-09-28,
+    // Every part matches Wiki Anatomy revision 138514 (checked 2026-10-22,
     // compared by scripts/test-anatomy.mjs). Parts after the first three
-    // were added then, so legacy results keep their order.
-    anatomyRevision: 136862, anatomyCheckedAt: '2026-09-28',
+    // were added on 2026-09-28, so legacy results keep their order.
+    anatomyRevision: 138514, anatomyCheckedAt: '2026-10-22',
     // Both bile sacs have the same numbers and are shown as one part.
     anatomyMerged: { 'Lower Sac': 'sac' },
     parts: [
@@ -139,9 +140,9 @@ const originalEnemies = [
     id: 'hulk', name: '헐크 스코처', faction: '오토마톤', source: wiki('Hulk_Scorcher'),
     main: main(1800, 4, 60, 0),
     note: '화염방사기형 헐크 기준입니다. 눈은 폭발 피해를 받지 않으며, 후방 방열판 파괴 후에도 잠시 생존할 수 있습니다.',
-    // Every part matches Wiki Anatomy revision 135126 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 139406 (checked 2026-10-22).
     // Parts after the first two were added then.
-    anatomyRevision: 135126, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 139406, anatomyCheckedAt: '2026-10-22',
     parts: [
       part('head', '정면의 붉은 눈', 250, 4, 25, 100, 100, true, 'kill', '작은 붉은 눈에 직접 맞혀야 합니다. 주변 얼굴 장갑에 맞는 것과 다릅니다.', { sourcePart: 'Head' }),
       part('heatsink', '후방 방열판', 900, 1, 60, 0, 60, true, 'bleed', '뒤쪽 주황색 방열판을 쏘세요. 파괴 후 남은 추가 체력이 감소하며 죽습니다.', { constitution: 650, sourcePart: 'Heatsink' }),
@@ -152,9 +153,9 @@ const originalEnemies = [
   {
     id: 'devastator', name: '데바스테이터 · 기본형', faction: '오토마톤', source: wiki('Devastator'),
     main: main(750, 2, 0, 0), note: '머리와 복부가 흉부보다 얇습니다. 로켓형·중장갑형의 장비와 방패는 포함하지 않습니다.',
-    // Every part matches Wiki Anatomy revision 136811 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 138977 (checked 2026-10-22).
     // Parts after the legacy ones were added then.
-    anatomyRevision: 136811, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 138977, anatomyCheckedAt: '2026-10-22',
     parts: [
       part('head', '머리', 110, 1, 0, 100, 100, true, 'kill', '흉부 위로 드러난 작은 얼굴을 노리세요.', { sourcePart: 'Head' }),
       part('stomach', '복부', 350, 1, 0, 100, 100, true, 'kill', '가슴 장갑 아래 허리의 노출 부위를 노리세요.', { sourcePart: 'Stomach' }),
@@ -168,9 +169,9 @@ const originalEnemies = [
   {
     id: 'berserker', name: '버서커', faction: '오토마톤', source: wiki('Berserker'),
     main: main(750, 0, 0, 0), note: '작은 머리나 허리의 복부를 노리세요. 각 부위의 체력은 서로 별개입니다.',
-    // Every part matches Wiki Anatomy revision 135118 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 138975 (checked 2026-10-22).
     // Parts after the legacy ones were added then.
-    anatomyRevision: 135118, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 138975, anatomyCheckedAt: '2026-10-22',
     parts: [
       part('head', '머리', 110, 1, 0, 100, 100, true, 'kill', '접근하는 적의 작은 머리를 직접 맞히세요.', { sourcePart: 'Head' }),
       part('stomach', '복부', 350, 1, 0, 100, 100, true, 'kill', '움직이는 머리를 맞히기 어렵다면 복부를 노리세요.', { sourcePart: 'Stomach' }),
@@ -246,8 +247,8 @@ const originalEnemies = [
   {
     id: 'predator-hunter', name: '프레데터 헌터', faction: '테르미니드', family: 'predator-hunter',
     source: wiki('Predator_Hunter'), sourceRevision: 135098, checkedAt: '2026-09-17',
-    // Every part matches Wiki Anatomy revision 135098 (checked 2026-09-28).
-    anatomyRevision: 135098, anatomyCheckedAt: '2026-09-28',
+    // Every part matches Wiki Anatomy revision 139037 (checked 2026-10-22).
+    anatomyRevision: 139037, anatomyCheckedAt: '2026-10-22',
     main: main(175, 0, 0, 0),
     note: '은신·담즙 발사·측면 도약을 사용하는 변종입니다. 본체 체력 175는 일반 고난이도 헌터 160과 다릅니다. 머리는 치명 부위이며 앞발·다리·날개 하나의 파괴는 처치가 아닙니다.',
     parts: [
@@ -261,9 +262,9 @@ const originalEnemies = [
   warrior('warrior-hardened', '워리어', 325, 150, 100),
   {
     id: 'hive-guard', name: '하이브 가드', faction: '테르미니드', source: wiki('Hive_Guard'), sourceRevision: 135085,
-    // Every part matches Wiki Anatomy revision 136682 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 137924 (checked 2026-10-22).
     // Parts after the first three were added then.
-    anatomyRevision: 136682, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 137924, anatomyCheckedAt: '2026-10-22',
     main: main(500, 2, 30, 0),
     note: '머리 장갑은 3, 노출된 사지는 1입니다. 머리 파괴 후에도 출혈 중 공격할 수 있습니다. 사지 한쪽의 파괴를 처치와 구분합니다.',
     parts: [
@@ -289,7 +290,7 @@ const originalEnemies = [
   // The wiki table gives armor 2 for the main body and head, also at the
   // reviewed revision 135087; the earlier 3 came from a difficulty 6+ remark.
   spewer('bile-spewer-armored', '바일 스퓨어', 'Bile_Spewer', 2, '너싱 스퓨어의 무장 변종으로, 위키 부위 표 기준 본체·머리 장갑은 2입니다. 입과 후방 복부에는 장갑이 없습니다.', 135087, 'bile-spewer',
-    { anatomyRevision: 136689, anatomyLegacy: { 'main.armor': 3, 'head.armor': 3 } }),
+    { anatomyRevision: 139148, anatomyCheckedAt: '2026-10-22', anatomyLegacy: { 'main.armor': 3, 'head.armor': 3 } }),
   spewer('nursing-spewer', '너싱 스퓨어', 'Nursing_Spewer', 2, '노란 복부의 너싱 스퓨어 기준입니다.', 135086, 'nursing-spewer', { anatomyRevision: 136685 }),
   {
     id: 'stalker', name: '스토커', faction: '테르미니드', source: wiki('Stalker'), sourceRevision: 135091,
@@ -347,9 +348,9 @@ const originalEnemies = [
     id: 'rocket-devastator', name: '로켓 데바스테이터', faction: '오토마톤', source: wiki('Rocket_Devastator'), sourceRevision: 135121,
     main: main(750, 2, 0, 0),
     note: '머리·복부는 치명 부위입니다. 어깨 로켓 포드 파괴는 무장 제거이며 즉사와 다릅니다.',
-    // Every part matches Wiki Anatomy revision 136514 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 138979 (checked 2026-10-22).
     // Parts after the legacy ones were added then.
-    anatomyRevision: 136514, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 138979, anatomyCheckedAt: '2026-10-22',
     parts: [
       part('head', '머리', 110, 1, 0, 100, 100, true, 'kill', '어깨 로켓 포드 사이의 작은 얼굴을 직접 맞히세요.', { sourcePart: 'Head' }),
       part('stomach', '복부', 350, 1, 0, 100, 100, true, 'kill', '가슴 장갑 아래의 얇은 허리를 노리세요.', { sourcePart: 'Stomach' }),
@@ -367,9 +368,9 @@ const originalEnemies = [
     main: main(750, 2, 0, 0),
     shield: { hp: 800, armor: 4, label: '방패에 가리지 않은 부위를 조준', note: '방패를 피해서 머리·복부·배낭에 직접 맞히는 조건입니다. 방패 파괴 탄수와 방패를 통한 폭발은 포함하지 않습니다.' },
     note: '방패 자체에 맞은 탄은 아래 부위의 직격 피해가 아닙니다. 작은 얼굴이나 측면·후방에서 드러나는 배낭을 노리세요.',
-    // Every part matches Wiki Anatomy revision 136516 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 139373 (checked 2026-10-22).
     // Parts after the legacy ones were added then.
-    anatomyRevision: 136516, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 139373, anatomyCheckedAt: '2026-10-22',
     anatomyOmitted: { Shield: 'The arm shield is the shield toggle (hits that get past it), not a part' },
     parts: [
       part('head', '머리', 110, 1, 0, 100, 100, true, 'kill', '방패 위로 노출된 작은 얼굴을 맞히세요.', { sourcePart: 'Head' }),
@@ -386,9 +387,9 @@ const originalEnemies = [
     id: 'scout-strider', name: '스카우트 스트라이더', faction: '오토마톤', source: wiki('Scout_Strider'), sourceRevision: 135123,
     main: main(500, 4, 0, 0),
     note: '후방이 열린 기본형입니다. 조종사와 보행 기체는 별도 체력이며, 조종사 머리 계산에는 조종사 체력 125를 적용합니다.',
-    // Every part matches Wiki Anatomy revision 135123 (checked 2026-09-28),
+    // Every part matches Wiki Anatomy revision 139387 (checked 2026-10-22),
     // the strider tab and the Pilot tab. Parts after the first three were added then.
-    anatomyRevision: 135123, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 139387, anatomyCheckedAt: '2026-10-22',
     anatomyOmitted: { Pilot: 'The pilot health pool is the Pilot tab, whose parts are modelled one by one' },
     parts: [
       part('pilot-head', '노출된 조종사 머리', 40, 0, 0, 100, 100, true, 'kill', '뒤로 돌아가거나 높은 곳에서 드러난 조종사의 머리를 직접 맞히세요. 사진은 같은 조종사 모델의 머리 위치입니다.', { main: { ...main(125, 0, 0, 50), name: '조종사' }, sourcePart: 'Pilot: Head', sourceMain: 'Pilot: Main' }),
@@ -406,9 +407,9 @@ const originalEnemies = [
     id: 'reinforced-strider', name: '강화 스카우트 스트라이더', faction: '오토마톤', source: wiki('Reinforced_Scout_Strider'), sourceRevision: 135124,
     main: main(500, 4, 0, 0),
     note: '조종석이 막힌 강화형입니다. 위키에 로켓 유폭의 즉사 판정 오류가 기재되어 있어 로켓은 탄수 계산에서 제외합니다.',
-    // Every part matches Wiki Anatomy revision 135124 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 139395 (checked 2026-10-22).
     // Parts after the first three were added then.
-    anatomyRevision: 135124, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 139395, anatomyCheckedAt: '2026-10-22',
     anatomyOmitted: { 'Rockets (4)': 'The wiki notes a bug in the rocket detonation instant kill, so rockets are not counted' },
     parts: [
       part('turret-system', '포탑 연결부', 300, 3, 0, 100, 100, true, 'kill', '조종석과 하부 보행 장치 사이의 회전 연결부를 맞히세요.', { sourcePart: 'Turret System' }),
@@ -423,8 +424,8 @@ const originalEnemies = [
     id: 'gunship', name: '건십', faction: '오토마톤', source: wiki('Gunship'), sourceRevision: 135132,
     main: main(950, 3, 0, 0),
     note: '추진기 하나를 파괴하면 격추합니다. 앞뒤 추진기는 체력이 같지만 내구도가 다릅니다. 동체와 여러 추진기에 나눠 맞힌 경우는 계산하지 않습니다.',
-    // Every part matches Wiki Anatomy revision 135132 (checked 2026-09-28).
-    anatomyRevision: 135132, anatomyCheckedAt: '2026-09-28',
+    // Every part matches Wiki Anatomy revision 139881 (checked 2026-10-22).
+    anatomyRevision: 139881, anatomyCheckedAt: '2026-10-22',
     parts: [
       part('front-thruster', '앞 추진기 한 개', 400, 3, 85, 0, 0, true, 'kill', '동체 앞쪽 추진기 한 개에 집중하세요. 다른 추진기에 맞힌 피해는 합산하지 않습니다.', { sourcePart: 'Front Thrusters (2)' }),
       part('rear-thruster', '뒤 추진기 한 개', 400, 3, 80, 0, 0, true, 'kill', '뒤쪽 추진기는 내구도가 조금 낮습니다. 사진에서 표시한 추진기 하나를 계속 맞히세요.', { sourcePart: 'Rear Thrusters (2)' }),
@@ -435,9 +436,9 @@ const originalEnemies = [
     id: 'annihilator-tank', name: '어나이얼레이터 탱크', faction: '오토마톤', source: wiki('Annihilator_Tank'), sourceRevision: 135129,
     main: main(4000, 5, 100, 0),
     note: '포탑 체력 2,100과 차체 체력 4,000을 따로 계산합니다. 포탑 뒤의 방열판과 차체 뒤의 엔진실도 서로 다른 부위입니다.',
-    // Every part matches Wiki Anatomy revision 135129 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 139864 (checked 2026-10-22).
     // Parts after the first four were added then.
-    anatomyRevision: 135129, anatomyCheckedAt: '2026-09-28', anatomyMain: 'Hull Main',
+    anatomyRevision: 139864, anatomyCheckedAt: '2026-10-22', anatomyMain: 'Hull Main',
     parts: [
       part('turret-front', '포탑 정면', 2100, 5, 100, 100, 100, true, 'kill', '위쪽 포탑의 정면 장갑을 맞히는 조건입니다. 아래 차체의 체력과 합산하지 않습니다.', { main: { ...main(2100, 5, 100, 0), name: '포탑' }, sourcePart: 'Turret Front', sourceMain: 'Turret Main' }),
       part('heatsink', '포탑 후방 방열판', 750, 3, 100, 0, 200, true, 'kill', '위쪽 포탑 뒤의 빛나는 방열판을 노리세요. 차체 아래쪽 엔진실보다 장갑이 얇습니다.', { main: { ...main(2100, 5, 100, 0), name: '포탑' }, sourcePart: 'Turret Heatsink', sourceMain: 'Turret Main' }),
@@ -454,9 +455,9 @@ const originalEnemies = [
     id: 'watcher', name: '와처', faction: '일루미닛', source: wiki('Watcher'), sourceRevision: 135178,
     main: main(600, 0, 0, 0),
     note: '몸통이 치명 부위입니다. 눈이나 지느러미 하나를 파괴하는 것만으로는 죽지 않으며, 추가 피해가 본체를 소진한 경우에만 처치로 표시합니다.',
-    // Every part matches Wiki Anatomy revision 135710 (checked 2026-09-28).
+    // Every part matches Wiki Anatomy revision 139239 (checked 2026-10-22).
     // Parts after the legacy ones were added then.
-    anatomyRevision: 135710, anatomyCheckedAt: '2026-09-28',
+    anatomyRevision: 139239, anatomyCheckedAt: '2026-10-22',
     // The wiki raised the upper fin's armor from 0 after the reviewed revision.
     anatomyLegacy: { 'upper-fin.armor': 0 },
     parts: [

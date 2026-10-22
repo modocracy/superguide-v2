@@ -2723,6 +2723,14 @@
     "sha256": "f17aa34eb25f902e8f52666fbeb81f8ba58b94a864bc005f8a6e271d33017860",
     "sourceSha256": "f46dfda1a166ae19698ff2d0f536bc63f65b28024791153345ef5eadfe74ac0f"
   },
+  "./assets/anatomy/revised-rocket-raider-right-arm-thumb.webp": {
+    "sha256": "0079f409129c4cfad579c9949c14171de036caec772329d470dec768454fdbea",
+    "sourceSha256": "16ab176a4e26d73552acdcd5bc661df890096879832bd99c12f79aea4460dc8a"
+  },
+  "./assets/anatomy/revised-rocket-raider-right-arm.webp": {
+    "sha256": "ace075d5b3ef52cccd46675df090f6bc57f254da8a5077aa932de241f52c8d84",
+    "sourceSha256": "90cd9cd5052e09826a493bed08221dbf10784b39d54eb66961e29fab93f8cd97"
+  },
   "./assets/anatomy/revised-rupture-charger-claw-thumb.webp": {
     "sha256": "3b7117accf4f51b9d5950b0fd8c073fb9afcb02d242f0e576c07c0c7544e7dbb",
     "sourceSha256": "92bf5051d1df071c0d49dfc4730343824215527bd3ba3f6e5c2e781c971d9dc4"

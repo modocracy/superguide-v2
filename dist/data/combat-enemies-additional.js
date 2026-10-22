@@ -68,8 +68,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Bile_Spitter",
     "sourceRevision": 135077,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 136488,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 139149,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 60,
       "armor": 0,
@@ -190,8 +190,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Spore_Burst_Scavenger",
     "sourceRevision": 135100,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135100,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 137850,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 60,
       "armor": 0,
@@ -251,8 +251,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Spore_Burst_Hunter",
     "sourceRevision": 135101,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135101,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 137849,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 160,
       "armor": 0,
@@ -338,8 +338,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Trooper",
     "sourceRevision": 135109,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135109,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138834,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 125,
       "armor": 0,
@@ -411,8 +411,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Brawler",
     "sourceRevision": 135110,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135110,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138833,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 125,
       "armor": 0,
@@ -498,8 +498,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Commissar",
     "sourceRevision": 135111,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135111,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138835,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 125,
       "armor": 1,
@@ -571,8 +571,11 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Rocket_Raider",
     "sourceRevision": 135113,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135113,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138836,
+    "anatomyCheckedAt": "2026-10-22",
+    "anatomyLegacy": {
+      "arm.name": "팔 한쪽"
+    },
     "main": {
       "hp": 125,
       "armor": 0,
@@ -611,7 +614,7 @@ export const additionalEnemies = [
       },
       {
         "id": "arm",
-        "name": "팔 한쪽",
+        "name": "왼팔",
         "hp": 65,
         "armor": 0,
         "durability": 0,
@@ -619,8 +622,8 @@ export const additionalEnemies = [
         "toMain": 50,
         "overflowCap": false,
         "effect": "break",
-        "tip": "팔 한쪽에 집중하는 조건입니다. 팔 하나의 파괴는 처치와 다릅니다.",
-        "sourcePart": "Arms (2)"
+        "tip": "왼팔입니다. 부숴도 죽지 않고 피해의 50%가 본체로 들어갑니다.",
+        "sourcePart": "Left Arm"
       },
       {
         "id": "leg",
@@ -634,6 +637,19 @@ export const additionalEnemies = [
         "effect": "kill",
         "tip": "위키에서 치명 부위로 표시한 다리 한쪽을 직접 맞히는 경로입니다.",
         "sourcePart": "Legs (2)"
+      },
+      {
+        "id": "right-arm",
+        "name": "오른팔",
+        "hp": 65,
+        "armor": 0,
+        "durability": 0,
+        "exdr": 100,
+        "toMain": 50,
+        "overflowCap": false,
+        "effect": "kill",
+        "tip": "오른팔입니다. 위키가 치명 부위로 표시해, 부수면 처치됩니다.",
+        "sourcePart": "Right Arm"
       }
     ]
   },
@@ -644,8 +660,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Assault_Raider",
     "sourceRevision": 135114,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135114,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138971,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 125,
       "armor": 0,
@@ -731,8 +747,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Marauder",
     "sourceRevision": 135115,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135115,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138973,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 125,
       "armor": 0,
@@ -804,8 +820,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/MG_Raider",
     "sourceRevision": 135117,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135117,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138978,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 125,
       "armor": 0,
@@ -901,23 +917,30 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_Commissar",
     "sourceRevision": 135135,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135135,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138837,
+    "anatomyCheckedAt": "2026-10-22",
+    "anatomyLegacy": {
+      "main.armor": 0,
+      "head.armor": 0,
+      "torso.armor": 0,
+      "arm.armor": 0,
+      "leg.armor": 0
+    },
     "main": {
       "hp": 125,
-      "armor": 0,
+      "armor": 1,
       "durability": 0,
       "exdr": 0,
       "constitution": 0
     },
-    "note": "점프팩으로 접근하는 지휘 보병입니다. 일반 커미사르와 달리 머리·몸통·사지 장갑은 0입니다. 시체의 팩도 폭발할 수 있어 거리를 유지하세요.",
+    "note": "점프팩으로 접근하는 지휘 보병입니다. 일반 커미사르처럼 머리·몸통·사지 장갑은 1입니다. 시체의 팩도 폭발할 수 있어 거리를 유지하세요.",
     "spearLock": false,
     "parts": [
       {
         "id": "head",
         "name": "머리",
         "hp": 40,
-        "armor": 0,
+        "armor": 1,
         "durability": 0,
         "exdr": 100,
         "toMain": 100,
@@ -930,7 +953,7 @@ export const additionalEnemies = [
         "id": "torso",
         "name": "몸통",
         "hp": 100,
-        "armor": 0,
+        "armor": 1,
         "durability": 0,
         "exdr": 100,
         "toMain": 100,
@@ -943,7 +966,7 @@ export const additionalEnemies = [
         "id": "arm",
         "name": "팔 한쪽",
         "hp": 65,
-        "armor": 0,
+        "armor": 1,
         "durability": 0,
         "exdr": 100,
         "toMain": 50,
@@ -956,7 +979,7 @@ export const additionalEnemies = [
         "id": "leg",
         "name": "다리 한쪽",
         "hp": 90,
-        "armor": 0,
+        "armor": 1,
         "durability": 0,
         "exdr": 100,
         "toMain": 65,
@@ -988,8 +1011,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_Trooper",
     "sourceRevision": 135136,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135136,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138828,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 125,
       "armor": 0,
@@ -1162,8 +1185,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Pyro_Trooper",
     "sourceRevision": 135173,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135173,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138838,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 125,
       "armor": 0,
@@ -1332,8 +1355,8 @@ export const additionalEnemies = [
     "source": "https://helldivers.wiki.gg/wiki/Obtruder",
     "sourceRevision": 135037,
     "checkedAt": "2026-09-17",
-    "anatomyRevision": 135037,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 138037,
+    "anatomyCheckedAt": "2026-10-22",
     "main": {
       "hp": 400,
       "armor": 0,

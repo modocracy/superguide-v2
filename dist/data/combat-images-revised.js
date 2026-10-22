@@ -3617,5 +3617,26 @@ export const revisedCombatImages = {
         "retrievedAt": "2026-09-29"
       }
     ]
+  },
+  "rocket-raider": {
+    "right-arm": [
+      {
+        "src": "./assets/anatomy/revised-rocket-raider-right-arm.webp",
+        "thumbnail": "./assets/anatomy/revised-rocket-raider-right-arm-thumb.webp",
+        "title": "Trooper Arms Front.png",
+        "stage": "initial",
+        "source": "https://helldivers.wiki.gg/wiki/File:Trooper_Arms_Front.png",
+        "originalUrl": "https://helldivers.wiki.gg/images/Trooper_Arms_Front.png?7a1112",
+        "renderedUrl": "https://helldivers.wiki.gg/images/thumb/Trooper_Arms_Front.png/800px-Trooper_Arms_Front.png?7a1112",
+        "thumbnailUrl": "https://helldivers.wiki.gg/images/thumb/Trooper_Arms_Front.png/320px-Trooper_Arms_Front.png?7a1112",
+        "width": 800,
+        "height": 533,
+        "thumbnailWidth": 320,
+        "thumbnailHeight": 213,
+        "sha256": "90cd9cd5052e09826a493bed08221dbf10784b39d54eb66961e29fab93f8cd97",
+        "thumbnailSha256": "16ab176a4e26d73552acdcd5bc661df890096879832bd99c12f79aea4460dc8a",
+        "retrievedAt": "2026-10-22"
+      }
+    ]
   }
 };

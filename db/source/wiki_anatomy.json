@@ -1,5 +1,5 @@
 {
- "retrievedAt": "2026-09-28",
+ "retrievedAt": "2026-10-22",
  "pages": {
   "Agitator": {
    "source": "https://helldivers.wiki.gg/wiki/Agitator",
@@ -254,7 +254,7 @@
   },
   "Annihilator Tank": {
    "source": "https://helldivers.wiki.gg/wiki/Annihilator_Tank",
-   "revision": 135129,
+   "revision": 139864,
    "rows": [
     {
      "part_name": "Turret<br>Main",
@@ -364,7 +364,7 @@
   },
   "Assault Raider": {
    "source": "https://helldivers.wiki.gg/wiki/Assault_Raider",
-   "revision": 135114,
+   "revision": 138971,
    "rows": [
     {
      "part_name": "Main",
@@ -448,7 +448,7 @@
   },
   "Barrager Tank": {
    "source": "https://helldivers.wiki.gg/wiki/Barrager_Tank",
-   "revision": 135332,
+   "revision": 139879,
    "rows": [
     {
      "part_name": "Turret<br>Main",
@@ -546,7 +546,7 @@
   },
   "Berserker": {
    "source": "https://helldivers.wiki.gg/wiki/Berserker",
-   "revision": 135118,
+   "revision": 138975,
    "rows": [
     {
      "part_name": "Main",
@@ -656,7 +656,7 @@
   },
   "Bile Spewer": {
    "source": "https://helldivers.wiki.gg/wiki/Bile_Spewer",
-   "revision": 136689,
+   "revision": 139148,
    "rows": [
     {
      "part_name": "Main",
@@ -754,7 +754,7 @@
   },
   "Bile Spitter": {
    "source": "https://helldivers.wiki.gg/wiki/Bile_Spitter",
-   "revision": 136488,
+   "revision": 139149,
    "rows": [
     {
      "part_name": "Main",
@@ -799,7 +799,7 @@
   },
   "Bile Titan": {
    "source": "https://helldivers.wiki.gg/wiki/Bile_Titan",
-   "revision": 136862,
+   "revision": 138514,
    "rows": [
     {
      "part_name": "Main",
@@ -965,7 +965,7 @@
   },
   "Bile Warrior": {
    "source": "https://helldivers.wiki.gg/wiki/Bile_Warrior",
-   "revision": 136684,
+   "revision": 139144,
    "rows": [
     {
      "part_name": "Main",
@@ -1023,7 +1023,7 @@
   },
   "Brawler": {
    "source": "https://helldivers.wiki.gg/wiki/Brawler",
-   "revision": 135110,
+   "revision": 138833,
    "rows": [
     {
      "part_name": "Main",
@@ -1163,7 +1163,7 @@
   },
   "Charger": {
    "source": "https://helldivers.wiki.gg/wiki/Charger",
-   "revision": 136850,
+   "revision": 137700,
    "rows": [
     {
      "part_name": "Main",
@@ -1207,8 +1207,7 @@
      "part_name": "Inner<br>Flesh",
      "health": "Main",
      "av": "1",
-     "front_image": "Charger Inner Flesh.png",
-     "side_image": "Charger Inner Flesh with Destroyed Butt.png",
+     "side_image": "Charger Inner Flesh.png",
      "durability": "30%",
      "percent_to_main": "300%",
      "dmg_cap_main": "Yes",
@@ -1311,7 +1310,7 @@
   },
   "Charger Behemoth": {
    "source": "https://helldivers.wiki.gg/wiki/Charger_Behemoth",
-   "revision": 136856,
+   "revision": 137702,
    "rows": [
     {
      "part_name": "Main",
@@ -1355,8 +1354,7 @@
      "part_name": "Inner<br>Flesh",
      "health": "Main",
      "av": "1",
-     "front_image": "Charger Behemoth Inner Flesh.png",
-     "side_image": "Charger Behemoth Inner Flesh with Destroyed Butt.png",
+     "side_image": "Charger Behemoth Inner Flesh.png",
      "durability": "30%",
      "percent_to_main": "300%",
      "dmg_cap_main": "Yes",
@@ -1459,7 +1457,7 @@
   },
   "Commissar": {
    "source": "https://helldivers.wiki.gg/wiki/Commissar",
-   "revision": 135111,
+   "revision": 138835,
    "rows": [
     {
      "part_name": "Main",
@@ -1529,7 +1527,7 @@
   },
   "Conflagration Devastator": {
    "source": "https://helldivers.wiki.gg/wiki/Conflagration_Devastator",
-   "revision": 136519,
+   "revision": 139855,
    "rows": [
     {
      "part_name": "Main",
@@ -1650,7 +1648,7 @@
   },
   "Crescent Overseer": {
    "source": "https://helldivers.wiki.gg/wiki/Crescent_Overseer",
-   "revision": 136673,
+   "revision": 139398,
    "rows": [
     {
      "part_name": "Main",
@@ -1672,6 +1670,19 @@
      "side_image": "Overseer Head Side.png",
      "durability": "0%",
      "percent_to_main": "100%",
+     "dmg_cap_main": "Yes",
+     "bleed": "None",
+     "fatal": "Yes",
+     "exdr": "100%"
+    },
+    {
+     "part_name": "Backpack",
+     "health": "300",
+     "av": "2",
+     "rear_image": "",
+     "side_image": "",
+     "durability": "0%",
+     "percent_to_main": "50%",
      "dmg_cap_main": "Yes",
      "bleed": "None",
      "fatal": "Yes",
@@ -1771,7 +1782,7 @@
   },
   "Crusher": {
    "source": "https://helldivers.wiki.gg/wiki/Crusher",
-   "revision": 136236,
+   "revision": 138301,
    "rows": [
     {
      "part_name": "Main",
@@ -1873,7 +1884,7 @@
   },
   "Devastator": {
    "source": "https://helldivers.wiki.gg/wiki/Devastator",
-   "revision": 136811,
+   "revision": 138977,
    "rows": [
     {
      "part_name": "Main",
@@ -2130,7 +2141,7 @@
   },
   "Dropship": {
    "source": "https://helldivers.wiki.gg/wiki/Dropship",
-   "revision": 135133,
+   "revision": 139884,
    "rows": [
     {
      "part_name": "Main",
@@ -2687,7 +2698,7 @@
   },
   "Fleshmob": {
    "source": "https://helldivers.wiki.gg/wiki/Fleshmob",
-   "revision": 136675,
+   "revision": 138173,
    "rows": [
     {
      "part_name": "Main<br>",
@@ -2766,7 +2777,7 @@
   },
   "Gatekeeper": {
    "source": "https://helldivers.wiki.gg/wiki/Gatekeeper",
-   "revision": 135035,
+   "revision": 138108,
    "rows": [
     {
      "table": 0,
@@ -3082,7 +3093,7 @@
   },
   "Gunship": {
    "source": "https://helldivers.wiki.gg/wiki/Gunship",
-   "revision": 135132,
+   "revision": 139881,
    "rows": [
     {
      "part_name": "Main",
@@ -3472,7 +3483,7 @@
   },
   "Heavy Devastator": {
    "source": "https://helldivers.wiki.gg/wiki/Heavy_Devastator",
-   "revision": 136516,
+   "revision": 139373,
    "rows": [
     {
      "part_name": "Main",
@@ -3613,7 +3624,7 @@
   },
   "Hive Guard": {
    "source": "https://helldivers.wiki.gg/wiki/Hive_Guard",
-   "revision": 136682,
+   "revision": 137924,
    "rows": [
     {
      "part_name": "Main",
@@ -3697,7 +3708,7 @@
   },
   "Hive Lord": {
    "source": "https://helldivers.wiki.gg/wiki/Hive_Lord",
-   "revision": 136936,
+   "revision": 139241,
    "rows": [
     {
      "table": 0,
@@ -3992,7 +4003,7 @@
   },
   "Hulk Bruiser": {
    "source": "https://helldivers.wiki.gg/wiki/Hulk_Bruiser",
-   "revision": 135127,
+   "revision": 139407,
    "rows": [
     {
      "part_name": "Main",
@@ -4065,7 +4076,7 @@
   },
   "Hulk Firebomber": {
    "source": "https://helldivers.wiki.gg/wiki/Hulk_Firebomber",
-   "revision": 135177,
+   "revision": 138254,
    "rows": [
     {
      "part_name": "Main",
@@ -4134,7 +4145,7 @@
   },
   "Hulk Obliterator": {
    "source": "https://helldivers.wiki.gg/wiki/Hulk_Obliterator",
-   "revision": 135125,
+   "revision": 138853,
    "rows": [
     {
      "part_name": "Main",
@@ -4204,7 +4215,7 @@
   },
   "Hulk Scorcher": {
    "source": "https://helldivers.wiki.gg/wiki/Hulk_Scorcher",
-   "revision": 135126,
+   "revision": 139406,
    "rows": [
     {
      "part_name": "Main",
@@ -4696,12 +4707,12 @@
   },
   "Jet Brigade Commissar": {
    "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_Commissar",
-   "revision": 135135,
+   "revision": 138837,
    "rows": [
     {
      "part_name": "Main",
      "health": "125",
-     "av": "0",
+     "av": "1",
      "front_image": "Assault Raider Main Health.png",
      "durability": "0%",
      "percent_to_main": "-",
@@ -4713,7 +4724,7 @@
     {
      "part_name": "Head",
      "health": "40",
-     "av": "0",
+     "av": "1",
      "front_image": "Assault Raider Head Front.png",
      "side_image": "Assault Raider Head Side.png",
      "durability": "0%",
@@ -4726,7 +4737,7 @@
     {
      "part_name": "Torso",
      "health": "100",
-     "av": "0",
+     "av": "1",
      "front_image": "Assault Raider Torso Front.png",
      "side_image": "Assault Raider Torso Side.png",
      "durability": "0%",
@@ -4739,7 +4750,7 @@
     {
      "part_name": "Arms (2)",
      "health": "65",
-     "av": "0",
+     "av": "1",
      "front_image": "Assault Raider Arms Front.png",
      "side_image": "Assault Raider Arms Side.png",
      "durability": "0%",
@@ -4752,7 +4763,7 @@
     {
      "part_name": "Legs (2)",
      "health": "90",
-     "av": "0",
+     "av": "1",
      "front_image": "Assault Raider Legs Front.png",
      "side_image": "Assault Raider Legs Side.png",
      "durability": "0%",
@@ -4903,7 +4914,7 @@
   },
   "Jet Brigade Hulk Bruiser": {
    "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_Hulk_Bruiser",
-   "revision": 135140,
+   "revision": 138258,
    "rows": [
     {
      "part_name": "Main",
@@ -4975,7 +4986,7 @@
   },
   "Jet Brigade Hulk Scorcher": {
    "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_Hulk_Scorcher",
-   "revision": 135139,
+   "revision": 138257,
    "rows": [
     {
      "part_name": "Main",
@@ -5134,7 +5145,7 @@
   },
   "Jet Brigade Trooper": {
    "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_Trooper",
-   "revision": 135136,
+   "revision": 138828,
    "rows": [
     {
      "part_name": "Main",
@@ -5218,7 +5229,7 @@
   },
   "Leviathan": {
    "source": "https://helldivers.wiki.gg/wiki/Leviathan",
-   "revision": 135186,
+   "revision": 139040,
    "rows": [
     {
      "table": 0,
@@ -5431,7 +5442,7 @@
   },
   "MG Raider": {
    "source": "https://helldivers.wiki.gg/wiki/MG_Raider",
-   "revision": 135117,
+   "revision": 138978,
    "rows": [
     {
      "part_name": "Main",
@@ -5527,7 +5538,7 @@
   },
   "Marauder": {
    "source": "https://helldivers.wiki.gg/wiki/Marauder",
-   "revision": 135115,
+   "revision": 138973,
    "rows": [
     {
      "part_name": "Main",
@@ -5695,7 +5706,7 @@
   },
   "Obtruder": {
    "source": "https://helldivers.wiki.gg/wiki/Obtruder",
-   "revision": 135037,
+   "revision": 138037,
    "rows": [
     {
      "part_name": "Main",
@@ -5947,7 +5958,7 @@
   },
   "Predator Hunter": {
    "source": "https://helldivers.wiki.gg/wiki/Predator_Hunter",
-   "revision": 135098,
+   "revision": 139037,
    "rows": [
     {
      "part_name": "Main",
@@ -6017,7 +6028,7 @@
   },
   "Predator Stalker": {
    "source": "https://helldivers.wiki.gg/wiki/Predator_Stalker",
-   "revision": 135099,
+   "revision": 137847,
    "rows": [
     {
      "part_name": "Main",
@@ -6125,7 +6136,7 @@
   },
   "Pyro Trooper": {
    "source": "https://helldivers.wiki.gg/wiki/Pyro_Trooper",
-   "revision": 135173,
+   "revision": 138838,
    "rows": [
     {
      "part_name": "Main",
@@ -6329,7 +6340,7 @@
   },
   "Reinforced Scout Strider": {
    "source": "https://helldivers.wiki.gg/wiki/Reinforced_Scout_Strider",
-   "revision": 135124,
+   "revision": 139395,
    "rows": [
     {
      "part_name": "Main",
@@ -6444,7 +6455,7 @@
   },
   "Rocket Devastator": {
    "source": "https://helldivers.wiki.gg/wiki/Rocket_Devastator",
-   "revision": 136514,
+   "revision": 138979,
    "rows": [
     {
      "part_name": "Main",
@@ -6590,7 +6601,7 @@
   },
   "Rocket Raider": {
    "source": "https://helldivers.wiki.gg/wiki/Rocket_Raider",
-   "revision": 135113,
+   "revision": 138836,
    "rows": [
     {
      "part_name": "Main",
@@ -6631,7 +6642,7 @@
      "exdr": "100%"
     },
     {
-     "part_name": "Arms (2)",
+     "part_name": "Left Arm",
      "health": "65",
      "av": "0",
      "front_image": "Trooper Arms Front.png",
@@ -6641,6 +6652,19 @@
      "dmg_cap_main": "No",
      "bleed": "None",
      "fatal": "No",
+     "exdr": "100%"
+    },
+    {
+     "part_name": "Right Arm",
+     "health": "65",
+     "av": "0",
+     "front_image": "Trooper Arms Front.png",
+     "side_image": "Trooper Arms Side.png",
+     "durability": "0%",
+     "percent_to_main": "50%",
+     "dmg_cap_main": "No",
+     "bleed": "None",
+     "fatal": "Yes",
      "exdr": "100%"
     },
     {
@@ -6660,7 +6684,7 @@
   },
   "Rupture Charger": {
    "source": "https://helldivers.wiki.gg/wiki/Rupture_Charger",
-   "revision": 135108,
+   "revision": 137862,
    "rows": [
     {
      "part_name": "Main",
@@ -6820,7 +6844,7 @@
   },
   "Rupture Spewer": {
    "source": "https://helldivers.wiki.gg/wiki/Rupture_Spewer",
-   "revision": 135107,
+   "revision": 137863,
    "rows": [
     {
      "part_name": "Main",
@@ -6917,7 +6941,7 @@
   },
   "Rupture Warrior": {
    "source": "https://helldivers.wiki.gg/wiki/Rupture_Warrior",
-   "revision": 135105,
+   "revision": 137859,
    "rows": [
     {
      "part_name": "Main",
@@ -7020,7 +7044,7 @@
   },
   "Scout Strider": {
    "source": "https://helldivers.wiki.gg/wiki/Scout_Strider",
-   "revision": 135123,
+   "revision": 139387,
    "rows": [
     {
      "table": 0,
@@ -7209,7 +7233,7 @@
   },
   "Shredder Tank": {
    "source": "https://helldivers.wiki.gg/wiki/Shredder_Tank",
-   "revision": 135130,
+   "revision": 139871,
    "rows": [
     {
      "part_name": "Turret<br>Main",
@@ -7376,7 +7400,7 @@
   },
   "Spore Burst Bile Titan": {
    "source": "https://helldivers.wiki.gg/wiki/Spore_Burst_Bile_Titan",
-   "revision": 135104,
+   "revision": 137858,
    "rows": [
     {
      "part_name": "Main",
@@ -7543,7 +7567,7 @@
   },
   "Spore Burst Hunter": {
    "source": "https://helldivers.wiki.gg/wiki/Spore_Burst_Hunter",
-   "revision": 135101,
+   "revision": 137849,
    "rows": [
     {
      "part_name": "Main",
@@ -7612,7 +7636,7 @@
   },
   "Spore Burst Scavenger": {
    "source": "https://helldivers.wiki.gg/wiki/Spore_Burst_Scavenger",
-   "revision": 135100,
+   "revision": 137850,
    "rows": [
     {
      "part_name": "Main",
@@ -7657,7 +7681,7 @@
   },
   "Spore Burst Warrior": {
    "source": "https://helldivers.wiki.gg/wiki/Spore_Burst_Warrior",
-   "revision": 135102,
+   "revision": 137855,
    "rows": [
     {
      "part_name": "Main",
@@ -7715,7 +7739,7 @@
   },
   "Spore Charger": {
    "source": "https://helldivers.wiki.gg/wiki/Spore_Charger",
-   "revision": 136858,
+   "revision": 139886,
    "rows": [
     {
      "part_name": "Main",
@@ -7759,8 +7783,7 @@
      "part_name": "Inner<br>Flesh",
      "health": "Main",
      "av": "1",
-     "front_image": "Spore Charger Inner Flesh.png",
-     "side_image": "Spore Charger Inner Flesh with Destroyed Butt.png",
+     "side_image": "Spore Charger Inner Flesh.png",
      "durability": "100%",
      "percent_to_main": "300%",
      "dmg_cap_main": "Yes",
@@ -7974,7 +7997,7 @@
   },
   "Stingray": {
    "source": "https://helldivers.wiki.gg/wiki/Stingray",
-   "revision": 135184,
+   "revision": 139235,
    "rows": [
     {
      "part_name": "Main",
@@ -8005,7 +8028,7 @@
   },
   "Trooper": {
    "source": "https://helldivers.wiki.gg/wiki/Trooper",
-   "revision": 135109,
+   "revision": 138834,
    "rows": [
     {
      "part_name": "Main",
@@ -8075,7 +8098,7 @@
   },
   "Veracitor": {
    "source": "https://helldivers.wiki.gg/wiki/Veracitor",
-   "revision": 135034,
+   "revision": 138107,
    "rows": [
     {
      "part_name": "Main",
@@ -8318,7 +8341,7 @@
   },
   "Voteless": {
    "source": "https://helldivers.wiki.gg/wiki/Voteless",
-   "revision": 135187,
+   "revision": 138050,
    "rows": [
     {
      "table": 0,
@@ -8546,7 +8569,7 @@
   },
   "Vox Engine": {
    "source": "https://helldivers.wiki.gg/wiki/Vox_Engine",
-   "revision": 134993,
+   "revision": 139236,
    "rows": [
     {
      "part_name": "Main",
@@ -8741,7 +8764,7 @@
   },
   "War Strider": {
    "source": "https://helldivers.wiki.gg/wiki/War_Strider",
-   "revision": 136760,
+   "revision": 139410,
    "rows": [
     {
      "part_name": "Main",
@@ -8791,7 +8814,7 @@
      "percent_to_main": "-",
      "bleed": "None",
      "fatal": "No",
-     "exdr": "40%"
+     "exdr": "60%"
     },
     {
      "part_name": "Grenade<br>Launchers (2)",
@@ -9051,7 +9074,7 @@
   },
   "Watcher": {
    "source": "https://helldivers.wiki.gg/wiki/Watcher",
-   "revision": 135710,
+   "revision": 139239,
    "rows": [
     {
      "part_name": "Main",
