@@ -140,6 +140,11 @@ for (const expected of golden.demolition) {
   }, `${expected.structure} × ${expected.weapon}/${expected.mode} ${JSON.stringify(expected.options)}`);
 }
 
+// Stratagems added after the legacy fixture was made. The legacy overviews list
+// the catalogue as it was then, so these are left out when replaying them.
+const addedAfterLegacy = new Set(['apex', 'nova']);
+const legacyCatalogue = stratagems.filter(item => !addedAfterLegacy.has(item.id));
+assert.equal(legacyCatalogue.length, 110, 'legacy catalogue size');
 for (const expected of golden.selections) {
   const options = { shieldCleared: expected.shieldCleared, jammerDisabled: false };
   const structure = structures.find(item => item.id === expected.structure);
@@ -148,7 +153,7 @@ for (const expected of golden.selections) {
     assert(!structure && expected.weapon === 'all' || !stratagems.some(item => item.id === expected.weapon) && expected.weapon !== 'all', label);
   } else if (expected.view === 'weapons') {
     // The new catalogue lists stratagems in plain category order, so compare as sets.
-    const overview = structureOverview(structure, stratagems, demolitionProfiles, options);
+    const overview = structureOverview(structure, legacyCatalogue, demolitionProfiles, options);
     const byId = (a, b) => a[0].localeCompare(b[0]);
     assert.deepEqual(overview.entries.map(entry => [entry.weapon.id, entry.outcome, entry.attacks.map(attack => attack.mode.id)]).sort(byId), [...expected.entries].sort(byId), label);
     assert.deepEqual([overview.possible, overview.conditional, overview.unknown, overview.blocked], expected.counts, label);

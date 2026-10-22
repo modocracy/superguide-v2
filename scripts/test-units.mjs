@@ -24,7 +24,7 @@ let checks = 0;
 const ok = (value, message) => { assert(value, message); checks++; };
 
 // --- Catalogue -------------------------------------------------------------------
-ok(stratagems.length === 110, 'catalogue keeps all 110 stratagems');
+ok(stratagems.length === 112, 'catalogue keeps all 112 stratagems');
 ok(new Set(stratagems.map(item => item.id)).size === stratagems.length, 'stratagem ids are unique');
 for (const item of stratagems) {
   ok(categories.some(cat => cat.id === item.category), `${item.id}: category`);

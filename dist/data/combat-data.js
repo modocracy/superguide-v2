@@ -610,6 +610,7 @@ export const weaponProfiles = {
     ],
   },
   'anti-materiel': profile('Anti-Material_Rifle', [shot('standard', '기본 사격', 450, 225, 4, 0, 0, { falloff: true })], '헐크 눈은 근거리 이론값으로 1발이어도, 거리 감쇠가 생기면 2발 이상 필요할 수 있습니다.'),
+  'apex': profile('AMW-20_Apex', [shot('standard', '기본 사격', 1550, 930, 5, 0, 0, { falloff: true })], '엎드리거나 앉아서 쏘는 한 발 기준입니다. 근거리 최대 피해로 계산하며, 거리 감쇠가 생기면 더 필요할 수 있습니다.'),
   'machine-gun': profile('MG-43_Machine_Gun', [shot('standard', '기본 사격', 90, 23, 3, 0, 0, { falloff: true })]),
   'stalwart': profile('M-105_Stalwart', [shot('standard', '기본 사격', 90, 22, 2, 0, 0, { falloff: true })]),
   'heavy-machine-gun': profile('MG-206_Heavy_Machine_Gun', [shot('standard', '기본 사격', 150, 35, 4, 0, 0, { falloff: true })]),
@@ -617,6 +618,7 @@ export const weaponProfiles = {
   'bullet-storm': profile('MGX-42', [shot('standard', '기본 사격', 100, 25, 2, 0, 0, { falloff: true })]),
   'expendable-at': profile('EAT-17_Expendable_Anti-Tank', [shot('standard', '대전차탄', 2000, 2000, 6, 150, 3)]),
   'quasar': profile('LAS-99_Quasar_Cannon', [shot('standard', '충전 사격', 2000, 2000, 6, 150, 3)]),
+  'nova': profile('LAS-44_Nova', [shot('standard', '충전 사격', 880, 880, 5, 0, 0)], '약 1.6초 충전한 뒤 나가는 한 발 기준입니다. 위키에 따르면 거리에 따른 피해 감소가 없습니다.'),
   'commando': profile('MLS-4X_Commando', [shot('standard', '미사일 1발', 1100, 1100, 6, 150, 3)], '유도한 미사일이 선택한 부위에 직접 명중하는 조건입니다.'),
   'recoilless': profile('Recoilless', [
     shot('heat', '대전차 고폭탄(HEAT)', 3200, 3200, 6, 150, 3),

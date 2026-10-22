@@ -64,6 +64,14 @@ export const wikiIcons = {
     "retrievedAt": "2026-09-16",
     "sha256": "ce6c71998ec3a7107be2e29126a6982ffc3ab9d6c99aa2bd4c6fd3dcec6d7935"
   },
+  "apex": {
+    "src": "./assets/stratagems/apex-stratagem-icon.svg",
+    "title": "Apex Stratagem Icon.svg",
+    "source": "https://helldivers.wiki.gg/wiki/File:Apex_Stratagem_Icon.svg",
+    "originalUrl": "https://helldivers.wiki.gg/images/Apex_Stratagem_Icon.svg?68a026",
+    "retrievedAt": "2026-10-22",
+    "sha256": "f891a9bac3a384e2c3ad9b57467d19c552c144de37654e19ecf2908088350e64"
+  },
   "expendable-at": {
     "src": "./assets/stratagems/expendable-anti-tank-stratagem-icon.svg",
     "title": "Expendable Anti-Tank Stratagem Icon.svg",
@@ -79,6 +87,14 @@ export const wikiIcons = {
     "originalUrl": "https://helldivers.wiki.gg/images/Quasar_Cannon_Stratagem_Icon.svg?56c6f4",
     "retrievedAt": "2026-09-16",
     "sha256": "44d7563f23d22ba8f39f8f5bdb83f5112edc73cbf4abf5624da4cd8f47a3f0d2"
+  },
+  "nova": {
+    "src": "./assets/stratagems/nova-stratagem-icon.svg",
+    "title": "Nova Stratagem Icon.svg",
+    "source": "https://helldivers.wiki.gg/wiki/File:Nova_Stratagem_Icon.svg",
+    "originalUrl": "https://helldivers.wiki.gg/images/Nova_Stratagem_Icon.svg?f60b66",
+    "retrievedAt": "2026-10-22",
+    "sha256": "fa5a2bb6fa1ca11d37555ddc8afaec202dbab6281dd22cbd295e6876a98c99f9"
   },
   "spear": {
     "src": "./assets/stratagems/spear-stratagem-icon.svg",
