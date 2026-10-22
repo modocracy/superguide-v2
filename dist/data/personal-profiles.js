@@ -2,8 +2,8 @@
 export const personalProfiles = {
   arbitrator: {
     source: 'https://helldivers.wiki.gg/wiki/AR-11_Arbitrator',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136839,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139640,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -44,8 +44,8 @@ export const personalProfiles = {
   },
   coyote: {
     source: 'https://helldivers.wiki.gg/wiki/AR-2_Coyote',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135307,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139637,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -68,8 +68,8 @@ export const personalProfiles = {
   },
   liberator: {
     source: 'https://helldivers.wiki.gg/wiki/AR-23_Liberator',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133890,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139629,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -92,8 +92,8 @@ export const personalProfiles = {
   },
   'liberator-carbine': {
     source: 'https://helldivers.wiki.gg/wiki/AR-23A_Liberator_Carbine',
-    checkedAt: '2026-09-27',
-    sourceRevision: 129325,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139633,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -116,8 +116,8 @@ export const personalProfiles = {
   },
   'liberator-concussive': {
     source: 'https://helldivers.wiki.gg/wiki/AR-23C_Liberator_Concussive',
-    checkedAt: '2026-09-27',
-    sourceRevision: 129324,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139630,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -140,7 +140,7 @@ export const personalProfiles = {
   },
   'liberator-penetrator': {
     source: 'https://helldivers.wiki.gg/wiki/AR-23P_Liberator_Penetrator',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 132927,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -164,8 +164,8 @@ export const personalProfiles = {
   },
   pacifier: {
     source: 'https://helldivers.wiki.gg/wiki/AR-32_Pacifier',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135613,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139635,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -188,8 +188,8 @@ export const personalProfiles = {
   },
   suppressor: {
     source: 'https://helldivers.wiki.gg/wiki/AR-59_Suppressor',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136031,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139639,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -212,8 +212,8 @@ export const personalProfiles = {
   },
   tenderizer: {
     source: 'https://helldivers.wiki.gg/wiki/AR-61_Tenderizer',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133274,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139632,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -236,8 +236,8 @@ export const personalProfiles = {
   },
   'one-two': {
     source: 'https://helldivers.wiki.gg/wiki/AR%2FGL-21_One-Two',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136086,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139638,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -276,8 +276,8 @@ export const personalProfiles = {
   },
   blitzer: {
     source: 'https://helldivers.wiki.gg/wiki/ARC-12_Blitzer',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135712,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139676,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -302,8 +302,8 @@ export const personalProfiles = {
   },
   adjudicator: {
     source: 'https://helldivers.wiki.gg/wiki/BR-14_Adjudicator',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135308,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139631,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -326,8 +326,8 @@ export const personalProfiles = {
   },
   'exploding-crossbow': {
     source: 'https://helldivers.wiki.gg/wiki/CB-9_Exploding_Crossbow',
-    checkedAt: '2026-09-27',
-    sourceRevision: 134265,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139667,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -350,8 +350,8 @@ export const personalProfiles = {
   },
   'double-freedom': {
     source: 'https://helldivers.wiki.gg/wiki/DBS-2_Double_Freedom',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133864,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139664,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -394,8 +394,8 @@ export const personalProfiles = {
   },
   evictor: {
     source: 'https://helldivers.wiki.gg/wiki/GL-15_Evictor',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136737,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139668,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -418,8 +418,8 @@ export const personalProfiles = {
   },
   dominator: {
     source: 'https://helldivers.wiki.gg/wiki/JAR-5_Dominator',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135324,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139671,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -442,8 +442,8 @@ export const personalProfiles = {
   },
   sai: {
     source: 'https://helldivers.wiki.gg/wiki/LAS-12_Sai',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136801,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139678,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -466,8 +466,8 @@ export const personalProfiles = {
   },
   sickle: {
     source: 'https://helldivers.wiki.gg/wiki/LAS-16_Sickle',
-    checkedAt: '2026-09-27',
-    sourceRevision: 134896,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139674,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -490,8 +490,8 @@ export const personalProfiles = {
   },
   smg: {
     source: 'https://helldivers.wiki.gg/wiki/M7S_SMG',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135616,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139654,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -514,15 +514,15 @@ export const personalProfiles = {
   },
   shotgun: {
     source: 'https://helldivers.wiki.gg/wiki/M90A_Shotgun',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133867,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139663,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
         id: 'standard',
         name: '기본 사격',
-        standard: 55,
-        durable: 20,
+        standard: 66,
+        durable: 24,
         ap: 2,
         explosion: 0,
         explosionDurable: 0,
@@ -540,15 +540,15 @@ export const personalProfiles = {
   },
   'assault-rifle': {
     source: 'https://helldivers.wiki.gg/wiki/MA5C_Assault_Rifle',
-    checkedAt: '2026-09-27',
-    sourceRevision: 132636,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139636,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
         id: 'standard',
         name: '기본 사격',
         standard: 90,
-        durable: 16,
+        durable: 20,
         ap: 3,
         explosion: 0,
         explosionDurable: 0,
@@ -564,8 +564,8 @@ export const personalProfiles = {
   },
   knight: {
     source: 'https://helldivers.wiki.gg/wiki/MP-98_Knight',
-    checkedAt: '2026-09-27',
-    sourceRevision: 134925,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139649,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -588,8 +588,8 @@ export const personalProfiles = {
   },
   scorcher: {
     source: 'https://helldivers.wiki.gg/wiki/PLAS-1_Scorcher',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135171,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139673,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -612,8 +612,8 @@ export const personalProfiles = {
   },
   amendment: {
     source: 'https://helldivers.wiki.gg/wiki/R-2_Amendment',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135836,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139645,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -636,8 +636,8 @@ export const personalProfiles = {
   },
   constitution: {
     source: 'https://helldivers.wiki.gg/wiki/R-2124_Constitution',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135330,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139643,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -660,8 +660,8 @@ export const personalProfiles = {
   },
   eruptor: {
     source: 'https://helldivers.wiki.gg/wiki/R-36_Eruptor',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135041,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139666,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -702,8 +702,8 @@ export const personalProfiles = {
   },
   hyena: {
     source: 'https://helldivers.wiki.gg/wiki/R-4_Hyena',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133040,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139647,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -724,10 +724,34 @@ export const personalProfiles = {
       },
     ],
   },
+  sightliner: {
+    source: 'https://helldivers.wiki.gg/wiki/R-40_Sightliner',
+    checkedAt: '2026-10-22',
+    sourceRevision: 139823,
+    note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
+    modes: [
+      {
+        id: 'standard',
+        name: '기본 사격',
+        standard: 350,
+        durable: 205,
+        ap: 4,
+        explosion: 0,
+        explosionDurable: 0,
+        explosionAp: 0,
+        innerRadius: null,
+        radius: null,
+        delivery: 'projectile',
+        unit: '발',
+        magazine: 10,
+        ammoPerShot: 1,
+      },
+    ],
+  },
   deadeye: {
     source: 'https://helldivers.wiki.gg/wiki/R-6_Deadeye',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133310,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139644,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -750,8 +774,8 @@ export const personalProfiles = {
   },
   diligence: {
     source: 'https://helldivers.wiki.gg/wiki/R-63_Diligence',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133313,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139641,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -774,8 +798,8 @@ export const personalProfiles = {
   },
   'diligence-counter-sniper': {
     source: 'https://helldivers.wiki.gg/wiki/R-63CS_Diligence_Counter_Sniper',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133316,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139642,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -798,8 +822,8 @@ export const personalProfiles = {
   },
   censor: {
     source: 'https://helldivers.wiki.gg/wiki/R-72_Censor',
-    checkedAt: '2026-09-27',
-    sourceRevision: 129336,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139646,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -822,8 +846,8 @@ export const personalProfiles = {
   },
   'hot-shot-marksman-rifle': {
     source: 'https://helldivers.wiki.gg/wiki/R%2F40-K_Hot-Shot_Marksman_Rifle',
-    checkedAt: '2026-09-27',
-    sourceRevision: 134790,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139825,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -846,8 +870,8 @@ export const personalProfiles = {
   },
   halt: {
     source: 'https://helldivers.wiki.gg/wiki/SG-20_Halt',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135273,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139665,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -890,15 +914,15 @@ export const personalProfiles = {
   },
   breaker: {
     source: 'https://helldivers.wiki.gg/wiki/SG-225_Breaker',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133876,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139658,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
         id: 'standard',
         name: '기본 사격',
-        standard: 30,
-        durable: 6,
+        standard: 36,
+        durable: 8,
         ap: 2,
         explosion: 0,
         explosionDurable: 0,
@@ -916,7 +940,7 @@ export const personalProfiles = {
   },
   'breaker-incendiary': {
     source: 'https://helldivers.wiki.gg/wiki/SG-225IE_Breaker_Incendiary',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 133887,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -942,15 +966,15 @@ export const personalProfiles = {
   },
   'breaker-spray-pray': {
     source: 'https://helldivers.wiki.gg/wiki/SG-225SP_Breaker_Spray%26Pray',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133883,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139660,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
         id: 'standard',
         name: '기본 사격',
-        standard: 15,
-        durable: 4,
+        standard: 18,
+        durable: 5,
         ap: 2,
         explosion: 0,
         explosionDurable: 0,
@@ -968,8 +992,8 @@ export const personalProfiles = {
   },
   cookout: {
     source: 'https://helldivers.wiki.gg/wiki/SG-451_Cookout',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133854,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139661,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -994,15 +1018,15 @@ export const personalProfiles = {
   },
   punisher: {
     source: 'https://helldivers.wiki.gg/wiki/SG-8_Punisher',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133709,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139657,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
         id: 'standard',
         name: '기본 사격',
-        standard: 45,
-        durable: 12,
+        standard: 54,
+        durable: 15,
         ap: 2,
         explosion: 0,
         explosionDurable: 0,
@@ -1020,8 +1044,8 @@ export const personalProfiles = {
   },
   'punisher-plasma': {
     source: 'https://helldivers.wiki.gg/wiki/SG-8P_Punisher_Plasma',
-    checkedAt: '2026-09-27',
-    sourceRevision: 134702,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139675,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1044,8 +1068,8 @@ export const personalProfiles = {
   },
   slugger: {
     source: 'https://helldivers.wiki.gg/wiki/SG-8S_Slugger',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133843,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139659,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1068,8 +1092,8 @@ export const personalProfiles = {
   },
   sweeper: {
     source: 'https://helldivers.wiki.gg/wiki/SG-97_Sweeper',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133858,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139662,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1094,8 +1118,8 @@ export const personalProfiles = {
   },
   gallant: {
     source: 'https://helldivers.wiki.gg/wiki/SMG-203_Gallant',
-    checkedAt: '2026-09-27',
-    sourceRevision: 132314,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139656,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1118,8 +1142,8 @@ export const personalProfiles = {
   },
   reprimand: {
     source: 'https://helldivers.wiki.gg/wiki/SMG-32_Reprimand',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135321,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139652,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1142,8 +1166,8 @@ export const personalProfiles = {
   },
   defender: {
     source: 'https://helldivers.wiki.gg/wiki/SMG-37_Defender',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135617,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139650,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1166,8 +1190,8 @@ export const personalProfiles = {
   },
   pummeler: {
     source: 'https://helldivers.wiki.gg/wiki/SMG-72_Pummeler',
-    checkedAt: '2026-09-27',
-    sourceRevision: 129340,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139651,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1190,8 +1214,8 @@ export const personalProfiles = {
   },
   stoker: {
     source: 'https://helldivers.wiki.gg/wiki/SMG%2FFLAM-34_Stoker',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135618,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139655,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1215,15 +1239,15 @@ export const personalProfiles = {
   },
   'smg-sta-11': {
     source: 'https://helldivers.wiki.gg/wiki/StA-11_SMG',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133262,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139653,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
         id: 'standard',
         name: '기본 사격',
-        standard: 90,
-        durable: 18,
+        standard: 100,
+        durable: 20,
         ap: 2,
         explosion: 0,
         explosionDurable: 0,
@@ -1239,8 +1263,8 @@ export const personalProfiles = {
   },
   'assault-rifle-sta-52': {
     source: 'https://helldivers.wiki.gg/wiki/StA-52_Assault_Rifle',
-    checkedAt: '2026-09-27',
-    sourceRevision: 132640,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139634,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1263,8 +1287,8 @@ export const personalProfiles = {
   },
   variable: {
     source: 'https://helldivers.wiki.gg/wiki/VG-70_Variable',
-    checkedAt: '2026-09-27',
-    sourceRevision: 134747,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139669,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1313,7 +1337,7 @@ export const personalProfiles = {
   },
   'stun-lance': {
     source: 'https://helldivers.wiki.gg/wiki/CQC-19_Stun_Lance',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 136717,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1338,8 +1362,8 @@ export const personalProfiles = {
   },
   saber: {
     source: 'https://helldivers.wiki.gg/wiki/CQC-2_Saber',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136722,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139353,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1363,7 +1387,7 @@ export const personalProfiles = {
   },
   'stun-baton': {
     source: 'https://helldivers.wiki.gg/wiki/CQC-30_Stun_Baton',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 136718,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1388,7 +1412,7 @@ export const personalProfiles = {
   },
   machete: {
     source: 'https://helldivers.wiki.gg/wiki/CQC-42_Machete',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 136834,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1413,7 +1437,7 @@ export const personalProfiles = {
   },
   'combat-hatchet': {
     source: 'https://helldivers.wiki.gg/wiki/CQC-5_Combat_Hatchet',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 136719,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1438,7 +1462,7 @@ export const personalProfiles = {
   },
   'entrenchment-tool': {
     source: 'https://helldivers.wiki.gg/wiki/CQC-73_Entrenchment_Tool',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 136720,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1463,8 +1487,8 @@ export const personalProfiles = {
   },
   ultimatum: {
     source: 'https://helldivers.wiki.gg/wiki/GP-20_Ultimatum',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133409,
+    checkedAt: '2026-10-22',
+    sourceRevision: 138946,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1487,8 +1511,8 @@ export const personalProfiles = {
   },
   'grenade-pistol': {
     source: 'https://helldivers.wiki.gg/wiki/GP-31_Grenade_Pistol',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135849,
+    checkedAt: '2026-10-22',
+    sourceRevision: 138942,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1511,8 +1535,8 @@ export const personalProfiles = {
   },
   talon: {
     source: 'https://helldivers.wiki.gg/wiki/LAS-58_Talon',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133312,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139819,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1535,7 +1559,7 @@ export const personalProfiles = {
   },
   pistol: {
     source: 'https://helldivers.wiki.gg/wiki/M6C%2FSOCOM_Pistol',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 133822,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1559,7 +1583,7 @@ export const personalProfiles = {
   },
   verdict: {
     source: 'https://helldivers.wiki.gg/wiki/P-113_Verdict',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 135322,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1583,8 +1607,8 @@ export const personalProfiles = {
   },
   redeemer: {
     source: 'https://helldivers.wiki.gg/wiki/P-19_Redeemer',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135318,
+    checkedAt: '2026-10-22',
+    sourceRevision: 138940,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1607,15 +1631,15 @@ export const personalProfiles = {
   },
   peacemaker: {
     source: 'https://helldivers.wiki.gg/wiki/P-2_Peacemaker',
-    checkedAt: '2026-09-27',
-    sourceRevision: 132079,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139796,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
         id: 'standard',
         name: '기본 사격',
         standard: 100,
-        durable: 32,
+        durable: 20,
         ap: 2,
         explosion: 0,
         explosionDurable: 0,
@@ -1631,8 +1655,8 @@ export const personalProfiles = {
   },
   'missile-pistol': {
     source: 'https://helldivers.wiki.gg/wiki/P-33_Missile_Pistol',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136483,
+    checkedAt: '2026-10-22',
+    sourceRevision: 138278,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1656,8 +1680,8 @@ export const personalProfiles = {
   },
   breacher: {
     source: 'https://helldivers.wiki.gg/wiki/P-34_Breacher',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136738,
+    checkedAt: '2026-10-22',
+    sourceRevision: 138990,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1666,11 +1690,11 @@ export const personalProfiles = {
         standard: 60,
         durable: 0,
         ap: 4,
-        explosion: 1940,
+        explosion: 0,
         explosionDurable: 0,
         explosionAp: 0,
-        innerRadius: 1,
-        radius: 1,
+        innerRadius: null,
+        radius: null,
         delivery: 'projectile',
         unit: '발',
         magazine: 1,
@@ -1692,7 +1716,7 @@ export const personalProfiles = {
   },
   're-educator': {
     source: 'https://helldivers.wiki.gg/wiki/P-35_Re-Educator',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 133801,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1716,8 +1740,8 @@ export const personalProfiles = {
   },
   senator: {
     source: 'https://helldivers.wiki.gg/wiki/P-4_Senator',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135319,
+    checkedAt: '2026-10-22',
+    sourceRevision: 138941,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1738,9 +1762,33 @@ export const personalProfiles = {
       },
     ],
   },
+  mist: {
+    source: 'https://helldivers.wiki.gg/wiki/P-44_Mist',
+    checkedAt: '2026-10-22',
+    sourceRevision: 139371,
+    note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
+    modes: [
+      {
+        id: 'standard',
+        name: '기본 사격',
+        standard: 110,
+        durable: 18,
+        ap: 2,
+        explosion: 0,
+        explosionDurable: 0,
+        explosionAp: 0,
+        innerRadius: null,
+        radius: null,
+        delivery: 'projectile',
+        unit: '발',
+        magazine: 25,
+        ammoPerShot: 1,
+      },
+    ],
+  },
   veto: {
     source: 'https://helldivers.wiki.gg/wiki/P-69_Veto',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 133273,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1764,7 +1812,7 @@ export const personalProfiles = {
   },
   warrant: {
     source: 'https://helldivers.wiki.gg/wiki/P-92_Warrant',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 135323,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1789,8 +1837,8 @@ export const personalProfiles = {
   },
   'bolt-pistol': {
     source: 'https://helldivers.wiki.gg/wiki/P%2F40-K_Bolt_Pistol',
-    checkedAt: '2026-09-27',
-    sourceRevision: 134787,
+    checkedAt: '2026-10-22',
+    sourceRevision: 138238,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -1813,15 +1861,15 @@ export const personalProfiles = {
   },
   bushwhacker: {
     source: 'https://helldivers.wiki.gg/wiki/SG-22_Bushwhacker',
-    checkedAt: '2026-09-27',
-    sourceRevision: 133295,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139396,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
         id: 'standard',
         name: '기본 사격',
-        standard: 45,
-        durable: 12,
+        standard: 54,
+        durable: 15,
         ap: 2,
         explosion: 0,
         explosionDurable: 0,
@@ -1838,8 +1886,8 @@ export const personalProfiles = {
       {
         id: 'all-barrels',
         name: '모든 총열 동시 발사',
-        standard: 45,
-        durable: 12,
+        standard: 54,
+        durable: 15,
         ap: 2,
         explosion: 0,
         explosionDurable: 0,
@@ -1857,7 +1905,7 @@ export const personalProfiles = {
   },
   incendiary: {
     source: 'https://helldivers.wiki.gg/wiki/G-10_Incendiary',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 123870,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1880,9 +1928,34 @@ export const personalProfiles = {
       },
     ],
   },
+  caltrops: {
+    source: 'https://helldivers.wiki.gg/wiki/G-11_Caltrops',
+    checkedAt: '2026-10-22',
+    sourceRevision: 139419,
+    note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
+    modes: [
+      {
+        id: 'standard',
+        name: '폭발 1회',
+        standard: 0,
+        durable: 0,
+        ap: 0,
+        explosion: 50,
+        explosionDurable: 10,
+        explosionAp: 3,
+        innerRadius: 1,
+        radius: 10,
+        delivery: 'explosive',
+        unit: '개',
+        unitLabel: '수류탄',
+        magazine: null,
+        ammoPerShot: 1,
+      },
+    ],
+  },
   'high-explosive': {
     source: 'https://helldivers.wiki.gg/wiki/G-12_High_Explosive',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 126141,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1907,7 +1980,7 @@ export const personalProfiles = {
   },
   thermite: {
     source: 'https://helldivers.wiki.gg/wiki/G-123_Thermite',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 126403,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1932,7 +2005,7 @@ export const personalProfiles = {
   },
   'incendiary-impact': {
     source: 'https://helldivers.wiki.gg/wiki/G-13_Incendiary_Impact',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 128954,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1957,7 +2030,7 @@ export const personalProfiles = {
   },
   pyrotech: {
     source: 'https://helldivers.wiki.gg/wiki/G-142_Pyrotech',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 125762,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -1983,7 +2056,7 @@ export const personalProfiles = {
   },
   impact: {
     source: 'https://helldivers.wiki.gg/wiki/G-16_Impact',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 126328,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -2008,7 +2081,7 @@ export const personalProfiles = {
   },
   gas: {
     source: 'https://helldivers.wiki.gg/wiki/G-4_Gas',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 134066,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -2033,7 +2106,7 @@ export const personalProfiles = {
   },
   'giga-grenade': {
     source: 'https://helldivers.wiki.gg/wiki/G-48_Giga_Grenade',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 129943,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -2058,8 +2131,8 @@ export const personalProfiles = {
   },
   seeker: {
     source: 'https://helldivers.wiki.gg/wiki/G-50_Seeker',
-    checkedAt: '2026-09-27',
-    sourceRevision: 135535,
+    checkedAt: '2026-10-22',
+    sourceRevision: 138263,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -2083,7 +2156,7 @@ export const personalProfiles = {
   },
   frag: {
     source: 'https://helldivers.wiki.gg/wiki/G-6_Frag',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 126327,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -2127,8 +2200,8 @@ export const personalProfiles = {
   },
   'anti-tank-seeker': {
     source: 'https://helldivers.wiki.gg/wiki/G-60_Anti-Tank_Seeker',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136478,
+    checkedAt: '2026-10-22',
+    sourceRevision: 138729,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -2152,7 +2225,7 @@ export const personalProfiles = {
   },
   pineapple: {
     source: 'https://helldivers.wiki.gg/wiki/G-7_Pineapple',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 134063,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -2196,8 +2269,8 @@ export const personalProfiles = {
   },
   immolation: {
     source: 'https://helldivers.wiki.gg/wiki/G-8_Immolation',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136440,
+    checkedAt: '2026-10-22',
+    sourceRevision: 136947,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -2221,8 +2294,8 @@ export const personalProfiles = {
   },
   'melta-mine': {
     source: 'https://helldivers.wiki.gg/wiki/G%2F40-K_Melta_Mine',
-    checkedAt: '2026-09-27',
-    sourceRevision: 136621,
+    checkedAt: '2026-10-22',
+    sourceRevision: 139243,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
       {
@@ -2247,7 +2320,7 @@ export const personalProfiles = {
   },
   dynamite: {
     source: 'https://helldivers.wiki.gg/wiki/TED-63_Dynamite',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 136234,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [
@@ -2272,7 +2345,7 @@ export const personalProfiles = {
   },
   'lure-mine': {
     source: 'https://helldivers.wiki.gg/wiki/TM-1_Lure_Mine',
-    checkedAt: '2026-09-27',
+    checkedAt: '2026-10-22',
     sourceRevision: 136571,
     note: '같은 부위를 최대 피해로 계속 맞혔을 때의 횟수입니다. 거리와 맞는 각도에 따른 피해 변화, 도탄, 화상 같은 지속 피해와 기절 같은 효과는 빼고 계산합니다. 여러 부위에 동시에 들어가는 피해는 합치지 않습니다. 연사와 점사는 한 발씩 계산합니다. 산탄과 전격은 기본적으로 모두 맞는다고 가정하며, 파편은 20%를 반올림한 개수가 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
     modes: [

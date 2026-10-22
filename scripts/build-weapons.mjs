@@ -13,6 +13,26 @@ const categoriesSource = await read('db/source/wiki_categories.json');
 const pagesSource = await read('db/source/wiki_pages.json');
 const koreanSource = await read('db/source/korean_names.json');
 const data = source.data;
+// The datamine sometimes renames a weapon's attack reference without renaming the
+// record it points to (revision 139350: P-34 BREACHER refers to "P-34_BREACHER_E",
+// the record is still "P-34 BREACHER_E"). Link such a reference to the one record whose
+// name differs only by spaces and underscores; the attack list itself is kept as is.
+export function repairReferences(snapshot) {
+  const loose = name => name.replace(/[\s_]+/g, '_').toUpperCase();
+  const repairs = [];
+  for (const [weaponKey, weapon] of Object.entries(snapshot.weapons)) {
+    for (const attack of weapon.attacks ?? []) {
+      const table = snapshot[attack.type];
+      if (!table || attack.type === 'weapons' || table[attack.name]) continue;
+      const matches = Object.keys(table).filter(key => loose(key) === loose(attack.name));
+      if (matches.length !== 1) continue;
+      table[attack.name] = table[matches[0]];
+      repairs.push({ weapon: weaponKey, type: attack.type, reference: attack.name, record: matches[0] });
+    }
+  }
+  return repairs;
+}
+export const referenceRepairs = repairReferences(data);
 const categories = categoriesSource.categories;
 const roster = { 'Primary Weapons': 'primary', 'Secondary Weapons': 'secondary', Throwables: 'throwable' };
 const subtypeNames = ['Assault Rifles', 'Marksman Rifles', 'Shotguns', 'Submachine Guns', 'Energy-Based', 'Pistols', 'Melee', 'Special Secondaries', 'Standard Throwables', 'Special Throwables'];
@@ -22,7 +42,8 @@ const number = value => typeof value === 'number' && Number.isFinite(value) && v
 const keys = new Map(Object.keys(data.weapons).map(key => [normalize(key), key]));
 const aliases = { 'CQC-73 Entrenchment Tool': 'CQC-72 ENTRENCHMENT TOOL' };
 // Korean names for weapons the Namu Wiki snapshot has no heading for, chosen by the site owner.
-export const manualKoreanNames = { 'AR-32': { name: '퍼시파이어', reason: '나무위키 스냅샷에 제목이 없어 사이트 관리자가 지정한 이름' } };
+// Entry shape: { 'CODE': { name: '이름', reason: '...' } }. Empty since Namu Wiki added AR-32 퍼시파이어 (2026-10-22).
+export const manualKoreanNames = {};
 const titles = Object.keys(roster).flatMap(key => categories[key].map(p => p.title));
 export const koreanMatches = matchKoreanNames(koreanSource.pages, titles);
 const dataTitles = titles.map(title => aliases[title] ?? keys.get(normalize(title)) ?? title);
@@ -185,6 +206,7 @@ const weapons = Object.entries(roster).flatMap(([categoryName, category]) =>
     const attacks = weapon.attacks ?? [];
     const primaryAttack = attacks.find(attack => attack.level === 1) ?? attacks[0];
     const notes = [];
+    for (const repair of referenceRepairs.filter(item => item.weapon === dataKey)) notes.push(`원본 참조 보정: 공격 참조 ${repair.reference}에 해당하는 기록이 없어, 띄어쓰기·밑줄만 다른 기록 ${repair.record}에 연결했습니다.`);
     if (korean?.matchedCode) notes.push(`한국어 이름 보정: 위키 제목 ${code}와 데이터 키 ${dataKey}의 제식 번호를 함께 대조하여 나무위키 ${korean.evidence}에 연결했습니다.`);
     if (extras.heatCapacity.raw && extras.heatCapacity.seconds === null) notes.push(`열 용량 단위 미확인: capacity=${extras.heatCapacity.raw}. 초·발수를 추정하지 않고 raw에 보존합니다.`);
     if (code === 'ARC-12' && /five arcs with damage of 50/.test(page.wikitext)) notes.push('인포박스 전격 피해 250은 본문에 명시된 50 피해 전격 5개의 합계입니다. DB는 전격당 피해를 유지합니다.');

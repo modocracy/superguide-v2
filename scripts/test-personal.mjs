@@ -145,11 +145,11 @@ ambiguousSizeSnapshot.categories.large.members.push(ambiguousSizeSnapshot.catego
 assert.throws(() => buildEnemySizes(ambiguousSizeSnapshot, enemies), /Duplicate or ambiguous/);
 
 eq(personalWeapons.map(w => w.id), weapons.map(w => w.id), 'complete source roster and stable order');
-eq(personalWeapons.length, 103);
+eq(personalWeapons.length, 106);
 eq(new Set([...personalWeapons, ...stratagems].map(w => w.id)).size, personalWeapons.length + stratagems.length, 'no personal/stratagem ID collisions');
 eq(personalGroups.map(g => g.id), ['primary', 'secondary', 'throwable']);
 ok(/^\d{4}-\d{2}-\d{2}$/.test(personalWeaponsCheckedAt), 'checkedAt format');
-eq(personalWeaponsSource.attacksRevision, 136739);
+eq(personalWeaponsSource.attacksRevision, 139350);
 const playerCopy = [...Object.values(personalUnsupported)];
 const collectModeCopy = attack => {
   playerCopy.push(...[attack.name, attack.note, attack.unsupported, attack.hitCondition?.projectileName].filter(Boolean));
@@ -476,7 +476,7 @@ eq(compare('harvester', 'recoilless').verified, false, 'shield uncleared by defa
 ok(compare('harvester', 'recoilless', { shieldCleared: true }).shieldAssumed, 'shield prerequisite visible');
 const synthetic = { id: 'test', main: { hp: 99999, armor: 0, exdr: 0 }, parts: [{ id: 'body', name: '몸통', hp: 46 * 90, armor: 0, durability: 0, exdr: 0, toMain: 0, overflowCap: false, effect: 'kill' }] };
 eq(compareAttacks(synthetic, [{ weaponId: 'liberator' }]).entries[0].magazinesNeeded, 2, 'magazine boundary');
-const volley = compareAttacks({ ...synthetic, parts: [{ ...synthetic.parts[0], hp: 100 }] }, [{ weaponId: 'bushwhacker', modeId: 'all-barrels' }], { assume: { hitCount: 1 } }).entries[0];
+const volley = compareAttacks({ ...synthetic, parts: [{ ...synthetic.parts[0], hp: 150 }] }, [{ weaponId: 'bushwhacker', modeId: 'all-barrels' }], { assume: { hitCount: 1 } }).entries[0];
 eq([volley.hits, volley.magazinesNeeded], [3, 3], 'multi-barrel event consumes three shells per trigger');
 const before = compare('hunter-hardened', 'liberator'); before.route.hits = 999;
 eq(compare('hunter-hardened', 'liberator').hits, 1, 'cache protected from result mutation');

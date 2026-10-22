@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { weapons, weaponsSource } from '../db/weapons.js';
-import { parseInfobox, plainWiki, seconds, chargeDamage, reloadTimes, koreanMatches, manualKoreanNames } from './build-weapons.mjs';
+import { parseInfobox, plainWiki, seconds, chargeDamage, reloadTimes, koreanMatches, manualKoreanNames, repairReferences } from './build-weapons.mjs';
 import { extractHeadings, compactKoreanPage, matchKoreanNames, normalizeCode } from './fetch-weapons-source.mjs';
 import { infoboxExtras, infoboxDisagreements } from './weapon-infobox.mjs';
 
@@ -14,6 +14,7 @@ const categorySource = await read('db/source/wiki_categories.json');
 const pageSource = await read('db/source/wiki_pages.json');
 const koreanSource = await read('db/source/korean_names.json');
 const data = source.data;
+repairReferences(data);   // same reference repairs as the generator (see build-weapons.mjs)
 // Report all drift before asserting, so one failure never hides later weapons.
 let disagreementCount = 0, unrecordedCount = 0;
 for (const weapon of weapons) {
@@ -26,7 +27,7 @@ for (const weapon of weapons) {
   }
   for (const recorded of weapon.infoboxConflicts) assert(disagreements.some(c => JSON.stringify(c) === JSON.stringify(recorded)), `${weapon.en}: stale conflict record`);
 }
-console.log(`Infobox cross-check: 103 pages; ${disagreementCount} disagreements; ${unrecordedCount} unrecorded.`);
+console.log(`Infobox cross-check: 106 pages; ${disagreementCount} disagreements; ${unrecordedCount} unrecorded.`);
 assert.equal(unrecordedCount, 0, 'Unrecorded infobox drift; inspect the local sources and review each conflict.');
 const categories = categorySource.categories;
 const roster = { primary: 'Primary Weapons', secondary: 'Secondary Weapons', throwable: 'Throwables' };
@@ -81,7 +82,7 @@ function checkProjection(item, attack, type) {
   }
 }
 
-assert.equal(weapons.length, 103);
+assert.equal(weapons.length, 106);
 // Real-snapshot regression expectations, independent of the parser's own projection.
 const byCode = code => weapons.find(w => w.code === code);
 for (const [code, type] of Object.entries({ 'CB-9': 'explosives', 'GL-15': 'explosives', 'JAR-5': 'special', 'R-36': 'explosives', 'VG-70': 'special', 'FLAM-66': 'special' })) assert.equal(byCode(code).type, type);
@@ -107,7 +108,8 @@ assert.equal(byCode('SMG/FLAM-34').reloadDetails.find(d => d.field === 'reload_t
 assert.equal(byCode('AR/GL-21').name, '원-투');
 assert.equal(byCode('MA5C').name, '어썰트 라이플');
 assert.equal(byCode('SMG/FLAM-34').name, '스토커');
-assert.deepEqual(koreanMatches.unmatchedRoster.map(w => w.code).sort(), ['AR-32']);
+assert.deepEqual(koreanMatches.unmatchedRoster.map(w => w.code).sort(), []);
+assert.equal(byCode('AR-32').name, '퍼시파이어');
 assert.equal(byCode('CQC-73').name, '참호 도구');
 assert.equal(byCode('CQC-73').nameSource.matchedCode, 'CQC-72');
 assert.equal(byCode('ARC-12').rpm, 45);
@@ -120,7 +122,7 @@ assert.equal(byCode('P-34').spareRounds, 2);
 for (const [code, rate] of [['CQC-2', 150], ['CQC-42', 72], ['CQC-5', 100], ['CQC-73', 150]]) assert.equal(byCode(code).swingsPerMinute, rate);
 for (const [code, rate] of [['G-10', 100], ['G-123', 150], ['FLAM-66', 150], ['P-72', 150], ['SMG/FLAM-34', 150], ['R-4', 100], ['SG-225IE', 100], ['G-142', 20], ['G-13', 100], ['G-4', 25], ['LAS-5', 100], ['LAS-7', 100]]) assert.equal(byCode(code).dot.perSecond, rate);
 assert.equal(byCode('G-123').dot.duration, 6.5);
-for (const [code, seconds, shots] of [['LAS-12', 4, 53], ['LAS-16', 7, 87], ['LAS-17', 15, 175], ['LAS-5', 8, null], ['LAS-7', 6.67, null], ['LAS-13', 2, 10], ['LAS-58', null, null]]) {
+for (const [code, seconds, shots] of [['LAS-12', 4, 53], ['LAS-16', 8, 105], ['LAS-17', 15, 175], ['LAS-5', 8, null], ['LAS-7', 6.67, null], ['LAS-13', 2, 10], ['LAS-58', null, null]]) {
   assert.equal(byCode(code).heatCapacity.seconds, seconds);
   assert.equal(byCode(code).heatCapacity.shots, shots);
 }
@@ -161,8 +163,8 @@ assert.deepEqual(chargeDamage('Uncharged: 100 bolt + 75 explosion; Charged: 200 
 assert.deepEqual(chargeDamage('Charged: 100–200 bolt'), []);
 assert.throws(() => chargeDamage('Charged: 100 bolt<br>200 bolt'), /Conflicting/);
 assert.deepEqual(Object.keys(pageSource.pages).sort(), weapons.map(w => w.en).sort());
-assert.equal(new Set(weapons.map(w => w.id)).size, 103);
-assert.deepEqual(count(weapons, 'category'), { primary: 55, secondary: 25, throwable: 23 });
+assert.equal(new Set(weapons.map(w => w.id)).size, 106);
+assert.deepEqual(count(weapons, 'category'), { primary: 56, secondary: 26, throwable: 24 });
 assert.match(weaponsSource.retrievedAt, /^\d{4}-\d{2}-\d{2}$/);
 assert.equal(weaponsSource.retrievedAt, source.retrievedAt.slice(0, 10));
 assert.equal(weaponsSource.attacks, source.source);
@@ -279,7 +281,7 @@ for (let run = 1; run <= 2; run++) {
   const rebuilt = execFileSync(process.execPath, [fileURLToPath(new URL('scripts/build-weapons.mjs', root)), '--stdout'], { cwd: fileURLToPath(root), encoding: 'utf8' });
   assert.equal(rebuilt, committed, `Build ${run}: db/weapons.js is stale; run node scripts/build-weapons.mjs`);
 }
-console.log('Validated 103 weapons; source projections and two byte-identical rebuilds passed.');
+console.log('Validated 106 weapons; source projections and two byte-identical rebuilds passed.');
 console.log(`Category counts: ${JSON.stringify(count(weapons, 'category'))}`);
 console.log(`Type counts: ${JSON.stringify(count(weapons, 'type'))}`);
 const nullCounts = (items, fields) => Object.fromEntries(fields.map(field => [field, items.filter(item => item[field] === null).length]));
@@ -299,10 +301,10 @@ console.log(`Underbarrels: ${list(w => w.linkedAttacks.length > 0)}`);
 console.log(`Multiple attack components/modes: ${list(w => w.variants.length > 0)}`);
 console.log(`Beam/spray/arc units: ${list(w => [w, ...w.variants].some(v => ['beam', 'spray', 'arc'].includes(v.delivery)))}`);
 console.log(`Uncertain damage-only units: ${list(w => [w, ...w.variants].some(v => v.delivery === 'damage'))}`);
-console.log(`Gap fills: fuse ${weapons.filter(w => w.fuse !== null).length}/23; infobox type ${weapons.filter(w => w.fieldSources.type?.field === 'infobox.weapon_type').length}/103; names ${weapons.filter(w => w.name !== null).length}/103; reload ${weapons.filter(w => w.reload !== null).length}/103; tactical reload ${weapons.filter(w => w.reloadTactical !== null).length}/103`);
+console.log(`Gap fills: fuse ${weapons.filter(w => w.fuse !== null).length}/23; infobox type ${weapons.filter(w => w.fieldSources.type?.field === 'infobox.weapon_type').length}/103; names ${weapons.filter(w => w.name !== null).length}/103; reload ${weapons.filter(w => w.reload !== null).length}/103; tactical reload ${weapons.filter(w => w.reloadTactical !== null).length}/106`);
 console.log(`Unmatched Korean roster: ${koreanMatches.unmatchedRoster.map(w => `${w.title} (${w.reason})`).join('; ') || '(none)'}`);
 for (const page of koreanSource.pages) console.log(`Unmapped Namu headings [${decodeURIComponent(page.source).split('/w/')[1]}]: ${koreanMatches.unmappedHeadings.filter(h => h.source === page.source).map(h => h.heading).join('; ') || '(none)'}`);
 console.log(`Infobox charged variants: ${list(w => w.variants.some(v => v.id.startsWith('wiki-')))}`);
-console.log(`Unavailable page sources: ${Object.values(pageSource.pages).filter(p => p.wikitext === null).length}/103`);
+console.log(`Unavailable page sources: ${Object.values(pageSource.pages).filter(p => p.wikitext === null).length}/106`);
 console.log(`Infobox additions: ${JSON.stringify(Object.fromEntries(Object.entries({ infoboxConflicts: w => w.infoboxConflicts.length, dot: w => w.dot.raw !== null, heatCapacity: w => w.heatCapacity.raw !== null, swingsPerMinute: w => w.swingsPerMinute !== null, rpmModes: w => w.rpmModes.length, filledRpm: w => w.fieldSources.rpm !== null, filledSpareRounds: w => w.fieldSources.spareRounds !== null }).map(([field, predicate]) => [field, weapons.filter(predicate).length])))}`);
 console.log(`Type disagreements: ${list(w => w.notes.some(n => n.startsWith('유형 불일치:')))}`);

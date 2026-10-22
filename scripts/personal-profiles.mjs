@@ -80,9 +80,13 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     // firing mode: the round sticks where it hits and then detonates there.
     // Its impact explosion has 0 durable damage and AP 0, so it never adds
     // damage under the engine's explosion rule and is left out of the list.
+    // Datamine revision 139350 dropped that impact explosion record entirely
+    // (P-34_P still names P-34_P_IE); a missing record adds no damage either.
     if (weapon.id === 'breacher') {
       const delayed = weapon.variants.filter(v => v.delivery === 'explosion');
-      if (delayed.length !== 1 || modes[0].explosionDurable !== 0) throw new Error('Breacher explosion evidence changed');
+      if (delayed.length !== 1 || ![0, null, undefined].includes(modes[0].explosionDurable)) throw new Error('Breacher explosion evidence changed');
+      // No impact explosion record: count it as none rather than unknown.
+      if (modes[0].explosionDurable == null) Object.assign(modes[0], { explosion: 0, explosionDurable: 0, explosionAp: 0 });
       const [blast] = delayed;
       modes[0].explosions = [{ id: 'delayed', name: '지연 폭발', standard: blast.splash, durable: blast.splashDurable, ap: blast.splashAp, innerRadius: blast.innerRadius, radius: blast.radius }];
       modes[0].note = '맞은 부위에 붙은 탄이 잠시 뒤 그 자리에서 터지는 지연 폭발까지 계산합니다. 붙은 뒤 적이 움직여도 같은 부위에서 터진다고 가정하며, 계속 타는 피해는 뺍니다.';

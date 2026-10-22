@@ -41,6 +41,8 @@ export const reviewedConflicts = {
   'PLAS-39 Accelerator Rifle': [{ field: 'spareMags', db: 12, infobox: 8, raw: '8' }],
   'P-92 Warrant': [{ field: 'spareMags', db: 7, infobox: 8, raw: '8' }],
   'G-123 Thermite': [{ field: 'radius', db: [1.5, 2.5], infobox: 2, raw: '2 m' }],
+  // Patch 1.007.200 raised spare magazines from 6 to 7; the datamine has it, the infobox not yet.
+  'StA-52 Assault Rifle': [{ field: 'spareMags', db: 7, infobox: 6, raw: '6' }],
 };
 
 export function infoboxDisagreements(w, box, data) {

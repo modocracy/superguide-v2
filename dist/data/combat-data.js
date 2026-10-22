@@ -585,7 +585,7 @@ export const weaponProfiles = {
   'autocannon': profile('AC-8_Autocannon', [
     shot('aphet', '철갑고폭예광탄(APHET)', 325, 260, 4, 150, 3, { falloff: true }),
     shot('flak', '대공포탄 모드', 150, 150, 2, 190, 3, {
-      source: wiki('Module:Decodedata-Attacks/weapons_data.json'), sourceRevision: 136739, checkedAt: '2026-09-27',
+      source: wiki('Module:Decodedata-Attacks/weapons_data.json'), sourceRevision: 139350, checkedAt: '2026-10-22',
       sourceRecords: { projectile: 'AC-8_P1', explosion: 'AC-8_P1_IE', fragment: 'AC-8_P2' },
       delivery: 'explosive', directKind: 'none', explosionDurable: 190, innerRadius: 2, radius: 7,
       hitCondition: { kind: 'shrapnel', min: 0, max: 30, default: 6, defaultPct: 20 },
@@ -594,7 +594,7 @@ export const weaponProfiles = {
     }),
   ]),
   'wasp': {
-    source: wiki('Module:Decodedata-Attacks/weapons_data.json'), sourceRevision: 136739, checkedAt: '2026-09-27',
+    source: wiki('Module:Decodedata-Attacks/weapons_data.json'), sourceRevision: 139350, checkedAt: '2026-10-22',
     sourceRecords: { weapon: 'STA-X3 W.A.S.P. LAUNCHER', projectile: 'StA-X3_P1', explosion: 'StA-X3_P1_IE', bomblet: 'StA-X3_P', bombletExplosion: 'StA-X3_P_IE' },
     note: '분산탄 한 발에서 나온 작은 미사일이 같은 부위에 맞는다고 가정한 피해 계산입니다. 실제 유도 가능 대상이나 명중 부위를 보장하지 않습니다. 탄창 소모량과 여러 부위 동시 피해는 계산하지 않습니다.',
     modes: [

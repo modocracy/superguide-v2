@@ -1,12 +1,12 @@
 {
  "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0",
- "retrievedAt": "2026-09-27",
+ "retrievedAt": "2026-10-22",
  "pages": [
   {
    "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0",
    "status": 200,
    "modifiedAt": null,
-   "retrievedAt": "2026-09-27",
+   "retrievedAt": "2026-10-22",
    "headings": [
     "개요",
     "무기 커스터마이즈",
@@ -20,7 +20,7 @@
    "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0/%EC%A3%BC%20%EB%AC%B4%EA%B8%B0",
    "status": 200,
    "modifiedAt": null,
-   "retrievedAt": "2026-09-27",
+   "retrievedAt": "2026-10-22",
    "headings": [
     "태그",
     "돌격소총",
@@ -30,6 +30,7 @@
     "BR-14 어드주디케이터",
     "AR-61 텐더라이저",
     "AR-23A 리버레이터 카빈",
+    "AR-32 퍼시파이어",
     "MA5C 어썰트 라이플",
     "AR-2 코요테",
     "AR/GL-21원-투",
@@ -44,6 +45,8 @@
     "R-2 어멘드멘트",
     "R-72 센서",
     "R-4 하이에나",
+    "저격소총",
+    "R-40 사이트라이너",
     "기관단총",
     "MP-98 나이트",
     "SMG-37 디펜더",
@@ -51,7 +54,7 @@
     "SMG-32 레프리맨드",
     "M7S 기관단총",
     "StA-11 기관단총",
-    "SMG/FLAM-34 스토커[375]",
+    "SMG/FLAM-34 스토커[399]",
     "SMG-203 갤런트",
     "산탄총",
     "SG-8 퍼니셔",
@@ -90,7 +93,7 @@
    "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0/%EB%B3%B4%EC%A1%B0",
    "status": 200,
    "modifiedAt": null,
-   "retrievedAt": "2026-09-27",
+   "retrievedAt": "2026-10-22",
    "headings": [
     "개요",
     "권총",
@@ -101,6 +104,7 @@
     "P-92 워런트",
     "M6C/SOCOM 권총",
     "P-69 비토",
+    "P-44 미스트",
     "특수",
     "LAS-7 대거",
     "GP-31 유탄 권총",
@@ -127,7 +131,7 @@
    "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0/%ED%88%AC%EC%B2%99%20%EB%AC%B4%EA%B8%B0",
    "status": 200,
    "modifiedAt": null,
-   "retrievedAt": "2026-09-27",
+   "retrievedAt": "2026-10-22",
    "headings": [
     "개요",
     "표준 투척 무기",
@@ -154,7 +158,8 @@
     "G-48 기가 수류탄",
     "G/40-K 멜타마인",
     "G-8 번제",
-    "G-60 대전차 드론"
+    "G-60 대전차 드론",
+    "G-11 마름쇠"
    ]
   }
  ]

@@ -1,8 +1,8 @@
 {
  "source": "https://helldivers.wiki.gg/wiki/Module:Decodedata-Attacks/weapons_data.json",
- "revision": 136739,
- "revisionTimestamp": "2026-09-25T22:34:05Z",
- "retrievedAt": "2026-09-27",
+ "revision": 139350,
+ "revisionTimestamp": "2026-10-20T18:56:59Z",
+ "retrievedAt": "2026-10-22",
  "data": {
   "damage": {
    "40-K MELTAGUN_B_dm": {
@@ -100,6 +100,21 @@
     "demo": 10,
     "stun": 10,
     "push": 20,
+    "element_name": "none",
+    "statuses": [],
+    "element_name_sub": "ballistic"
+   },
+   "AMW-20_P_dm": {
+    "dmg": 1550,
+    "dmg2": 930,
+    "hits_per_second": 0,
+    "ap1": 5,
+    "ap2": 5,
+    "ap3": 5,
+    "ap4": 0,
+    "demo": 15,
+    "stun": 40,
+    "push": 25,
     "element_name": "none",
     "statuses": [],
     "element_name_sub": "ballistic"
@@ -956,6 +971,26 @@
     "element_name": "none",
     "name": "K-2 THROWING KNIFE_dm"
    },
+   "G-11 CALTROPS_E_dm": {
+    "dmg": 50,
+    "dmg2": 10,
+    "hits_per_second": 0,
+    "ap1": 3,
+    "ap2": 0,
+    "ap3": 0,
+    "ap4": 0,
+    "demo": 10,
+    "stun": 30,
+    "push": 0,
+    "element_name": "none",
+    "Status_Name_1": "Stun Small",
+    "Status_Value_1": 5,
+    "statuses": [
+     "Stun Small"
+    ],
+    "name": "G-11 CALTROPS_E_dm",
+    "element_name_sub": "explosion"
+   },
    "G-12 HIGH EXPLOSIVE_E_dm": {
     "dmg": 800,
     "dmg2": 800,
@@ -1687,6 +1722,21 @@
     "statuses": [],
     "element_name_sub": "ballistic"
    },
+   "LAS-44_P_dm": {
+    "dmg": 880,
+    "dmg2": 880,
+    "hits_per_second": 0,
+    "ap1": 5,
+    "ap2": 5,
+    "ap3": 5,
+    "ap4": 0,
+    "demo": 17,
+    "stun": 20,
+    "push": 20,
+    "element_name": "none",
+    "statuses": [],
+    "element_name_sub": "ballistic"
+   },
    "LAS-5 SCYTHE_B_dm": {
     "dmg": 350,
     "dmg2": 70,
@@ -1815,8 +1865,8 @@
     "ap3": 3,
     "ap4": 0,
     "demo": 10,
-    "stun": 15,
-    "push": 12,
+    "stun": 20,
+    "push": 24,
     "element_name": "none",
     "statuses": [],
     "element_name_sub": "ballistic"
@@ -1852,8 +1902,8 @@
     "element_name_sub": "ballistic"
    },
    "M90A_P_dm": {
-    "dmg": 55,
-    "dmg2": 20,
+    "dmg": 66,
+    "dmg2": 24,
     "hits_per_second": 0,
     "ap1": 2,
     "ap2": 2,
@@ -1868,7 +1918,7 @@
    },
    "MA5C_P_dm": {
     "dmg": 90,
-    "dmg2": 16,
+    "dmg2": 20,
     "hits_per_second": 0,
     "ap1": 3,
     "ap2": 3,
@@ -2020,7 +2070,7 @@
    },
    "P-2_P_dm": {
     "dmg": 100,
-    "dmg2": 32,
+    "dmg2": 20,
     "hits_per_second": 0,
     "ap1": 2,
     "ap2": 2,
@@ -2110,22 +2160,6 @@
     "statuses": [],
     "element_name_sub": "ballistic"
    },
-   "P-34_P_IE_dm": {
-    "dmg": 1940,
-    "dmg2": 0,
-    "hits_per_second": 0,
-    "ap1": 0,
-    "ap2": 0,
-    "ap3": 0,
-    "ap4": 0,
-    "demo": 0,
-    "stun": 0,
-    "push": 0,
-    "element_name": "none",
-    "statuses": [],
-    "name": "P-34_P_IE_dm",
-    "element_name_sub": "explosion"
-   },
    "P-35_P_dm": {
     "dmg": 60,
     "dmg2": 10,
@@ -2158,6 +2192,21 @@
     "demo": 10,
     "stun": 20,
     "push": 10,
+    "element_name": "none",
+    "statuses": [],
+    "element_name_sub": "ballistic"
+   },
+   "P-44_P_dm": {
+    "dmg": 110,
+    "dmg2": 18,
+    "hits_per_second": 0,
+    "ap1": 2,
+    "ap2": 2,
+    "ap3": 2,
+    "ap4": 0,
+    "demo": 10,
+    "stun": 10,
+    "push": 4,
     "element_name": "none",
     "statuses": [],
     "element_name_sub": "ballistic"
@@ -2295,8 +2344,8 @@
     "element_name_sub": "explosion"
    },
    "PLAS-101_P_dm": {
-    "dmg": 100,
-    "dmg2": 50,
+    "dmg": 200,
+    "dmg2": 100,
     "hits_per_second": 0,
     "ap1": 3,
     "ap2": 3,
@@ -2458,7 +2507,7 @@
     "ap3": 3,
     "ap4": 0,
     "demo": 10,
-    "stun": 20,
+    "stun": 15,
     "push": 10,
     "element_name": "none",
     "statuses": [],
@@ -2636,6 +2685,21 @@
     "statuses": [
      "Fire"
     ],
+    "element_name_sub": "ballistic"
+   },
+   "R-40_P_dm": {
+    "dmg": 350,
+    "dmg2": 205,
+    "hits_per_second": 0,
+    "ap1": 4,
+    "ap2": 4,
+    "ap3": 4,
+    "ap4": 0,
+    "demo": 10,
+    "stun": 20,
+    "push": 25,
+    "element_name": "none",
+    "statuses": [],
     "element_name_sub": "ballistic"
    },
    "R-6_P_dm": {
@@ -2931,8 +2995,8 @@
     "element_name_sub": "ballistic"
    },
    "SG-22_P_dm": {
-    "dmg": 45,
-    "dmg2": 12,
+    "dmg": 54,
+    "dmg2": 15,
     "hits_per_second": 0,
     "ap1": 2,
     "ap2": 2,
@@ -2946,8 +3010,8 @@
     "element_name_sub": "ballistic"
    },
    "SG-225_P_dm": {
-    "dmg": 30,
-    "dmg2": 6,
+    "dmg": 36,
+    "dmg2": 8,
     "hits_per_second": 0,
     "ap1": 2,
     "ap2": 2,
@@ -2980,8 +3044,8 @@
     "element_name_sub": "ballistic"
    },
    "SG-225SP_P_dm": {
-    "dmg": 15,
-    "dmg2": 4,
+    "dmg": 18,
+    "dmg2": 5,
     "hits_per_second": 0,
     "ap1": 2,
     "ap2": 2,
@@ -3476,6 +3540,16 @@
     "noise": "small_explosion_frag",
     "name": "G-109 URCHIN E"
    },
+   "G-11 CALTROPS_E": {
+    "damage_id": "G-11 CALTROPS_E_dm",
+    "r1": 1,
+    "r2": 10,
+    "r3": 15,
+    "aoe_duration": 0,
+    "is_huge": 1,
+    "noise": "small_explosion_frag",
+    "name": "G-11 CALTROPS E"
+   },
    "G-12 HIGH EXPLOSIVE_E": {
     "damage_id": "G-12 HIGH EXPLOSIVE_E_dm",
     "r1": 2.5,
@@ -3814,16 +3888,6 @@
     "noise": "small_explosion_frag",
     "name": "P-34 BREACHER E"
    },
-   "P-34_P_IE": {
-    "damage_id": "P-34_P_IE_dm",
-    "r1": 1,
-    "r2": 1,
-    "r3": 0,
-    "aoe_duration": 0,
-    "is_huge": 1,
-    "noise": "medium_explosion_vehicle",
-    "name": "P-34 P IE"
-   },
    "P/40-K_P_IE": {
     "damage_id": "P/40-K_P_IE_dm",
     "r1": 1,
@@ -4066,10 +4130,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.550000012,
     "drag": 0.300000012,
-    "explode_on_impact_id": "AC-8_P_IE",
     "explode_angle": 60,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "AC-8_P_IE",
     "name": "AC-8 P"
    },
    "AC-8_P2": {
@@ -4096,11 +4161,25 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0.300000012,
-    "explode_on_impact_id": "AC-8_P1_IE",
     "explode_angle": 90,
     "explode_proximity": 3,
     "explosion_delay": 0,
+    "arming_distance": 8,
+    "explode_on_impact_id": "AC-8_P1_IE",
     "name": "AC-8 P1"
+   },
+   "AMW-20_P": {
+    "damage_id": "AMW-20_P_dm",
+    "caliber": 60,
+    "pellets": 1,
+    "velocity": 1500,
+    "mass": 70,
+    "gravity": 0.349999994,
+    "lifetime": 0,
+    "life_time_randomness": 0,
+    "pen_slow": 0.100000001,
+    "drag": 0.100000001,
+    "name": "AMW-20 P"
    },
    "APW-1_P": {
     "damage_id": "APW-1_P_dm",
@@ -4256,10 +4335,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 1,
-    "explode_on_impact_id": "CB-9_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0.100000001,
+    "explode_on_impact_id": "CB-9_P_IE",
     "name": "CB-9 P"
    },
    "DBS-2_P": {
@@ -4286,10 +4366,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.850000024,
     "drag": 0,
-    "explode_on_impact_id": "EAT-17_P_IE",
     "explode_angle": 60,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "EAT-17_P_IE",
     "name": "EAT-17 P"
    },
    "EAT-411_P": {
@@ -4303,10 +4384,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0.5,
-    "explode_on_impact_id": "EAT-411_P_IE",
     "explode_angle": 90,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "EAT-411_P_IE",
     "name": "EAT-411 P"
    },
    "EAT-700_P1": {
@@ -4320,10 +4402,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 15,
-    "explode_on_impact_id": "EAT-700_P1_IE",
     "explode_angle": 360,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 3,
+    "explode_on_impact_id": "EAT-700_P1_IE",
     "name": "EAT-700 P1"
    },
    "EAT-700_P": {
@@ -4337,10 +4420,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.850000024,
     "drag": 0,
-    "explode_on_impact_id": "EAT-700_P_IE",
     "explode_angle": 60,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "EAT-700_P_IE",
     "name": "EAT-700 P"
    },
    "FAF-14_P": {
@@ -4354,10 +4438,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0,
-    "explode_on_impact_id": "FAF-14_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "FAF-14_P_IE",
     "name": "FAF-14 P"
    },
    "G-7_P": {
@@ -4371,10 +4456,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0.5,
-    "explode_on_impact_id": "G-7_P_IE",
     "explode_angle": 0,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 15,
+    "explode_on_impact_id": "G-7_P_IE",
     "explode_id": "G-7_P_IE",
     "name": "G-7 P"
    },
@@ -4389,10 +4475,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 1.20000005,
-    "explode_on_impact_id": "GL-15_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 7,
+    "explode_on_impact_id": "GL-15_P_IE",
     "explode_id": "GL-15_P_IE",
     "name": "GL-15 P"
    },
@@ -4407,10 +4494,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 1.20000005,
-    "explode_on_impact_id": "GL-21_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 7,
+    "explode_on_impact_id": "GL-21_P_IE",
     "explode_id": "GL-21_P_IE",
     "name": "GL-21 P"
    },
@@ -4425,10 +4513,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 1.20000005,
-    "explode_on_impact_id": "GL-28_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 5,
+    "explode_on_impact_id": "GL-28_P_IE",
     "name": "GL-28 P"
    },
    "GL-52_P": {
@@ -4442,10 +4531,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 1.20000005,
-    "explode_on_impact_id": "GL-52_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 4,
+    "explode_on_impact_id": "GL-52_P_IE",
     "name": "GL-52 P"
    },
    "GP-20_P": {
@@ -4459,10 +4549,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0.5,
-    "explode_on_impact_id": "GP-20_P_IE",
     "explode_angle": 90,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "GP-20_P_IE",
     "name": "GP-20 P"
    },
    "GP-31_P": {
@@ -4476,10 +4567,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 1.20000005,
-    "explode_on_impact_id": "GP-31_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 4,
+    "explode_on_impact_id": "GP-31_P_IE",
     "explode_id": "GP-31_P_IE",
     "name": "GP-31 P"
    },
@@ -4494,10 +4586,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0.300000012,
-    "explode_on_impact_id": "GR-8_P_IE",
     "explode_angle": 20,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "GR-8_P_IE",
     "name": "GR-8 P"
    },
    "GR-8_P1": {
@@ -4511,10 +4604,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.850000024,
     "drag": 0,
-    "explode_on_impact_id": "GR-8_P1_IE",
     "explode_angle": 89,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "GR-8_P1_IE",
     "name": "GR-8 P1"
    },
    "JAR-5_P": {
@@ -4595,6 +4689,19 @@
     "drag": 0,
     "name": "LAS-17 P2"
    },
+   "LAS-44_P": {
+    "damage_id": "LAS-44_P_dm",
+    "caliber": 10,
+    "pellets": 1,
+    "velocity": 1500,
+    "mass": 8,
+    "gravity": 0,
+    "lifetime": 6,
+    "life_time_randomness": 0,
+    "pen_slow": 0.25,
+    "drag": 0,
+    "name": "LAS-44 P"
+   },
    "LAS-58_P": {
     "damage_id": "LAS-58_P_dm",
     "caliber": 10,
@@ -4619,10 +4726,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0,
-    "explode_on_impact_id": "LAS-99_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "LAS-99_P_IE",
     "name": "LAS-99 P"
    },
    "M-1000_P": {
@@ -4740,10 +4848,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0,
-    "explode_on_impact_id": "MLS-4X_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "MLS-4X_P_IE",
     "name": "MLS-4X P"
    },
    "MP-98_P": {
@@ -4822,10 +4931,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0,
-    "explode_on_impact_id": "P-33_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "P-33_P_IE",
     "explode_id": "P-33_P_IE",
     "name": "P-33 P"
    },
@@ -4840,10 +4950,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0,
-    "explode_on_impact_id": "P-33_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "P-33_P_IE",
     "explode_id": "P-33_P_IE",
     "name": "P-33 P1"
    },
@@ -4858,10 +4969,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0,
     "drag": 2,
-    "explode_on_impact_id": "P-34_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 1,
+    "arming_distance": 5000,
+    "explode_on_impact_id": "P-34_P_IE",
     "explode_id": "P-34_P_IE",
     "name": "P-34 P"
    },
@@ -4890,6 +5002,19 @@
     "pen_slow": 0.25,
     "drag": 1.20000005,
     "name": "P-4 P"
+   },
+   "P-44_P": {
+    "damage_id": "P-44_P_dm",
+    "caliber": 9,
+    "pellets": 1,
+    "velocity": 375,
+    "mass": 7,
+    "gravity": 1,
+    "lifetime": 0,
+    "life_time_randomness": 0,
+    "pen_slow": 0.25,
+    "drag": 1.20000005,
+    "name": "P-44 P"
    },
    "P-69_P": {
     "damage_id": "P-69_P_dm",
@@ -4941,10 +5066,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0,
-    "explode_on_impact_id": "P/40-K_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "P/40-K_P_IE",
     "name": "P/40-K P"
    },
    "PLAS-1_P": {
@@ -4958,10 +5084,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.349999994,
     "drag": 1.5,
-    "explode_on_impact_id": "PLAS-1_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "PLAS-1_P_IE",
     "name": "PLAS-1 P"
    },
    "PLAS-101_P": {
@@ -4975,10 +5102,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.349999994,
     "drag": 1.5,
-    "explode_on_impact_id": "PLAS-101_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "PLAS-101_P_IE",
     "name": "PLAS-101 P"
    },
    "P": {
@@ -4992,10 +5120,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.349999994,
     "drag": 1.5,
-    "explode_on_impact_id": "P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "P_IE",
     "name": "P"
    },
    "PLAS-15_P": {
@@ -5009,10 +5138,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.349999994,
     "drag": 1,
-    "explode_on_impact_id": "PLAS-15_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "PLAS-15_P_IE",
     "name": "PLAS-15 P"
    },
    "P1": {
@@ -5026,10 +5156,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.349999994,
     "drag": 1.5,
-    "explode_on_impact_id": "P1_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "P1_IE",
     "name": "P1"
    },
    "P2": {
@@ -5043,10 +5174,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.349999994,
     "drag": 1.5,
-    "explode_on_impact_id": "P2_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "P2_IE",
     "name": "P2"
    },
    "PLAS-39_P": {
@@ -5060,10 +5192,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.349999994,
     "drag": 0.100000001,
-    "explode_on_impact_id": "PLAS-39_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "PLAS-39_P_IE",
     "name": "PLAS-39 P"
    },
    "PLAS-45_P": {
@@ -5077,10 +5210,11 @@
     "life_time_randomness": 0.300000012,
     "pen_slow": 0.349999994,
     "drag": 0.100000001,
-    "explode_on_impact_id": "PLAS-45_P_IE",
     "explode_angle": 360,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 1,
+    "explode_on_impact_id": "PLAS-45_P_IE",
     "explode_id": "PLAS-45_P_IE",
     "name": "PLAS-45 P"
    },
@@ -5095,10 +5229,11 @@
     "life_time_randomness": 0.300000012,
     "pen_slow": 0.349999994,
     "drag": 0.100000001,
-    "explode_on_impact_id": "P3_IE",
     "explode_angle": 360,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 1,
+    "explode_on_impact_id": "P3_IE",
     "explode_id": "P3_IE",
     "name": "P3"
    },
@@ -5139,10 +5274,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0,
-    "explode_on_impact_id": "R-36_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0.100000001,
+    "explode_on_impact_id": "R-36_P_IE",
     "explode_id": "R-36_P_IE",
     "name": "R-36 P"
    },
@@ -5158,6 +5294,19 @@
     "pen_slow": 0.25,
     "drag": 0.300000012,
     "name": "R-4 P"
+   },
+   "R-40_P": {
+    "damage_id": "R-40_P_dm",
+    "caliber": 8,
+    "pellets": 1,
+    "velocity": 950,
+    "mass": 11,
+    "gravity": 1,
+    "lifetime": 0,
+    "life_time_randomness": 0,
+    "pen_slow": 0.25,
+    "drag": 0.200000003,
+    "name": "R-40 P"
    },
    "R-6_P": {
     "damage_id": "R-6_P_dm",
@@ -5235,10 +5384,11 @@
     "life_time_randomness": 0.699999988,
     "pen_slow": 0.25,
     "drag": 0.5,
-    "explode_on_impact_id": "RL-77_P1_IE",
     "explode_angle": 0,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 15,
+    "explode_on_impact_id": "RL-77_P1_IE",
     "explode_id": "RL-77_P1_IE",
     "name": "RL-77 P1"
    },
@@ -5253,10 +5403,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0.300000012,
-    "explode_on_impact_id": "RL-77_P_IE",
     "explode_angle": 360,
     "explode_proximity": 2,
     "explosion_delay": 0.200000003,
+    "arming_distance": 1,
+    "explode_on_impact_id": "RL-77_P_IE",
     "explode_id": "RL-77_P_IE",
     "name": "RL-77 P"
    },
@@ -5271,10 +5422,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0.5,
-    "explode_on_impact_id": "RL-77_P1_IE",
     "explode_angle": 0,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 1,
+    "explode_on_impact_id": "RL-77_P1_IE",
     "explode_id": "RL-77_P1_IE",
     "name": "RL-77 P3"
    },
@@ -5289,10 +5441,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0.300000012,
-    "explode_on_impact_id": "RL-77_P2_IE",
     "explode_angle": 360,
     "explode_proximity": 0,
     "explosion_delay": 0.200000003,
+    "arming_distance": 1,
+    "explode_on_impact_id": "RL-77_P2_IE",
     "explode_id": "RL-77_P2_IE",
     "name": "RL-77 P2"
    },
@@ -5320,6 +5473,10 @@
     "life_time_randomness": 0,
     "pen_slow": 0,
     "drag": 4,
+    "explode_angle": 80,
+    "explode_proximity": 0,
+    "explosion_delay": 0.5,
+    "arming_distance": 1,
     "explode_id": "S-11_P_E",
     "name": "S-11 P"
    },
@@ -5438,10 +5595,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.349999994,
     "drag": 4,
-    "explode_on_impact_id": "SG-8P_P_IE",
     "explode_angle": 360,
     "explode_proximity": 0.5,
     "explosion_delay": 0,
+    "arming_distance": 1,
+    "explode_on_impact_id": "SG-8P_P_IE",
     "name": "SG-8P P"
    },
    "SG-8S_P": {
@@ -5546,10 +5704,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0,
-    "explode_on_impact_id": "StA-X3_P_IE",
     "explode_angle": 80,
     "explode_proximity": 0,
     "explosion_delay": 0,
+    "arming_distance": 0,
+    "explode_on_impact_id": "StA-X3_P_IE",
     "name": "StA-X3 P"
    },
    "StA-X3_P1": {
@@ -5563,10 +5722,11 @@
     "life_time_randomness": 0,
     "pen_slow": 0.25,
     "drag": 0,
-    "explode_on_impact_id": "StA-X3_P1_IE",
     "explode_angle": 90,
     "explode_proximity": 12,
     "explosion_delay": 0,
+    "arming_distance": 30,
+    "explode_on_impact_id": "StA-X3_P1_IE",
     "name": "StA-X3 P1"
    },
    "P4": {
@@ -5600,36 +5760,42 @@
    "40-K MELTAGUN_B": {
     "damage_id": "40-K MELTAGUN_B_dm",
     "range": 15,
+    "falloff": 0.600000024,
     "radius": 0,
     "name": "40-K MELTAGUN B"
    },
    "AX/LAS-5 ROVER_B": {
     "damage_id": "AX/LAS-5 ROVER_B_dm",
     "range": 1000,
+    "falloff": 1,
     "radius": 0,
     "name": "AX/LAS-5 ROVER B"
    },
    "LAS-13 TRIDENT_B": {
     "damage_id": "LAS-13 TRIDENT_B_dm",
     "range": 200,
+    "falloff": 1,
     "radius": 0,
     "name": "LAS-13 TRIDENT B"
    },
    "LAS-5 SCYTHE_B": {
     "damage_id": "LAS-5 SCYTHE_B_dm",
     "range": 1000,
+    "falloff": 1,
     "radius": 0,
     "name": "LAS-5 SCYTHE B"
    },
    "LAS-7 DAGGER_B": {
     "damage_id": "LAS-7 DAGGER_B_dm",
     "range": 1000,
+    "falloff": 1,
     "radius": 0,
     "name": "LAS-7 DAGGER B"
    },
    "LAS-98 LASER CANNON_B": {
     "damage_id": "LAS-98 LASER CANNON_B_dm",
     "range": 1000,
+    "falloff": 1,
     "radius": 0,
     "name": "LAS-98 LASER CANNON B"
    }
@@ -5889,6 +6055,59 @@
      }
     ],
     "backpack_name": "AUTOCANNON BACKPACK"
+   },
+   "AMW-20 APEX": {
+    "id": "AMW-20",
+    "name": "AMW-20 APEX",
+    "recoil_mods": {
+     "horizontal_multiplier": 1,
+     "vertical_multiplier": 1,
+     "drift_horizontal_multiplier": 1,
+     "drift_vertical_multiplier": 1,
+     "climb_horizontal_multiplier": 1,
+     "climb_vertical_multiplier": 1,
+     "ergo": -4
+    },
+    "drift": {
+     "x": 200,
+     "y": 450
+    },
+    "climb": {
+     "x": 150,
+     "y": 550
+    },
+    "spread": {
+     "x": 0.100000001,
+     "y": 0.100000001
+    },
+    "spread_mods": {
+     "x": 1,
+     "y": 1
+    },
+    "sway": 1,
+    "ergonomics": 14,
+    "noise": "weapon_large",
+    "barrels": 1,
+    "fire_modes": [
+     "single",
+     "none"
+    ],
+    "roundtype": "mags",
+    "cap": 5,
+    "magstart": 4,
+    "mags": 4,
+    "capplus": 1,
+    "supply": 2,
+    "rpm": 50,
+    "attacks": [
+     {
+      "type": "projectile",
+      "name": "AMW-20_P",
+      "parent": "AMW-20 APEX",
+      "level": 1
+     }
+    ],
+    "backpack_name": "APEX BACKPACK"
    },
    "APW-1 ANTI-MATERIEL RIFLE": {
     "id": "APW-1",
@@ -7296,7 +7515,7 @@
     "roundtype": "mags",
     "cap": 1,
     "magstart": 7,
-    "mags": 7,
+    "mags": 10,
     "capplus": 0,
     "supply": 7,
     "attacks": [
@@ -7572,7 +7791,6 @@
     ],
     "roundtype": "mags",
     "cap": 1,
-    "capplus": 0,
     "rpm": 600,
     "attacks": [
      {
@@ -7624,7 +7842,6 @@
     ],
     "roundtype": "mags",
     "cap": 1,
-    "capplus": 0,
     "rpm": 600,
     "attacks": [
      {
@@ -7676,7 +7893,6 @@
     ],
     "roundtype": "mags",
     "cap": 1,
-    "capplus": 0,
     "rpm": 600,
     "attacks": [
      {
@@ -7951,6 +8167,51 @@
       "name": "K-2 THROWING KNIFE_dm",
       "parent": "K-2 THROWING KNIFE",
       "level": 1
+     }
+    ]
+   },
+   "G-11 CALTROPS": {
+    "id": "G-11",
+    "name": "G-11 CALTROPS",
+    "drift": {
+     "x": 2.5,
+     "y": 10
+    },
+    "climb": {
+     "x": 2.5,
+     "y": 10
+    },
+    "spread": {
+     "x": 10,
+     "y": 10
+    },
+    "spread_mods": {
+     "x": 1,
+     "y": 1
+    },
+    "sway": 1,
+    "ergonomics": 65,
+    "noise": "none",
+    "barrels": 0,
+    "fire_modes": [
+     "automatic",
+     "none"
+    ],
+    "start": 4,
+    "max": 5,
+    "supplythrowable": 3,
+    "attacks": [
+     {
+      "type": "explosion",
+      "name": "G-11 CALTROPS_E",
+      "parent": "G-11 CALTROPS",
+      "level": 1
+     },
+     {
+      "type": "status",
+      "name": "Stun Small",
+      "parent": "G-11 CALTROPS_E",
+      "level": 2
      }
     ]
    },
@@ -8475,7 +8736,7 @@
     "roundtype": "rounds",
     "cap": 120,
     "roundssupply": 60,
-    "rpm": 320,
+    "rpm": 240,
     "attacks": [
      {
       "type": "projectile",
@@ -8941,7 +9202,7 @@
     "supply": 6,
     "heatdata": {
      "overheat_temp": 100,
-     "heat_per_shot": 1.14999998,
+     "heat_per_shot": 0.949999988,
      "heat_per_second": 0,
      "heat_loss_per_second": 8,
      "heat_loss_per_second_cold": 12,
@@ -8949,7 +9210,7 @@
      "heat_loss_overheat": 400,
      "heat_loss_overheat_cold": 600,
      "heat_loss_overheat_hot": 300,
-     "charge_time": 0.5,
+     "charge_time": 0.3333333333333333,
      "needs_reload": 1
     },
     "rpm": 750,
@@ -9012,7 +9273,7 @@
      "heat_loss_overheat": 400,
      "heat_loss_overheat_cold": 600,
      "heat_loss_overheat_hot": 300,
-     "charge_time": 0.5,
+     "charge_time": 0.3333333333333333,
      "needs_reload": 1
     },
     "rpm": 700,
@@ -9039,6 +9300,69 @@
       "type": "projectile",
       "name": "LAS-17_P2",
       "parent": "LAS-17 DOUBLE-EDGE SICKLE",
+      "level": 1
+     }
+    ]
+   },
+   "LAS-44 NOVA": {
+    "id": "LAS-44",
+    "name": "LAS-44 NOVA",
+    "recoil_mods": {
+     "horizontal_multiplier": 1,
+     "vertical_multiplier": 1,
+     "drift_horizontal_multiplier": 1,
+     "drift_vertical_multiplier": 1,
+     "climb_horizontal_multiplier": 1,
+     "climb_vertical_multiplier": 1,
+     "ergo": -2
+    },
+    "drift": {
+     "x": 20,
+     "y": 800
+    },
+    "climb": {
+     "x": 20,
+     "y": 800
+    },
+    "spread": {
+     "x": 2,
+     "y": 2
+    },
+    "spread_mods": {
+     "x": 1,
+     "y": 1
+    },
+    "sway": 0.280000001,
+    "ergonomics": 70,
+    "noise": "weapon_medium",
+    "barrels": 1,
+    "fire_modes": [
+     "single",
+     "none"
+    ],
+    "roundtype": "heat",
+    "magstart": 0,
+    "mags": 0,
+    "supply": 6,
+    "heatdata": {
+     "overheat_temp": 100,
+     "heat_per_shot": 100,
+     "heat_per_second": 0,
+     "heat_loss_per_second": 28,
+     "heat_loss_per_second_cold": 33.600001400000004,
+     "heat_loss_per_second_hot": 24.02399944,
+     "heat_loss_overheat": 28,
+     "heat_loss_overheat_cold": 33.600001400000004,
+     "heat_loss_overheat_hot": 24.02399944,
+     "charge_time": 1.5873015873015872,
+     "needs_reload": 0
+    },
+    "rpm": 30,
+    "attacks": [
+     {
+      "type": "projectile",
+      "name": "LAS-44_P",
+      "parent": "LAS-44 NOVA",
       "level": 1
      }
     ]
@@ -9639,12 +9963,12 @@
     "id": "MA5C",
     "name": "MA5C ASSAULT RIFLE",
     "drift": {
-     "x": 12,
-     "y": 20
+     "x": 6,
+     "y": 15
     },
     "climb": {
      "x": 12,
-     "y": 30
+     "y": 25
     },
     "spread": {
      "x": 2,
@@ -9795,10 +10119,6 @@
     ],
     "roundtype": "mags",
     "cap": 300,
-    "magstart": 0,
-    "mags": 0,
-    "capplus": 1,
-    "supply": 0,
     "rpm": 1300,
     "attacks": [
      {
@@ -9838,10 +10158,6 @@
     ],
     "roundtype": "mags",
     "cap": 4,
-    "magstart": 0,
-    "mags": 0,
-    "capplus": 0,
-    "supply": 6,
     "rpm": 240,
     "attacks": [
      {
@@ -10215,7 +10531,7 @@
      },
      {
       "type": "explosion",
-      "name": "P-34 BREACHER_E",
+      "name": "P-34_BREACHER_E",
       "parent": "P-34_P",
       "level": 2
      },
@@ -10336,6 +10652,50 @@
       "type": "projectile",
       "name": "P-4_P",
       "parent": "P-4 SENATOR",
+      "level": 1
+     }
+    ]
+   },
+   "P-44 MIST": {
+    "id": "P-44",
+    "name": "P-44 MIST",
+    "drift": {
+     "x": 10,
+     "y": 24
+    },
+    "climb": {
+     "x": 8,
+     "y": 24
+    },
+    "spread": {
+     "x": 6,
+     "y": 10
+    },
+    "spread_mods": {
+     "x": 1,
+     "y": 1
+    },
+    "sway": 1,
+    "ergonomics": 90,
+    "noise": "weapon_small",
+    "barrels": 1,
+    "fire_modes": [
+     "automatic",
+     "single",
+     "none"
+    ],
+    "roundtype": "mags",
+    "cap": 25,
+    "magstart": 4,
+    "mags": 5,
+    "capplus": 1,
+    "supply": 6,
+    "rpm": 400,
+    "attacks": [
+     {
+      "type": "projectile",
+      "name": "P-44_P",
+      "parent": "P-44 MIST",
       "level": 1
      }
     ]
@@ -10879,7 +11239,7 @@
       ],
       "damage_mod": [
        1,
-       2.5
+       1
       ],
       "distance_mult": [
        0.699999988,
@@ -11216,6 +11576,59 @@
       "name": "Fire",
       "parent": "R-4_P",
       "level": 2
+     }
+    ]
+   },
+   "R-40 SIGHTLINER": {
+    "id": "R-40",
+    "name": "R-40 SIGHTLINER",
+    "recoil_mods": {
+     "horizontal_multiplier": 0.6,
+     "vertical_multiplier": 1,
+     "drift_horizontal_multiplier": 1,
+     "drift_vertical_multiplier": 1,
+     "climb_horizontal_multiplier": 0.6,
+     "climb_vertical_multiplier": 1,
+     "sway": 1.0499999819999999,
+     "ergo": -9
+    },
+    "drift": {
+     "x": 40,
+     "y": 50
+    },
+    "climb": {
+     "x": 50,
+     "y": 210
+    },
+    "spread": {
+     "x": 0.100000001,
+     "y": 0.100000001
+    },
+    "spread_mods": {
+     "x": 1,
+     "y": 1
+    },
+    "sway": 0.699999988,
+    "ergonomics": 40,
+    "noise": "weapon_medium",
+    "barrels": 1,
+    "fire_modes": [
+     "single",
+     "none"
+    ],
+    "roundtype": "mags",
+    "cap": 10,
+    "magstart": 6,
+    "mags": 8,
+    "capplus": 1,
+    "supply": 8,
+    "rpm": 40,
+    "attacks": [
+     {
+      "type": "projectile",
+      "name": "R-40_P",
+      "parent": "R-40 SIGHTLINER",
+      "level": 1
      }
     ]
    },
@@ -12584,11 +12997,11 @@
     "name": "STA-11 SMG",
     "drift": {
      "x": 10,
-     "y": 20
+     "y": 12
     },
     "climb": {
      "x": 5,
-     "y": 10
+     "y": 8
     },
     "spread": {
      "x": 5,
@@ -12599,7 +13012,7 @@
      "y": 1
     },
     "sway": 0.699999988,
-    "ergonomics": 80,
+    "ergonomics": 90,
     "noise": "weapon_small",
     "barrels": 1,
     "fire_modes": [
@@ -12616,7 +13029,7 @@
     "attacks": [
      {
       "type": "projectile",
-      "name": "MP-98_P",
+      "name": "P-2_P",
       "parent": "STA-11 SMG",
       "level": 1
      }
@@ -12635,12 +13048,12 @@
      "ergo": -3
     },
     "drift": {
-     "x": 10,
-     "y": 15
+     "x": 5,
+     "y": 7.5
     },
     "climb": {
-     "x": 6,
-     "y": 25
+     "x": 4,
+     "y": 12.5
     },
     "spread": {
      "x": 2,
@@ -12662,7 +13075,7 @@
     "roundtype": "mags",
     "cap": 56,
     "magstart": 4,
-    "mags": 6,
+    "mags": 7,
     "capplus": 1,
     "supply": 6,
     "rpm": 790,

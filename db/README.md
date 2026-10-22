@@ -258,7 +258,7 @@ npm run check
 | G-123 Thermite | radius | innerRadius=1.5 / radius=2.5 | 2 m |
 
 - 신관 null 11종: G-13/G-16/G-48/G-50/G-60/G-8/G-89는 `Impact`, G/40-K/TM-1은 `Proximity`, K-2는 `N/A`, TED-63은 선택 가능한 `5s / 15s / 60s`라 단일 값을 선택하지 않습니다. G/SH-39는 실제 인포박스가 `0s`이므로 0을 보존합니다.
-- 이름 미연결: AR-32 Pacifier는 해당 제목이 없습니다. 그래서 `build-weapons.mjs`의 `manualKoreanNames`에 사이트 관리자가 정한 `퍼시파이어`를 두고, `nameSource`에 `manual: true`와 이유를 기록합니다. 나무위키에 제목이 생기면 그 이름이 우선합니다. CQC-73 Entrenchment Tool은 데이터 키의 제식 번호로 연결했습니다. 검증 stdout에는 미연결 무기 제목 외에 로스터에 대응하지 않는 모든 일반 절 제목도 출력합니다.
+- 이름 미연결: 2026-10-22 수집부터 없습니다. AR-32 Pacifier는 나무위키에 제목이 없던 동안 `build-weapons.mjs`의 `manualKoreanNames`에 사이트 관리자가 정한 이름을 두었고, 나무위키에 같은 이름 `AR-32 퍼시파이어`가 생겨 비웠습니다. 다시 미연결 무기가 생기면 이 목록에 이름과 이유를 넣으며, `nameSource`에 `manual: true`가 기록되고 나무위키 제목이 생기면 그쪽이 우선합니다. CQC-73 Entrenchment Tool은 데이터 키의 제식 번호로 연결했습니다. 검증 stdout에는 미연결 무기 제목 외에 로스터에 대응하지 않는 모든 일반 절 제목도 출력합니다.
 - reload null 30종은 투척물 23종, 근접 6종(CQC-2/5/19/30/42/73), ARC-12 Blitzer입니다. 해당 인포박스에 재장전 시간 필드가 없습니다. 전술 장전 값이 없는 무기는 reload에서 역산하지 않습니다.
 - Purifier는 비충전 direct/splash=100/75, 충전=200/300입니다. Accelerator Rifle은 `Ballistic|250`, `Explosion|100` 단일 표기만 있고, Loyalist는 `Ballistic|75-150`, `Explosion|75-225` 범위만 있습니다. 둘 다 비충전/충전별 수치를 명시하지 않으므로 해당 wiki 변형은 생성하지 않고 원문을 notes에 남깁니다. 검증기는 이 기록된 부재를 허용하되, Purifier의 실제 4개 값은 별도로 회귀 검증합니다.
 
