@@ -550,7 +550,7 @@ export default {
   "직격 350 / 내구 200. 매 4번째 탄에 폭발이 있으며 카드 폭발 350은 그 탄 기준입니다. 4.5 m는 탄 1발의 반경이지 전체 포격 구역이 아닙니다.": "Impact 350 / durable 200. Every 4th shell explodes, and the card's 350 blast refers to that shell. 4.5 m is the radius of one shell, not the whole barrage zone.",
   "하늘에서 파편을 반복 살포해 보병 무리를 정리하는 공격.": "Strike that repeatedly showers shrapnel from the sky to clear infantry groups.",
   "적이 계속 쏟아지는 입구에 던지고 마지막 파편이 떨어질 때까지 접근하지 마세요.": "Throw it at an entrance enemies keep pouring out of, and stay back until the last shrapnel lands.",
-  "파편이 예상보다 넓게 퍼집니다. 포격 방향에 따라 위험 구역이 길어질 수 있습니다.": "Shrapnel spreads wider than you'd expect. Depending on the barrage direction, the danger zone can stretch further.",
+  "패치 1.007.200에서 파편이 퍼지는 각도가 35°에서 27°로 좁아져 목표 지점에 더 모여 떨어집니다. 그래도 표지에서 최소 30 m쯤 떨어지고, 표지가 나와 구축함 사이에 오는 쪽은 위험 구역이 더 길어지니 피하세요.": "Since patch 1.007.200 the shrapnel cone narrowed from 35° to 27°, so it lands more tightly on the target. Still keep at least about 30 m from the beacon, and avoid the side where the beacon sits between you and your Super Destroyer, where the danger zone stretches further.",
   "카드는 피해를 주는 파편 1개 기준입니다. 공중의 모탄은 직격 300(AP 7), 주폭발 350(AP 3)이며 12개 파편을 만듭니다. 6 m는 개별 파편의 폭발 외곽입니다.": "The card is per damaging fragment. The airborne parent shell deals 300 impact (AP 7) and a 350 main explosion (AP 3), and creates 12 fragments. 6 m is the outer blast radius of each fragment.",
   "집중된 구역에 고폭탄을 반복 투사하는 중형 포격.": "Medium barrage that repeatedly lands HE shells on a focused area.",
   "전초기지나 적 증원 중심에 던지고 멀리 빠지세요. 포격이 끝난 뒤 남은 적을 처리합니다.": "Throw it at an outpost or the center of enemy reinforcements and get well away. Clean up survivors after the barrage ends.",
