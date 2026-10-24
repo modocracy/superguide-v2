@@ -142,7 +142,7 @@ for (const expected of golden.demolition) {
 
 // Stratagems added after the legacy fixture was made. The legacy overviews list
 // the catalogue as it was then, so these are left out when replaying them.
-const addedAfterLegacy = new Set(['apex', 'nova']);
+const addedAfterLegacy = new Set(['apex', 'nova', 'maelstrom']);
 const legacyCatalogue = stratagems.filter(item => !addedAfterLegacy.has(item.id));
 assert.equal(legacyCatalogue.length, 110, 'legacy catalogue size');
 for (const expected of golden.selections) {

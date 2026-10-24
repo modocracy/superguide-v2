@@ -73,4 +73,8 @@ export const vehicles = [
     { id: 'main', name: '주포', direct: 3500, splash: 750, ap: 8, splashAp: 5, radius: 10, innerRadius: 3.3, unit: '주포 포탄 1발', note: '입사각에 따라 직격 관통력이 AP 7·6으로 줄어듭니다.' },
     { id: 'coax', name: '동축 기관총', direct: 150, directNoteShort: '탄당 · 내구 피해 35', splash: 0, ap: 4, unit: '기관총 1발' },
   ] },
+  { id: 'maelstrom', name: '마엘스트롬', aliases: ['메일스트롬'], en: 'TD-110 Maelstrom', code: 'TD-110', direct: 0, splash: 2000, ap: 5, splashAp: 5, radius: 5, innerRadius: 3, cooldown: 780, tags: ['차량', '분대 협동', '레이저 유도'], summary: '개틀링 기관총 두 정과 레이저 유도 미사일 발사기를 갖춘 궤도 장갑차.', usage: '운전수가 차체를 표적 쪽으로 돌려 주면 포수가 기관총으로 적 무리를 쓸어내고, 미사일은 큰 적에게 아껴 쓰세요. 양옆 승객석의 동료는 측면과 후방을 엄호합니다.', warning: '기관총과 미사일 유도 레이저는 좌우 약 20°씩만 돌아갑니다. 운전수가 연막을 터뜨리면 포수의 시야도 가려집니다.', notes: '함선 모듈 적용 전 기본값입니다. 카드의 큰 숫자와 폭발 반경은 미사일 기준입니다.', unit: '미사일 1발', variants: [
+    { id: 'missile', name: '레이저 유도 미사일', direct: 0, splash: 2000, ap: 5, splashAp: 5, radius: 5, innerRadius: 3, unit: '미사일 1발', note: '직격 피해 없이 폭발 피해만 줍니다. 폭발은 일반·내구 피해가 같습니다. 발사기 2개에 10발씩, 모두 20발입니다.' },
+    { id: 'gatling', name: '개틀링 기관총', direct: 150, directNoteShort: '탄당 · 내구 피해 35', splash: 0, ap: 4, unit: '기관총 1발', note: '탄띠당 300발, 탄띠 7개로 모두 2,100발입니다. 재장전에 4초가 걸리며, 미리 재장전하면 탄띠에 남은 탄은 버려집니다.' },
+  ], source: 'https://helldivers.wiki.gg/wiki/TD-110_Maelstrom', sourceRevision: 138101, extraSource: 'https://helldivers.wiki.gg/wiki/Module:Decodedata-Attacks/stratagems_data.json', damageRevision: 139910 },
 ];

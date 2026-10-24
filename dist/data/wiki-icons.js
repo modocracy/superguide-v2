@@ -744,6 +744,14 @@ export const wikiIcons = {
     "retrievedAt": "2026-09-16",
     "sha256": "ccafeb206d15da1b2937330f0d06f3f7fe4415ef243f90b185138a2799d5ecab"
   },
+  "maelstrom": {
+    "src": "./assets/stratagems/maelstrom-stratagem-icon.svg",
+    "title": "Maelstrom Stratagem Icon.svg",
+    "source": "https://helldivers.wiki.gg/wiki/File:Maelstrom_Stratagem_Icon.svg",
+    "originalUrl": "https://helldivers.wiki.gg/images/Maelstrom_Stratagem_Icon.svg?e7c7b5",
+    "retrievedAt": "2026-10-24",
+    "sha256": "120076baeda8fd80b2a04ed9d8094e7297c1340a0059b3b63d7f96b19264dcac"
+  },
   "reinforce": {
     "src": "./assets/stratagems/reinforce-stratagem-icon.svg",
     "title": "Reinforce Stratagem Icon.svg",

@@ -71,6 +71,9 @@ export const demolitionProfiles = {
   'leveller': profile(shot(40, 40)),
   'wasp': profile(shot(30, 30), { conditionalAim: true, note: indirect }),
   'solo-silo': profile(shot(null, 40, { name: '미사일 폭발', note: '여러 폭발의 철거력 40을 합산하지 않습니다.' })),
+  // Wiki Demolition summary (revision 138005), Other Stratagems: TD-110 Maelstrom,
+  // Missile Explosion, force 40, explosive. The table has no row for its Gatling guns.
+  'maelstrom': profile(shot(null, 40, { name: '미사일 폭발' })),
   'speargun': profile(shot(30, 30)),
   'de-escalator': profile(shot(20, null, { directLabel: '전격' }), { conditionalAim: true, note: indirect }),
   'epoch': profile([
