@@ -472,17 +472,27 @@ const originalEnemies = [
     id: 'elevated-overseer', name: '고위 오버시어 · 비행형', faction: '일루미닛', source: wiki('Elevated_Overseer'), sourceRevision: 135189,
     main: main(450, 0, 0, 0),
     note: '비행형은 지상형과 체력·머리 장갑이 다릅니다. 제트팩 파괴는 즉사이며, 흉부는 장갑을 벗긴 뒤 몸통에 후속탄을 맞힙니다.',
-    // Every part matches Wiki Anatomy revision 135795 (checked 2026-09-28).
-    // Parts after the legacy ones were added then.
+    // Every part matches Wiki Anatomy revision 135795 (checked 2026-09-28),
+    // except the torso and arm health below. Parts after the legacy ones were added then.
     anatomyRevision: 135795, anatomyCheckedAt: '2026-09-28',
+    // The official patch notes 4.1.0 (2025-10-23) cut the torso from 600 to 450
+    // and the arms from 300 to 250, and no later patch note changes them. The
+    // wiki table went back to 600/300 on 2026-03-04 while its own change history
+    // kept 450/250, so the site follows the patch notes here.
+    anatomyOfficial: {
+      'torso.hp': { wiki: 600, source: 'Patch 4.1.0 (2025-10-23): torso health decreased from 600 to 450' },
+      'right-arm.hp': { wiki: 300, source: 'Patch 4.1.0 (2025-10-23): arms health decreased from 300 to 250' },
+      'left-arm.hp': { wiki: 300, source: 'Patch 4.1.0 (2025-10-23): arms health decreased from 300 to 250' },
+    },
+    anatomyLegacy: { 'chest-armor.next.hp': 600, 'crotch-armor.next.hp': 600, 'right-arm.hp': 300, 'left-arm.hp': 300 },
     parts: [
       part('head', '머리·투구', 200, 2, 0, 100, 100, true, 'kill', '날아다니는 적의 작은 투구를 직접 맞히세요. 지상형보다 머리 장갑이 낮습니다.', { sourcePart: 'Head' }),
       part('jetpack', '등의 제트팩', 300, 2, 0, 100, 50, true, 'kill', '옆이나 뒤에서 등에 달린 제트팩을 노리세요. 파괴 때 주변에 폭발 피해를 줄 수 있습니다.', { sourcePart: 'Jetpack' }),
-      part('chest-armor', '흉부 장갑 → 몸통', 150, 2, 0, 100, 20, false, 'armor', '흉부 장갑을 벗긴 뒤 같은 위치를 계속 맞히세요. 본체 체력 450에 전달된 피해도 함께 계산합니다.', { sourcePart: 'Chest Armor', next: part('torso', '노출된 몸통', 600, 1, 0, 100, 100, true, 'kill', '위키 부위 표의 몸통 체력은 600이며, 그 전에 별도 본체 체력 450이 소진되면 처치입니다.', { sourcePart: 'Torso' }) }),
-      part('crotch-armor', '사타구니 장갑 → 몸통', 200, 2, 0, 100, 20, false, 'armor', '하복부 장갑을 벗긴 다음 같은 몸통을 공격하세요.', { sourcePart: 'Crotch Armor', next: part('torso', '노출된 몸통', 600, 1, 0, 100, 100, true, 'kill', '벗겨진 하복부 안쪽입니다.', { sourcePart: 'Torso' }) }),
+      part('chest-armor', '흉부 장갑 → 몸통', 150, 2, 0, 100, 20, false, 'armor', '흉부 장갑을 벗긴 뒤 같은 위치를 계속 맞히세요. 본체 체력 450에 전달된 피해도 함께 계산합니다.', { sourcePart: 'Chest Armor', next: part('torso', '노출된 몸통', 450, 1, 0, 100, 100, true, 'kill', '공식 패치 노트 4.1.0 기준 몸통 체력은 450으로, 본체 체력 450과 같습니다. 위키 부위 표의 값 대신 패치 노트 값을 씁니다.', { sourcePart: 'Torso' }) }),
+      part('crotch-armor', '사타구니 장갑 → 몸통', 200, 2, 0, 100, 20, false, 'armor', '하복부 장갑을 벗긴 다음 같은 몸통을 공격하세요.', { sourcePart: 'Crotch Armor', next: part('torso', '노출된 몸통', 450, 1, 0, 100, 100, true, 'kill', '벗겨진 하복부 안쪽입니다.', { sourcePart: 'Torso' }) }),
       part('limb-armor', '팔다리 장갑 한 개', 100, 2, 0, 100, 20, false, 'break', '팔다리를 덮은 장갑판 하나입니다. 부숴도 죽지 않습니다.', { sourcePart: 'Limb Armor' }),
-      part('right-arm', '오른팔', 300, 1, 0, 100, 50, true, 'kill', '무기를 든 오른팔입니다. 파괴하면 죽습니다.', { sourcePart: 'Right Arm' }),
-      part('left-arm', '왼팔', 300, 1, 0, 100, 50, true, 'break', '왼팔입니다. 부숴도 죽지 않지만 피해의 절반이 본체로 전달됩니다.', { sourcePart: 'Left Arm' }),
+      part('right-arm', '오른팔', 250, 1, 0, 100, 50, true, 'kill', '무기를 든 오른팔입니다. 파괴하면 죽습니다.', { sourcePart: 'Right Arm' }),
+      part('left-arm', '왼팔', 250, 1, 0, 100, 50, true, 'break', '왼팔입니다. 부숴도 죽지 않지만 피해의 절반이 본체로 전달됩니다.', { sourcePart: 'Left Arm' }),
       part('leg', '다리 한쪽', 450, 0, 0, 100, 70, true, 'break', '다리 하나입니다. 본체 체력을 공유하며, 피해의 70%가 본체로 들어갑니다.', { mainOnly: true, sourcePart: 'Legs (2)' }),
     ],
   },

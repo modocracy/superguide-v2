@@ -14,9 +14,9 @@ export function wikiReference(enemy, weaponId, mode) {
   return enemy.tacticalResults?.find(item => item.weapon === weaponId && item.mode === mode.id) || null;
 }
 
-export function recommend(unit, choice) {
+// `enemy` defaults to the current data; the parity test passes the legacy values.
+export function recommend(unit, choice, enemy = findEnemy(unit.enemy)) {
   const [weaponId, modeId] = choice.split(':');
-  const enemy = findEnemy(unit.enemy);
   const pick = factionLoadouts[unit.enemy]?.find(item => item.weapon === choice);
   if (enemy && pick?.adviceOnly) return { enemy, weaponId, pick, adviceOnly: true };
 

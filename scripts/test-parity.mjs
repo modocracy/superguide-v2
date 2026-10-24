@@ -10,7 +10,7 @@ import { structures, demolitionProfiles } from '../dist/data/demolition-data.js'
 import { factionGuides } from '../dist/data/faction-data.js';
 import { solveMatchup, withHitAssumption } from '../dist/core/combat.js';
 import { solveDemolition, structureOverview, weaponOverview } from '../dist/core/demolition.js';
-import { recommend } from '../dist/core/factions.js';
+import { recommend, findEnemy } from '../dist/core/factions.js';
 import { shieldRecovery } from '../dist/core/defense.js';
 import { stratagems } from '../dist/core/catalog.js';
 
@@ -170,7 +170,7 @@ let picks = 0;
 for (const guide of factionGuides) for (const unit of guide.units) for (const choice of unit.weapons) {
   const expected = golden.factions[picks++];
   assert.deepEqual([expected.guide, expected.enemy, expected.choice], [guide.id, unit.enemy, choice]);
-  const pick = recommend(unit, choice);
+  const pick = recommend(unit, choice, legacyEnemy(findEnemy(unit.enemy)));
   assert.deepEqual({
     adviceOnly: Boolean(pick.adviceOnly), mode: pick.mode?.id ?? null, row: pick.route ? view(pick.route) : null,
     alternatives: (pick.alternatives || []).map(view), reference: pick.reference ? [pick.reference.weapon, pick.reference.mode, pick.reference.hits] : null,

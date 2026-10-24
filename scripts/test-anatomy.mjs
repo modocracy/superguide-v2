@@ -25,10 +25,19 @@ const isPoolRow = name => /(^|\s)Main$/.test(name);
 const sharesMain = (part, main) => part.mainOnly === true || part.hp === main.hp && part.toMain >= 100;
 const unknown = part => Boolean(part.unknownReason);
 
-function matches(part, row, label, main) {
+// anatomyOfficial: values the site takes from the official patch notes because
+// the wiki table disagrees with them. Each entry names the wiki value it was
+// reviewed against, so a later wiki edit fails here and is looked at again.
+const usedOfficial = new Set();
+function matches(part, row, label, main, enemy) {
   // A value the wiki gives as "-" is left uncalculated on the site.
   const value = (actual, text, message) => text === '-' ? ok(actual === null && unknown(part), `${message} left uncalculated`) : eq(actual, number(text), message);
-  if (/^Main\b/.test(row.health)) ok(sharesMain(part, part.main || main), `${label}: health ${row.health} shares a main pool`);
+  const official = enemy?.anatomyOfficial?.[`${part.id}.hp`];
+  if (official) {
+    usedOfficial.add(`${enemy.id}/${part.id}.hp`);
+    eq(number(row.health), official.wiki, `${label}: wiki health is still the reviewed ${official.wiki} (site follows: ${official.source})`);
+    ok(Number.isFinite(part.hp) && part.hp !== official.wiki && /^Patch [\d.]+ \(\d{4}-\d{2}-\d{2}\): /.test(official.source), `${label}: official health ${part.hp} with its patch-note source`);
+  } else if (/^Main\b/.test(row.health)) ok(sharesMain(part, part.main || main), `${label}: health ${row.health} shares a main pool`);
   else if (/^Infinite/i.test(row.health)) ok(part.hp === null && unknown(part), `${label}: infinite health is left uncalculated`);
   else value(part.hp, row.health, `${label}: health`);
   value(part.armor, row.av, `${label}: armor`);
@@ -88,7 +97,7 @@ for (const enemy of revised) {
   for (const part of parts.filter(part => part.sourcePart)) {
     const row = byName.get(part.sourcePart);
     ok(row, `${enemy.id}/${part.id}: wiki row ${part.sourcePart}`);
-    matches(part, row, `${enemy.id}/${part.id}`, enemy.main);
+    matches(part, row, `${enemy.id}/${part.id}`, enemy.main, enemy);
     covered.add(part.sourcePart);
   }
   for (const [name, partId] of Object.entries(enemy.anatomyMerged || {})) {
@@ -104,4 +113,7 @@ for (const enemy of revised) {
   const uncovered = [...byName.keys()].filter(name => !covered.has(name));
   eq(uncovered, [], `${enemy.id}: every wiki anatomy row is a part`);
 }
-console.log(`PASS anatomy: ${checked} checks; ${revised.length} enemies match Wiki Anatomy snapshot ${snapshot.retrievedAt}.`);
+for (const enemy of revised) for (const key of Object.keys(enemy.anatomyOfficial || {})) {
+  ok(usedOfficial.has(`${enemy.id}/${key}`), `${enemy.id}: anatomyOfficial ${key} matches no part; remove it`);
+}
+console.log(`PASS anatomy: ${checked} checks; ${revised.length} enemies match Wiki Anatomy snapshot ${snapshot.retrievedAt}; ${usedOfficial.size} values follow the official patch notes.`);

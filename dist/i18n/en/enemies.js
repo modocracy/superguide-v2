@@ -671,7 +671,7 @@ export default {
   "날아다니는 적의 작은 투구를 직접 맞히세요. 지상형보다 머리 장갑이 낮습니다.": "Hit the small helmet of this flying enemy directly. Its head armor is lower than the ground version's.",
   "옆이나 뒤에서 등에 달린 제트팩을 노리세요. 파괴 때 주변에 폭발 피해를 줄 수 있습니다.": "Aim for the jetpack on its back from the side or rear. Destroying it can deal explosive damage around it.",
   "흉부 장갑을 벗긴 뒤 같은 위치를 계속 맞히세요. 본체 체력 450에 전달된 피해도 함께 계산합니다.": "Strip the chest armor, then keep hitting the same spot. Damage transferred to its 450 main health is counted too.",
-  "위키 부위 표의 몸통 체력은 600이며, 그 전에 별도 본체 체력 450이 소진되면 처치입니다.": "The wiki's anatomy table lists torso health as 600, but it dies if its separate 450 main health runs out before that.",
+  "공식 패치 노트 4.1.0 기준 몸통 체력은 450으로, 본체 체력 450과 같습니다. 위키 부위 표의 값 대신 패치 노트 값을 씁니다.": "Per the official patch notes 4.1.0, torso health is 450, the same as its 450 main health. The patch-note value is used instead of the wiki anatomy table's.",
   "박격포 위의 작은 머리를 직접 맞히세요.": "Hit the small head above the mortar directly.",
   "가슴 장갑을 벗긴 뒤 드러난 같은 몸통을 공격하세요.": "Strip the chest armor, then attack the same torso once it's exposed.",
   "벗겨진 흉부 안쪽입니다.": "The inside once the chest armor is stripped.",
