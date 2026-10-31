@@ -1,5 +1,5 @@
 {
- "retrievedAt": "2026-10-22",
+ "retrievedAt": "2026-10-31",
  "pages": {
   "Agitator": {
    "source": "https://helldivers.wiki.gg/wiki/Agitator",
@@ -1527,7 +1527,7 @@
   },
   "Conflagration Devastator": {
    "source": "https://helldivers.wiki.gg/wiki/Conflagration_Devastator",
-   "revision": 139855,
+   "revision": 140049,
    "rows": [
     {
      "part_name": "Main",
@@ -1648,7 +1648,7 @@
   },
   "Crescent Overseer": {
    "source": "https://helldivers.wiki.gg/wiki/Crescent_Overseer",
-   "revision": 139398,
+   "revision": 140058,
    "rows": [
     {
      "part_name": "Main",
@@ -1782,7 +1782,7 @@
   },
   "Crusher": {
    "source": "https://helldivers.wiki.gg/wiki/Crusher",
-   "revision": 138301,
+   "revision": 141041,
    "rows": [
     {
      "part_name": "Main",
@@ -2184,7 +2184,7 @@
   },
   "Elevated Overseer": {
    "source": "https://helldivers.wiki.gg/wiki/Elevated_Overseer",
-   "revision": 135795,
+   "revision": 140086,
    "rows": [
     {
      "part_name": "Main",
@@ -2265,7 +2265,7 @@
     },
     {
      "part_name": "Torso",
-     "health": "600",
+     "health": "400",
      "av": "1",
      "front_image": "Overseer Half Bare Torso.png",
      "side_image": "Overseer Bare Torso Side.png",
@@ -2278,7 +2278,7 @@
     },
     {
      "part_name": "Right<br>Arm",
-     "health": "300",
+     "health": "250",
      "av": "1",
      "front_image": "Overseer Right Arm Front.png",
      "side_image": "Overseer Right Arm Side.png",
@@ -2291,7 +2291,7 @@
     },
     {
      "part_name": "Left<br>Arm",
-     "health": "300",
+     "health": "250",
      "av": "1",
      "front_image": "Overseer Left Arm.png",
      "durability": "0%",
@@ -2318,7 +2318,7 @@
   },
   "Factory Strider": {
    "source": "https://helldivers.wiki.gg/wiki/Factory_Strider",
-   "revision": 135134,
+   "revision": 139888,
    "rows": [
     {
      "table": 0,
@@ -2698,7 +2698,7 @@
   },
   "Fleshmob": {
    "source": "https://helldivers.wiki.gg/wiki/Fleshmob",
-   "revision": 138173,
+   "revision": 140060,
    "rows": [
     {
      "part_name": "Main<br>",
@@ -2777,7 +2777,7 @@
   },
   "Gatekeeper": {
    "source": "https://helldivers.wiki.gg/wiki/Gatekeeper",
-   "revision": 138108,
+   "revision": 140067,
    "rows": [
     {
      "table": 0,
@@ -3149,7 +3149,7 @@
   },
   "Harvester": {
    "source": "https://helldivers.wiki.gg/wiki/Harvester",
-   "revision": 135183,
+   "revision": 140061,
    "rows": [
     {
      "table": 0,
@@ -4076,7 +4076,7 @@
   },
   "Hulk Firebomber": {
    "source": "https://helldivers.wiki.gg/wiki/Hulk_Firebomber",
-   "revision": 138254,
+   "revision": 140050,
    "rows": [
     {
      "part_name": "Main",
@@ -4517,7 +4517,7 @@
   },
   "Incendiary MG Devastator": {
    "source": "https://helldivers.wiki.gg/wiki/Incendiary_MG_Devastator",
-   "revision": 136517,
+   "revision": 140048,
    "rows": [
     {
      "part_name": "Main",
@@ -4637,7 +4637,7 @@
   },
   "Incendiary Rocket Raider": {
    "source": "https://helldivers.wiki.gg/wiki/Incendiary_Rocket_Raider",
-   "revision": 135174,
+   "revision": 140047,
    "rows": [
     {
      "part_name": "Main",
@@ -4914,7 +4914,7 @@
   },
   "Jet Brigade Hulk Bruiser": {
    "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_Hulk_Bruiser",
-   "revision": 138258,
+   "revision": 140134,
    "rows": [
     {
      "part_name": "Main",
@@ -4986,7 +4986,7 @@
   },
   "Jet Brigade Hulk Scorcher": {
    "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_Hulk_Scorcher",
-   "revision": 138257,
+   "revision": 140135,
    "rows": [
     {
      "part_name": "Main",
@@ -5061,7 +5061,7 @@
   },
   "Jet Brigade MG Raider": {
    "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_MG_Raider",
-   "revision": 135137,
+   "revision": 139889,
    "rows": [
     {
      "part_name": "Main",
@@ -5145,7 +5145,7 @@
   },
   "Jet Brigade Trooper": {
    "source": "https://helldivers.wiki.gg/wiki/Jet_Brigade_Trooper",
-   "revision": 138828,
+   "revision": 140765,
    "rows": [
     {
      "part_name": "Main",
@@ -5229,7 +5229,7 @@
   },
   "Leviathan": {
    "source": "https://helldivers.wiki.gg/wiki/Leviathan",
-   "revision": 139040,
+   "revision": 140064,
    "rows": [
     {
      "table": 0,
@@ -5781,7 +5781,7 @@
   },
   "Overseer": {
    "source": "https://helldivers.wiki.gg/wiki/Overseer",
-   "revision": 135796,
+   "revision": 140056,
    "rows": [
     {
      "part_name": "Main",
@@ -6136,7 +6136,7 @@
   },
   "Pyro Trooper": {
    "source": "https://helldivers.wiki.gg/wiki/Pyro_Trooper",
-   "revision": 138838,
+   "revision": 139895,
    "rows": [
     {
      "part_name": "Main",
@@ -6231,7 +6231,7 @@
   },
   "Radical": {
    "source": "https://helldivers.wiki.gg/wiki/Radical",
-   "revision": 136549,
+   "revision": 140051,
    "rows": [
     {
      "part_name": "Main",
@@ -7400,7 +7400,7 @@
   },
   "Spore Burst Bile Titan": {
    "source": "https://helldivers.wiki.gg/wiki/Spore_Burst_Bile_Titan",
-   "revision": 137858,
+   "revision": 140147,
    "rows": [
     {
      "part_name": "Main",
@@ -7739,7 +7739,7 @@
   },
   "Spore Charger": {
    "source": "https://helldivers.wiki.gg/wiki/Spore_Charger",
-   "revision": 139886,
+   "revision": 140019,
    "rows": [
     {
      "part_name": "Main",
@@ -7997,7 +7997,7 @@
   },
   "Stingray": {
    "source": "https://helldivers.wiki.gg/wiki/Stingray",
-   "revision": 139235,
+   "revision": 140063,
    "rows": [
     {
      "part_name": "Main",
@@ -8028,7 +8028,7 @@
   },
   "Trooper": {
    "source": "https://helldivers.wiki.gg/wiki/Trooper",
-   "revision": 138834,
+   "revision": 139995,
    "rows": [
     {
      "part_name": "Main",
@@ -8098,7 +8098,7 @@
   },
   "Veracitor": {
    "source": "https://helldivers.wiki.gg/wiki/Veracitor",
-   "revision": 138107,
+   "revision": 140066,
    "rows": [
     {
      "part_name": "Main",
@@ -8341,7 +8341,7 @@
   },
   "Voteless": {
    "source": "https://helldivers.wiki.gg/wiki/Voteless",
-   "revision": 138050,
+   "revision": 140055,
    "rows": [
     {
      "table": 0,
@@ -8530,7 +8530,7 @@
      "side_image": "Heavy Voteless Upper Arms Side.png",
      "durability": "0%",
      "percent_to_main": "40%",
-     "dmg_cap_main": "Yes",
+     "dmg_cap_main": "No",
      "bleed": "1,000 [-40/s]",
      "fatal": "No",
      "exdr": "100%"
@@ -8545,7 +8545,7 @@
      "side_image": "Heavy Voteless Forearms Side.png",
      "durability": "0%",
      "percent_to_main": "30%",
-     "dmg_cap_main": "No",
+     "dmg_cap_main": "Yes",
      "bleed": "None",
      "fatal": "No",
      "exdr": "100%"
@@ -8569,7 +8569,7 @@
   },
   "Vox Engine": {
    "source": "https://helldivers.wiki.gg/wiki/Vox_Engine",
-   "revision": 139236,
+   "revision": 140053,
    "rows": [
     {
      "part_name": "Main",
@@ -8900,7 +8900,7 @@
   },
   "Warp Ship": {
    "source": "https://helldivers.wiki.gg/wiki/Warp_Ship",
-   "revision": 135185,
+   "revision": 140062,
    "rows": [
     {
      "part_name": "Main",
@@ -9074,7 +9074,7 @@
   },
   "Watcher": {
    "source": "https://helldivers.wiki.gg/wiki/Watcher",
-   "revision": 139239,
+   "revision": 140766,
    "rows": [
     {
      "part_name": "Main",
@@ -9158,7 +9158,7 @@
   },
   "Wretch": {
    "source": "https://helldivers.wiki.gg/wiki/Wretch",
-   "revision": 136548,
+   "revision": 140071,
    "rows": [
     {
      "part_name": "Main",

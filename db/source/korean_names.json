@@ -1,12 +1,12 @@
 {
  "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0",
- "retrievedAt": "2026-10-22",
+ "retrievedAt": "2026-10-31",
  "pages": [
   {
    "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0",
    "status": 200,
    "modifiedAt": null,
-   "retrievedAt": "2026-10-22",
+   "retrievedAt": "2026-10-31",
    "headings": [
     "개요",
     "무기 커스터마이즈",
@@ -20,7 +20,7 @@
    "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0/%EC%A3%BC%20%EB%AC%B4%EA%B8%B0",
    "status": 200,
    "modifiedAt": null,
-   "retrievedAt": "2026-10-22",
+   "retrievedAt": "2026-10-31",
    "headings": [
     "태그",
     "돌격소총",
@@ -37,6 +37,7 @@
     "StA-52 돌격소총",
     "AR-59 서프레서",
     "AR-11 아비트레이터",
+    "AR-23L 리버레이터 레거시",
     "지정사수소총",
     "R-2124 콘스티튜션",
     "R-63 딜리전스",
@@ -54,7 +55,7 @@
     "SMG-32 레프리맨드",
     "M7S 기관단총",
     "StA-11 기관단총",
-    "SMG/FLAM-34 스토커[399]",
+    "SMG/FLAM-34 스토커[418]",
     "SMG-203 갤런트",
     "산탄총",
     "SG-8 퍼니셔",
@@ -81,7 +82,7 @@
     "LAS-17 더블 엣지 시클",
     "PLAS-39 가속 소총",
     "LAS-13 트라이던트",
-    "R/40-K 핫샷 마크맨 라이플",
+    "R/40-K 핫샷 마크스맨 라이플",
     "LAS-12 사이",
     "특수",
     "JAR-5 도미네이터",
@@ -93,7 +94,7 @@
    "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0/%EB%B3%B4%EC%A1%B0",
    "status": 200,
    "modifiedAt": null,
-   "retrievedAt": "2026-10-22",
+   "retrievedAt": "2026-10-31",
    "headings": [
     "개요",
     "권총",
@@ -131,7 +132,7 @@
    "source": "https://namu.wiki/w/HELLDIVERS%202/%EB%AC%B4%EA%B8%B0/%ED%88%AC%EC%B2%99%20%EB%AC%B4%EA%B8%B0",
    "status": 200,
    "modifiedAt": null,
-   "retrievedAt": "2026-10-22",
+   "retrievedAt": "2026-10-31",
    "headings": [
     "개요",
     "표준 투척 무기",

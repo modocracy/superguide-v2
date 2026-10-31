@@ -27,7 +27,7 @@ for (const weapon of weapons) {
   }
   for (const recorded of weapon.infoboxConflicts) assert(disagreements.some(c => JSON.stringify(c) === JSON.stringify(recorded)), `${weapon.en}: stale conflict record`);
 }
-console.log(`Infobox cross-check: 106 pages; ${disagreementCount} disagreements; ${unrecordedCount} unrecorded.`);
+console.log(`Infobox cross-check: 107 pages; ${disagreementCount} disagreements; ${unrecordedCount} unrecorded.`);
 assert.equal(unrecordedCount, 0, 'Unrecorded infobox drift; inspect the local sources and review each conflict.');
 const categories = categorySource.categories;
 const roster = { primary: 'Primary Weapons', secondary: 'Secondary Weapons', throwable: 'Throwables' };
@@ -82,7 +82,7 @@ function checkProjection(item, attack, type) {
   }
 }
 
-assert.equal(weapons.length, 106);
+assert.equal(weapons.length, 107);
 // Real-snapshot regression expectations, independent of the parser's own projection.
 const byCode = code => weapons.find(w => w.code === code);
 for (const [code, type] of Object.entries({ 'CB-9': 'explosives', 'GL-15': 'explosives', 'JAR-5': 'special', 'R-36': 'explosives', 'VG-70': 'special', 'FLAM-66': 'special' })) assert.equal(byCode(code).type, type);
@@ -163,8 +163,8 @@ assert.deepEqual(chargeDamage('Uncharged: 100 bolt + 75 explosion; Charged: 200 
 assert.deepEqual(chargeDamage('Charged: 100–200 bolt'), []);
 assert.throws(() => chargeDamage('Charged: 100 bolt<br>200 bolt'), /Conflicting/);
 assert.deepEqual(Object.keys(pageSource.pages).sort(), weapons.map(w => w.en).sort());
-assert.equal(new Set(weapons.map(w => w.id)).size, 106);
-assert.deepEqual(count(weapons, 'category'), { primary: 56, secondary: 26, throwable: 24 });
+assert.equal(new Set(weapons.map(w => w.id)).size, 107);
+assert.deepEqual(count(weapons, 'category'), { primary: 57, secondary: 26, throwable: 24 });
 assert.match(weaponsSource.retrievedAt, /^\d{4}-\d{2}-\d{2}$/);
 assert.equal(weaponsSource.retrievedAt, source.retrievedAt.slice(0, 10));
 assert.equal(weaponsSource.attacks, source.source);
@@ -281,7 +281,7 @@ for (let run = 1; run <= 2; run++) {
   const rebuilt = execFileSync(process.execPath, [fileURLToPath(new URL('scripts/build-weapons.mjs', root)), '--stdout'], { cwd: fileURLToPath(root), encoding: 'utf8' });
   assert.equal(rebuilt, committed, `Build ${run}: db/weapons.js is stale; run node scripts/build-weapons.mjs`);
 }
-console.log('Validated 106 weapons; source projections and two byte-identical rebuilds passed.');
+console.log('Validated 107 weapons; source projections and two byte-identical rebuilds passed.');
 console.log(`Category counts: ${JSON.stringify(count(weapons, 'category'))}`);
 console.log(`Type counts: ${JSON.stringify(count(weapons, 'type'))}`);
 const nullCounts = (items, fields) => Object.fromEntries(fields.map(field => [field, items.filter(item => item[field] === null).length]));
@@ -301,10 +301,10 @@ console.log(`Underbarrels: ${list(w => w.linkedAttacks.length > 0)}`);
 console.log(`Multiple attack components/modes: ${list(w => w.variants.length > 0)}`);
 console.log(`Beam/spray/arc units: ${list(w => [w, ...w.variants].some(v => ['beam', 'spray', 'arc'].includes(v.delivery)))}`);
 console.log(`Uncertain damage-only units: ${list(w => [w, ...w.variants].some(v => v.delivery === 'damage'))}`);
-console.log(`Gap fills: fuse ${weapons.filter(w => w.fuse !== null).length}/23; infobox type ${weapons.filter(w => w.fieldSources.type?.field === 'infobox.weapon_type').length}/103; names ${weapons.filter(w => w.name !== null).length}/103; reload ${weapons.filter(w => w.reload !== null).length}/103; tactical reload ${weapons.filter(w => w.reloadTactical !== null).length}/106`);
+console.log(`Gap fills: fuse ${weapons.filter(w => w.fuse !== null).length}/23; infobox type ${weapons.filter(w => w.fieldSources.type?.field === 'infobox.weapon_type').length}/103; names ${weapons.filter(w => w.name !== null).length}/103; reload ${weapons.filter(w => w.reload !== null).length}/103; tactical reload ${weapons.filter(w => w.reloadTactical !== null).length}/107`);
 console.log(`Unmatched Korean roster: ${koreanMatches.unmatchedRoster.map(w => `${w.title} (${w.reason})`).join('; ') || '(none)'}`);
 for (const page of koreanSource.pages) console.log(`Unmapped Namu headings [${decodeURIComponent(page.source).split('/w/')[1]}]: ${koreanMatches.unmappedHeadings.filter(h => h.source === page.source).map(h => h.heading).join('; ') || '(none)'}`);
 console.log(`Infobox charged variants: ${list(w => w.variants.some(v => v.id.startsWith('wiki-')))}`);
-console.log(`Unavailable page sources: ${Object.values(pageSource.pages).filter(p => p.wikitext === null).length}/106`);
+console.log(`Unavailable page sources: ${Object.values(pageSource.pages).filter(p => p.wikitext === null).length}/107`);
 console.log(`Infobox additions: ${JSON.stringify(Object.fromEntries(Object.entries({ infoboxConflicts: w => w.infoboxConflicts.length, dot: w => w.dot.raw !== null, heatCapacity: w => w.heatCapacity.raw !== null, swingsPerMinute: w => w.swingsPerMinute !== null, rpmModes: w => w.rpmModes.length, filledRpm: w => w.fieldSources.rpm !== null, filledSpareRounds: w => w.fieldSources.spareRounds !== null }).map(([field, predicate]) => [field, weapons.filter(predicate).length])))}`);
 console.log(`Type disagreements: ${list(w => w.notes.some(n => n.startsWith('유형 불일치:')))}`);

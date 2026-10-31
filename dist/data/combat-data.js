@@ -63,17 +63,18 @@ const spewer = (id, name, page, armor, note, revision, family = id, anatomy = {}
   ],
 });
 // Each build is one tab (table) of the wiki Voteless page, revision 135187
-// (checked 2026-09-28). The upper arm was added then.
-const voteless = (id, name, hp, headHp, forearmHp, upperArmHp, table) => ({
+// (checked 2026-09-28). The upper arm was added then. Since revision 140055 the
+// Heavy tab caps the forearm's damage to main and not the upper arm's.
+const voteless = (id, name, hp, headHp, forearmHp, upperArmHp, table, caps = { forearm: false, upperArm: true }) => ({
   id, name, faction: '일루미닛', source: wiki('Voteless'), sourceRevision: 135187, family: 'voteless',
-  anatomyRevision: 138050, anatomyCheckedAt: '2026-10-22', anatomyTable: table, anatomyTables: [table],
+  anatomyRevision: 140055, anatomyCheckedAt: '2026-10-31', anatomyTable: table, anatomyTables: [table],
   main: main(hp, 0, 0, 0, 100),
   note: '체형별 체력이 다릅니다. 머리는 치명 부위입니다. 다리를 잃고도 기어올 수 있어 다리 파괴는 즉사로 취급하지 않습니다. 본체 체력 소진 후의 출혈도 반영합니다.',
   parts: [
     part('head', '머리', headHp, 1, 0, 100, 100, true, 'kill', '몸통보다 체력이 낮은 머리를 직접 맞히세요.', { sourcePart: 'Head' }),
-    part('forearm', '아래팔 한쪽', forearmHp, 0, 0, 100, 30, false, 'break', '팔꿈치 아래의 팔 한쪽을 노리는 계산입니다. 팔 하나가 떨어져도 살아 있을 수 있습니다.', { sourcePart: 'Forearms (2)' }),
+    part('forearm', '아래팔 한쪽', forearmHp, 0, 0, 100, 30, caps.forearm, 'break', '팔꿈치 아래의 팔 한쪽을 노리는 계산입니다. 팔 하나가 떨어져도 살아 있을 수 있습니다.', { sourcePart: 'Forearms (2)' }),
     part('leg', '다리', 80, 0, 0, 100, 30, true, 'break', '다리를 끊어 쓰러뜨려도 기어와 공격할 수 있습니다. 확실히 끝내려면 머리를 노리세요.', { sourcePart: 'Legs' }),
-    part('upper-arm', '위팔 한쪽', upperArmHp, 0, 0, 100, 40, true, 'break', '팔꿈치 위의 팔 한쪽입니다. 떨어져도 바로 죽지 않지만 피해의 40%가 본체로 들어갑니다.', { constitution: 1000, sourcePart: 'Upper Arms (2)' }),
+    part('upper-arm', '위팔 한쪽', upperArmHp, 0, 0, 100, 40, caps.upperArm, 'break', '팔꿈치 위의 팔 한쪽입니다. 떨어져도 바로 죽지 않지만 피해의 40%가 본체로 들어갑니다.', { constitution: 1000, sourcePart: 'Upper Arms (2)' }),
   ],
 });
 
@@ -187,9 +188,9 @@ const originalEnemies = [
     main: main(600, 0, 0, 0),
     shield: { hp: 1500, armor: 2, label: '방패를 피해서 공격할 수 있음', note: '팔의 방패를 우회해 해당 부위를 직접 맞히는 조건입니다. 방패에 맞는 탄수는 포함하지 않습니다.' },
     note: '흉부는 장갑을 먼저 벗겨야 합니다. 방패가 사선을 가리고 있다면 아래의 직격 계산을 그대로 적용할 수 없습니다.',
-    // Every part matches Wiki Anatomy revision 135796 (checked 2026-09-28).
-    // Parts after the legacy ones were added then.
-    anatomyRevision: 135796, anatomyCheckedAt: '2026-09-28',
+    // Every part matches Wiki Anatomy revision 140056 (checked 2026-10-31).
+    // Parts after the legacy ones were added on 2026-09-28.
+    anatomyRevision: 140056, anatomyCheckedAt: '2026-10-31',
     anatomyOmitted: { Shield: 'The arm shield is the shield toggle (hits that get past it), not a part' },
     parts: [
       part('head', '머리·투구', 150, 3, 0, 100, 100, true, 'kill', '장갑 관통이 충분하면 투구를 쏘세요.', { sourcePart: 'Head' }),
@@ -208,9 +209,9 @@ const originalEnemies = [
     main: main(3000, 4, 70, 0),
     shield: { hp: 1500, armor: 0, label: '보호막이 이미 제거된 상태', note: '보호막은 강한 한 발도 흡수하고 다시 생성될 수 있습니다. 보호막 제거에 쓴 탄수는 아래 계산에서 제외합니다.' },
     note: '다리와 몸통을 잇는 가로 관절이 치명 부위입니다. 눈은 파괴해도 생존하며 빔 공격이 강해질 수 있습니다.',
-    // Every part matches Wiki Anatomy revision 135183 (checked 2026-09-28),
-    // the Intact and Armor Broken tabs. Parts after the first four were added then.
-    anatomyRevision: 135183, anatomyCheckedAt: '2026-09-28',
+    // Every part matches Wiki Anatomy revision 140061 (checked 2026-10-31),
+    // the Intact and Armor Broken tabs. Parts after the first four were added on 2026-09-28.
+    anatomyRevision: 140061, anatomyCheckedAt: '2026-10-31',
     anatomyMerged: { 'Armor Broken: Damaged Chassis': 'chassis' },
     anatomyOmitted: { Shield: 'The energy shield is the shield toggle (cleared before counting), not a part' },
     parts: [
@@ -450,14 +451,15 @@ const originalEnemies = [
   },
   voteless('voteless-light', '무권자 · 경량형', 100, 40, 50, 50, 0),
   voteless('voteless-medium', '무권자 · 중간형', 130, 50, 50, 65, 1),
-  voteless('voteless-heavy', '무권자 · 중량형', 160, 60, 65, 80, 2),
+  { ...voteless('voteless-heavy', '무권자 · 중량형', 160, 60, 65, 80, 2, { forearm: true, upperArm: false }),
+    anatomyLegacy: { 'forearm.overflowCap': false, 'upper-arm.overflowCap': true } },
   {
     id: 'watcher', name: '와처', faction: '일루미닛', source: wiki('Watcher'), sourceRevision: 135178,
     main: main(600, 0, 0, 0),
     note: '몸통이 치명 부위입니다. 눈이나 지느러미 하나를 파괴하는 것만으로는 죽지 않으며, 추가 피해가 본체를 소진한 경우에만 처치로 표시합니다.',
-    // Every part matches Wiki Anatomy revision 139239 (checked 2026-10-22).
-    // Parts after the legacy ones were added then.
-    anatomyRevision: 139239, anatomyCheckedAt: '2026-10-22',
+    // Every part matches Wiki Anatomy revision 140766 (checked 2026-10-31).
+    // Parts after the legacy ones were added on 2026-10-22.
+    anatomyRevision: 140766, anatomyCheckedAt: '2026-10-31',
     // The wiki raised the upper fin's armor from 0 after the reviewed revision.
     anatomyLegacy: { 'upper-fin.armor': 0 },
     parts: [
@@ -472,17 +474,15 @@ const originalEnemies = [
     id: 'elevated-overseer', name: '고위 오버시어 · 비행형', faction: '일루미닛', source: wiki('Elevated_Overseer'), sourceRevision: 135189,
     main: main(450, 0, 0, 0),
     note: '비행형은 지상형과 체력·머리 장갑이 다릅니다. 제트팩 파괴는 즉사이며, 흉부는 장갑을 벗긴 뒤 몸통에 후속탄을 맞힙니다.',
-    // Every part matches Wiki Anatomy revision 135795 (checked 2026-09-28),
-    // except the torso and arm health below. Parts after the legacy ones were added then.
-    anatomyRevision: 135795, anatomyCheckedAt: '2026-09-28',
+    // Every part matches Wiki Anatomy revision 140086 (checked 2026-10-31),
+    // except the torso health below. Parts after the legacy ones were added on 2026-09-28.
+    anatomyRevision: 140086, anatomyCheckedAt: '2026-10-31',
     // The official patch notes 4.1.0 (2025-10-23) cut the torso from 600 to 450
     // and the arms from 300 to 250, and no later patch note changes them. The
-    // wiki table went back to 600/300 on 2026-03-04 while its own change history
-    // kept 450/250, so the site follows the patch notes here.
+    // wiki table went back to 600/300 on 2026-03-04; revision 140086 restored the
+    // arms to 250 but gives the torso 400, so the site follows the patch notes there.
     anatomyOfficial: {
-      'torso.hp': { wiki: 600, source: 'Patch 4.1.0 (2025-10-23): torso health decreased from 600 to 450' },
-      'right-arm.hp': { wiki: 300, source: 'Patch 4.1.0 (2025-10-23): arms health decreased from 300 to 250' },
-      'left-arm.hp': { wiki: 300, source: 'Patch 4.1.0 (2025-10-23): arms health decreased from 300 to 250' },
+      'torso.hp': { wiki: 400, source: 'Patch 4.1.0 (2025-10-23): torso health decreased from 600 to 450' },
     },
     anatomyLegacy: { 'chest-armor.next.hp': 600, 'crotch-armor.next.hp': 600, 'right-arm.hp': 300, 'left-arm.hp': 300 },
     parts: [
@@ -596,7 +596,7 @@ export const weaponProfiles = {
   'autocannon': profile('AC-8_Autocannon', [
     shot('aphet', '철갑고폭예광탄(APHET)', 325, 260, 4, 150, 3, { falloff: true }),
     shot('flak', '대공포탄 모드', 150, 150, 2, 190, 3, {
-      source: wiki('Module:Decodedata-Attacks/weapons_data.json'), sourceRevision: 139350, checkedAt: '2026-10-22',
+      source: wiki('Module:Decodedata-Attacks/weapons_data.json'), sourceRevision: 140989, checkedAt: '2026-10-31',
       sourceRecords: { projectile: 'AC-8_P1', explosion: 'AC-8_P1_IE', fragment: 'AC-8_P2' },
       delivery: 'explosive', directKind: 'none', explosionDurable: 190, innerRadius: 2, radius: 7,
       hitCondition: { kind: 'shrapnel', min: 0, max: 30, default: 6, defaultPct: 20 },
@@ -605,7 +605,7 @@ export const weaponProfiles = {
     }),
   ]),
   'wasp': {
-    source: wiki('Module:Decodedata-Attacks/weapons_data.json'), sourceRevision: 139350, checkedAt: '2026-10-22',
+    source: wiki('Module:Decodedata-Attacks/weapons_data.json'), sourceRevision: 140989, checkedAt: '2026-10-31',
     sourceRecords: { weapon: 'STA-X3 W.A.S.P. LAUNCHER', projectile: 'StA-X3_P1', explosion: 'StA-X3_P1_IE', bomblet: 'StA-X3_P', bombletExplosion: 'StA-X3_P_IE' },
     note: '분산탄 한 발에서 나온 작은 미사일이 같은 부위에 맞는다고 가정한 피해 계산입니다. 실제 유도 가능 대상이나 명중 부위를 보장하지 않습니다. 탄창 소모량과 여러 부위 동시 피해는 계산하지 않습니다.',
     modes: [

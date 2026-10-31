@@ -1,8 +1,8 @@
 {
  "source": "https://helldivers.wiki.gg/wiki/Module:Decodedata-Attacks/weapons_data.json",
- "revision": 139350,
- "revisionTimestamp": "2026-10-20T18:56:59Z",
- "retrievedAt": "2026-10-22",
+ "revision": 140989,
+ "revisionTimestamp": "2026-10-30T07:45:01Z",
+ "retrievedAt": "2026-10-31",
  "data": {
   "damage": {
    "40-K MELTAGUN_B_dm": {
@@ -112,7 +112,7 @@
     "ap2": 5,
     "ap3": 5,
     "ap4": 0,
-    "demo": 15,
+    "demo": 30,
     "stun": 40,
     "push": 25,
     "element_name": "none",
@@ -2405,37 +2405,6 @@
     "name": "P_IE_dm",
     "element_name_sub": "explosion"
    },
-   "PLAS-15_P_dm": {
-    "dmg": 100,
-    "dmg2": 50,
-    "hits_per_second": 0,
-    "ap1": 2,
-    "ap2": 2,
-    "ap3": 2,
-    "ap4": 0,
-    "demo": 10,
-    "stun": 20,
-    "push": 10,
-    "element_name": "none",
-    "statuses": [],
-    "element_name_sub": "ballistic"
-   },
-   "PLAS-15_P_IE_dm": {
-    "dmg": 25,
-    "dmg2": 25,
-    "hits_per_second": 0,
-    "ap1": 3,
-    "ap2": 0,
-    "ap3": 0,
-    "ap4": 0,
-    "demo": 10,
-    "stun": 10,
-    "push": 5,
-    "element_name": "none",
-    "statuses": [],
-    "name": "PLAS-15_P_IE_dm",
-    "element_name_sub": "explosion"
-   },
    "P1_dm": {
     "dmg": 150,
     "dmg2": 75,
@@ -3928,16 +3897,6 @@
     "noise": "small_explosion_frag",
     "name": "P IE"
    },
-   "PLAS-15_P_IE": {
-    "damage_id": "PLAS-15_P_IE_dm",
-    "r1": 0.75,
-    "r2": 1.5,
-    "r3": 2,
-    "aoe_duration": 0,
-    "is_huge": 1,
-    "noise": "small_explosion_frag",
-    "name": "PLAS-15 P IE"
-   },
    "P1_IE": {
     "damage_id": "P1_IE_dm",
     "r1": 1,
@@ -4170,7 +4129,7 @@
    },
    "AMW-20_P": {
     "damage_id": "AMW-20_P_dm",
-    "caliber": 60,
+    "caliber": 20,
     "pellets": 1,
     "velocity": 1500,
     "mass": 70,
@@ -5126,24 +5085,6 @@
     "arming_distance": 0,
     "explode_on_impact_id": "P_IE",
     "name": "P"
-   },
-   "PLAS-15_P": {
-    "damage_id": "PLAS-15_P_dm",
-    "caliber": 10,
-    "pellets": 1,
-    "velocity": 550,
-    "mass": 10,
-    "gravity": 0.5,
-    "lifetime": 0,
-    "life_time_randomness": 0,
-    "pen_slow": 0.349999994,
-    "drag": 1,
-    "explode_angle": 80,
-    "explode_proximity": 0,
-    "explosion_delay": 0,
-    "arming_distance": 0,
-    "explode_on_impact_id": "PLAS-15_P_IE",
-    "name": "PLAS-15 P"
    },
    "P1": {
     "damage_id": "P1_dm",
@@ -6329,6 +6270,59 @@
       "type": "projectile",
       "name": "AR-23_P",
       "parent": "AR-23 LIBERATOR",
+      "level": 1
+     }
+    ]
+   },
+   "AR-23L LIBERATOR LEGACY": {
+    "id": "AR-23L",
+    "name": "AR-23L LIBERATOR LEGACY",
+    "recoil_mods": {
+     "horizontal_multiplier": 1,
+     "vertical_multiplier": 1,
+     "drift_horizontal_multiplier": 1,
+     "drift_vertical_multiplier": 1,
+     "climb_horizontal_multiplier": 1,
+     "climb_vertical_multiplier": 1,
+     "ergo": -1
+    },
+    "drift": {
+     "x": 10,
+     "y": 13
+    },
+    "climb": {
+     "x": 7,
+     "y": 26
+    },
+    "spread": {
+     "x": 2,
+     "y": 2
+    },
+    "spread_mods": {
+     "x": 1,
+     "y": 1
+    },
+    "sway": 1,
+    "ergonomics": 60,
+    "noise": "weapon_medium",
+    "barrels": 1,
+    "fire_modes": [
+     "automatic",
+     "single",
+     "burst"
+    ],
+    "roundtype": "mags",
+    "cap": 45,
+    "magstart": 6,
+    "mags": 8,
+    "capplus": 1,
+    "supply": 8,
+    "rpm": 660,
+    "attacks": [
+     {
+      "type": "projectile",
+      "name": "AR-23_P",
+      "parent": "AR-23L LIBERATOR LEGACY",
       "level": 1
      }
     ]
@@ -10531,7 +10525,7 @@
      },
      {
       "type": "explosion",
-      "name": "P-34_BREACHER_E",
+      "name": "P-34 BREACHER_E",
       "parent": "P-34_P",
       "level": 2
      },
@@ -11149,12 +11143,6 @@
       "level": 1
      },
      {
-      "type": "projectile",
-      "name": "PLAS-15_P",
-      "parent": "PLAS-15 LOYALIST",
-      "level": 1
-     },
-     {
       "type": "explosion",
       "name": "P1_IE",
       "parent": "P1",
@@ -11164,12 +11152,6 @@
       "type": "explosion",
       "name": "P2_IE",
       "parent": "P2",
-      "level": 2
-     },
-     {
-      "type": "explosion",
-      "name": "PLAS-15_P_IE",
-      "parent": "PLAS-15_P",
       "level": 2
      }
     ]
@@ -13447,6 +13429,7 @@
      }
     ]
    }
-  }
+  },
+  "wep_version": "1.007.202"
  }
 }

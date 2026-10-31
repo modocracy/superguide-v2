@@ -526,8 +526,8 @@ export const expandedEnemies = [
     "sourceRevision": 135093,
     "note": "머리는 즉사 부위이며 후방 복부 파괴는 출혈을 유발합니다. 포자 혹은 본체에 20%만 전달하며 폭발 피해를 받지 않습니다. 뒤쪽 복부 내구도는 100%로 일반 차저와 다릅니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 139886,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140019,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 2400,
       "armor": 4,
@@ -887,8 +887,8 @@ export const expandedEnemies = [
     "sourceRevision": 135104,
     "note": "본체 7,000·머리 2,500·포자낭 1,000으로 기본 바일 타이탄과 다릅니다. 포자낭 파괴와 처치를 구분합니다. 다리 살점의 추가 체력은 시간이 지나도 줄지 않습니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 137858,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140147,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 7000,
       "armor": 4,
@@ -1594,8 +1594,8 @@ export const expandedEnemies = [
     "sourceRevision": 135177,
     "note": "눈은 직접 맞혀야 하며 폭발 피해에 면역입니다. 후방 방열판 파괴는 출혈을 시작합니다. 한쪽 다리 파괴와 양쪽 다리 파괴를 구분합니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 138254,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140050,
+    "anatomyCheckedAt": "2026-10-31",
     "anatomyLegacy": {
       "leg.staticConstitution": null
     },
@@ -1681,8 +1681,8 @@ export const expandedEnemies = [
     "sourceRevision": 135140,
     "note": "제트팩이 일반 헐크의 후방 방열판을 완전히 가립니다. 제트팩 파괴는 출혈 없이 즉사하며 장갑은 3입니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 138258,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140134,
+    "anatomyCheckedAt": "2026-10-31",
     "anatomyLegacy": {
       "leg.staticConstitution": null
     },
@@ -1766,8 +1766,8 @@ export const expandedEnemies = [
     "sourceRevision": 135139,
     "note": "제트팩이 일반 헐크의 후방 방열판을 완전히 가립니다. 제트팩 파괴는 출혈 없이 즉사하며 장갑은 3입니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 138257,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140135,
+    "anatomyCheckedAt": "2026-10-31",
     "anatomyLegacy": {
       "leg.staticConstitution": null
     },
@@ -1859,8 +1859,8 @@ export const expandedEnemies = [
       "label": "방패를 우회해 선택한 부위에 공격이 닿는 상태"
     },
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 139855,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140049,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 750,
       "armor": 2,
@@ -2009,8 +2009,8 @@ export const expandedEnemies = [
       "label": "방패를 우회해 선택한 부위에 공격이 닿는 상태"
     },
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 136517,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 140048,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 750,
       "armor": 2,
@@ -2809,8 +2809,8 @@ export const expandedEnemies = [
     "sourceRevision": 135134,
     "note": "눈과 머리 살점은 장갑4 치명 부위입니다. 복부 문·노출된 회로·다리 연결부의 0/s 추가 체력은 자연 감소하지 않으므로 끝까지 깎아야 합니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 135134,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 139888,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 10000,
       "armor": 4,
@@ -3167,8 +3167,8 @@ export const expandedEnemies = [
     "sourceRevision": 134991,
     "note": "몸통·다리의 개별 체력이 본체보다 높지만, 본체로 전달된 피해가 먼저 체력을 소진할 수 있습니다. 서로 다른 부위에 동시에 맞은 폭발 피해는 합치지 않습니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 136549,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 140051,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 750,
       "armor": 1,
@@ -3571,8 +3571,8 @@ export const expandedEnemies = [
     ],
     "note": "본체 체력이 소진된 뒤 추가 체력 50,000이 초당 10,000씩 감소하여 폭발합니다. 무장·방열판 파괴의 별도 본체 피해와 해치 수류탄 조건이 있습니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 139236,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140053,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 9000,
       "armor": 5,
@@ -3781,8 +3781,8 @@ export const expandedEnemies = [
     "sourceRevision": 135181,
     "note": "박격포형 오버시어입니다. 머리는 장갑 3이며, 흉부와 사타구니 장갑을 벗긴 뒤 몸통을 공격할 수 있습니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 139398,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140058,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 600,
       "armor": 0,
@@ -3933,8 +3933,8 @@ export const expandedEnemies = [
     "sourceRevision": 135182,
     "note": "여러 머리·복부 덩어리는 각각 별도 체력입니다. 한 덩어리 파괴를 처치로 취급하지 않으며, 서로 다른 덩어리에 들어간 피해를 자동 합산하지 않습니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 138173,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140060,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 5000,
       "armor": 0,
@@ -4006,8 +4006,8 @@ export const expandedEnemies = [
     "sourceRevision": 135184,
     "note": "기총소사를 하는 비행체입니다. 사격구는 별도 부위 체력이 아니라 본체 체력을 공유합니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 139235,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140063,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 800,
       "armor": 3,
@@ -4041,8 +4041,8 @@ export const expandedEnemies = [
     "sourceRevision": 135186,
     "note": "지느러미나 꼬리를 부수면 장갑 4의 내부가 드러납니다. 한 외피 파괴와 전체 함선 처치를 구분합니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 139040,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140064,
+    "anatomyCheckedAt": "2026-10-31",
     "anatomyMerged": {
       "Broken: Damaged Rearward- Middle Vertebra": "rearward-middle-vertebra"
     },
@@ -4244,8 +4244,8 @@ export const expandedEnemies = [
       "armor": 0
     },
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 135185,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 140062,
+    "anatomyCheckedAt": "2026-10-31",
     "anatomyOmitted": {
       "Shield": "The energy shield is the shield toggle (cleared before counting), not a part"
     },
@@ -4356,8 +4356,8 @@ export const expandedEnemies = [
       "armor": 2
     },
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 138107,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140066,
+    "anatomyCheckedAt": "2026-10-31",
     "anatomyOmitted": {
       "Shield": "The cockpit shield is the shield toggle (cleared before counting the pilot), not a part"
     },
@@ -4600,8 +4600,8 @@ export const expandedEnemies = [
       "armor": 2
     },
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 138108,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 140067,
+    "anatomyCheckedAt": "2026-10-31",
     "anatomyMerged": {
       "Legs (3)": "leg",
       "Arms (2)": "exposed-arm"
@@ -4840,8 +4840,8 @@ export const expandedEnemies = [
     "sourceRevision": 133907,
     "note": "머리 파괴는 즉사 조건이 아닙니다. 팔과 발톱 하나의 파괴도 처치와 구분하며, 다리를 통해 본체 체력을 소진할 수 있습니다.",
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 136548,
-    "anatomyCheckedAt": "2026-09-28",
+    "anatomyRevision": 140071,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 450,
       "armor": 1,
@@ -4930,8 +4930,8 @@ export const expandedEnemies = [
       "note": "재생을 제외한 최소 이론값입니다. 피격 후 0.5초부터 초당 체력 30이 재생되어 공격 간격에 따라 더 필요할 수 있습니다. 머리·헬멧은 재생하지 않습니다."
     },
     "checkedAt": "2026-09-16",
-    "anatomyRevision": 138301,
-    "anatomyCheckedAt": "2026-10-22",
+    "anatomyRevision": 141041,
+    "anatomyCheckedAt": "2026-10-31",
     "main": {
       "hp": 6000,
       "armor": 1,
