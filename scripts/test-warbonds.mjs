@@ -3,10 +3,12 @@
 // links into weapon/stratagem views, and that the generated data is current.
 import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { parseWarbondPage, parseCurrency, parseDate, findTemplates, templateParams, parseTableRows, UNCONFIRMED } from './warbond-parse.mjs';
-import { generate, buildWarbonds, warbondId, baseTitle, RENAMED } from './build-warbonds.mjs';
-import { warbonds, warbondTiers, warbondDiscrepancies, warbondLinks } from '../dist/data/warbonds.js';
+import { generate, buildWarbonds, warbondId, baseTitle, RENAMED, pickLatest } from './build-warbonds.mjs';
+import { warbonds, warbondTiers, warbondDiscrepancies, warbondLinks, latestWarbondId } from '../dist/data/warbonds.js';
 import { warbondImages } from '../dist/data/warbond-images.js';
+import { warbondBannerImages } from '../dist/data/warbond-banner-images.js';
 import { personalWeapons } from '../dist/data/personal-weapons.js';
 import { stratagemById } from '../dist/core/catalog.js';
 import { parseRoute } from '../dist/core/route.js';
@@ -145,5 +147,32 @@ eq(buildWarbonds(reversed, korean).warbonds.map(w => w.id), warbonds.map(w => w.
 assert.throws(() => buildWarbonds(snapshot, { ...korean, 'Cutting Edge': '' }), /No Korean name/); checks++;
 assert.throws(() => buildWarbonds(snapshot, { ...korean, 'Made Up': '가짜' }), /without a warbond page/); checks++;
 ok(parseRoute('').view === 'warbonds', 'warbonds is the main page');
+
+// --- "Latest release" banner -----------------------------------------------------------------
+const maxDate = warbonds.map(w => w.date).sort().at(-1);
+const newest = warbonds.filter(w => w.date === maxDate).map(w => w.en).sort()[0];
+eq(latestWarbondId, warbonds.find(w => w.en === newest).id, 'banner picks the warbond with the newest release date');
+eq(latestWarbondId, pickLatest(warbonds), 'generated latestWarbondId matches pickLatest');
+// Tie-break: same date → English title in code-unit order; input order never matters; undated never wins.
+const tie = [{ id: 'b', en: 'Bravo', date: '2026-05-01' }, { id: 'a', en: 'Alpha', date: '2026-05-01' }, { id: 'c', en: 'Charlie', date: '2026-04-01' }, { id: 'x', en: 'Aardvark', date: null }];
+for (const order of [tie, [...tie].reverse(), [tie[2], tie[0], tie[3], tie[1]]]) eq(pickLatest(order), 'a', 'tie-break by English title regardless of order');
+eq(pickLatest([{ id: 'x', en: 'X', date: null }]), null, 'no dated warbond → no banner');
+eq(pickLatest(warbonds.toReversed()), latestWarbondId, 'real data: order does not change the pick');
+// Large banner cover: only for the latest warbond, small and sharp; the 26 small covers are unchanged.
+const banner = warbondBannerImages[latestWarbondId];
+ok(banner, `no large banner cover for ${latestWarbondId}: run python scripts/tools/fetch-warbond-covers.py --latest-large (the page falls back to the small cover meanwhile)`);
+for (const [id, image] of Object.entries(warbondBannerImages)) {
+  const bytes = await readFile(new URL(`dist/${image.src.slice(2)}`, root));
+  ok(image.src === `./assets/warbonds/${id}-large.webp` && image.width <= 720 && image.width > warbondImages[id].width, `${id}: large cover path and size`);
+  ok(bytes.length <= 40000, `${id}: large cover is ${bytes.length} bytes (≤ 40,000)`);
+  eq(createHash('sha256').update(bytes).digest('hex'), image.sha256, `${id}: large cover file matches its record`);
+}
+for (const [id, image] of Object.entries(warbondImages)) {
+  eq(createHash('sha256').update(await readFile(new URL(`dist/${image.src.slice(2)}`, root))).digest('hex'), image.sha256, `${id}: small cover unchanged`);
+}
+const { latestBanner } = await import('../dist/ui/views/warbonds.js');
+const bannerHtml = String(latestBanner());
+ok(bannerHtml.includes(`data-open="${latestWarbondId}"`) && bannerHtml.includes(banner.src) && bannerHtml.includes(`max-width:${banner.width}px`), 'banner opens the same detail route and shows the large cover at no more than its own width');
+ok(bannerHtml.includes('최신 출시 채권') && bannerHtml.includes(warbonds.find(w => w.id === latestWarbondId).name), 'banner shows its label and the Korean name');
 
 console.log(`PASS warbonds: ${checks} checks (${warbonds.length} warbonds, ${warbondDiscrepancies.length} wiki discrepancies left 미확인, ${warbondLinks.weapons} weapon + ${warbondLinks.stratagems} stratagem links).`);

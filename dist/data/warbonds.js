@@ -2073,3 +2073,5 @@ export const warbondLinks = {
     {"warbondId":"urban-legends","page":3,"name":"Anti-Tank Emplacement","type":"Emplacement","matched":"E/AT-12 Anti-Tank Emplacement","id":"at-emplacement"}
   ]
 };
+
+export const latestWarbondId = "scope-of-authority";

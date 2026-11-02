@@ -2,8 +2,9 @@
 // release date, price and per-page medal costs. Weapons and stratagems link to
 // their own detail views; other items keep their wiki (English) names.
 //   #/warbonds[/<warbond>]?t=<tier>
-import { warbonds, warbondTiers, warbondsCheckedAt, warbondsSource, warbondDiscrepancies } from '../../data/warbonds.js';
+import { warbonds, warbondTiers, warbondsCheckedAt, warbondsSource, warbondDiscrepancies, latestWarbondId } from '../../data/warbonds.js';
 import { warbondImages } from '../../data/warbond-images.js';
+import { warbondBannerImages } from '../../data/warbond-banner-images.js';
 import { personalWeapons } from '../../data/personal-weapons.js';
 import { stratagemById } from '../../core/catalog.js';
 import { html, render, $, $$, badge, external, icon } from '../dom.js';
@@ -70,6 +71,33 @@ function card(warbond) {
       ${warbond.counts.stratagems ? badge(L(`스트라타젬 ${warbond.counts.stratagems}`, `${warbond.counts.stratagems} ${plural(warbond.counts.stratagems, 'stratagem')}`), 'accent') : ''}
       ${unsure ? badge(L('일부 미확인', 'Some unconfirmed'), 'unknown') : ''}</div>
   </button></article>`;
+}
+
+// "Latest release" banner. latestWarbondId is chosen by the build (newest release date,
+// ties by English title — scripts/build-warbonds.mjs pickLatest), so it follows data refreshes.
+// The large cover exists only for the latest warbond; otherwise the small cover is used.
+// Either way the image is never stretched past its own pixel width (max-width), so it stays sharp.
+export function latestBanner() {
+  const warbond = warbonds.find(item => item.id === latestWarbondId);
+  if (!warbond) return '';
+  const image = warbondBannerImages[warbond.id] || warbondImages[warbond.id];
+  const fact = (label, value) => html`<div><dt>${label}</dt><dd>${value}</dd></div>`;
+  return html`<section class="wb-latest" aria-labelledby="wb-latest-title"><button class="wb-latest-open" type="button" data-open="${warbond.id}">
+    ${image ? html`<img class="wb-latest-cover" src="${image.src}" alt="" width="${image.width}" height="${image.height}" style="max-width:${image.width}px" decoding="async">` : ''}
+    <div class="wb-latest-body">
+      <div class="eyebrow">${L('최신 출시 채권', 'Latest warbond')}</div>
+      <h2 id="wb-latest-title">${warbond.name}</h2>${lang === 'en' ? '' : html`<p class="en">${warbond.en}</p>`}
+      <dl class="wb-latest-facts">
+        ${fact(L('출시일', 'Release date'), warbond.date || UNCONFIRMED)}
+        ${fact(L('가격', 'Price'), sc(warbond.price))}
+        ${fact(L('전체 메달', 'All items'), warbond.totalCost != null ? medals(warbond.totalCost) : UNCONFIRMED)}
+        ${fact(L('항목', 'Items'), html`${count(warbond.itemCount)}<small>${L('개', '')}</small>`)}
+        ${fact(L('무기', 'Weapons'), count(warbond.counts.weapons))}
+        ${fact(L('스트라타젬', 'Stratagems'), count(warbond.counts.stratagems))}
+      </dl>
+      <span class="button primary small wb-latest-cta">${L('페이지별 목록 보기', 'See every page')} ${icon('arrow', 16)}</span>
+    </div>
+  </button></section>`;
 }
 
 function renderList() {
@@ -164,6 +192,7 @@ export function mount(container, context) {
   const items = warbonds.reduce((sum, item) => sum + item.itemCount, 0);
   render(root, html`<div class="page-head"><div><div class="eyebrow">Warbonds</div><h1>${L('전쟁 채권', 'Warbonds')}</h1>
       <p>${L(`전쟁 채권 ${warbonds.length}종의 출시일·가격과 페이지별 메달 비용, 들어 있는 무기와 스트라타젬(${items}개 항목). 카드를 누르면 페이지별 목록이 열립니다.`, `Release date, price and per-page medal costs of all ${warbonds.length} warbonds, with the weapons and stratagems inside (${items} items). Open a card for the page-by-page list.`)}</p></div></div>
+    ${latestBanner()}
     <div class="chips" role="group" aria-label="${L('등급', 'Tier')}" style="margin-bottom:18px">
       <button class="chip" type="button" data-tier-filter="" aria-pressed="true">${L('전체', 'All')} <span class="count">${warbonds.length}</span></button>
       ${warbondTiers.map(tier => html`<button class="chip" type="button" data-tier-filter="${tier.id}" aria-pressed="false">${tier.name} <span class="count">${warbonds.filter(item => item.tier === tier.id).length}</span></button>`)}

@@ -13,6 +13,7 @@
   - 항목 연결: 무기 92개·스트라타젬 31개가 사이트 상세 화면으로 연결되고 미연결 0개입니다.
   - 위키 전쟁 채권 문서의 `LAS-16 Trident`는 사이트의 LAS-13 Trident와 같은 무기입니다. 무기 문서 revision 140438에 출처 Siege Breakers 1페이지·35메달, 1.006.003 변경 기록에 'LAS-16 Trident'에서 이름 변경이 적혀 있어 `RENAMED`로 명시 연결했습니다.
   - 표지 이미지 26장: `scripts/tools/fetch-warbond-covers.py` → `dist/assets/warbonds/`(240px WebP).
+- 전쟁 채권 첫 화면 위에 '최신 출시 채권' 배너 추가: 빌드가 출시일이 가장 늦은 채권을 고르고(같은 날이면 영문 제목 순, `latestWarbondId`), 큰 표지는 `python scripts/tools/fetch-warbond-covers.py --latest-large`로 그 채권만 받습니다(현재 Scope of Authority, 720×360·38KB). 데이터 갱신으로 최신 채권이 바뀌면 이 명령을 다시 실행해야 검사가 통과합니다.
 
 ## 남은 일 (각각 사용자 승인 후 진행)
 
