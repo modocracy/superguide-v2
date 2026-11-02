@@ -90,7 +90,10 @@ const route = parseRoute('#/enemy/charger?w=autocannon&m=aphet');
 ok(route.view === 'enemy' && route.id === 'charger' && route.query.w === 'autocannon' && route.query.m === 'aphet', 'parse route');
 ok(formatRoute(route) === '#/enemy/charger?w=autocannon&m=aphet', 'format round-trips');
 ok(parseRoute('#combat').view === 'enemy' && parseRoute('#catalog').view === 'arsenal', 'old-site hashes still work');
-ok(parseRoute('').view === 'arsenal' && parseRoute('#/nowhere').view === 'arsenal', 'unknown routes fall back');
+ok(parseRoute('').view === 'warbonds' && parseRoute('#/nowhere').view === 'warbonds' && formatRoute(parseRoute('')) === '#/warbonds', 'empty and unknown routes open the warbond main page');
+for (const hash of ['#/arsenal', '#/arsenal/eagle-500kg?c=eagle', '#/gear/liberator?cat=primary', '#/gear?tab=loadout&p=liberator', '#/enemy/charger?w=autocannon', '#/demolition?s=spore-spewer', '#/factions/predator-strain', '#/warbonds/cutting-edge?t=premium']) {
+  ok(formatRoute(parseRoute(hash)) === hash, `existing link keeps its screen: ${hash}`);
+}
 ok(parseRoute('#/arsenal?q=%EB%8F%84%EB%B0%80%ED%83%80%26x').query.q === '도밀타&x', 'queries decode once');
 ok(formatRoute({ view: 'arsenal', query: { q: '', c: null } }) === '#/arsenal', 'empty params are dropped');
 

@@ -22,7 +22,7 @@ export function initAnalytics(win = window, doc = document) {
   doc.head.appendChild(script);
 
   // Keep the previous site's feature names so reports read the same across both.
-  const feature = { arsenal: 'catalog', gear: 'gear', enemy: 'combat', demolition: 'demolition', factions: 'factions' };
+  const feature = { warbonds: 'warbonds', arsenal: 'catalog', gear: 'gear', enemy: 'combat', demolition: 'demolition', factions: 'factions' };
   let last;
   return view => {
     if (!feature[view] || view === last) return;
