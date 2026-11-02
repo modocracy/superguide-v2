@@ -301,7 +301,7 @@ npm run check
 사이트 첫 화면(`#/warbonds`)의 데이터입니다. 무기 DB와 별개이며 브라우저는 `db/`를 읽지 않습니다.
 
 - `source/wiki_warbonds.json`: `node scripts/fetch-warbonds.mjs`가 [Category:Warbonds](https://helldivers.wiki.gg/wiki/Category:Warbonds)의 문서를 MediaWiki API로 받은 스냅샷입니다(네트워크 필요, 기본 도구 User-Agent). `pages[영문 제목]`에 `source`, `pageid`, `revision`, `revisionTimestamp`, `retrievedAt`, `wikitext`를 보존합니다. 분류에 함께 들어 있는 개요 문서 `Warbonds`는 인포박스가 없어 `skipped`에만 기록합니다.
-- `source/warbond_korean_names.json`: 전쟁 채권 26종의 한국어 이름(나무위키 표기, 사용자 제공). 키는 문서 제목에서 ` Premium Warbond`/` Legendary Warbond`/` Warbond`를 뺀 이름입니다. 이름이 빠지거나 남으면 빌드가 실패합니다.
+- `source/warbond_korean_names.json`: 전쟁 채권 26종의 한국어 이름(게임 내 표기). 이름만 담고 다른 항목은 두지 않습니다. 키는 문서 제목에서 ` Premium Warbond`/` Legendary Warbond`/` Warbond`를 뺀 이름입니다. 이름이 빠지거나 남으면 빌드가 실패합니다.
 - `node scripts/build-warbonds.mjs [--stdout]`: 위 두 파일만 읽어 `dist/data/warbonds.js`를 생성합니다(LF, 네트워크·시각 의존 없음). 공통 파서는 `scripts/warbond-parse.mjs`입니다.
 - `python scripts/tools/fetch-warbond-covers.py`: 인포박스 표지를 240px WebP로 받아 `dist/assets/warbonds/`와 `dist/data/warbond-images.js`를 씁니다(네트워크, Pillow 필요).
 

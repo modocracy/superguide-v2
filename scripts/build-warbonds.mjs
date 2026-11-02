@@ -1,6 +1,6 @@
 // Offline build of the warbond guide data from local snapshots only (no network, no clock).
 //   db/source/wiki_warbonds.json        ← scripts/fetch-warbonds.mjs (Helldivers Wiki wikitext)
-//   db/source/warbond_korean_names.json ← user-provided Korean warbond names (namuwiki)
+//   db/source/warbond_korean_names.json ← Korean warbond names (in-game text), name only
 // Writes dist/data/warbonds.js. Usage: node scripts/build-warbonds.mjs [--stdout]
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
@@ -104,7 +104,7 @@ export function buildWarbonds(snapshot, koreanNames, { weapons = personalWeapons
       pages,
     });
   }
-  const extra = Object.keys(koreanNames).filter(key => !key.startsWith('_') && !usedKorean.has(key));
+  const extra = Object.keys(koreanNames).filter(key => !usedKorean.has(key));
   if (extra.length) throw new Error(`Korean names without a warbond page: ${extra.join(', ')}`);
   const ids = new Set();
   for (const warbond of out) { if (ids.has(warbond.id)) throw new Error(`Duplicate warbond id ${warbond.id}`); ids.add(warbond.id); }
@@ -141,7 +141,7 @@ export async function generate() {
     warbondsSource: {
       source: snapshot.source, site: 'https://helldivers.wiki.gg/', license: 'CC BY-NC-SA 4.0',
       licenseUrl: 'https://creativecommons.org/licenses/by-nc-sa/4.0/', file: 'db/source/wiki_warbonds.json',
-      koreanNamesFile: 'db/source/warbond_korean_names.json', // Namuwiki names; provenance note kept there
+      koreanNamesFile: 'db/source/warbond_korean_names.json',
     },
     warbondTiers: [{ id: 'standard', name: '기본' }, { id: 'premium', name: '프리미엄' }, { id: 'legendary', name: '전설' }],
     warbonds,

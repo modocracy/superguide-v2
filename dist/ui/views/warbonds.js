@@ -170,7 +170,7 @@ export function mount(container, context) {
     </div>
     <div id="wb-list"></div>
     <p class="sources wb-credit">${L('자료', 'Data')}: ${external(warbondsSource.site, 'Helldivers Wiki')} <span>(helldivers.wiki.gg) ${L('기여자들', 'contributors')}, ${external(lang === 'en' ? warbondsSource.licenseUrl : `${warbondsSource.licenseUrl}deed.ko`, warbondsSource.license)}</span>
-      <span>${L(`위키 확인 ${warbondsCheckedAt} · 표지는 webp 변환·축소 · 한국어 전쟁 채권 이름은 나무위키 표기`, `Checked on the wiki ${warbondsCheckedAt} · covers converted to WebP and resized · Korean warbond names follow Namuwiki`)}</span></p>`);
+      <span>${L(`위키 확인 ${warbondsCheckedAt} · 표지는 webp 변환·축소`, `Checked on the wiki ${warbondsCheckedAt} · covers converted to WebP and resized`)}</span></p>`);
   root.addEventListener('click', event => {
     const target = event.target.closest('button');
     if (!target) return;

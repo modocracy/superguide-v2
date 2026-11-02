@@ -76,7 +76,8 @@ eq(parseTableRows('{|class="wikitable"\n!h\n|-\n|[[File:a.png|link=]]||Still Sta
 // --- The real snapshot ------------------------------------------------------------------------
 const snapshot = JSON.parse(await readFile(new URL('db/source/wiki_warbonds.json', root), 'utf8'));
 const korean = JSON.parse(await readFile(new URL('db/source/warbond_korean_names.json', root), 'utf8'));
-const koreanKeys = Object.keys(korean).filter(key => !key.startsWith('_'));
+const koreanKeys = Object.keys(korean);
+ok(Object.values(korean).every(name => typeof name === 'string' && name.trim()), 'the Korean name file holds only names (no notes or metadata)');
 eq(Object.keys(snapshot.pages).length, 26, 'snapshot holds the 26 warbond pages');
 eq(koreanKeys.length, 26, 'all 26 Korean warbond names are in the repo');
 // User-specified: keeps the game's official mistranslation as-is, including the "(오역)" marker.
