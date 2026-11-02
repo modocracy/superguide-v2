@@ -6,8 +6,9 @@
 
 > An unofficial Helldivers 2 field guide: stratagem and weapon stats, shots to kill for every enemy part, what destroys each structure, and loadout picks per faction. Switch to English with the **언어** (Language) button in the header, or open the site with `?lang=en`.
 
-## 네 가지 도구
+## 첫 화면과 도구
 
+- **전쟁 채권** (첫 화면) — 전쟁 채권 26종을 기본·프리미엄·전설로 나눠 출시일, 가격(SC), 페이지별 해금 메달과 항목별 메달 비용을 보여 줍니다. 들어 있는 무기·스트라타젬을 누르면 이 사이트의 상세 화면으로 갑니다. 위키 안에서 값이 서로 다르면 ‘미확인’으로 표시합니다.
 - **스트라타젬** — 110종의 피해·관통·범위와 사용법. 종류·관통력으로 거르고, 수치 순으로 정렬하고, 최대 3개를 나란히 비교합니다.
 - **적 대응** — 적을 고르면 지원 무기 전체를 필요 횟수 순으로 보여 줍니다. 무기를 누르면 부위별 탄수, 조준 위치 사진, 한 발 피해의 계산 과정이 열립니다.
 - **철거** — 시설로 찾기(무엇으로 부술 수 있나)와 스트라타젬으로 찾기(무엇을 부술 수 있나) 두 방향으로 봅니다.

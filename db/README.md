@@ -295,3 +295,21 @@ npm run check
 - 직격·내구 피해, 관통, 폭발 피해·관통, 최대 피해 반경(r1)·바깥 반경(r2)을 비교합니다. 충전 사격은 무기의 충전 배율(`damage_mod`)의 마지막 값을 곱합니다(레일건 2.5배, 에포크 2배).
 - 일부러 다른 값은 `reviewed`에 사이트 값·데이터마이닝 값·이유를 함께 적습니다. 예: 유탄 발사기 직격 0(위키 본문 기준, 원본 기록 20), 디폴리에이션 툴 관통 5(접촉 0.5초 뒤 3에서 5로 상승). 값이 바뀌거나 차이가 사라지면 다시 검토하도록 실패합니다.
 - 데이터마이닝에 없는 것은 `notCompared`에 이유를 적습니다. 솔로 사일로(스냅샷에 없음), 멜타건 15m 감쇠(위키 본문 값), 화염방사기·크레메이터 표의 DPS(원본은 입자 1개 기준) 등입니다. 궤도·이글 스트라타젬은 이 스냅샷에 없어 대조하지 않습니다.
+
+## 전쟁 채권 (위키 Category:Warbonds)
+
+사이트 첫 화면(`#/warbonds`)의 데이터입니다. 무기 DB와 별개이며 브라우저는 `db/`를 읽지 않습니다.
+
+- `source/wiki_warbonds.json`: `node scripts/fetch-warbonds.mjs`가 [Category:Warbonds](https://helldivers.wiki.gg/wiki/Category:Warbonds)의 문서를 MediaWiki API로 받은 스냅샷입니다(네트워크 필요, 기본 도구 User-Agent). `pages[영문 제목]`에 `source`, `pageid`, `revision`, `revisionTimestamp`, `retrievedAt`, `wikitext`를 보존합니다. 분류에 함께 들어 있는 개요 문서 `Warbonds`는 인포박스가 없어 `skipped`에만 기록합니다.
+- `source/warbond_korean_names.json`: 전쟁 채권 26종의 한국어 이름(게임 내 표기). 이름만 담고 다른 항목은 두지 않습니다. 키는 문서 제목에서 ` Premium Warbond`/` Legendary Warbond`/` Warbond`를 뺀 이름입니다. 이름이 빠지거나 남으면 빌드가 실패합니다.
+- `node scripts/build-warbonds.mjs [--stdout]`: 위 두 파일만 읽어 `dist/data/warbonds.js`를 생성합니다(LF, 네트워크·시각 의존 없음). 공통 파서는 `scripts/warbond-parse.mjs`입니다.
+- `python scripts/tools/fetch-warbond-covers.py`: 인포박스 표지를 240px WebP로 받아 `dist/assets/warbonds/`와 `dist/data/warbond-images.js`를 씁니다(네트워크, Pillow 필요). `--latest-large`는 작은 표지는 건드리지 않고 `latestWarbondId`(출시일이 가장 늦은 채권, 같은 날이면 영문 제목 순) 하나만 최대 1600px·120KB 이하로 받아 `<id>-large.webp`와 `dist/data/warbond-banner-images.js`를 씁니다. 원본보다 키우지 않습니다. 첫 화면의 '최신 출시 채권' 배너가 쓰며, 없으면 작은 표지로 대신합니다.
+
+해석 규칙:
+
+- 인포박스 `{{Infobox Warbond}}`: 등급(`type`, 없으면 제목의 Premium/Legendary), 출시일(ISO `YYYY-MM-DD`), 가격 SC(`Free`=0), `credit-claim`(`None`=0), `all-pages`, `all-items`.
+- `===Page N===` 아래 `{{Acquisitions Page}}`의 `N_name/N_link/N_image/N_cost`와 `spent_to_unlock`이 기준값입니다. 같은 절의 접힌 표(Icon/Item/Type/Cost)와 항목을 이미지 → 링크·이름 → 다른 페이지 → 철자 차이 순으로 짝지어 종류(Type)를 얻고 비용을 대조합니다.
+- 템플릿과 표가 다르면 그 값을 추정하지 않고 `null` + `'미확인'`으로 두고 `warbondDiscrepancies`에 `{warbondId, page, item, field, code, template, table|infobox}`를 남깁니다. 항목 비용 합계 ≠ `all-items`, 마지막 페이지 해금 ≠ `all-pages`, 표의 슈퍼 크레딧 합계 ≠ `credit-claim`도 같은 방식입니다. 해금 값이 없거나 `Unknown`인 페이지도 미확인입니다(1페이지는 처음부터 열림).
+- 무기·스트라타젬은 영문 이름(제식 번호 포함)으로 `personal-weapons.js`·`catalog.js`와 연결해 `ref: {view, id}`를 둡니다. 위키 전쟁 채권 문서에 남은 옛 이름은 `build-warbonds.mjs`의 `RENAMED`에 근거와 함께 명시합니다(LAS-16 Trident → LAS-13 Trident: 무기 문서 revision 140438의 출처가 Siege Breakers 1페이지·35메달이고, 1.006.003 변경 기록에 'LAS-16 Trident'에서 이름을 바꿨다고 적혀 있음). 그래도 일치하지 않으면 제식 번호와 따옴표 별칭을 뺀 이름이 사이트에서 하나뿐일 때만 연결하고 `warbondLinks.matchedWithoutCode`에 기록합니다. 방어구·외형 등 다른 항목 이름은 위키 영문 그대로 둡니다.
+
+`scripts/test-warbonds.mjs`(`npm run check`에 포함)가 파서 단위 검사, 합계 대조, 26종 한국어 이름, 연결 대상 존재, 미확인 값과 불일치 기록의 1:1 대응, 생성 파일 최신성·결정성·LF를 확인합니다.

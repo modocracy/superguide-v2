@@ -5,6 +5,7 @@ import { $, $$, icon, render, html } from './dom.js';
 import { initAnalytics } from './analytics.js';
 
 const VIEW_MODULES = {
+  warbonds: () => import('./views/warbonds.js'),
   arsenal: () => import('./views/arsenal.js'),
   gear: () => import('./views/gear.js'),
   enemy: () => import('./views/enemy.js'),
@@ -12,6 +13,7 @@ const VIEW_MODULES = {
   factions: () => import('./views/factions.js'),
 };
 const TITLES = {
+  warbonds: L('전쟁 채권', 'Warbonds'),
   arsenal: L('스트라타젬', 'Stratagems'), gear: L('장비', 'Gear'), enemy: L('적 대응', 'Enemies'),
   demolition: L('철거', 'Demolition'), factions: L('팩션 추천', 'Faction picks'),
 };
