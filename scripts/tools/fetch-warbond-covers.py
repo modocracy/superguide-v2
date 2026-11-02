@@ -4,7 +4,7 @@ Default: for every warbond in db/source/wiki_warbonds.json, a 240 px wide thumbn
 infobox `image=` → dist/assets/warbonds/<id>.webp plus dist/data/warbond-images.js.
 
 --latest-large: only for the warbond in the "latest release" banner (latestWarbondId of
-dist/data/warbonds.js, so run scripts/build-warbonds.mjs first) a ~720 px wide version →
+dist/data/warbonds.js, so run scripts/build-warbonds.mjs first) a ~1600 px wide version →
 dist/assets/warbonds/<id>-large.webp plus dist/data/warbond-banner-images.js. Never upscales
 past the original; lowers WebP quality step by step to stay within MAX_BYTES. The small
 covers are left untouched in this mode.
@@ -21,8 +21,8 @@ out_dir = root / 'dist' / 'assets' / 'warbonds'
 API = 'https://helldivers.wiki.gg/api.php'
 UA = 'HD2FieldGuide/2.0 (fan site data check; contact via github modocracy)'
 WIDTH = 240
-LARGE_WIDTH = 720
-MAX_BYTES = 40_000
+LARGE_WIDTH = 1600  # the banner spans the full content width (up to ~1240 px CSS), cropped to a wide strip
+MAX_BYTES = 120_000
 
 
 def get(url):
@@ -116,7 +116,7 @@ def latest_large(pages):
         image = image.convert('RGB')
         if image.width > LARGE_WIDTH:  # never upscale: a smaller original stays at its own size
             image = image.resize((LARGE_WIDTH, round(image.height * LARGE_WIDTH / image.width)), Image.LANCZOS)
-        for quality in range(80, 45, -5):
+        for quality in range(70, 40, -5):
             buffer = io.BytesIO()
             image.save(buffer, 'WEBP', quality=quality, method=6)
             if buffer.tell() <= MAX_BYTES:

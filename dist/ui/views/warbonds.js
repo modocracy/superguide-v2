@@ -75,29 +75,22 @@ function card(warbond) {
 
 // "Latest release" banner. latestWarbondId is chosen by the build (newest release date,
 // ties by English title — scripts/build-warbonds.mjs pickLatest), so it follows data refreshes.
-// The large cover exists only for the latest warbond; otherwise the small cover is used.
-// Either way the image is never stretched past its own pixel width (max-width), so it stays sharp.
+// Layout: the cover as a full-width strip (cropped top/bottom), then one row with the name on
+// the left and the "view pages" button on the right. The 1600 px large cover exists only for the
+// latest warbond; without it the 240 px small cover is shown at its own size (never upscaled).
 export function latestBanner() {
   const warbond = warbonds.find(item => item.id === latestWarbondId);
   if (!warbond) return '';
-  const image = warbondBannerImages[warbond.id] || warbondImages[warbond.id];
-  const fact = (label, value) => html`<div><dt>${label}</dt><dd>${value}</dd></div>`;
-  return html`<section class="wb-latest" aria-labelledby="wb-latest-title"><button class="wb-latest-open" type="button" data-open="${warbond.id}">
-    ${image ? html`<img class="wb-latest-cover" src="${image.src}" alt="" width="${image.width}" height="${image.height}" style="max-width:${image.width}px" decoding="async">` : ''}
-    <div class="wb-latest-body">
-      <div class="eyebrow">${L('최신 출시 채권', 'Latest warbond')}</div>
-      <h2 id="wb-latest-title">${warbond.name}</h2>${lang === 'en' ? '' : html`<p class="en">${warbond.en}</p>`}
-      <dl class="wb-latest-facts">
-        ${fact(L('출시일', 'Release date'), warbond.date || UNCONFIRMED)}
-        ${fact(L('가격', 'Price'), sc(warbond.price))}
-        ${fact(L('전체 메달', 'All items'), warbond.totalCost != null ? medals(warbond.totalCost) : UNCONFIRMED)}
-        ${fact(L('항목', 'Items'), html`${count(warbond.itemCount)}<small>${L('개', '')}</small>`)}
-        ${fact(L('무기', 'Weapons'), count(warbond.counts.weapons))}
-        ${fact(L('스트라타젬', 'Stratagems'), count(warbond.counts.stratagems))}
-      </dl>
-      <span class="button primary small wb-latest-cta">${L('페이지별 목록 보기', 'See every page')} ${icon('arrow', 16)}</span>
+  const large = warbondBannerImages[warbond.id];
+  const image = large || warbondImages[warbond.id];
+  return html`<section class="wb-latest" aria-labelledby="wb-latest-title">
+    ${image ? html`<button class="wb-latest-image" type="button" data-open="${warbond.id}" tabindex="-1" aria-hidden="true"><img class="wb-latest-cover ${large ? '' : 'is-small'}" src="${image.src}" alt="" width="${image.width}" height="${image.height}" decoding="async"></button>` : ''}
+    <div class="wb-latest-row">
+      <div class="wb-latest-name"><div class="eyebrow">${L('최신 출시 채권', 'Latest warbond')}</div>
+        <h2 id="wb-latest-title">${warbond.name}</h2>${lang === 'en' ? '' : html`<p class="en">${warbond.en}</p>`}</div>
+      <button class="button primary wb-latest-cta" type="button" data-open="${warbond.id}">${L('페이지별 목록 보기', 'View pages')} ${icon('arrow', 16)}</button>
     </div>
-  </button></section>`;
+  </section>`;
 }
 
 function renderList() {

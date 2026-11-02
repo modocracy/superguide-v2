@@ -158,21 +158,27 @@ const tie = [{ id: 'b', en: 'Bravo', date: '2026-05-01' }, { id: 'a', en: 'Alpha
 for (const order of [tie, [...tie].reverse(), [tie[2], tie[0], tie[3], tie[1]]]) eq(pickLatest(order), 'a', 'tie-break by English title regardless of order');
 eq(pickLatest([{ id: 'x', en: 'X', date: null }]), null, 'no dated warbond → no banner');
 eq(pickLatest(warbonds.toReversed()), latestWarbondId, 'real data: order does not change the pick');
-// Large banner cover: only for the latest warbond, small and sharp; the 26 small covers are unchanged.
+// Large banner cover: only for the latest warbond, wide enough for the full-width strip and within budget; the 26 small covers are unchanged.
 const banner = warbondBannerImages[latestWarbondId];
 ok(banner, `no large banner cover for ${latestWarbondId}: run python scripts/tools/fetch-warbond-covers.py --latest-large (the page falls back to the small cover meanwhile)`);
 for (const [id, image] of Object.entries(warbondBannerImages)) {
   const bytes = await readFile(new URL(`dist/${image.src.slice(2)}`, root));
-  ok(image.src === `./assets/warbonds/${id}-large.webp` && image.width <= 720 && image.width > warbondImages[id].width, `${id}: large cover path and size`);
-  ok(bytes.length <= 40000, `${id}: large cover is ${bytes.length} bytes (≤ 40,000)`);
+  ok(image.src === `./assets/warbonds/${id}-large.webp` && image.width >= 1200 && image.width <= 1600 && image.width > warbondImages[id].width, `${id}: large cover path and size (wide enough for the full-width strip)`);
+  ok(bytes.length <= 120000, `${id}: large cover is ${bytes.length} bytes (≤ 120,000)`);
   eq(createHash('sha256').update(bytes).digest('hex'), image.sha256, `${id}: large cover file matches its record`);
 }
 for (const [id, image] of Object.entries(warbondImages)) {
   eq(createHash('sha256').update(await readFile(new URL(`dist/${image.src.slice(2)}`, root))).digest('hex'), image.sha256, `${id}: small cover unchanged`);
 }
 const { latestBanner } = await import('../dist/ui/views/warbonds.js');
+const { escape } = await import('../dist/ui/dom.js');
 const bannerHtml = String(latestBanner());
-ok(bannerHtml.includes(`data-open="${latestWarbondId}"`) && bannerHtml.includes(banner.src) && bannerHtml.includes(`max-width:${banner.width}px`), 'banner opens the same detail route and shows the large cover at no more than its own width');
-ok(bannerHtml.includes('최신 출시 채권') && bannerHtml.includes(warbonds.find(w => w.id === latestWarbondId).name), 'banner shows its label and the Korean name');
+ok(bannerHtml.includes(`src="${banner.src}"`) && !bannerHtml.includes('is-small'), 'banner uses the large cover');
+const ctas = [...bannerHtml.matchAll(/<button class="button primary wb-latest-cta"[^>]*data-open="([^"]+)"[^>]*>([\s\S]*?)<\/button>/g)];
+ok(ctas.length === 1 && ctas[0][1] === latestWarbondId && ctas[0][2].includes('페이지별 목록 보기'), 'one "view pages" button opens the same detail route as the cards');
+ok([...bannerHtml.matchAll(/data-open="([^"]+)"/g)].every(m => m[1] === latestWarbondId), 'every clickable part of the banner opens the latest warbond');
+ok(!/<dl|<dt|wb-latest-facts|출시일|가격|전체 메달|스트라타젬/.test(bannerHtml), 'banner has no stat cells (release date, price, medals, counts)');
+const latest = warbonds.find(w => w.id === latestWarbondId);
+ok(bannerHtml.includes('최신 출시 채권') && bannerHtml.includes(`>${escape(latest.name)}</h2>`) && bannerHtml.includes(`>${escape(latest.en)}</p>`), 'banner shows its label, the Korean name and the English name');
 
 console.log(`PASS warbonds: ${checks} checks (${warbonds.length} warbonds, ${warbondDiscrepancies.length} wiki discrepancies left 미확인, ${warbondLinks.weapons} weapon + ${warbondLinks.stratagems} stratagem links).`);
