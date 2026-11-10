@@ -10,6 +10,9 @@ import { escape } from '../dist/ui/dom.js';
 import { listContent, resolveWarbondItem, itemRoute, itemDetailContent, mount, update } from '../dist/ui/views/warbonds.js';
 import { weaponDetail } from '../dist/ui/views/gear.js';
 import { stratagemDetail } from '../dist/ui/views/arsenal.js';
+import { personalProfiles } from '../dist/data/personal-profiles.js';
+import { weaponById } from '../dist/ui/gear-shared.js';
+import { modeDetails, throwChoices, playerDetails } from './personal-display.mjs';
 
 let checks = 0;
 const ok = (value, message) => { assert(value, message); checks++; };
@@ -103,6 +106,146 @@ setLang('ko');
 const modeHtml = String(await itemDetailContent('control-group', 'arsenal/epoch', 'charged'));
 ok(modeHtml.includes('data-variant="charged" aria-pressed="true"'), 'embedded stratagem selects URL mode');
 ok(modeHtml.includes('href="#/arsenal/epoch?m=charged"'), 'full-page link preserves mode');
+// Weapons with selectable firing modes get the same mode tabs as stratagems. Expected numbers are
+// read from the data, so a routine wiki refresh that changes a value or adds a weapon does not fail
+// these checks; they only confirm that whatever the data holds is shown in the right panel.
+const { num } = await import('../dist/core/explain.js');
+const multiMode = Object.entries(personalProfiles).filter(([, profile]) => profile.modes.length > 1);
+ok(multiMode.length > 0, 'some weapons have selectable firing modes');
+// One panel's text, so a check cannot pass on another mode's numbers.
+const panel = (content, id) => content.split(`data-variant-panel="${id}"`)[1]?.split('data-variant-panel=')[0] ?? '';
+const shows = (content, label, text) => content.includes(`<dt>${label}</dt><dd class="">${text}`) || content.includes(`<dt>${label}</dt><dd>${text}`);
+const DOT_ROW = /<dt>(?:화상|가스|전기) 피해<\/dt>/;
+for (const [id, profile] of multiMode) {
+  const w = weaponById.get(id);
+  const content = String(weaponDetail(w));
+  eq([...content.matchAll(/data-variant="([^"]+)"/g)].map(m => m[1]), profile.modes.map(m => m.id), `${id}: one tab per firing mode`);
+  eq((content.match(/data-variant-panel="/g) || []).length, profile.modes.length, `${id}: one panel per firing mode`);
+  ok(content.includes(`data-variant="${profile.modes[0].id}" aria-pressed="true"`), `${id}: first mode selected by default`);
+  ok(!content.includes('class="compare-table gear-modes"'), `${id}: mode tabs replace the component table`);
+  for (const m of profile.modes) {
+    const p = panel(content, m.id), extra = w.modeDetails?.[m.id], where = `${id}/${m.id}`;
+    if (m.unsupported && !extra) { ok(p.includes(m.unsupported), `${where}: mode without numbers shows its reason`); continue; }
+    ok(!p.includes(m.unsupported ?? '\u0000'), `${where}: filled-in mode does not show the calculator's reason`);
+    if (!m.unsupported && m.ammoPerShot > 1) {
+      const perRound = m.hitCondition?.kind === 'pellets' ? m.hitCondition.max / m.ammoPerShot : 1;
+      ok(shows(p, '한 번에 발사', num(m.ammoPerShot)) && p.includes(`모두 맞으면 ${num(m.standard * perRound * m.ammoPerShot)}`), `${where}: rounds fired at once and their total`);
+    }
+    if (m.id === 'underbarrel') ok(!p.includes('<dt>예비 탄창') && (extra?.rpm != null || !p.includes('<dt>연사')), `${where}: no spare magazines or fire rate borrowed from the main gun`);
+    if (extra?.spareRounds != null) ok(shows(p, '예비탄', num(extra.spareRounds)), `${where}: own spare rounds`);
+    if (extra?.rpm != null) ok(shows(p, '연사', num(extra.rpm)), `${where}: own fire rate`);
+    if (extra?.reload != null) ok(shows(p, '재장전', num(extra.reload)), `${where}: own reload`);
+    if (extra?.fuel) ok(shows(p, '연료', num(extra.magazine)) && p.includes(`AP ${extra.ap}`) && !p.includes('<dt>직격 피해'), `${where}: fuel and AP, no main-barrel damage`);
+    if (extra?.ammoAll) ok(shows(p, '한 번에 발사', num(w.magazine)) && p.includes(num(extra.direct * w.magazine)), `${where}: whole magazine at once and its total`);
+    for (const note of extra?.modeNotes ?? []) ok(p.includes(note), `${where}: note shown`);
+    eq(DOT_ROW.test(p), extra?.dot?.perSecond != null, `${where}: over-time damage only in the mode it belongs to`);
+  }
+}
+const [pickId, pickProfile] = multiMode[0];
+const picked = String(weaponDetail(weaponById.get(pickId), { variant: pickProfile.modes[1].id }));
+ok(picked.includes(`data-variant="${pickProfile.modes[1].id}" aria-pressed="true"`) && picked.includes(`data-variant-panel="${pickProfile.modes[0].id}" hidden`), 'weapon detail selects the given mode');
+const singles = [...weaponById.values()].filter(w => !(personalProfiles[w.id]?.modes.length > 1));
+for (const w of singles) {
+  const content = String(weaponDetail(w));
+  ok(!content.includes('data-variant'), `${w.id}: single-mode weapon has no mode tabs`);
+  if ((w.variants?.length ?? 0) > 1) ok(content.includes('class="compare-table gear-modes"'), `${w.id}: single-mode weapon keeps its component table`);
+}
+// Mode names are set in personal-profiles.mjs (code, not wiki data).
+const tabNames = id => [...String(weaponDetail(weaponById.get(id))).matchAll(/data-variant="[^"]+" aria-pressed="\w+">([^<]+)/g)].map(m => m[1]);
+const expectedNames = { 'double-freedom': ['기본 사격', '일제 사격'], bushwhacker: ['기본 사격', '일제 사격'], variable: ['기본 사격', '일제 사격', '전탄 발사'], 'missile-pistol': ['비유도', '유도 사격'], warrant: ['비유도', '유도 사격'] };
+for (const [id, names] of Object.entries(expectedNames)) if (personalProfiles[id]?.modes.length > 1) eq(tabNames(id), names, `${id} mode names`);
+// Notes from wiki prose are optional: a reworded page drops them with a warning, never fails the build.
+const weaponsDb = (await import('../db/weapons.js')).weapons;
+const datamine = JSON.parse(await readFile(new URL('../db/source/weapons_data.json', import.meta.url), 'utf8')).data;
+for (const weapon of ['stoker', 'missile-pistol', 'warrant', 'variable'].map(id => weaponsDb.find(w => w.id === id)).filter(Boolean)) {
+  const warnings = [];
+  const loose = modeDetails(weapon, datamine, 'reworded page', message => warnings.push(message)).modeDetails ?? {};
+  // "Same damage as unguided" comes from the datamine, not the prose, so it stays.
+  ok(warnings.length > 0 && Object.values(loose).every(detail => (detail.modeNotes ?? []).every(n => n === '피해는 비유도 사격과 같습니다.')), `${weapon.id}: reworded wiki page leaves the prose notes out with a warning`);
+}
+const embeddedWeapon = String(await itemDetailContent('ironclad-democracy', 'gear/arbitrator', 'underbarrel'));
+ok(embeddedWeapon.includes('data-variant="underbarrel" aria-pressed="true"'), 'embedded weapon selects URL mode');
+ok(embeddedWeapon.includes('href="#/gear/arbitrator?m=underbarrel"'), 'full-page link preserves weapon mode');
+// Effect badges from the wiki infobox trait list: each traitTags entry shows once, burn never twice.
+{
+  const LABELS = { fire: '화상', guided: '유도', arc: '전격', stun: '기절' };
+  for (const w of weaponById.values()) {
+    const chips = String(weaponDetail(w)).match(/<div class="chips"[\s\S]*?<\/div>/)?.[0] ?? '';
+    for (const tag of w.traitTags ?? []) ok(chips.includes(`>${LABELS[tag]}</span>`), `${w.id}: ${LABELS[tag]} badge shown`);
+    ok((chips.match(/>화상<\/span>/g) || []).length <= 1, `${w.id}: one burn badge at most`);
+  }
+  const base = (await import('../db/weapons.js')).weapons.find(w => w.id === 'liberator');
+  eq(playerDetails(base, { throwable_traits: 'Sticky {{*}} Stun' }).traitTags, ['stun'], 'trait list read from the infobox');
+  eq(playerDetails(base, { weapon_traits: 'Heavy Armor Penetrating {{*}} Explosive {{*}} Guided' }).traitTags, ['guided'], 'only the four badge traits are kept');
+  eq(playerDetails(base, {}).traitTags, [], 'no trait list, no badges');
+}
+// Warbond chip on weapon and stratagem details: exactly the items a warbond page links, pointing at that item.
+{
+  const { warbondSources } = await import('../dist/data/warbond-sources.js');
+  const { stratagems } = await import('../dist/core/catalog.js');
+  const linked = new Map();
+  for (const bond of warbonds) for (const page of bond.pages) for (const item of page.items) if (item.ref) linked.set(`${item.ref.view}/${item.ref.id}`, { bond, page: page.number });
+  eq(Object.keys(warbondSources).sort(), [...linked.keys()].sort(), 'warbond index lists every linked item');
+  for (const [key, { bond, page }] of linked) eq(warbondSources[key], { id: bond.id, name: bond.name, en: bond.en, tier: bond.tier, price: bond.price, page }, `${key}: index matches the warbond board`);
+  const details = [...[...weaponById.values()].map(w => ['gear', w.id, weaponDetail(w)]), ...stratagems.map(s => ['arsenal', s.id, stratagemDetail(s)])];
+  for (const [view, id, html] of details) {
+    const chip = String(html).match(/<a class="badge warbond" href="([^"]+)"[^>]*>[\s\S]*?<\/a>/);
+    const source = warbondSources[`${view}/${id}`];
+    if (!source) { ok(!chip, `${view}/${id}: no warbond chip for an item no warbond links`); continue; }
+    ok(chip && chip[1] === formatRoute(itemRoute({ id: source.id, query: {} }, `${view}/${id}`)), `${view}/${id}: chip links the item on its warbond board`);
+    ok(chip && chip[0].includes(escape(source.name)) && chip[0].includes('무료') === (source.price === 0), `${view}/${id}: chip names the warbond and marks a free one`);
+  }
+}
+// Spread choices picked before throwing (Caltrops) show only where the data has them.
+for (const w of weaponById.values()) eq(String(weaponDetail(w)).includes('<dt>퍼뜨리기'), Boolean(w.spreadModes?.length), `${w.id}: spread row only with spread choices`);
+const caltrops = (await import('../db/weapons.js')).weapons.find(w => w.id === 'caltrops');
+if (caltrops) {
+  const spreadWarnings = [];
+  eq(throwChoices(caltrops, 'reworded page', message => spreadWarnings.push(message)), {}, 'reworded Caltrops page leaves the spread row out');
+  eq(spreadWarnings.length, 1, 'and warns once');
+}
+// Support weapon fire rates, durable damage, magazine and spare ammo: whatever the data holds is
+// shown in the stat grid, and nothing otherwise. With tabs, the first grid is the first tab's.
+{
+  const { stratagems } = await import('../dist/core/catalog.js');
+  const { num } = await import('../dist/core/explain.js');
+  const shows = (content, label, text) => content.includes(`<dt>${label}</dt><dd>${text}`);
+  for (const item of stratagems.filter(s => s.category === 'support')) {
+    // The stat grid, not a firing-mode panel's grid above it.
+    const statsHtml = String(stratagemDetail(item)).replace(/<div class="variant-panel" data-fire-mode-panel[\s\S]*?<\/dl>/g, '');
+    const grid = statsHtml.match(/<dl class="detail-grid">[\s\S]*?<\/dl>/)?.[0] ?? '';
+    if (item.rpmModes?.length > 1) ok(shows(grid, '연사 모드', item.rpmModes.map(num).join(' / ')), `${item.id}: selectable fire rates shown`);
+    else if (item.rpm != null) ok(shows(grid, '연사', num(item.rpm)), `${item.id}: fire rate shown`);
+    else ok(!grid.includes('<dt>연사'), `${item.id}: no fire rate row without a fire rate`);
+    const durable = item.variants?.length > 1 ? item.variants[0].durable : item.durable;
+    const cells = [['내구 피해', durable], [item.fuel ? '연료' : '탄창', item.magazine], [item.fuel ? '예비 연료통' : '예비 탄창', item.spareMags], ['예비탄', item.spareRounds]];
+    for (const [label, value] of cells) {
+      if (value != null) ok(shows(grid, label, num(value)), `${item.id}: ${label} ${value} shown`);
+      else ok(!grid.includes(`<dt>${label}</dt>`), `${item.id}: no ${label} cell without a value`);
+    }
+  }
+}
+// Firing modes picked on a stratagem weapon (Airburst cluster/flak, W.A.S.P. burst/artillery): one button and
+// panel per mode, above the damage stats, showing whatever the data holds.
+{
+  const { stratagems } = await import('../dist/core/catalog.js');
+  const withModes = stratagems.filter(s => s.firingModes?.length);
+  ok(withModes.length > 0, 'some stratagems have firing modes');
+  for (const item of withModes) {
+    const content = String(stratagemDetail(item));
+    eq([...content.matchAll(/data-fire-mode="([^"]+)" aria-pressed="(\w+)">([^<]+)/g)].map(m => [m[1], m[2], m[3]]),
+      item.firingModes.map((m, i) => [m.id, String(!i), m.name]), `${item.id}: one button per firing mode, first selected`);
+    for (const [i, m] of item.firingModes.entries()) {
+      const panel = content.split(`data-fire-mode-panel="${m.id}"`)[1]?.split('data-fire-mode-panel=')[0] ?? '';
+      ok(panel.startsWith(i ? ' hidden' : ''), `${item.id}/${m.id}: only the first panel is open`);
+      for (const row of m.rows) ok(panel.includes(`<dt>${escape(row.label)}</dt>`) && panel.includes(escape(row.value)), `${item.id}/${m.id}: ${row.label} shown`);
+      if (m.note) ok(panel.includes(escape(m.note)), `${item.id}/${m.id}: note shown`);
+    }
+    if (item.firingModesNote) ok(content.includes(escape(item.firingModesNote)), `${item.id}: shared note shown`);
+    const modes = content.indexOf('data-fire-modes'), stats = content.indexOf('<dl class="detail-grid">', content.indexOf('</div>', content.lastIndexOf('data-fire-mode-panel')));
+    ok(modes > 0 && modes < stats, `${item.id}: modes sit above the damage stats`);
+  }
+}
 setLang('en');
 const en = String(await itemDetailContent('scope-of-authority', 'gear/sightliner'));
 ok(en.includes('Open full page') && en.includes('Back') && en.includes('Close item details'), 'new toolbar strings have English');
@@ -212,6 +355,11 @@ try {
   click(links[1]);
   click(closeItem);
   eq(bondPane.scrollTop, 720, 'narrow page-list scroll restored even if hiding it reported zero');
+  context.closeSheet();
+  // A weapon mode in the URL survives a deep link into the item pane (not only stratagem modes).
+  visit('#/warbonds/ironclad-democracy?item=gear%2Farbitrator&m=underbarrel');
+  for (let i = 0; i < 10 && !pane.innerHTML.includes('data-variant='); i++) await new Promise(resolve => setImmediate(resolve));
+  ok(pane.innerHTML.includes('data-variant="underbarrel" aria-pressed="true"'), 'deep link keeps the weapon mode in the warbond item pane');
   context.closeSheet();
   // Allow pending lazy detail renders to settle before restoring globals.
   await new Promise(resolve => setImmediate(resolve));

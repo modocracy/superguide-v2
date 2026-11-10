@@ -6,6 +6,7 @@ import { shieldRecovery } from '../../core/defense.js';
 import { wikiIcons } from '../../data/wiki-icons.js';
 import { html, raw, render, $, $$, icon, keycaps, badge, external } from '../dom.js';
 import { blastFigure } from '../blast.js';
+import { warbondChip } from '../warbond-chip.js';
 import { L, T, lang } from '../../core/i18n.js';
 
 const SORTS = [
@@ -20,7 +21,7 @@ const MAX_COMPARE = 3;
 let root, ctx;
 const state = { c: '', ap: '', q: '', sort: '', compare: new Set(), detail: null, variant: '', pushedDetail: false };
 
-const subtitle = item => lang === 'en' ? (item.code && !item.en.startsWith(item.code) ? item.code : '') : `${item.en}${item.code ? ` · ${item.code}` : ''}`;
+const subtitle = item => lang === 'en' ? (item.code && !item.en.startsWith(item.code) ? item.code : '') : item.en;
 export const iconOf = item => html`<img class="strat-icon" src="${wikiIcons[item.id]?.src}" alt="" width="44" height="44" loading="lazy" decoding="async">`;
 
 // --- Stats ---------------------------------------------------------------------
@@ -158,7 +159,52 @@ function spreadBlock(item) {
   </section>`;
 }
 
+// Durable damage, magazine and spare ammo from the datamine (see data-support.js).
+function ammoCells(item) {
+  const cell = (label, text, unit, caption) => html`<div><dt>${label}</dt><dd>${text}${unit ? html`<small>${unit}</small>` : ''}</dd>${caption ? html`<div class="caption">${caption}</div>` : ''}</div>`;
+  const spare = L('최대 보유', 'Maximum carried');
+  return [
+    item.durable != null ? cell(L('내구 피해', 'Durable damage'), num(item.durable), item.damageKind === 'dps' ? '/s' : '', L('단단한 부위에 들어가는 피해', 'Damage against durable parts')) : '',
+    item.magazine != null ? cell(item.fuel ? L('연료', 'Fuel') : L('탄창', 'Magazine'), num(item.magazine), item.fuel ? '' : L('발', ''),
+      item.magazineWiki != null ? L(`게임 데이터 기준 · 위키 표기 ${num(item.magazineWiki)}`, `Game data · wiki says ${num(item.magazineWiki)}`) : '') : '',
+    item.spareMags != null ? cell(item.fuel ? L('예비 연료통', 'Spare tanks') : L('예비 탄창', 'Spare magazines'), num(item.spareMags), L('개', ''), spare) : '',
+    item.spareRounds != null ? cell(L('예비탄', 'Spare rounds'), num(item.spareRounds), L('발', ''), spare) : '',
+  ];
+}
+
+// Fire rate from the wiki infobox, or the rates the player picks between.
+function rateCell(item) {
+  if (item.rpmModes?.length > 1) return html`<div><dt>${L('연사 모드', 'Fire rate modes')}</dt><dd>${item.rpmModes.map(num).join(' / ')}</dd><div class="caption">${L('분당 발수 · 골라서 사용', 'Rounds per minute · pick one')}</div></div>`;
+  if (item.rpm == null) return '';
+  return html`<div><dt>${L('연사', 'Fire rate')}</dt><dd>${num(item.rpm)}</dd><div class="caption">${L('분당 발수', 'Rounds per minute')}</div></div>`;
+}
+// Modes picked on the weapon that change how it fires or detonates (Airburst cluster/flak,
+// W.A.S.P. burst/artillery). Each mode lists its own facts; the damage stats stay below.
+function firingModesBlock(item) {
+  const modes = item.firingModes;
+  if (!modes?.length) return '';
+  const unit = value => value === '발' || value === '개' ? L(value, '') : value;
+  return html`<div class="firing-modes" data-fire-modes>
+    <div class="variant-tabs"><h3>${L('모드', 'Mode')}</h3><div class="segmented" role="group" aria-label="${L('모드 선택', 'Mode')}">${modes.map((m, i) => html`<button type="button" data-fire-mode="${m.id}" aria-pressed="${String(!i)}">${m.name}</button>`)}</div></div>
+    ${modes.map((m, i) => html`<div class="variant-panel" data-fire-mode-panel="${m.id}" ${i ? raw('hidden') : ''}>
+      <dl class="detail-grid">${m.rows.map(row => html`<div><dt>${row.label}</dt><dd class="${/\d/.test(row.value) ? '' : 'dim'}">${row.value}${row.unit ? html`<small>${unit(row.unit)}</small>` : ''}</dd>${row.caption ? html`<div class="caption">${row.caption}</div>` : ''}</div>`)}</dl>
+      ${m.note ? html`<p class="variant-note">${m.note}</p>` : ''}
+    </div>`)}
+    ${item.firingModesNote ? html`<p class="variant-note">${item.firingModesNote}</p>` : ''}
+  </div>`;
+}
+// The buttons switch only their own block, in the arsenal sheet or an embedded warbond pane.
+globalThis.document?.addEventListener('click', event => {
+  const pick = event.target.closest?.('[data-fire-mode]');
+  const group = pick?.closest('[data-fire-modes]');
+  if (!group) return;
+  for (const button of $$('[data-fire-mode]', group)) button.setAttribute('aria-pressed', String(button === pick));
+  for (const panel of $$('[data-fire-mode-panel]', group)) panel.hidden = panel.dataset.fireModePanel !== pick.dataset.fireMode;
+});
+
 const statGrid = item => html`<dl class="detail-grid">${stats(item).map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}">${stat.text}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd>${stat.caption ? html`<div class="caption">${stat.caption}</div>` : ''}</div>`)}
+  ${ammoCells(item)}
+  ${rateCell(item)}
   ${item.cooldown ? html`<div><dt>${L('재사용 대기', 'Cooldown')}</dt><dd>${num(item.cooldown)}<small>${L('초', 's')}</small></dd><div class="caption">${L('함선 강화 제외', 'Without ship modules')}</div></div>` : ''}</dl>`;
 
 export function stratagemDetail(item, { demolition = false, header = null, titleId = 'sheet-title', variant = state.variant, compare = true } = {}) {
@@ -172,9 +218,10 @@ export function stratagemDetail(item, { demolition = false, header = null, title
   <div class="sheet-content">
     <div class="detail-id"><img class="strat-icon large" src="${wikiIcons[item.id]?.src}" alt="" width="64" height="64">
       <div><h2 id="${titleId}">${item.name}</h2><p>${subtitle(item)}</p>
-      <div class="chips" style="margin-top:6px">${badge(cat.name, 'outline')}${item.ap != null ? badge(`AP ${item.ap} · ${apBandOf(item).name}`, 'accent') : ''}${item.tags.map(tag => badge(tag))}</div></div></div>
+      <div class="chips" style="margin-top:6px">${badge(cat.name, 'outline')}${warbondChip('arsenal', item.id)}${item.ap != null ? badge(`AP ${item.ap} · ${apBandOf(item).name}`, 'accent') : ''}${item.tags.map(tag => badge(tag))}</div></div></div>
     ${item.input ? html`<div class="block"><h3>${L('호출 코드', 'Stratagem code')}</h3>${keycaps(item.input, 'large')}</div>` : ''}
     <p style="font-size:16px">${item.summary}</p>
+    ${firingModesBlock(item)}
     ${variants ? html`<div class="variant-tabs"><h3>${item.variantLabel || L('모드별 수치', 'Stats by mode')}</h3><div class="segmented" role="group" aria-label="${item.variantLabel || L('모드 선택', 'Mode')}">${variants.map(v => html`<button type="button" data-variant="${v.id}" aria-pressed="${String(v === current)}">${v.tab || v.name}</button>`)}</div></div>
       ${variants.map(v => html`<div class="variant-panel" data-variant-panel="${v.id}" ${v === current ? '' : raw('hidden')}>${statGrid(withVariant(item, v))}${blastFigure(withVariant(item, v))}${v.note ? html`<p class="variant-note">${v.note}</p>` : ''}</div>`)}`
       : html`${statGrid(item)}${blastFigure(item)}`}
@@ -261,6 +308,8 @@ function toggleCompare(id) {
 // --- View lifecycle -------------------------------------------------------------------
 export function mount(container, context) {
   root = container; ctx = context;
+  // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
+  state.detail = null; state.variant = ''; state.pushedDetail = false;
   const count = id => stratagems.filter(item => item.category === id).length;
   render(root, html`<div class="page-head"><div><div class="eyebrow">Stratagem Arsenal</div><h1>${L('스트라타젬 도감', 'Stratagems')}</h1><p>${L(`${stratagems.length}종의 피해·관통·범위와 사용법. 카드를 누르면 자세한 기준이 열립니다.`, `Damage, penetration, reach and how to use all ${stratagems.length} stratagems. Open a card for the details behind the numbers.`)}</p></div></div>
   <div class="arsenal-tools">

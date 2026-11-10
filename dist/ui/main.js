@@ -64,7 +64,13 @@ export function openSheet(content, { wide = false, onClose = null, label = '' } 
   $('#sheet-body').scrollTop = 0;
 }
 export const closeSheet = () => sheet.open && sheet.close();
-sheet.addEventListener('close', () => { const done = onSheetClose; onSheetClose = null; done?.(); });
+// The dialog fires 'close' a moment after close(). When a view switch closes the sheet, the next
+// view may already have reopened it with its own handler by then: an event that arrives while the
+// sheet is open belongs to the earlier sheet and must not run the new handler.
+sheet.addEventListener('close', () => {
+  if (sheet.open) return;
+  const done = onSheetClose; onSheetClose = null; done?.();
+});
 sheet.addEventListener('click', event => {
   if (event.target === sheet || event.target.closest('[data-close]')) sheet.close();
 });

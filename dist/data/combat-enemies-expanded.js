@@ -138,7 +138,7 @@ export const expandedEnemies = [
   },
   {
     "id": "bile-warrior",
-    "name": "바일 워리어",
+    "name": "커스틱 워리어",
     "faction": "테르미니드",
     "source": "https://helldivers.wiki.gg/wiki/Caustic_Warrior",
     "sourceRevision": 135083,
@@ -534,7 +534,7 @@ export const expandedEnemies = [
   },
   {
     "id": "spore-charger",
-    "name": "스포어 차저",
+    "name": "커스틱 차저",
     "faction": "테르미니드",
     "source": "https://helldivers.wiki.gg/wiki/Caustic_Charger",
     "sourceRevision": 135093,
@@ -1602,7 +1602,7 @@ export const expandedEnemies = [
   },
   {
     "id": "hulk-firebomber",
-    "name": "헐크 파이어봄버",
+    "name": "헐크 파이어보머",
     "faction": "오토마톤",
     "source": "https://helldivers.wiki.gg/wiki/Hulk_Firebomber",
     "sourceRevision": 135177,
@@ -1859,7 +1859,7 @@ export const expandedEnemies = [
   },
   {
     "id": "conflagration-devastator",
-    "name": "화염형 데바스테이터",
+    "name": "컨플래그레이션 데버스테이터",
     "faction": "오토마톤",
     "source": "https://helldivers.wiki.gg/wiki/Conflagration_Devastator",
     "sourceRevision": 135176,
@@ -2008,7 +2008,7 @@ export const expandedEnemies = [
   },
   {
     "id": "incendiary-mg-devastator",
-    "name": "소이 기관총 데바스테이터",
+    "name": "인센디어리 MG 데버스테이터",
     "faction": "오토마톤",
     "source": "https://helldivers.wiki.gg/wiki/Incendiary_MG_Devastator",
     "sourceRevision": 135175,
@@ -4866,7 +4866,7 @@ export const expandedEnemies = [
   },
   {
     "id": "wretch",
-    "name": "레치",
+    "name": "렛치",
     "faction": "일루미닛",
     "source": "https://helldivers.wiki.gg/wiki/Wretch",
     "sourceRevision": 133907,
