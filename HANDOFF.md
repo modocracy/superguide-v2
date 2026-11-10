@@ -3,10 +3,12 @@
 > 작업을 마친 AI가 **덮어써서** 최신으로 유지합니다. 쌓아 두는 일지가 아닙니다. 규칙은 [AGENTS.md](AGENTS.md)를 보세요.
 
 - 마지막 갱신: 2026-11-10, Claude Code 담당
-- 기준: master `7ebc190` (PR #9 병합·배포)
+- 기준: master (PR #9 병합·배포 후 작은 수정 2개, 배포)
 - 진행 중인 작업: 없음
 
 ## 지금 상태
+
+- **작은 수정(2026-11-10, 배포)**: 영어 화면의 다크·라이트 버튼 설명을 영어로(`index.html` `data-en-label`/`data-en-title`). 세력 안내 '확인 날짜'를 안내마다 둘 수 있게 함(`faction-data.js`의 `checkedAt`, 없으면 `factionCheckedAt`): 커스틱·녹셔스는 2026-11-09, 나머지는 2026-09-17 그대로.
 
 - **[PR #9](https://github.com/modocracy/superguide-v2/pull/9) 병합(2026-11-10, 기여자 YuSeong, 배포됨)**: 무기 모드 탭(`?m=`), 주 무기 부착물 표(`weapon-attachments.js`, 54종 566줄), 지원 무기 연사·탄창 수치, 스트라타젬 호출 코드 110개, 무기·스트라타젬 상세의 채권 칩(`warbond-sources.js`), 채권 치장품·부스터·헬멧 한국어 이름, 철거 시설 11종 추가, 오토마톤 방어 시설 4종(대공포·박격포 진지·벙커 포탑·드롭십)을 철거 → 적 대응 화면으로 이동, 커스틱·녹셔스 변종 세력 안내, 칭호 배지 원래 색, 화면 간 상세 창이 닫혀 열리던 버그 수정. 적 이름을 나무위키 표기로 바로잡음(커미서·소각대·렛치·무분별한 대중·적임자 등, 2026-11-10 나무위키 대조로 확인). 새 검사 `test-structures`·`test-attachments`(`npm run check` 11종). 새 파이프라인: `fetch-attachments` + `fetch-namu-attachments` → `build-attachments`, `fetch-namu-warbond-items`, `fetch-structure-pages`.
 

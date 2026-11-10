@@ -1,6 +1,8 @@
 // Faction loadout guide: editorial picks per sub-faction unit, each backed by
 // the combat engine's count for the editor's aim point.
 import { factionGuides, factionSides, factionCheckedAt } from '../../data/faction-data.js';
+// Guides added later carry their own check date; the rest share factionCheckedAt.
+const guideCheckedAt = id => factionGuides.find(item => item.id === id)?.checkedAt || factionCheckedAt;
 import { enemies, combatCheckedAt } from '../../data/combat-data.js';
 import { pickerEnemyImages } from '../../data/selector-images.js';
 import { wikiIcons } from '../../data/wiki-icons.js';
@@ -40,7 +42,7 @@ function pickRow(unit, choice, index) {
       <span><b>${weapon.name}</b><small>${pick.pick.label}</small></span>
       <span class="pick-result">${badge(L('전술 안내', 'Tactic'), 'accent')}<small class="faint">${L('횟수 미표시', 'No count shown')}</small></span></summary>
       <div class="pick-body"><p class="how">${pick.pick.note}</p><p class="note">${pick.pick.limitation}</p>
-        <p class="sources">${external(pick.pick.source, L('적 특성·전술', 'Enemy traits and tactics'))}${external(weapon.source, L('장비', 'Weapon'))}<span>${L('확인', 'Checked')} ${factionCheckedAt}</span></p></div></details>`;
+        <p class="sources">${external(pick.pick.source, L('적 특성·전술', 'Enemy traits and tactics'))}${external(weapon.source, L('장비', 'Weapon'))}<span>${L('확인', 'Checked')} ${guideCheckedAt(state.guide)}</span></p></div></details>`;
   }
   const { route, mode, reference, tactic, enemy, alternatives, profile } = pick;
   const unitWord = unitOf(mode, route?.hits).unit;
@@ -84,7 +86,7 @@ function renderView() {
     <div class="chips" role="group" aria-label="${L('세력', 'Enemy force')}">${factionGuides.filter(item => item.side === side.id).map(item => html`<button class="chip" type="button" data-guide="${item.id}" aria-pressed="${item.id === guide.id}">${item.name}</button>`)}</div>
     <section class="panel guide-intro" data-side="${side.id}">${lang === 'en' ? '' : html`<span class="en">${guide.en}</span>`}<h2>${guide.name}</h2><p>${guide.intro}</p>
       ${guide.coverage ? html`<p class="note">${guide.coverage}</p>` : ''}
-      <p class="sources">${external(guide.source, L('세력 구성 출처', 'Force roster source'))}<span>${L(`확인 ${factionCheckedAt} · 주요 유닛 ${guide.units.length}종`, `Checked ${factionCheckedAt} · ${guide.units.length} key units`)}</span></p></section>
+      <p class="sources">${external(guide.source, L('세력 구성 출처', 'Force roster source'))}<span>${L(`확인 ${guideCheckedAt(guide.id)} · 주요 유닛 ${guide.units.length}종`, `Checked ${guideCheckedAt(guide.id)} · ${guide.units.length} key units`)}</span></p></section>
     <div class="units">${guide.units.map(unitCard)}</div>`);
 }
 
