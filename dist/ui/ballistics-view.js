@@ -91,7 +91,7 @@ function recordBlock(label, recordId, propelled) {
         <td>${markFalloff[idx]}%</td>
         <td>${p ? dropText(p.drop) : '—'}</td>
         <td>${p ? `${num(round(p.time, 0.01))}${L('초', 's')}` : '—'}</td>
-        <td>${p ? `${num(round(p.speed))}m/s` : '—'}</td></tr>`; })}</tbody>
+        <td>${p ? `${num(Math.round(p.speed))}m/s` : '—'}</td></tr>`; })}</tbody>
     </table></div>
   </div>`;
 }
