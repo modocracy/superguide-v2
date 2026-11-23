@@ -1135,6 +1135,7 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .attach-slot-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; align-items: start; }
 .attach-slot-col { display: grid; gap: 18px; min-width: 0; }
 .attach-slot-card { background: var(--surface); border: 1px solid var(--line); border-top: 2px solid var(--accent); overflow: hidden; min-width: 0; }
+.attach-slot-card.is-wide { grid-column: 1 / -1; }
 .attach-slot-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 16px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
 .attach-slot-head h4 { font: 750 15px/1.2 var(--font); color: var(--text); display: flex; align-items: center; gap: 8px; }
 .attach-slot-head h4::before { content: ''; width: 6px; height: 6px; background: var(--accent); flex: none; }
@@ -1145,6 +1146,9 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .attach-slot-card .gear-attach tbody th[scope="row"] { width: 34%; }
 .attach-slot-card .gear-attach tr > :nth-child(2) { width: 9.8em; }
 .attach-slot-card .gear-attach tr > :nth-child(3) { width: 5.5em; }
+.attach-slot-card.is-wide .gear-attach tbody th[scope="row"] { width: 26%; }
+.attach-slot-card.is-wide .gear-attach tr > :nth-child(2) { width: 11.5em; }
+.attach-slot-card.is-wide .gear-attach tr > :nth-child(3) { width: 7.5em; }
 .attach-slot-card .gear-attach tbody tr:last-child > * { border-bottom: 0; }
 @media (min-width: 980px) {
   .attach-slot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
@@ -1168,8 +1172,11 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
   .gear-attach, .gear-attach thead, .gear-attach tbody { display: block; }
   .gear-attach tr { display: grid; grid-template-columns: minmax(0, 1fr) 6.5em 5.2em; }
   .attach-slot-card .gear-attach tbody th[scope="row"],
+  .attach-slot-card.is-wide .gear-attach tbody th[scope="row"],
   .attach-slot-card .gear-attach tr > :nth-child(2),
+  .attach-slot-card.is-wide .gear-attach tr > :nth-child(2),
   .attach-slot-card .gear-attach tr > :nth-child(3),
+  .attach-slot-card.is-wide .gear-attach tr > :nth-child(3),
   .gear-attach tr > :nth-child(2),
   .gear-attach tr > :nth-child(3) { width: auto; }
   .gear-attach td small.attach-xp { white-space: normal; }

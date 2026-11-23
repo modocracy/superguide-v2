@@ -323,6 +323,29 @@ const EFFECTS = [
 ];
 export const attachmentEffects = effects => EFFECTS.filter(([key]) => effects[key] != null).map(([key, label, text]) => ({ key, label: label(), text: text(effects[key]) }));
 
+const estSlotHeight = items => items.reduce((sum, it) => {
+  const part = attachmentParts[it.part];
+  const effects = part.effects ? Object.keys(part.effects).length : 1;
+  const xpLines = it.level != null && !it.builtIn ? 2.2 : 1.2;
+  return sum + Math.max(xpLines, effects * 1.45) + 0.9;
+}, 2.6);
+
+function partitionAttachmentSlots(entries) {
+  let best = null;
+  for (let mask = 0; mask < (1 << (entries.length - 1)); mask++) {
+    const left = [entries[0]], right = [];
+    let hl = entries[0].height, hr = 0;
+    for (let i = 1; i < entries.length; i++) {
+      if ((mask >> (i - 1)) & 1) { left.push(entries[i]); hl += entries[i].height; }
+      else { right.push(entries[i]); hr += entries[i].height; }
+    }
+    if (!right.length) continue;
+    const diff = Math.abs(hl - hr);
+    if (!best || diff < best.diff) best = { cols: [left, right], diff };
+  }
+  return best.cols;
+}
+
 export function attachmentTable(w, expanded = false) {
   const list = w.category === 'primary' ? weaponAttachments[w.id] : null;
   if (!list?.length) return '';
@@ -337,22 +360,30 @@ export function attachmentTable(w, expanded = false) {
       <td>${effects == null ? unconfirmed : effects.length ? html`<ul class="attach-effects">${effects.map(e => html`<li>${e.label} <b>${e.text}</b></li>`)}</ul>` : html`<span class="faint">${L('변화 없음', 'No change')}</span>`}</td></tr>`;
   };
   const tableHead = html`<thead><tr><th scope="col">${L('부착물', 'Attachment')}</th><th scope="col">${L('해금', 'Unlock')}</th><th scope="col">${L('비용', 'Cost')}</th><th scope="col">${L('변동 수치', 'Stat changes')}</th></tr></thead>`;
-  const bySlot = slots.map(slot => ({ slot, items: list.filter(item => attachmentParts[item.part].slot === slot) }));
+  const bySlot = slots.map(slot => {
+    const items = list.filter(item => attachmentParts[item.part].slot === slot);
+    return { slot, items, height: estSlotHeight(items) };
+  });
   let bodyTable;
-  if (expanded && bySlot.length > 1) {
-    const cols = [[], []], heights = [0, 0];
-    for (const entry of bySlot) {
-      const target = heights[0] <= heights[1] ? 0 : 1;
-      cols[target].push(entry);
-      heights[target] += entry.items.length + 2;
-    }
-    const slotCard = ({ slot, items }) => html`<section class="attach-slot-card">
+  if (expanded) {
+    const slotCard = ({ slot, items }, wide = false) => html`<section class="attach-slot-card${wide ? ' is-wide' : ''}">
       <header class="attach-slot-head"><h4>${slotName(slot)}</h4><span>${L(`${items.length}종`, `${items.length}`)}</span></header>
       <div class="compare-scroll" role="region" aria-label="${slotName(slot)}" tabindex="0"><table class="compare-table gear-modes gear-attach">
         ${tableHead}<tbody>${items.map(row)}</tbody>
       </table></div>
     </section>`;
-    bodyTable = html`<div class="attach-slot-grid">${cols.map(col => html`<div class="attach-slot-col">${col.map(slotCard)}</div>`)}</div>`;
+    if (bySlot.length === 1) {
+      bodyTable = slotCard(bySlot[0], true);
+    } else if (bySlot.length === 2) {
+      bodyTable = html`<div class="attach-slot-grid">${bySlot.map(entry => slotCard(entry))}</div>`;
+    } else if (bySlot.length === 3) {
+      const sorted = [...bySlot].sort((a, b) => b.height - a.height);
+      const top = bySlot.filter(entry => entry !== sorted[2]);
+      bodyTable = html`<div class="attach-slot-grid">${top.map(entry => slotCard(entry))}${slotCard(sorted[2], true)}</div>`;
+    } else {
+      const cols = partitionAttachmentSlots(bySlot);
+      bodyTable = html`<div class="attach-slot-grid">${cols.map(col => html`<div class="attach-slot-col">${col.map(entry => slotCard(entry))}</div>`)}</div>`;
+    }
   } else {
     bodyTable = html`<div class="compare-scroll" role="region" aria-label="${L('부착물', 'Attachments')}" tabindex="0"><table class="compare-table gear-modes gear-attach">
       ${tableHead}
