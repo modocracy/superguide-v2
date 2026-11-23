@@ -390,7 +390,7 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
     const base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${detailGrid(w)}</section>`;
     const blast = blastFigure(w);
     stats = expanded
-      ? html`${detailColumns(base, blast || special ? html`${blast}${special}` : '')}${variantTable(w)}`
+      ? html`${blast ? detailColumns(base, html`${blast}${special}`) : html`${base}${special}`}${variantTable(w)}`
       : html`${base}${blast}${variantTable(w)}${special}`;
   }
   const ballistics = ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))], expanded);
@@ -400,7 +400,7 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
       ${expandable ? itemDetailToggle(expanded) : ''}</div>`;
   return html`${header ?? html`<div class="sheet-top"><span>${group.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
   <div class="sheet-content">
-    ${expanded ? html`<div class="item-detail-gear-head">${art}${identity}</div>` : html`${art}${identity}`}
+    ${expanded ? html`<div class="item-detail-gear-head" data-group="${w.category}">${art}${identity}</div>` : html`${art}${identity}`}
     ${stats}
     ${ballistics}
     ${attachmentTable(w, expanded)}

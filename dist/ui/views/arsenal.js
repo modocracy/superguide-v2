@@ -283,7 +283,7 @@ function changesBlock(item, expanded = false) {
   const content = html`${lines.length ? html`<ul class="notes">${lines.map(line => html`<li>${line}</li>`)}</ul>
     <p class="faint" style="font-size:12.5px">${L('재사용 대기와 호출에 표시된 값에 비율을 곱한 값입니다.', 'The rate applied to the cooldown and call-in values shown above.')} <a href="#/planets?tab=modifiers">${L('작전 제한 조건 보기', 'See operation modifiers')}</a></p>` : ''}
     ${modules.length ? html`<p class="faint" style="font-size:12.5px;margin-top:8px">${L('함선 모듈(모두 최고 단계)', 'Ship modules (all fully upgraded)')}: ${modules.map(module => `${lang === 'en' ? module.en : module.name} (${effect(module)})`).join(' · ')}</p>` : ''}`;
-  return expanded ? html`<section class="block"><h3>${title}</h3>${content}</section>`
+  return expanded ? html`<section class="block item-detail-changes"><h3>${title}</h3><div class="item-detail-card">${content}</div></section>`
     : html`<details class="planet-effects"><summary>${title}</summary>${content}</details>`;
 }
 
@@ -496,17 +496,18 @@ export function stratagemDetail(item, { demolition = false, force = null, header
     ? variants.map(v => html`<div data-variant-panel="${v.id}" ${v === current ? '' : raw('hidden')}>${specialBlock(item, force, v)}</div>`)
     : commonEffects;
   const statsLayout = expanded
-    ? html`${variantStats ? html`${base}${commonEffects}` : detailColumns(base, blasts || commonEffects ? html`${blasts}${commonEffects}` : '')}
+    ? html`${variantStats ? html`${base}${commonEffects}` : blasts ? detailColumns(base, html`${blasts}${commonEffects}`) : html`${base}${commonEffects}`}
       ${firing}${ballistics}${detailColumns(timing, changes)}${detailColumns(spread, defense)}${durability}`
     : html`${firing}${base}${blasts}${spread}${timing}${durability}${defense}${compactEffects}${ballistics}${changes}`;
-  return html`${header ?? html`<div class="sheet-top"><span>${cat.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
-  <div class="sheet-content">
-    <div class="detail-id${expandable && !item.input ? ' item-detail-actions' : ''}"><img class="strat-icon large" src="${wikiIcons[item.id]?.src}" alt="" width="64" height="64">
+  const heroHead = html`<div class="detail-id${expandable && !item.input ? ' item-detail-actions' : ''}"><img class="strat-icon large" src="${wikiIcons[item.id]?.src}" alt="" width="64" height="64">
       <div><h2 id="${titleId}">${item.name}</h2><p>${subtitle(item)}</p>
       <div class="chips" style="margin-top:6px">${badge(cat.name, 'outline')}${warbondChip('arsenal', item.id)}${item.ap != null ? badge(`AP ${item.ap} · ${apBandOf(item).name}`, 'accent') : ''}${item.tags.map(tag => badge(tag))}${stratagemStats[item.id]?.oneHanded ? badge(L('한손', 'One-handed')) : ''}${holeTag(item)}</div>${holeNote(item)}</div>
       ${expandable && !item.input ? itemDetailToggle(expanded) : ''}</div>
-    ${item.input ? html`<div class="item-detail-actions"><div class="block"><h3>${L('호출 코드', 'Stratagem code')}</h3>${keycaps(item.input, 'large')}</div>${expandable ? itemDetailToggle(expanded) : ''}</div>` : ''}
-    <p style="font-size:16px">${item.summary}</p>
+    ${item.input ? html`<div class="item-detail-actions item-detail-strat-bar"><div class="block"><h3>${L('호출 코드', 'Stratagem code')}</h3>${keycaps(item.input, 'large')}</div>${expandable ? itemDetailToggle(expanded) : ''}</div>` : ''}
+    <p class="item-detail-summary" style="font-size:16px">${item.summary}</p>`;
+  return html`${header ?? html`<div class="sheet-top"><span>${cat.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
+  <div class="sheet-content">
+    ${expanded ? html`<div class="item-detail-strat-head" style="--cat:${cat.color}">${heroHead}</div>` : heroHead}
     ${statsLayout}
     <section class="block"><h3>${L('이렇게 쓰세요', 'How to use it')}</h3><p>${item.usage}</p></section>
     ${item.warning ? html`<div class="callout warn"><h3>${L('주의', 'Watch out')}</h3><p>${item.warning}</p></div>` : ''}
