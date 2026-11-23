@@ -4,19 +4,37 @@ import { L, T } from '../core/i18n.js';
 
 class Safe { constructor(text) { this.text = text; } toString() { return this.text; } }
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-export const escape = value => String(value).replace(/[&<>"']/g, char => ESC[char]);
+const ESC_TEST = /[&<>"']/;
+const ESC_RE = /[&<>"']/g;
+const ESC_FN = char => ESC[char];
+export const escape = value => {
+  if (typeof value === 'number') return String(value);
+  const s = String(value);
+  return ESC_TEST.test(s) ? s.replace(ESC_RE, ESC_FN) : s;
+};
 export const raw = text => new Safe(String(text));
 // Shown text is looked up in the English dictionary (T is a no-op in Korean):
 // text between tags and human-readable attributes. Other attribute values
 // (data-*, value, class …) keep their raw text, because code reads them back.
-const piece = (value, shown = true) => value == null || value === false ? '' : value instanceof Safe ? value.text
-  : Array.isArray(value) ? value.map(item => piece(item, shown)).join('') : escape(shown ? T(value) : value);
+const piece = (value, shown = true) => {
+  if (value == null || value === false) return '';
+  if (value instanceof Safe) return value.text;
+  if (Array.isArray(value)) {
+    let out = '';
+    for (let i = 0; i < value.length; i++) out += piece(value[i], shown);
+    return out;
+  }
+  return escape(shown ? T(value) : value);
+};
 const READABLE = /\s(?:aria-label|aria-valuetext|title|alt|placeholder)=["'][^"']*$/;
 const shownAt = out => { const open = out.lastIndexOf('<'); return open <= out.lastIndexOf('>') || READABLE.test(out.slice(open)); };
-export const html = (strings, ...values) => new Safe(strings.reduce((out, text, i) => {
-  const next = out + text;
-  return i < values.length ? next + piece(values[i], shownAt(next)) : next;
-}, ''));
+export const html = (strings, ...values) => {
+  let out = strings[0];
+  for (let i = 0; i < values.length; i++) {
+    out += piece(values[i], shownAt(out)) + strings[i + 1];
+  }
+  return new Safe(out);
+};
 
 export const $ = (selector, root = document) => root.querySelector(selector);
 export const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];

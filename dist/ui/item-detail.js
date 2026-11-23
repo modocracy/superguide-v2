@@ -1,6 +1,30 @@
 import { L } from '../core/i18n.js';
 import { $, $$, html, icon, raw } from './dom.js';
 
+export const FORCE_NOTE = L(
+  '저지력은 적의 동작을 끊는 힘(적마다 기준값이 다름), 넉백은 밀어내는 힘입니다. 철거력은 한 번의 명중이나 폭발이 시설의 필요 철거력 이상이어야 하며, 여러 번 맞혀도 합산되지 않습니다.',
+  'Stagger force interrupts an enemy (each enemy has its own threshold); push force knocks it back. Demolition force must reach a structure\'s threshold in a single hit or blast; hits do not add up.',
+);
+
+export const detailStatCell = (stat, keepClass = false) => html`<div><dt>${stat.icon ? html`<span class="ico-${stat.icon}" aria-hidden="true"></span>` : ''}${stat.label}</dt><dd${stat.dim || keepClass ? raw(` class="${stat.dim ? 'dim' : ''}"`) : ''}>${stat.text}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd>${stat.caption ? html`<div class="caption">${stat.caption}</div>` : ''}${stat.warn ? html`<div class="caption force-note">${stat.warn}</div>` : ''}</div>`;
+
+export function bindItemSheetActions(viewName, state, ctx, { onCompare = null, onVariant = null } = {}) {
+  const sheet = $('#sheet');
+  sheet.addEventListener('click', event => {
+    if (document.body.dataset.view !== viewName) return;
+    if (onCompare) {
+      const compareBtn = event.target.closest('[data-compare]');
+      if (compareBtn) onCompare(compareBtn.dataset.compare);
+    }
+    const pick = event.target.closest('[data-variant]');
+    if (pick) {
+      selectItemVariant(state, pick.dataset.variant);
+      onVariant?.();
+    }
+    if (event.target.closest('[data-item-detail-toggle]')) toggleItemDetail(ctx);
+  });
+}
+
 export function itemDetailToggle(expanded) {
   return html`<button class="button ghost item-detail-toggle" type="button" data-item-detail-toggle aria-expanded="${String(expanded)}">
     <span class="item-detail-expand">${icon('expand', 16)} ${L('전체 화면', 'Full screen')}</span>
@@ -59,7 +83,8 @@ function restorePanel(body, snapshot) {
   const sections = $$('details', body);
   snapshot.disclosures.forEach((open, index) => { if (sections[index]) sections[index].open = open; });
   if (snapshot.firingMode) {
-    $$('[data-fire-mode]', body).find(button => button.dataset.fireMode === snapshot.firingMode)?.click();
+    const button = $$('[data-fire-mode]', body).find(item => item.dataset.fireMode === snapshot.firingMode);
+    if (button && button.getAttribute('aria-pressed') !== 'true') button.click();
   }
   body.scrollTop = snapshot.scrollTop;
 }

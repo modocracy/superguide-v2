@@ -8,7 +8,7 @@ import { wikiIcons } from '../../data/wiki-icons.js';
 import { html, raw, render, $, $$, icon, keycaps, badge, external } from '../dom.js';
 import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
-import { detailColumns, detailModeList, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, selectItemVariant, toggleItemDetail, updateItemDetail } from '../item-detail.js';
+import { detailColumns, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { supportProjectileRecords, propelledModes } from '../../data/support-records.js';
 import { warbondChip } from '../warbond-chip.js';
 import { L, T, lang } from '../../core/i18n.js';
@@ -124,18 +124,30 @@ function syncUrl() {
 
 function renderList() {
   const items = visibleItems();
-  // Category and type chips count within each other's choice; a chip with nothing to show is dimmed
-  // (picking it lets the other choice go).
-  const inCategory = (item, id = state.c) => !id || item.category === id;
-  const inPermit = (item, id = state.p) => !id || permitOf(item) === id;
-  const total = stratagems.filter(item => inCategory(item) && inPermit(item)).length;
+  // Count categories and permit types in a single scan over stratagems.
+  const catCounts = new Map(), permitCounts = new Map();
+  let total = 0, permitAll = 0, catAll = 0;
+  for (const item of stratagems) {
+    const matchCat = !state.c || item.category === state.c;
+    const permit = permitOf(item);
+    const matchPermit = !state.p || permit === state.p;
+    if (matchCat && matchPermit) total++;
+    if (matchPermit) {
+      catAll++;
+      catCounts.set(item.category, (catCounts.get(item.category) || 0) + 1);
+    }
+    if (matchCat) {
+      permitAll++;
+      permitCounts.set(permit, (permitCounts.get(permit) || 0) + 1);
+    }
+  }
   for (const chip of $$('[data-cat]', root)) {
-    const n = stratagems.filter(item => inCategory(item, chip.dataset.cat) && inPermit(item)).length;
+    const n = chip.dataset.cat ? (catCounts.get(chip.dataset.cat) || 0) : catAll;
     chip.querySelector('.count').textContent = n;
     chip.classList.toggle('is-empty', !n);
   }
   for (const chip of $$('[data-permit]', root)) {
-    const n = stratagems.filter(item => inPermit(item, chip.dataset.permit) && inCategory(item)).length;
+    const n = chip.dataset.permit ? (permitCounts.get(chip.dataset.permit) || 0) : permitAll;
     if (chip.dataset.permit) chip.querySelector('.count').textContent = n;
     chip.classList.toggle('is-empty', !n);
   }
@@ -338,8 +350,7 @@ function timingBlock(item, expanded = false) {
 // Special effects: demolition, stagger and push force of each attack from the wiki attack
 // datamine (stratagem-stats.js `forces`); demolition-data.js where the datamine has no record.
 const FORCE_KIND = { direct: L('직격', 'Direct'), beam: L('광선', 'Beam'), arc: L('전격', 'Arc'), spray: L('분사', 'Spray'), blast: L('폭발', 'Blast'), fragment: L('파편', 'Fragment'), overcharge: L('과충전 폭발', 'Overcharge blast'), backblast: L('후폭풍', 'Backblast'), wreck: L('차량 폭발', 'Vehicle explosion') };
-export const FORCE_NOTE = L('저지력은 적의 동작을 끊는 힘(적마다 기준값이 다름), 넉백은 밀어내는 힘입니다. 철거력은 한 번의 명중이나 폭발이 시설의 필요 철거력 이상이어야 하며, 여러 번 맞혀도 합산되지 않습니다.',
-  'Stagger force interrupts an enemy (each enemy has its own threshold); push force knocks it back. Demolition force must reach a structure\'s threshold in a single hit or blast; hits do not add up.');
+export { FORCE_NOTE };
 const DIRECT_KINDS = ['direct', 'beam', 'arc', 'spray'];
 // Explosions (the blast, an overcharge, a backblast) carry the blast icon in front of their name.
 const BLAST_KINDS = ['blast', 'overcharge', 'backblast', 'wreck'];
@@ -395,7 +406,7 @@ function specialBlock(item, profile, variant = null) {
 // Same order as the gear sheet: damage (direct, blast, durable, penetration), reach, ammo and fire rate,
 // handling, unlock. A stat the item does not have at all (no blast, '—' on utility gear) is left out;
 // an unverified one stays as 미확인.
-const statCell = stat => html`<div><dt>${stat.icon ? html`<span class="ico-${stat.icon}" aria-hidden="true"></span>` : ''}${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}">${stat.text}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd>${stat.caption ? html`<div class="caption">${stat.caption}</div>` : ''}${stat.warn ? html`<div class="caption force-note">${stat.warn}</div>` : ''}</div>`;
+const statCell = detailStatCell;
 const statGrid = (item, expanded = false) => {
   const [direct, blast, ap, reach] = stats(item);
   const [durable, ...ammo] = ammoCells(item);
@@ -686,21 +697,11 @@ export function mount(container, context) {
   });
   // Buttons inside the sheet live outside `root`; register that listener once.
   if (!sheetListener) {
-    sheetListener = event => {
-      if (document.body.dataset.view !== 'arsenal') return;
-      const target = event.target.closest('[data-compare]');
-      if (target) toggleCompare(target.dataset.compare);
-      const pick = event.target.closest('[data-variant]');
-      if (pick) {
-        selectItemVariant(state, pick.dataset.variant);
-        syncUrl();
-      }
-      if (event.target.closest('[data-item-detail-toggle]')) toggleItemDetail(ctx);
-    };
-    $('#sheet').addEventListener('click', sheetListener);
+    sheetListener = true;
+    bindItemSheetActions('arsenal', state, ctx, { onCompare: toggleCompare, onVariant: syncUrl });
   }
 }
-let sheetListener = null;
+let sheetListener = false;
 
 export function update(route) {
   const q = route.query;

@@ -19,7 +19,7 @@ import { num, strongest } from '../../core/explain.js';
 import { html, raw, render, $, $$, icon, badge, external } from '../dom.js';
 import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
-import { detailColumns, detailDisclosure, detailModeList, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, selectItemVariant, toggleItemDetail, updateItemDetail } from '../item-detail.js';
+import { detailColumns, detailDisclosure, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { warbondChip } from '../warbond-chip.js';
 import { GROUPS, groupOf, typeName, weaponById, displayName, orderTypes } from '../gear-shared.js';
 import { L, T, lang } from '../../core/i18n.js';
@@ -51,11 +51,18 @@ const HOLE_CONDITIONS = {
   'anti-tank-seeker': L('굴 가까이 있는 적에게 유도되어 굴 안쪽에서 터질 때만 벌레굴이 닫힙니다. 직접 굴에 넣을 수는 없습니다.', 'Closes a bug hole only when it homes in on an enemy by the hole and explodes inside it; you cannot put it into the hole yourself.'),
   'lure-mine': L('굴 입구에 설치해 두고 적이 밟아 굴 안쪽에서 터질 때만 벌레굴이 닫힙니다.', 'Closes a bug hole only when it is set at the hole\'s mouth and an enemy steps on it, exploding inside.'),
 };
+const HOLE_TIER_CACHE = new Map();
 export const holeTier = w => {
-  if (HOLE_CONDITIONS[w.id]) return 'conditional';
-  const records = [w, ...(w.variants || [])];
-  if (records.some(r => Math.max(r.demolition ?? 0, r.splashDemolition ?? 0) >= HOLE_OUTER)) return 'outer';
-  return records.some(r => (r.splashDemolition ?? 0) >= HOLE_INNER) ? 'inner' : null;
+  if (HOLE_TIER_CACHE.has(w.id)) return HOLE_TIER_CACHE.get(w.id);
+  let tier = null;
+  if (HOLE_CONDITIONS[w.id]) tier = 'conditional';
+  else {
+    const records = [w, ...(w.variants || [])];
+    if (records.some(r => Math.max(r.demolition ?? 0, r.splashDemolition ?? 0) >= HOLE_OUTER)) tier = 'outer';
+    else if (records.some(r => (r.splashDemolition ?? 0) >= HOLE_INNER)) tier = 'inner';
+  }
+  HOLE_TIER_CACHE.set(w.id, tier);
+  return tier;
 };
 const HOLE = {
   outer: [L('굴 파괴', 'Closes bug holes'), L(`철거력 ${HOLE_OUTER} 이상이라 굴 밖에 맞혀도 벌레굴이 닫힙니다.`, `Demolition force ${HOLE_OUTER}+: closes a bug hole even hitting outside it.`)],
@@ -164,19 +171,26 @@ function renderBrowse() {
   const items = visibleItems();
   for (const button of $$('[data-cat]', root)) button.setAttribute('aria-pressed', String(!state.q && button.dataset.cat === state.cat));
   const types = typesOf(state.cat);
-  // The one-handed filter only where it narrows the list (every secondary is one-handed, no throwable is).
-  // Type and one-handed chips count within each other's choice, like the stratagem filters; a chip
-  // with nothing to show is dimmed, and picking it lets the other choice go.
+  // Count each type, one-handed, and bug-hole chip in a single pass over the active group.
   const inCat = personalWeapons.filter(w => w.category === state.cat);
-  const showHand = inCat.some(oneHanded) && !inCat.every(oneHanded);
-  // The bug hole filter likewise only where some but not all of the group close holes.
-  const showHole = inCat.some(holeTier) && !inCat.every(holeTier);
-  const typeCount = type => inCat.filter(w => w.type === type && (!state.hand || oneHanded(w)) && (!state.hole || holeTier(w))).length;
-  const handCount = inCat.filter(w => oneHanded(w) && (!state.type || w.type === state.type) && (!state.hole || holeTier(w))).length;
-  const holeCount = inCat.filter(w => holeTier(w) && (!state.type || w.type === state.type) && (!state.hand || oneHanded(w))).length;
+  let showHandAll = true, hasHand = false, showHoleAll = true, hasHole = false;
+  let handCount = 0, holeCount = 0;
+  const typeCounts = new Map();
+  for (const w of inCat) {
+    const isHand = oneHanded(w);
+    const isHole = Boolean(holeTier(w));
+    if (isHand) hasHand = true; else showHandAll = false;
+    if (isHole) hasHole = true; else showHoleAll = false;
+    if ((!state.hand || isHand) && (!state.hole || isHole)) typeCounts.set(w.type, (typeCounts.get(w.type) || 0) + 1);
+    if ((!state.type || w.type === state.type) && (!state.hole || isHole) && isHand) handCount++;
+    if ((!state.type || w.type === state.type) && (!state.hand || isHand) && isHole) holeCount++;
+  }
+  const showHand = hasHand && !showHandAll;
+  const showHole = hasHole && !showHoleAll;
+  const typeCount = type => typeCounts.get(type) || 0;
   render($('#gear-types', root), types.length > 1 ? html`<button class="chip" type="button" data-type="" aria-pressed="${!state.type}">${L('전체', 'All')}</button>${types.map(type => html`<button class="chip ${typeCount(type) ? '' : 'is-empty'}" type="button" data-type="${type}" aria-pressed="${state.type === type}">${typeName(type)} <span class="count">${typeCount(type)}</span></button>`)}${showHand ? html`<button class="chip chip-hand ${handCount ? '' : 'is-empty'}" type="button" data-hand aria-pressed="${state.hand}" title="${L('달리면서 쏘거나 방패, 임무 물건을 든 채 쓸 수 있는 무기', 'Weapons you can fire while jogging or while holding a shield or mission item')}">${L('한손 무기만', 'One-handed only')} <span class="count">${handCount}</span></button>` : ''}${showHole ? html`<button class="chip chip-hole ${holeCount ? '' : 'is-empty'}" type="button" data-hole aria-pressed="${state.hole}" title="${L('벌레굴을 닫을 수 있는 무기(굴 밖에서도 닫히는 것과 굴 안쪽에 넣어야 하는 것)', 'Weapons that can close bug holes (from outside, or only from inside the hole)')}">${L('굴 파괴 가능', 'Closes bug holes')} <span class="count">${holeCount}</span></button>` : ''}` : '');
   $('#gear-types', root).hidden = Boolean(state.q) || types.length < 2;
-  const total = personalWeapons.filter(w => w.category === state.cat).length;
+  const total = inCat.length;
   $('#gear-count', root).innerHTML = html`<span>${L(html`<b>${items.length}</b>개 표시${state.q ? ' · 모든 분류에서 검색' : ` · ${groupOf(state.cat).name} ${total}개`}`, html`Showing <b>${items.length}</b>${state.q ? ' · searching every group' : ` of ${total} ${groupOf(state.cat).name.toLowerCase()}`}`)}</span>`.toString();
   render($('#gear-grid', root), items.length ? items.map(card) : html`<div class="empty" style="grid-column:1/-1"><h3>${L('맞는 장비가 없습니다', 'No matching gear')}</h3><p>${L('검색어를 줄이거나 분류를 바꿔 보세요.', 'Try a shorter search or another group.')}</p></div>`);
 }
@@ -258,7 +272,7 @@ function variantTable(w) {
     </table></div></section>`;
 }
 
-const detailGrid = w => html`<dl class="detail-grid">${detailRows(w).map(row => html`<div><dt>${row.icon ? html`<span class="ico-${row.icon}" aria-hidden="true"></span>` : ''}${row.label}</dt><dd class="${row.dim ? 'dim' : ''}">${row.text}${row.unit ? html`<small>${row.unit}</small>` : ''}</dd>${row.caption ? html`<div class="caption">${row.caption}</div>` : ''}</div>`)}</dl>`;
+const detailGrid = w => html`<dl class="detail-grid">${detailRows(w).map(stat => detailStatCell(stat, true))}</dl>`;
 
 // An underbarrel attachment has its own ammo, fire rate and reload; a mode the
 // shot calculator skips starts with no damage numbers of its own.
@@ -350,7 +364,13 @@ export function attachmentTable(w, expanded = false) {
   const list = w.category === 'primary' ? weaponAttachments[w.id] : null;
   if (!list?.length) return '';
   const unconfirmed = html`<span class="dim">${L('미확인', 'Unverified')}</span>`;
-  const slots = [...new Set(list.map(item => attachmentParts[item.part].slot))];
+  const slotMap = new Map();
+  for (const item of list) {
+    const slot = attachmentParts[item.part].slot;
+    let group = slotMap.get(slot);
+    if (!group) { group = []; slotMap.set(slot, group); }
+    group.push(item);
+  }
   const row = item => {
     const part = attachmentParts[item.part];
     const effects = part.effects ? attachmentEffects(part.effects) : null;
@@ -360,10 +380,7 @@ export function attachmentTable(w, expanded = false) {
       <td>${effects == null ? unconfirmed : effects.length ? html`<ul class="attach-effects">${effects.map(e => html`<li>${e.label} <b>${e.text}</b></li>`)}</ul>` : html`<span class="faint">${L('변화 없음', 'No change')}</span>`}</td></tr>`;
   };
   const tableHead = html`<thead><tr><th scope="col">${L('부착물', 'Attachment')}</th><th scope="col">${L('해금', 'Unlock')}</th><th scope="col">${L('비용', 'Cost')}</th><th scope="col">${L('변동 수치', 'Stat changes')}</th></tr></thead>`;
-  const bySlot = slots.map(slot => {
-    const items = list.filter(item => attachmentParts[item.part].slot === slot);
-    return { slot, items, height: estSlotHeight(items) };
-  });
+  const bySlot = [...slotMap].map(([slot, items]) => ({ slot, items, height: estSlotHeight(items) }));
   let bodyTable;
   if (expanded) {
     const slotCard = ({ slot, items }, wide = false) => html`<section class="attach-slot-card${wide ? ' is-wide' : ''}">
@@ -419,7 +436,7 @@ function specialBlock(w) {
     <span class="force-line"><b>${L('철거력', 'Demolition')}</b> ${row.demolition ?? '?'} · <b>${L('저지력', 'Stagger')}</b> ${row.stun ?? '?'} · <b>${L('넉백', 'Push')}</b> ${row.push ?? '?'}</span></dd></div>`;
   return html`<section class="block"><h3>${L('특수 효과', 'Special effects')}</h3>
     <dl class="detail-grid">${rows.map(cell)}</dl>
-    <p class="faint" style="font-size:12.5px;margin-top:8px">${L('저지력은 적의 동작을 끊는 힘(적마다 기준값이 다름), 넉백은 밀어내는 힘입니다. 철거력은 한 번의 명중이나 폭발이 시설의 필요 철거력 이상이어야 하며, 여러 번 맞혀도 합산되지 않습니다.', 'Stagger force interrupts an enemy (each enemy has its own threshold); push force knocks it back. Demolition force must reach the structure threshold in a single hit or blast; hits do not add up.')}</p>
+    <p class="faint" style="font-size:12.5px;margin-top:8px">${FORCE_NOTE}</p>
   </section>`;
 }
 
@@ -622,19 +639,11 @@ export function mount(container, context) {
   });
   // Mode buttons inside the sheet live outside `root`; register that listener once.
   if (!sheetListener) {
-    sheetListener = event => {
-      if (document.body.dataset.view !== 'gear') return;
-      const pick = event.target.closest('[data-variant]');
-      if (pick) {
-        selectItemVariant(state, pick.dataset.variant);
-        syncUrl();
-      }
-      if (event.target.closest('[data-item-detail-toggle]')) toggleItemDetail(ctx);
-    };
-    $('#sheet').addEventListener('click', sheetListener);
+    sheetListener = true;
+    bindItemSheetActions('gear', state, ctx, { onVariant: syncUrl });
   }
 }
-let sheetListener = null;
+let sheetListener = false;
 
 export function update(route) {
   const q = route.query;
