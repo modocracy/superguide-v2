@@ -19,7 +19,7 @@ import { num, strongest } from '../../core/explain.js';
 import { html, raw, render, $, $$, icon, badge, external } from '../dom.js';
 import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
-import { detailStatsLayout, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, selectItemVariant, toggleItemDetail, updateItemDetail } from '../item-detail.js';
+import { detailColumns, detailDisclosure, detailModeList, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, selectItemVariant, toggleItemDetail, updateItemDetail } from '../item-detail.js';
 import { warbondChip } from '../warbond-chip.js';
 import { GROUPS, groupOf, typeName, weaponById, displayName, orderTypes } from '../gear-shared.js';
 import { L, T, lang } from '../../core/i18n.js';
@@ -283,12 +283,16 @@ function modeView(w, m) {
   return { ...w, dot: null, ...(m.id === 'underbarrel' ? GUN_FIELDS : {}), ...own, ...extra };
 }
 
-// Modes the player switches between get tabs, like the stratagem modes in the arsenal.
-function modeTabs(modes, current, includeBlast) {
+function modeStats({ mode, stats }) {
+  if (!stats) return html`<p class="variant-note">${mode.unsupported}</p>`;
+  return html`${detailGrid(stats)}${blastFigure(stats)}
+    ${stats.modeNotes?.length ? html`<ul class="notes">${stats.modeNotes.map(note => html`<li>${note}</li>`)}</ul>` : ''}`;
+}
+
+// Modes the player switches between get tabs in the compact panel.
+function modeTabs(modes, current) {
   return html`<div class="variant-tabs"><h3>${L('모드별 수치', 'Stats by mode')}</h3><div class="segmented" role="group" aria-label="${L('모드 선택', 'Mode')}">${modes.map(({ mode }) => html`<button type="button" data-variant="${mode.id}" aria-pressed="${String(mode === current)}">${mode.name}</button>`)}</div></div>
-    ${modes.map(({ mode, stats }) => itemVariantPanel(mode.id, current.id, stats
-      ? html`${detailGrid(stats)}${includeBlast ? blastFigure(stats) : ''}${stats.modeNotes?.length ? html`<ul class="notes">${stats.modeNotes.map(note => html`<li>${note}</li>`)}</ul>` : ''}`
-      : html`<p class="variant-note">${mode.unsupported}</p>`))}`;
+    ${modes.map(entry => itemVariantPanel(entry.mode.id, current.id, modeStats(entry)))}`;
 }
 
 // Customization (primary weapons): every attachment per slot with its unlock level,
@@ -319,7 +323,7 @@ const EFFECTS = [
 ];
 export const attachmentEffects = effects => EFFECTS.filter(([key]) => effects[key] != null).map(([key, label, text]) => ({ key, label: label(), text: text(effects[key]) }));
 
-export function attachmentTable(w) {
+export function attachmentTable(w, expanded = false) {
   const list = w.category === 'primary' ? weaponAttachments[w.id] : null;
   if (!list?.length) return '';
   const unconfirmed = html`<span class="dim">${L('미확인', 'Unverified')}</span>`;
@@ -332,14 +336,17 @@ export function attachmentTable(w) {
       <td>${item.builtIn ? L('기본 장착', 'Built in') : item.cost != null ? num(item.cost) : unconfirmed}</td>
       <td>${effects == null ? unconfirmed : effects.length ? html`<ul class="attach-effects">${effects.map(e => html`<li>${e.label} <b>${e.text}</b></li>`)}</ul>` : html`<span class="faint">${L('변화 없음', 'No change')}</span>`}</td></tr>`;
   };
-  // Long lists (up to two dozen attachments), so the section starts folded.
-  return html`<details class="block gear-block gear-attach-block disclosure"><summary><h3>${L('커스터마이징', 'Customization')}</h3><span class="attach-count">${L(`부착물 ${list.length}개`, `${list.length} attachments`)}</span></summary>
-    <div class="compare-scroll" role="region" aria-label="${L('부착물', 'Attachments')}" tabindex="0"><table class="compare-table gear-modes gear-attach">
+  const content = html`<div class="compare-scroll" role="region" aria-label="${L('부착물', 'Attachments')}" tabindex="0"><table class="compare-table gear-modes gear-attach">
       <thead><tr><th scope="col">${L('부착물', 'Attachment')}</th><th scope="col">${L('해금', 'Unlock')}</th><th scope="col">${L('비용', 'Cost')}</th><th scope="col">${L('변동 수치', 'Stat changes')}</th></tr></thead>
       ${slots.map(slot => html`<tbody><tr class="attach-slot"><th scope="rowgroup" colspan="4">${slotName(slot)}</th></tr>${list.filter(item => attachmentParts[item.part].slot === slot).map(row)}</tbody>`)}
     </table></div>
     <p class="faint attach-note">${L('+/-와 %는 기본 상태 대비 변화, 탄창 용량과 탄창 수, 재장전 시간은 장착했을 때의 값입니다. 해금은 무기 레벨(누적 경험치는 그 레벨까지 필요한 무기 경험치로 모든 주무기가 같음), 비용은 요청 신청서 기준입니다. 한국어 이름을 확인하지 못한 부착물은 영어 이름으로 표시합니다.', 'Signed numbers and percentages are changes from the base weapon; capacity, magazine counts and reload times are the values with the attachment fitted. Unlock is the weapon level (the XP total to reach it is the same for every primary); cost is in Requisition Slips.')} ${external(`${w.source}#Attachments`, L('위키 부착물 표', 'Wiki attachments table'))}</p>
-  </details>`;
+  `;
+  return detailDisclosure(L('커스터마이징', 'Customization'), content, {
+    className: 'gear-block gear-attach-block',
+    expanded,
+    meta: html`<span class="attach-count">${L(`부착물 ${list.length}개`, `${list.length} attachments`)}</span>`,
+  });
 }
 
 // Special effects: demolition, stagger and push force of each attack record (db/weapons.js datamine fields).
@@ -372,21 +379,31 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
   const modes = personalProfiles[w.id]?.modes || [];
   const current = modes.find(m => m.id === variant) || modes[0];
   const modeDetails = modes.length > 1 ? modes.map(mode => ({ mode, stats: modeView(w, mode) })) : [];
-  const base = modeDetails.length ? modeTabs(modeDetails, current, !expandable) : html`<section class="block"><h3>${L('기본 수치', 'Key stats')}</h3>${detailGrid(w)}</section>`;
-  const blasts = !modeDetails.length ? blastFigure(w) : !expandable ? '' : modeDetails.map(({ mode, stats }) => {
-    const diagram = stats && blastFigure(stats);
-    return diagram ? itemVariantPanel(mode.id, current.id, diagram) : '';
-  });
-  const extra = html`${modeDetails.length ? '' : variantTable(w)}${specialBlock(w)}`;
-  const ballistics = ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))]);
+  const special = specialBlock(w);
+  let stats;
+  if (modeDetails.length) {
+    const byMode = expanded
+      ? detailModeList(L('모드별 수치', 'Stats by mode'), modeDetails.map(entry => ({ name: entry.mode.name, content: modeStats(entry) })))
+      : modeTabs(modeDetails, current);
+    stats = html`${byMode}${special}`;
+  } else {
+    const base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${detailGrid(w)}</section>`;
+    const blast = blastFigure(w);
+    stats = expanded
+      ? html`${detailColumns(base, blast || special ? html`${blast}${special}` : '')}${variantTable(w)}`
+      : html`${base}${blast}${variantTable(w)}${special}`;
+  }
+  const ballistics = ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))], expanded);
+  const art = weaponArt(w, 'gear-art large');
+  const identity = html`<div class="detail-id gear-id${expandable ? ' item-detail-actions' : ''}"><div><h2 id="${titleId}">${displayName(w)}</h2><p>${lang === 'en' ? '' : w.en}</p>
+      <div class="chips" style="margin-top:6px">${badge(group.name, 'outline')}${badge(typeName(w.type))}${warbondChip('gear', w.id)}${apOf(w) != null ? badge(`${apText(w)} · ${apBandOf({ ap: apOf(w) })?.name}`, 'accent') : ''}${traits(w)}</div>${holeTier(w) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[w.id]}</p>` : ''}</div>
+      ${expandable ? itemDetailToggle(expanded) : ''}</div>`;
   return html`${header ?? html`<div class="sheet-top"><span>${group.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
   <div class="sheet-content">
-    ${weaponArt(w, 'gear-art large')}
-    <div class="detail-id gear-id${expandable ? ' item-detail-actions' : ''}"><div><h2 id="${titleId}">${displayName(w)}</h2><p>${lang === 'en' ? '' : w.en}</p>
-      <div class="chips" style="margin-top:6px">${badge(group.name, 'outline')}${badge(typeName(w.type))}${warbondChip('gear', w.id)}${apOf(w) != null ? badge(`${apText(w)} · ${apBandOf({ ap: apOf(w) })?.name}`, 'accent') : ''}${traits(w)}</div>${holeTier(w) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[w.id]}</p>` : ''}</div>
-      ${expandable ? itemDetailToggle(expanded) : ''}</div>
-    ${expandable ? detailStatsLayout(base, blasts, extra, ballistics) : html`${base}${blasts}${extra}${ballistics}`}
-    ${attachmentTable(w)}
+    ${expanded ? html`<div class="item-detail-gear-head">${art}${identity}</div>` : html`${art}${identity}`}
+    ${stats}
+    ${ballistics}
+    ${attachmentTable(w, expanded)}
     ${conflicts.length ? html`<div class="callout warn"><h3>${L('위키 페이지 표시값과 다름', 'Differs from the wiki page')}</h3><p>${conflicts.map(c => L(`${c.label || CONFLICT_FIELDS[c.field]?.[0] || c.field}: 데이터 ${Array.isArray(c.db) ? c.db.join('~') : c.db} / 페이지 ${c.raw ?? c.infobox}`, `${T(c.label) || CONFLICT_FIELDS[c.field]?.[1] || c.field}: data ${Array.isArray(c.db) ? c.db.join('~') : c.db} / page ${c.raw ?? c.infobox}`)).join(' · ')}. ${L('더 최신인 게임 데이터 값을 표시합니다.', 'The newer game data value is shown.')}</p></div>` : ''}
     ${w.playerNotes?.length ? html`<section class="block"><h3>${L('알아 둘 점', 'Good to know')}</h3><ul class="notes">${w.playerNotes.map(note => html`<li>${note}</li>`)}</ul></section>` : ''}
     <div class="links">
@@ -402,11 +419,12 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
   </div>`;
 }
 
-function openDetail(id) {
+function openDetail(id, keepScroll = false) {
   const w = weaponById.get(id);
   if (!w) return;
   openItemSheet(ctx, state, weaponDetail(w, { expandable: true, expanded: state.expanded }), {
     label: `${T(displayName(w))} ${L('상세', 'details')}`,
+    keepScroll,
   });
 }
 
@@ -514,7 +532,7 @@ function showTab() {
 export function mount(container, context) {
   root = container; ctx = context;
   // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
-  Object.assign(state, { detail: null, variant: '', expanded: false });
+  Object.assign(state, { detail: null, variant: '', expanded: false, panelSnapshot: null });
   const count = id => personalWeapons.filter(w => w.category === id).length;
   LEDES.browse = L(`주무기 ${count('primary')}종 · 보조무기 ${count('secondary')}종 · 투척 ${count('throwable')}종의 수치. 카드를 누르면 자세한 기준이 열립니다.`, `Stats for ${count('primary')} primaries, ${count('secondary')} secondaries and ${count('throwable')} throwables. Open a card for the details behind the numbers.`);
   render(root, html`<div class="page-head gear-head"><div><div class="eyebrow">Armory</div>

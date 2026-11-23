@@ -59,9 +59,9 @@ const sheet = $('#sheet');
 const sheetBody = $('#sheet-body');
 let onSheetClose = null;
 let onSheetCollapse = null;
-let panelScroll = 0;
 // keepScroll: refresh an open sheet in place (e.g. after a setting inside it changes).
 export function openSheet(content, { wide = false, expanded = false, onClose = null, onCollapse = null, label = '', keepScroll = false } = {}) {
+  const scrollTop = keepScroll ? sheetBody.scrollTop : 0;
   render(sheetBody, content);
   sheet.classList.toggle('wide', wide);
   sheet.classList.toggle('expanded', expanded);
@@ -70,16 +70,7 @@ export function openSheet(content, { wide = false, expanded = false, onClose = n
   onSheetClose = onClose;
   onSheetCollapse = onCollapse;
   if (!sheet.open) sheet.showModal();
-  if (!keepScroll) {
-    sheetBody.scrollTop = 0;
-    panelScroll = 0;
-  }
-}
-function setSheetExpanded(expanded) {
-  if (expanded) panelScroll = sheetBody.scrollTop;
-  sheet.classList.toggle('expanded', expanded);
-  $('[data-item-detail-toggle]', sheet)?.setAttribute('aria-expanded', String(expanded));
-  sheetBody.scrollTop = expanded ? 0 : panelScroll;
+  sheetBody.scrollTop = scrollTop;
 }
 export const closeSheet = () => sheet.open && sheet.close();
 // The dialog fires 'close' a moment after close(). When a view switch closes the sheet, the next
@@ -133,7 +124,7 @@ export const ctx = {
     current.route = parseRoute(hash);
   },
   get route() { return current.route; },
-  openSheet, closeSheet, setSheetExpanded, toast,
+  openSheet, closeSheet, toast,
 };
 
 async function handle() {

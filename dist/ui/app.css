@@ -514,23 +514,26 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .item-detail-toggle span { display: inline-flex; align-items: center; gap: 8px; }
 .item-detail-toggle[aria-expanded="false"] .item-detail-collapse,
 .item-detail-toggle[aria-expanded="true"] .item-detail-expand { display: none; }
-.item-detail-stats,
-.item-detail-extra { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
-.item-detail-primary,
-.item-detail-figures { display: contents; }
-.item-detail-extra { order: 1; }
-.item-detail-ballistics { order: 2; }
-.item-detail-extra:empty,
-.item-detail-ballistics:empty,
-.item-detail-blasts:not(:has(> :not([hidden]))) { display: none; }
+.item-detail-gear-head,
+.item-detail-columns { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+.item-detail-columns > div,
+.item-detail-mode { display: grid; gap: 14px; min-width: 0; }
+.item-detail-mode { padding: 12px; border: 1px solid var(--line); background: var(--surface-2); }
+.item-detail-mode h4 { font: 700 20px/1.2 var(--cond); }
+.item-detail-section-heading { display: flex; gap: 12px; align-items: baseline; margin-bottom: 8px; }
+.block > .item-detail-section-heading h3 { margin: 0; }
+.sheet.expanded .sheet-content > .block > h3,
+.sheet.expanded .item-detail-section-heading > h3 { font-size: 16px; }
+.sheet.expanded .detail-grid { margin: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sheet.expanded .detail-grid > div { padding: 10px 12px; overflow-wrap: anywhere; }
+.sheet.expanded .detail-grid > div:only-child { grid-column: 1 / -1; }
 @media (min-width: 900px) {
-  .sheet.expanded .item-detail-stats:has(.item-detail-blasts > :not([hidden]), .item-detail-ballistics:not(:empty)) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 28px;
-  }
-  .sheet.expanded .item-detail-primary,
-  .sheet.expanded .item-detail-figures { display: grid; align-content: start; gap: 20px; min-width: 0; }
-  .sheet.expanded .item-detail-figures:not(:has(.item-detail-blasts > :not([hidden]), .item-detail-ballistics:not(:empty))) { display: none; }
+  .item-detail-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .item-detail-gear-head { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 24px; align-items: center; }
+  .item-detail-gear-head .gear-art.large { margin: 0; }
+}
+@media (min-width: 1040px) {
+  .sheet.expanded .item-detail-key-stats > .detail-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 .detail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); overflow: hidden; }
 .detail-grid > div { background: var(--surface); padding: 12px 14px; }
@@ -577,7 +580,15 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .ballistic-block[open] > summary { margin-bottom: 8px; }
 .ballistic { display: grid; gap: 12px; margin-bottom: 14px; }
 .ballistic h4 { font-size: 13.5px; font-weight: 750; color: var(--text); }
-.ballistic-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.ballistic-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; }
+section.ballistic-block .ballistic { grid-template-columns: minmax(0, 1fr); padding: 12px; border: 1px solid var(--line); background: var(--surface-2); }
+section.ballistic-block .ballistic h4 { font: 700 20px/1.2 var(--cond); }
+@media (min-width: 900px) {
+  section.ballistic-block .ballistic { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: start; }
+  section.ballistic-block .ballistic > h4 { grid-column: 1 / -1; }
+  section.ballistic-block .ballistic > .detail-grid { grid-column: 1; grid-row: span 2; }
+  section.ballistic-block .ballistic > :is(.ballistic-charts, .compare-scroll) { grid-column: 2; }
+}
 .ballistic-chart { margin: 0; padding: 10px 10px 4px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
 .ballistic-chart figcaption { font-size: 12.5px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; }
 .ballistic-chart svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
@@ -591,6 +602,9 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .compare-table.ballistic-table td, .compare-table.ballistic-table th { white-space: nowrap; padding: 7px 10px; }
 .compare-table.ballistic-table thead th { font-size: 13px; }
 .compare-table.ballistic-table tbody th { width: auto; }
+@media (max-width: 480px) {
+  section.ballistic-block .ballistic-table :is(th, td) { padding: 6px; white-space: normal; }
+}
 .links { display: flex; gap: 8px; flex-wrap: wrap; }
 .sources { font-size: 12.5px; color: var(--text-3); display: flex; gap: 6px 14px; flex-wrap: wrap; }
 

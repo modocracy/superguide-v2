@@ -8,14 +8,23 @@ export function itemDetailToggle(expanded) {
   </button>`;
 }
 
-export function detailStatsLayout(base, blasts, extra, ballistics) {
-  return html`<div class="item-detail-stats">
-    <div class="item-detail-primary">${base}<div class="item-detail-extra">${extra}</div></div>
-    <div class="item-detail-figures">
-      <div class="item-detail-blasts">${blasts}</div>
-      <div class="item-detail-ballistics">${ballistics}</div>
-    </div>
-  </div>`;
+export function detailColumns(...sections) {
+  const visible = sections.filter(Boolean);
+  if (visible.length < 2) return visible[0] ?? '';
+  return html`<div class="item-detail-columns">${visible.map(section => html`<div>${section}</div>`)}</div>`;
+}
+
+export function detailModeList(title, modes) {
+  return html`<section class="block"><h3>${title}</h3>
+    <div class="item-detail-columns">${modes.map(({ name, content }) => html`<section class="item-detail-mode"><h4>${name}</h4>${content}</section>`)}</div>
+  </section>`;
+}
+
+export function detailDisclosure(title, content, { className, expanded, meta = '' }) {
+  const heading = html`<h3>${title}</h3>${meta}`;
+  return expanded
+    ? html`<section class="block ${className}"><header class="item-detail-section-heading">${heading}</header>${content}</section>`
+    : html`<details class="block ${className} disclosure"><summary>${heading}</summary>${content}</details>`;
 }
 
 export function itemVariantPanel(id, selected, content) {
@@ -38,7 +47,27 @@ export function toggleItemDetail(ctx) {
   ctx.go(next, expanded ? { replace: true } : { entryState: { itemDetail: 'expanded' } });
 }
 
+function panelSnapshot(body) {
+  return {
+    scrollTop: body.scrollTop,
+    disclosures: $$('details', body).map(section => section.open),
+    firingMode: $('[data-fire-mode][aria-pressed="true"]', body)?.dataset.fireMode,
+  };
+}
+
+function restorePanel(body, snapshot) {
+  const sections = $$('details', body);
+  snapshot.disclosures.forEach((open, index) => { if (sections[index]) sections[index].open = open; });
+  if (snapshot.firingMode) {
+    $$('[data-fire-mode]', body).find(button => button.dataset.fireMode === snapshot.firingMode)?.click();
+  }
+  body.scrollTop = snapshot.scrollTop;
+}
+
 export function openItemSheet(ctx, state, content, { label, keepScroll = false }) {
+  const body = $('#sheet-body');
+  const toggleFocused = document.activeElement?.matches('[data-item-detail-toggle]');
+  const previousPanel = keepScroll && !state.expanded && !$('#sheet').classList.contains('expanded') ? panelSnapshot(body) : null;
   ctx.openSheet(content, {
     expanded: state.expanded,
     keepScroll,
@@ -52,10 +81,13 @@ export function openItemSheet(ctx, state, content, { label, keepScroll = false }
       }
       state.detail = null;
       state.variant = '';
+      state.panelSnapshot = null;
       const { view, query } = ctx.route;
       ctx.replace({ view, query: { ...query, m: '', full: '' } });
     },
   });
+  if (previousPanel) restorePanel(body, previousPanel);
+  if (toggleFocused) $('[data-item-detail-toggle]', body)?.focus({ preventScroll: true });
 }
 
 export function selectItemVariant(state, variant) {
@@ -70,7 +102,7 @@ export function selectItemVariant(state, variant) {
 export function updateItemDetail(ctx, state, route, id, variants, openDetail) {
   if (!id) {
     if (!state.detail) return;
-    Object.assign(state, { detail: null, variant: '', expanded: false });
+    Object.assign(state, { detail: null, variant: '', expanded: false, panelSnapshot: null });
     ctx.closeSheet();
     return;
   }
@@ -86,10 +118,18 @@ export function updateItemDetail(ctx, state, route, id, variants, openDetail) {
     ctx.replace({ ...route, query: { ...route.query, m: variant } });
   }
   if (!sameItem || !$('#sheet').open) {
-    Object.assign(state, { detail: id, variant });
+    Object.assign(state, { detail: id, variant, panelSnapshot: null });
     openDetail(id);
     return;
   }
+  if (changedSize) {
+    const body = $('#sheet-body');
+    if (expanded) state.panelSnapshot = panelSnapshot(body);
+    state.variant = variant;
+    openDetail(id, true);
+    if (!expanded && state.panelSnapshot) restorePanel(body, state.panelSnapshot);
+    else body.scrollTop = 0;
+    return;
+  }
   if (state.variant !== variant) selectItemVariant(state, variant);
-  if (changedSize) ctx.setSheetExpanded(expanded);
 }
