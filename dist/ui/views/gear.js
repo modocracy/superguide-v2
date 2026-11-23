@@ -19,6 +19,7 @@ import { num, strongest } from '../../core/explain.js';
 import { html, raw, render, $, $$, icon, badge, external } from '../dom.js';
 import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
+import { detailStatsLayout, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, selectItemVariant, toggleItemDetail, updateItemDetail } from '../item-detail.js';
 import { warbondChip } from '../warbond-chip.js';
 import { GROUPS, groupOf, typeName, weaponById, displayName, orderTypes } from '../gear-shared.js';
 import { L, T, lang } from '../../core/i18n.js';
@@ -35,7 +36,7 @@ const SORTS = [
 ];
 
 let root, ctx;
-const state = { tab: 'browse', cat: 'primary', type: '', hand: false, hole: false, q: '', sort: '', detail: null, variant: '', pushedDetail: false };
+const state = { tab: 'browse', cat: 'primary', type: '', hand: false, hole: false, q: '', sort: '', detail: null, variant: '', expanded: false };
 // One-handed weapons (wiki infobox trait): fire while jogging or holding a shield or mission item.
 const oneHanded = w => (w.traitTags || []).includes('one-handed');
 // Bug holes, by the demolition data's thresholds: a hit of the outer force (40) closes one from outside,
@@ -156,7 +157,7 @@ function visibleItems() {
 
 function syncUrl() {
   const query = state.tab === 'loadout' ? { tab: 'loadout', ...loadoutQuery() } : state.tab === 'armor' ? { tab: 'armor', w: armor.weight, p: armor.passive, a: armor.focus, d: armor.detail, q: armor.q } : state.tab === 'boosters' ? { tab: 'boosters', b: booster.focus } : state.tab === 'modules' ? { tab: 'modules', u: shipModule.focus } : { cat: state.cat === 'primary' ? '' : state.cat, type: state.type, h: state.hand ? '1' : '', bh: state.hole ? '1' : '', q: state.q, sort: state.sort };
-  ctx.replace({ view: 'gear', id: state.detail, query: { ...query, m: state.detail ? state.variant : '' } });
+  ctx.replace({ view: 'gear', id: state.detail, query: { ...query, m: state.detail ? state.variant : '', full: state.expanded ? '1' : '' } });
 }
 
 function renderBrowse() {
@@ -283,14 +284,11 @@ function modeView(w, m) {
 }
 
 // Modes the player switches between get tabs, like the stratagem modes in the arsenal.
-function modeTabs(w, modes, current) {
-  return html`<div class="variant-tabs"><h3>${L('모드별 수치', 'Stats by mode')}</h3><div class="segmented" role="group" aria-label="${L('모드 선택', 'Mode')}">${modes.map(m => html`<button type="button" data-variant="${m.id}" aria-pressed="${String(m === current)}">${m.name}</button>`)}</div></div>
-    ${modes.map(m => {
-      const v = modeView(w, m);
-      return html`<div class="variant-panel" data-variant-panel="${m.id}" ${m === current ? '' : raw('hidden')}>${v
-        ? html`${detailGrid(v)}${blastFigure(v)}${v.modeNotes?.length ? html`<ul class="notes">${v.modeNotes.map(note => html`<li>${note}</li>`)}</ul>` : ''}`
-        : html`<p class="variant-note">${m.unsupported}</p>`}</div>`;
-    })}`;
+function modeTabs(modes, current, includeBlast) {
+  return html`<div class="variant-tabs"><h3>${L('모드별 수치', 'Stats by mode')}</h3><div class="segmented" role="group" aria-label="${L('모드 선택', 'Mode')}">${modes.map(({ mode }) => html`<button type="button" data-variant="${mode.id}" aria-pressed="${String(mode === current)}">${mode.name}</button>`)}</div></div>
+    ${modes.map(({ mode, stats }) => itemVariantPanel(mode.id, current.id, stats
+      ? html`${detailGrid(stats)}${includeBlast ? blastFigure(stats) : ''}${stats.modeNotes?.length ? html`<ul class="notes">${stats.modeNotes.map(note => html`<li>${note}</li>`)}</ul>` : ''}`
+      : html`<p class="variant-note">${mode.unsupported}</p>`))}`;
 }
 
 // Customization (primary weapons): every attachment per slot with its unlock level,
@@ -367,20 +365,27 @@ function specialBlock(w) {
   </section>`;
 }
 
-export function weaponDetail(w, { header = null, titleId = 'sheet-title', variant = state.variant } = {}) {
+export function weaponDetail(w, { header = null, titleId = 'sheet-title', variant = state.variant, expandable = false, expanded = false } = {}) {
   const group = groupOf(w.category);
   const conflicts = w.infoboxConflicts || [];
   const image = weaponImages[w.id];
   const modes = personalProfiles[w.id]?.modes || [];
   const current = modes.find(m => m.id === variant) || modes[0];
+  const modeDetails = modes.length > 1 ? modes.map(mode => ({ mode, stats: modeView(w, mode) })) : [];
+  const base = modeDetails.length ? modeTabs(modeDetails, current, !expandable) : html`<section class="block"><h3>${L('기본 수치', 'Key stats')}</h3>${detailGrid(w)}</section>`;
+  const blasts = !modeDetails.length ? blastFigure(w) : !expandable ? '' : modeDetails.map(({ mode, stats }) => {
+    const diagram = stats && blastFigure(stats);
+    return diagram ? itemVariantPanel(mode.id, current.id, diagram) : '';
+  });
+  const extra = html`${modeDetails.length ? '' : variantTable(w)}${specialBlock(w)}`;
+  const ballistics = ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))]);
   return html`${header ?? html`<div class="sheet-top"><span>${group.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
   <div class="sheet-content">
     ${weaponArt(w, 'gear-art large')}
-    <div class="detail-id gear-id"><div><h2 id="${titleId}">${displayName(w)}</h2><p>${lang === 'en' ? '' : w.en}</p>
-      <div class="chips" style="margin-top:6px">${badge(group.name, 'outline')}${badge(typeName(w.type))}${warbondChip('gear', w.id)}${apOf(w) != null ? badge(`${apText(w)} · ${apBandOf({ ap: apOf(w) })?.name}`, 'accent') : ''}${traits(w)}</div>${holeTier(w) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[w.id]}</p>` : ''}</div></div>
-    ${modes.length > 1 ? modeTabs(w, modes, current) : html`<section class="block"><h3>${L('기본 수치', 'Key stats')}</h3>${detailGrid(w)}</section>${blastFigure(w)}${variantTable(w)}`}
-    ${specialBlock(w)}
-    ${ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))])}
+    <div class="detail-id gear-id${expandable ? ' item-detail-actions' : ''}"><div><h2 id="${titleId}">${displayName(w)}</h2><p>${lang === 'en' ? '' : w.en}</p>
+      <div class="chips" style="margin-top:6px">${badge(group.name, 'outline')}${badge(typeName(w.type))}${warbondChip('gear', w.id)}${apOf(w) != null ? badge(`${apText(w)} · ${apBandOf({ ap: apOf(w) })?.name}`, 'accent') : ''}${traits(w)}</div>${holeTier(w) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[w.id]}</p>` : ''}</div>
+      ${expandable ? itemDetailToggle(expanded) : ''}</div>
+    ${expandable ? detailStatsLayout(base, blasts, extra, ballistics) : html`${base}${blasts}${extra}${ballistics}`}
     ${attachmentTable(w)}
     ${conflicts.length ? html`<div class="callout warn"><h3>${L('위키 페이지 표시값과 다름', 'Differs from the wiki page')}</h3><p>${conflicts.map(c => L(`${c.label || CONFLICT_FIELDS[c.field]?.[0] || c.field}: 데이터 ${Array.isArray(c.db) ? c.db.join('~') : c.db} / 페이지 ${c.raw ?? c.infobox}`, `${T(c.label) || CONFLICT_FIELDS[c.field]?.[1] || c.field}: data ${Array.isArray(c.db) ? c.db.join('~') : c.db} / page ${c.raw ?? c.infobox}`)).join(' · ')}. ${L('더 최신인 게임 데이터 값을 표시합니다.', 'The newer game data value is shown.')}</p></div>` : ''}
     ${w.playerNotes?.length ? html`<section class="block"><h3>${L('알아 둘 점', 'Good to know')}</h3><ul class="notes">${w.playerNotes.map(note => html`<li>${note}</li>`)}</ul></section>` : ''}
@@ -400,13 +405,8 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
 function openDetail(id) {
   const w = weaponById.get(id);
   if (!w) return;
-  ctx.openSheet(weaponDetail(w), {
+  openItemSheet(ctx, state, weaponDetail(w, { expandable: true, expanded: state.expanded }), {
     label: `${T(displayName(w))} ${L('상세', 'details')}`,
-    onClose: () => {
-      if (state.detail !== id) return;
-      state.detail = null; state.variant = '';
-      if (state.pushedDetail) { state.pushedDetail = false; history.back(); } else syncUrl();
-    },
   });
 }
 
@@ -514,7 +514,7 @@ function showTab() {
 export function mount(container, context) {
   root = container; ctx = context;
   // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
-  state.detail = null; state.variant = ''; state.pushedDetail = false;
+  Object.assign(state, { detail: null, variant: '', expanded: false });
   const count = id => personalWeapons.filter(w => w.category === id).length;
   LEDES.browse = L(`주무기 ${count('primary')}종 · 보조무기 ${count('secondary')}종 · 투척 ${count('throwable')}종의 수치. 카드를 누르면 자세한 기준이 열립니다.`, `Stats for ${count('primary')} primaries, ${count('secondary')} secondaries and ${count('throwable')} throwables. Open a card for the details behind the numbers.`);
   render(root, html`<div class="page-head gear-head"><div><div class="eyebrow">Armory</div>
@@ -549,27 +549,23 @@ export function mount(container, context) {
     else if (target.dataset.hand != null) { state.hand = !state.hand; if (target.classList.contains('is-empty')) { state.type = ''; state.hole = false; } renderBrowse(); syncUrl(); }
     else if (target.dataset.hole != null) { state.hole = !state.hole; if (target.classList.contains('is-empty')) { state.type = ''; state.hand = false; } renderBrowse(); syncUrl(); }
     else if (target.dataset.type != null) { state.type = state.type === target.dataset.type ? '' : target.dataset.type; if (target.classList.contains('is-empty')) { state.hand = false; state.hole = false; } renderBrowse(); syncUrl(); }
-    else if (target.dataset.open) { state.pushedDetail = true; ctx.go({ view: 'gear', id: target.dataset.open, query: { ...ctx.route.query, m: '' } }); }
+    else if (target.dataset.open) openItemPanel(ctx, target.dataset.open);
   });
   // Mode buttons inside the sheet live outside `root`; register that listener once.
   if (!sheetListener) {
     sheetListener = event => {
       if (document.body.dataset.view !== 'gear') return;
       const pick = event.target.closest('[data-variant]');
-      if (pick) selectVariant(pick.dataset.variant);
+      if (pick) {
+        selectItemVariant(state, pick.dataset.variant);
+        syncUrl();
+      }
+      if (event.target.closest('[data-item-detail-toggle]')) toggleItemDetail(ctx);
     };
     $('#sheet').addEventListener('click', sheetListener);
   }
 }
 let sheetListener = null;
-
-function selectVariant(id) {
-  state.variant = id;
-  const sheet = $('#sheet');
-  for (const button of $$('[data-variant]', sheet)) button.setAttribute('aria-pressed', String(button.dataset.variant === id));
-  for (const panel of $$('[data-variant-panel]', sheet)) panel.hidden = panel.dataset.variantPanel !== id;
-  syncUrl();
-}
 
 export function update(route) {
   const q = route.query;
@@ -592,6 +588,5 @@ export function update(route) {
   }
   showTab();
   const id = weaponById.has(route.id) ? route.id : null;
-  if (id && id !== state.detail) { state.detail = id; state.variant = personalProfiles[id]?.modes.some(m => m.id === q.m) ? q.m : ''; openDetail(id); }
-  else if (!id && state.detail) { state.detail = null; state.variant = ''; state.pushedDetail = false; ctx.closeSheet(); }
+  updateItemDetail(ctx, state, route, id, personalProfiles[id]?.modes, openDetail);
 }

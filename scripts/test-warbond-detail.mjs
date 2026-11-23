@@ -64,6 +64,11 @@ for (const [value, renderer] of [['gear/sightliner', weaponDetail], ['arsenal/no
   const ref = resolveWarbondItem('scope-of-authority', value);
   const content = String(renderer(ref.target));
   ok(content.includes('id="sheet-title"') && content.includes('data-close'), `${value}: ordinary full-page detail still has its original header`);
+  ok(!content.includes('data-item-detail-toggle'), `${value}: embedded details do not expose the catalogue panel control`);
+  for (const expanded of [false, true]) {
+    const standalone = String(renderer(ref.target, { expandable: true, expanded }));
+    ok(standalone.includes(`data-item-detail-toggle aria-expanded="${expanded}"`), `${value}: initial button has an explicit ${expanded ? 'expanded' : 'collapsed'} state`);
+  }
 }
 const css = await readFile(new URL('../dist/ui/app.css', import.meta.url), 'utf8');
 // Browser-free layout contracts. Actual panel rectangles, scrollbar counts and

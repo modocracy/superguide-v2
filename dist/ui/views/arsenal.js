@@ -8,6 +8,7 @@ import { wikiIcons } from '../../data/wiki-icons.js';
 import { html, raw, render, $, $$, icon, keycaps, badge, external } from '../dom.js';
 import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
+import { detailStatsLayout, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, selectItemVariant, toggleItemDetail, updateItemDetail } from '../item-detail.js';
 import { supportProjectileRecords, propelledModes } from '../../data/support-records.js';
 import { warbondChip } from '../warbond-chip.js';
 import { L, T, lang } from '../../core/i18n.js';
@@ -34,7 +35,7 @@ const PERMITS = [
 const permitOf = item => stratagemStats[item.id]?.permit;
 // AP bands offered as filters ("unverified AP" is not one).
 const AP_FILTERS = apBands.filter(band => band.id !== 'unknown');
-const state = { c: '', ap: '', p: '', q: '', sort: '', mod: true, compare: new Set(), detail: null, variant: '', pushedDetail: false };
+const state = { c: '', ap: '', p: '', q: '', sort: '', mod: true, compare: new Set(), detail: null, variant: '', expanded: false };
 
 const subtitle = item => lang === 'en' ? (item.code && !item.en.startsWith(item.code) ? item.code : '') : item.en;
 export const iconOf = item => html`<img class="strat-icon" src="${wikiIcons[item.id]?.src}" alt="" width="44" height="44" loading="lazy" decoding="async">`;
@@ -118,7 +119,7 @@ function visibleItems() {
 }
 
 function syncUrl() {
-  ctx.replace({ view: 'arsenal', id: state.detail, query: { c: state.c, ap: state.ap, p: state.p, q: state.q, sort: state.sort, mod: state.mod ? '' : 'off', m: state.detail ? state.variant : '' } });
+  ctx.replace({ view: 'arsenal', id: state.detail, query: { c: state.c, ap: state.ap, p: state.p, q: state.q, sort: state.sort, mod: state.mod ? '' : 'off', m: state.detail ? state.variant : '', full: state.expanded ? '1' : '' } });
 }
 
 function renderList() {
@@ -439,30 +440,34 @@ const statGrid = item => {
   return html`<dl class="detail-grid">${[direct, blast].filter(stat => !absent(stat)).map(statCell)}${durable}${absent(ap) ? '' : statCell(ap)}${extra('damage')}${unverifiedArea ? '' : statCell(reach)}${extra('reach')}${ammo}${extra('ammo')}${rateCell(item)}${sentryCells.map(statCell)}${timeCells.map(statCell)}${bodyCells.map(statCell)}${handling.map(statCell)}</dl>`;
 };
 
-export function stratagemDetail(item, { demolition = false, force = null, header = null, titleId = 'sheet-title', variant = state.variant, compare = true } = {}) {
+export function stratagemDetail(item, { demolition = false, force = null, header = null, titleId = 'sheet-title', variant = state.variant, compare = true, expandable = false, expanded = false } = {}) {
   const cat = categoryOf(item.category);
   const variants = item.variants?.length > 1 ? item.variants : null;
   const current = variantOf(item, variant);
   const combat = item.category === 'support';
   const notes = [item.rangeNote, item.notes, ...(item.modes || [])].filter(Boolean);
   const inCompare = state.compare.has(item.id);
+  const variantStats = variants?.map(mode => ({ mode, stats: withVariant(item, mode) }));
+  const base = variantStats ? html`<div class="variant-tabs"><h3>${item.variantLabel || L('모드별 수치', 'Stats by mode')}</h3><div class="segmented" role="group" aria-label="${item.variantLabel || L('모드 선택', 'Mode')}">${variants.map(v => html`<button type="button" data-variant="${v.id}" aria-pressed="${String(v === current)}">${v.tab || v.name}</button>`)}</div></div>
+    ${variantStats.map(({ mode, stats }) => itemVariantPanel(mode.id, current.id, html`${statGrid(stats)}${expandable ? '' : blastFigure(stats)}${mode.note ? html`<p class="variant-note">${mode.note}</p>` : ''}`))}`
+    : html`<section class="block"><h3>${L('기본 수치', 'Key stats')}</h3>${statGrid(item)}</section>`;
+  const blasts = !variantStats ? blastFigure(item) : !expandable ? '' : variantStats.map(({ mode, stats }) => {
+    const diagram = blastFigure(stats);
+    return diagram ? itemVariantPanel(mode.id, current.id, diagram) : '';
+  });
+  const special = variants?.some(v => v.record) ? variants.map(v => html`<div data-variant-panel="${v.id}" ${v === current ? '' : raw('hidden')}>${specialBlock(item, force, v)}</div>`) : specialBlock(item, force);
+  const extra = html`${spreadBlock(item)}${timingBlock(item)}${durabilityBlock(item)}${defenseBlock(item)}${special}`;
+  const ballistics = ballisticsBlock(Object.entries(supportProjectileRecords[item.id] || {}).map(([modeId, record]) => ({ label: T(item.variants?.find(v => v.id === modeId)?.name) ?? MODE_LABELS[modeId] ?? item.name, record, propelled: propelledModes[item.id]?.includes(modeId) })));
   return html`${header ?? html`<div class="sheet-top"><span>${cat.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
   <div class="sheet-content">
-    <div class="detail-id"><img class="strat-icon large" src="${wikiIcons[item.id]?.src}" alt="" width="64" height="64">
+    <div class="detail-id${expandable && !item.input ? ' item-detail-actions' : ''}"><img class="strat-icon large" src="${wikiIcons[item.id]?.src}" alt="" width="64" height="64">
       <div><h2 id="${titleId}">${item.name}</h2><p>${subtitle(item)}</p>
-      <div class="chips" style="margin-top:6px">${badge(cat.name, 'outline')}${warbondChip('arsenal', item.id)}${item.ap != null ? badge(`AP ${item.ap} · ${apBandOf(item).name}`, 'accent') : ''}${item.tags.map(tag => badge(tag))}${stratagemStats[item.id]?.oneHanded ? badge(L('한손', 'One-handed')) : ''}${holeTag(item)}</div>${holeNote(item)}</div></div>
-    ${item.input ? html`<div class="block"><h3>${L('호출 코드', 'Stratagem code')}</h3>${keycaps(item.input, 'large')}</div>` : ''}
+      <div class="chips" style="margin-top:6px">${badge(cat.name, 'outline')}${warbondChip('arsenal', item.id)}${item.ap != null ? badge(`AP ${item.ap} · ${apBandOf(item).name}`, 'accent') : ''}${item.tags.map(tag => badge(tag))}${stratagemStats[item.id]?.oneHanded ? badge(L('한손', 'One-handed')) : ''}${holeTag(item)}</div>${holeNote(item)}</div>
+      ${expandable && !item.input ? itemDetailToggle(expanded) : ''}</div>
+    ${item.input ? html`<div class="item-detail-actions"><div class="block"><h3>${L('호출 코드', 'Stratagem code')}</h3>${keycaps(item.input, 'large')}</div>${expandable ? itemDetailToggle(expanded) : ''}</div>` : ''}
     <p style="font-size:16px">${item.summary}</p>
     ${firingModesBlock(item)}
-    ${variants ? html`<div class="variant-tabs"><h3>${item.variantLabel || L('모드별 수치', 'Stats by mode')}</h3><div class="segmented" role="group" aria-label="${item.variantLabel || L('모드 선택', 'Mode')}">${variants.map(v => html`<button type="button" data-variant="${v.id}" aria-pressed="${String(v === current)}">${v.tab || v.name}</button>`)}</div></div>
-      ${variants.map(v => html`<div class="variant-panel" data-variant-panel="${v.id}" ${v === current ? '' : raw('hidden')}>${statGrid(withVariant(item, v))}${blastFigure(withVariant(item, v))}${v.note ? html`<p class="variant-note">${v.note}</p>` : ''}</div>`)}`
-      : html`<section class="block"><h3>${L('기본 수치', 'Key stats')}</h3>${statGrid(item)}</section>${blastFigure(item)}`}
-    ${spreadBlock(item)}
-    ${timingBlock(item)}
-    ${durabilityBlock(item)}
-    ${defenseBlock(item)}
-    ${variants?.some(v => v.record) ? variants.map(v => html`<div data-variant-panel="${v.id}" ${v === current ? '' : raw('hidden')}>${specialBlock(item, force, v)}</div>`) : specialBlock(item, force)}
-    ${ballisticsBlock(Object.entries(supportProjectileRecords[item.id] || {}).map(([modeId, record]) => ({ label: T(item.variants?.find(v => v.id === modeId)?.name) ?? MODE_LABELS[modeId] ?? item.name, record, propelled: propelledModes[item.id]?.includes(modeId) })))}
+    ${expandable ? detailStatsLayout(base, blasts, extra, ballistics) : html`${base}${blasts}${extra}${ballistics}`}
     ${changesBlock(item)}
     <section class="block"><h3>${L('이렇게 쓰세요', 'How to use it')}</h3><p>${item.usage}</p></section>
     ${item.warning ? html`<div class="callout warn"><h3>${L('주의', 'Watch out')}</h3><p>${item.warning}</p></div>` : ''}
@@ -530,21 +535,22 @@ const holeTag = item => {
 };
 const holeNote = item => bugHoleTier(item.id) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[item.id]}</p>` : '';
 
-function openDetail(id) {
+function openDetail(id, keepScroll = false) {
   const item = stratagemById.get(id);
   if (!item) return;
-  const show = () => ctx.openSheet(stratagemDetail(item, { demolition: Boolean(demolitionProfiles?.[id]), force: demolitionProfiles?.[id] }), {
+  const show = keepScroll => openItemSheet(ctx, state, stratagemDetail(item, {
+    demolition: Boolean(demolitionProfiles?.[id]),
+    force: demolitionProfiles?.[id],
+    expandable: true,
+    expanded: state.expanded,
+  }), {
     label: `${T(item.name)} ${L('상세', 'details')}`,
-    onClose: () => {
-      if (state.detail !== id) return;
-      state.detail = null; state.variant = '';
-      if (state.pushedDetail) { state.pushedDetail = false; history.back(); } else syncUrl();
-    },
+    keepScroll,
   });
-  show();
+  show(keepScroll);
   // Demolition data is large; learn which stratagems have it only when needed.
   if (!demolitionProfiles) loadDemolition().then(profiles => {
-    if (state.detail === id && (profiles[id] || bugHoleTier(id))) show();
+    if (ctx.route.view === 'arsenal' && state.detail === id && $('#sheet').open && (profiles[id] || bugHoleTier(id))) show(true);
   });
 }
 
@@ -585,14 +591,14 @@ function toggleCompare(id) {
   else if (state.compare.size >= MAX_COMPARE) { ctx.toast(L(`비교는 최대 ${MAX_COMPARE}개까지입니다. 하나를 빼 주세요.`, `You can compare up to ${MAX_COMPARE}. Remove one first.`)); return; }
   else state.compare.add(id);
   renderList();
-  if (state.detail === id) openDetail(id);
+  if (state.detail === id) openDetail(id, true);
 }
 
 // --- View lifecycle -------------------------------------------------------------------
 export function mount(container, context) {
   root = container; ctx = context;
   // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
-  state.detail = null; state.variant = ''; state.pushedDetail = false;
+  Object.assign(state, { detail: null, variant: '', expanded: false });
   const count = id => stratagems.filter(item => item.category === id).length;
   render(root, html`<div class="page-head"><div><div class="eyebrow">Stratagem Arsenal</div><h1>${L('스트라타젬 도감', 'Stratagems')}</h1><p>${L(`${stratagems.length}종의 피해·관통·범위와 사용법. 카드를 누르면 자세한 기준이 열립니다.`, `Damage, penetration, reach and how to use all ${stratagems.length} stratagems. Open a card for the details behind the numbers.`)}</p></div></div>
   <div class="arsenal-tools">
@@ -632,7 +638,7 @@ export function mount(container, context) {
       renderList(); syncUrl();
     }
     else if (target.dataset.mod) { state.mod = target.dataset.mod === 'on'; setModulesOn(state.mod); renderList(); syncUrl(); }
-    else if (target.dataset.open) { state.pushedDetail = true; ctx.go({ view: 'arsenal', id: target.dataset.open, query: { ...ctx.route.query, m: '' } }); }
+    else if (target.dataset.open) openItemPanel(ctx, target.dataset.open);
     else if (target.dataset.compare) toggleCompare(target.dataset.compare);
     else if (target.hasAttribute('data-compare-clear')) { state.compare.clear(); renderList(); }
     else if (target.hasAttribute('data-compare-open')) openCompare();
@@ -645,20 +651,16 @@ export function mount(container, context) {
       const target = event.target.closest('[data-compare]');
       if (target) toggleCompare(target.dataset.compare);
       const pick = event.target.closest('[data-variant]');
-      if (pick) selectVariant(pick.dataset.variant);
+      if (pick) {
+        selectItemVariant(state, pick.dataset.variant);
+        syncUrl();
+      }
+      if (event.target.closest('[data-item-detail-toggle]')) toggleItemDetail(ctx);
     };
     $('#sheet').addEventListener('click', sheetListener);
   }
 }
 let sheetListener = null;
-
-function selectVariant(id) {
-  state.variant = id;
-  const sheet = $('#sheet');
-  for (const button of $$('[data-variant]', sheet)) button.setAttribute('aria-pressed', String(button.dataset.variant === id));
-  for (const panel of $$('[data-variant-panel]', sheet)) panel.hidden = panel.dataset.variantPanel !== id;
-  syncUrl();
-}
 
 export function update(route) {
   const q = route.query;
@@ -676,6 +678,5 @@ export function update(route) {
   $('#arsenal-sort', root).value = state.sort;
   renderList();
   const id = stratagemById.has(route.id) ? route.id : null;
-  if (id && id !== state.detail) { state.detail = id; state.variant = stratagemById.get(id).variants?.some(v => v.id === q.m) ? q.m : ''; openDetail(id); }
-  else if (!id && state.detail) { state.detail = null; state.variant = ''; state.pushedDetail = false; ctx.closeSheet(); }
+  updateItemDetail(ctx, state, route, id, stratagemById.get(id)?.variants, openDetail);
 }
