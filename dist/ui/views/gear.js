@@ -336,10 +336,30 @@ export function attachmentTable(w, expanded = false) {
       <td>${item.builtIn ? L('기본 장착', 'Built in') : item.cost != null ? num(item.cost) : unconfirmed}</td>
       <td>${effects == null ? unconfirmed : effects.length ? html`<ul class="attach-effects">${effects.map(e => html`<li>${e.label} <b>${e.text}</b></li>`)}</ul>` : html`<span class="faint">${L('변화 없음', 'No change')}</span>`}</td></tr>`;
   };
-  const content = html`<div class="compare-scroll" role="region" aria-label="${L('부착물', 'Attachments')}" tabindex="0"><table class="compare-table gear-modes gear-attach">
-      <thead><tr><th scope="col">${L('부착물', 'Attachment')}</th><th scope="col">${L('해금', 'Unlock')}</th><th scope="col">${L('비용', 'Cost')}</th><th scope="col">${L('변동 수치', 'Stat changes')}</th></tr></thead>
-      ${slots.map(slot => html`<tbody><tr class="attach-slot"><th scope="rowgroup" colspan="4">${slotName(slot)}</th></tr>${list.filter(item => attachmentParts[item.part].slot === slot).map(row)}</tbody>`)}
-    </table></div>
+  const tableHead = html`<thead><tr><th scope="col">${L('부착물', 'Attachment')}</th><th scope="col">${L('해금', 'Unlock')}</th><th scope="col">${L('비용', 'Cost')}</th><th scope="col">${L('변동 수치', 'Stat changes')}</th></tr></thead>`;
+  const bySlot = slots.map(slot => ({ slot, items: list.filter(item => attachmentParts[item.part].slot === slot) }));
+  let bodyTable;
+  if (expanded && bySlot.length > 1) {
+    const cols = [[], []], heights = [0, 0];
+    for (const entry of bySlot) {
+      const target = heights[0] <= heights[1] ? 0 : 1;
+      cols[target].push(entry);
+      heights[target] += entry.items.length + 2;
+    }
+    const slotCard = ({ slot, items }) => html`<section class="attach-slot-card">
+      <header class="attach-slot-head"><h4>${slotName(slot)}</h4><span>${L(`${items.length}종`, `${items.length}`)}</span></header>
+      <div class="compare-scroll" role="region" aria-label="${slotName(slot)}" tabindex="0"><table class="compare-table gear-modes gear-attach">
+        ${tableHead}<tbody>${items.map(row)}</tbody>
+      </table></div>
+    </section>`;
+    bodyTable = html`<div class="attach-slot-grid">${cols.map(col => html`<div class="attach-slot-col">${col.map(slotCard)}</div>`)}</div>`;
+  } else {
+    bodyTable = html`<div class="compare-scroll" role="region" aria-label="${L('부착물', 'Attachments')}" tabindex="0"><table class="compare-table gear-modes gear-attach">
+      ${tableHead}
+      ${bySlot.map(({ slot, items }) => html`<tbody><tr class="attach-slot"><th scope="rowgroup" colspan="4">${slotName(slot)}</th></tr>${items.map(row)}</tbody>`)}
+    </table></div>`;
+  }
+  const content = html`${bodyTable}
     <p class="faint attach-note">${L('+/-와 %는 기본 상태 대비 변화, 탄창 용량과 탄창 수, 재장전 시간은 장착했을 때의 값입니다. 해금은 무기 레벨(누적 경험치는 그 레벨까지 필요한 무기 경험치로 모든 주무기가 같음), 비용은 요청 신청서 기준입니다. 한국어 이름을 확인하지 못한 부착물은 영어 이름으로 표시합니다.', 'Signed numbers and percentages are changes from the base weapon; capacity, magazine counts and reload times are the values with the attachment fitted. Unlock is the weapon level (the XP total to reach it is the same for every primary); cost is in Requisition Slips.')} ${external(`${w.source}#Attachments`, L('위키 부착물 표', 'Wiki attachments table'))}</p>
   `;
   return detailDisclosure(L('커스터마이징', 'Customization'), content, {
