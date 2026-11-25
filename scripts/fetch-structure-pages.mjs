@@ -28,3 +28,5 @@ for (const title of TITLES) {
   await sleep(1500);
 }
 await writeFile(new URL('../db/source/wiki_structures.json', import.meta.url), JSON.stringify(out, null, 1) + '\n');
+// The enemy page's part info table is also generated from these pages: keep it in step.
+await (await import('./build-enemy-anatomy.mjs')).writeEnemyAnatomy();

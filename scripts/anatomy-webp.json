@@ -3291,6 +3291,1038 @@
     "sha256": "b3853fef993be18d388f1da2a6c7c66b56df543c3600cb5d17f10bda56bae529",
     "sourceSha256": "efab49a669265846cb4ac7b908deab5f0beec67b291bbe29053f3e6bbbcbda0b"
   },
+  "./assets/anatomy/row-aa-emplacement-main-thumb.webp": {
+    "sha256": "8d6bbed248ac73718cdc358ec2809413f04dc31d1980c0a91dfcfbf1d9a1adb5",
+    "sourceSha256": "a5a432d965fc7dd54d3e1b00ee172a60ad032224565396ab32a6e46091be9674"
+  },
+  "./assets/anatomy/row-aa-emplacement-main.webp": {
+    "sha256": "0b754db28cc9fb899bf36a4ed545553df8cfb808ec56b938fe4029461dc13456",
+    "sourceSha256": "a1cb6f779f8af754dd60471add41148330f054de8248de5967e5743ebb873b3a"
+  },
+  "./assets/anatomy/row-agitator-main-thumb.webp": {
+    "sha256": "a12c0e56c6adf9eaced746ff9b6cec00071943e62f8d0ea80c602800dc299118",
+    "sourceSha256": "66425941aafa32a79f72aa193c603dc1776b86c860bec31b94741b7bfc83a406"
+  },
+  "./assets/anatomy/row-agitator-main.webp": {
+    "sha256": "965e34d73e2e77f351b8e2af788c55e72803b799c746cc1ccf192bfa8ef7986c",
+    "sourceSha256": "0ad94e5b08049e7238dde104bba6cbca7cba2e0376d5b3962a5b7117c84adc54"
+  },
+  "./assets/anatomy/row-alpha-commander-main-thumb.webp": {
+    "sha256": "a8f8410549cabd829f3a3cd45e1ec81904fcd9a89ec5a5875e5d13dcb66c2244",
+    "sourceSha256": "3e17f1e424668f88aa895da8f2fa8a971b51f7e9b41f29cd8c327deb14fd413b"
+  },
+  "./assets/anatomy/row-alpha-commander-main.webp": {
+    "sha256": "169130f007d8bcf58176d5f091adf20edbdca33ff98d2d9cbc91d05c9799c88e",
+    "sourceSha256": "158f2e93ba1f1cffced2a4a3aff5abedde729aae3c3d7e9c8d1c464485b48c3b"
+  },
+  "./assets/anatomy/row-alpha-warrior-main-thumb.webp": {
+    "sha256": "78a8796e80ca6e7bb43198fdff9d23aa7101e76e78fa74480dd03801eb99754f",
+    "sourceSha256": "3e06db5045551b69bbe02525e60e25804a6003b4c507ed5046e5be4ef9ba2343"
+  },
+  "./assets/anatomy/row-alpha-warrior-main.webp": {
+    "sha256": "fb0739fd584e0b61c4b727f013b4a154d0402c9dd0a1806d3f33ecb915c43873",
+    "sourceSha256": "fc660e3d2790c2a8dbbc543ef314e50c566be2ac599859d2eab74d45eb7499d7"
+  },
+  "./assets/anatomy/row-annihilator-tank-hull-main-thumb.webp": {
+    "sha256": "ea0e516897c4f39eb3194ea32eea55da96c805dfa39a034374c0b3ba1ba48685",
+    "sourceSha256": "93dfc07baa22c67dba8dd2be76dabfa75466a438318042077bddcf913b21d00a"
+  },
+  "./assets/anatomy/row-annihilator-tank-hull-main.webp": {
+    "sha256": "5726ceb1a596e8de58152fa77e57d14d7f1488a2ad13af9621b5b95f55f73065",
+    "sourceSha256": "5faac7f1002cdc9c7cef176155d6eabc38b0c008dd187be52b29a4c1803fdbf0"
+  },
+  "./assets/anatomy/row-annihilator-tank-turret-main-thumb.webp": {
+    "sha256": "c094705bc0382948d82efc9b2acb6337d6847bac69e6961ae7f3af59955d199d",
+    "sourceSha256": "bd1d0c58dccf53ab3539d32331cbf5d85436196bed638e3e8adac2107d0fa1d1"
+  },
+  "./assets/anatomy/row-annihilator-tank-turret-main.webp": {
+    "sha256": "1dda199a3c044ec2ddb22da2ea9bb06f11834b57bb6d970ae6b82c02eff9f1c0",
+    "sourceSha256": "f4e935e80db1304c52e2323574da48857e9cedad401a5fefc19f305329e71449"
+  },
+  "./assets/anatomy/row-assault-raider-main-thumb.webp": {
+    "sha256": "7461787aff0a228db0c88b93e43eea28a9cce9f2d1243e3eda22695705af4a92",
+    "sourceSha256": "2e119a8af99afb32d3b573c6a0e22c8ce90d068b2fb3addb8ddf04f0be8bdce6"
+  },
+  "./assets/anatomy/row-assault-raider-main.webp": {
+    "sha256": "7d3f2821ef1ab90ed476f5c0e9068b6a0ed251f785f849eda18c3d55aed6dc9d",
+    "sourceSha256": "d38e0b0498bb4bda82ded8475874be8208ddbcab75d62ffbd4ada0077ad23b7e"
+  },
+  "./assets/anatomy/row-barrager-tank-hull-main-thumb.webp": {
+    "sha256": "a5f02179eb82d1801a103f5356ebf88e49942bab1ac936038e598f3c23f01c71",
+    "sourceSha256": "e348f68746a9ac34c35e6c2e20f76ef318b14f957d2514f97a9cb4529da8fdf1"
+  },
+  "./assets/anatomy/row-barrager-tank-hull-main.webp": {
+    "sha256": "97ae7d3970c29a6ebfce18549bee50af9fc11bbd6832f1ee9ab3e20ff95fd5e6",
+    "sourceSha256": "438851bf9d9ca750066e6db96da8e4f64ed2514494ab03b7f1a139258e392957"
+  },
+  "./assets/anatomy/row-barrager-tank-turret-main-thumb.webp": {
+    "sha256": "4b544eb768f4575f27fbc9c19958b2a058136ee61dc454f6c3a40d650b79d776",
+    "sourceSha256": "e7d14d8deaeca689c4896e81025669d639d705933f9dc18f0f69629bc99924fa"
+  },
+  "./assets/anatomy/row-barrager-tank-turret-main.webp": {
+    "sha256": "cbf00b482c3da43d5e1cb950c97b9448ab1ccfdd9afb34b71df40e7c3d7099c5",
+    "sourceSha256": "d8c0d01788f481451070def29aeb5ad765bc1b1f84f22d851ad20814ea2dad5c"
+  },
+  "./assets/anatomy/row-behemoth-main-thumb.webp": {
+    "sha256": "6932ec73d475b70ff0018ceed8d331b50213efa34dd2d4cd728365770c566ca9",
+    "sourceSha256": "df7b5689d80e028c996af82f031d83198aa019f20978035066c6b659dffdb089"
+  },
+  "./assets/anatomy/row-behemoth-main.webp": {
+    "sha256": "3d4c769541dff7c6cb3b43c6f80c8558bc8b29081f61a4317684686a1345ad2f",
+    "sourceSha256": "d472291f91809f6864ef5f0f1bbbd05696a9d0325f52f08fd60dff5837edb65b"
+  },
+  "./assets/anatomy/row-berserker-main-thumb.webp": {
+    "sha256": "37d977f7db4b9961f453ffaadef1747d9b658f74e021017f86f52c104c980617",
+    "sourceSha256": "ce92b20bb883d98c7b7a45102a4f08d14dd98de62a7ee386d82b998097823ef7"
+  },
+  "./assets/anatomy/row-berserker-main.webp": {
+    "sha256": "e51efc8bf56b7d359a1bee1d24075f7241041b13881656579f96390b2c33a409",
+    "sourceSha256": "a35f02b33c433f48b8657acd697de17efcb20a5496d2b344fd0a9833a768267f"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-butt-thumb.webp": {
+    "sha256": "b3245683267414b157deab62169b2cd9fd471caa0582dc77bee2062a30b58593",
+    "sourceSha256": "c3b21b289bf3059dc370a784b37c5087de42ff52f85b842d906b70100a5c493c"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-butt.webp": {
+    "sha256": "a8063bfaaca23dbf3cb37d07b100789f0cad245a5a9de224103c5d5dc3484793",
+    "sourceSha256": "86ee41ed2ba5055ca02d23b10be03e4a1b9f79475dd1bb6a4a304e93e6accb8e"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-front-legs-thumb.webp": {
+    "sha256": "373db3519a860b9a87aacd35f6a4bbb9550d1e0575ea434cac18a9bf979590e7",
+    "sourceSha256": "3e53c79c9ddc865457ccbf903123b19e475a8dde2d0c638e997b46f31cecc6aa"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-front-legs.webp": {
+    "sha256": "baf074780d6dda601d3a0e0e878741d55429683e64a9d9d4dd633a62ee1ca123",
+    "sourceSha256": "30e98801bbe8a54bdf3f3c677636cda170a6f7b5fab06aeb11d7eac044327d6f"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-head-thumb.webp": {
+    "sha256": "749aef983539487d3b5ab4155fd20b19c93656f0cc92d11de698a37015d97c99",
+    "sourceSha256": "0d696898ff1733d442c38fd338a8f08292d26b0a98c239968165d7e3ab310617"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-head.webp": {
+    "sha256": "218cc135a41135a01de06a1605a7bf64ff1665861e1cc8cce4ea5a3775b83aae",
+    "sourceSha256": "2f8cb56e739e90ff436c39050a65b7bf033e7b7765507dc98b8d865382c613fd"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-main-thumb.webp": {
+    "sha256": "dad7101a60734cfb519c4bf717caa615fa7890e3fbd87ebdc2eca375057ce8f7",
+    "sourceSha256": "7482b5c6d3d79e3b12422f6a38d4648b02e2b8f55877df211a493fb17615a0fa"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-main.webp": {
+    "sha256": "f1bcbc554c39257353f2b9f831d537e52b60c09a193ef7d1943d0ba815ec97ae",
+    "sourceSha256": "624135a8e42c5ea2a9f79773c2408a8cc89a884369fcc68343a93519d6202031"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-mouth-thumb.webp": {
+    "sha256": "275bfdeaaae0af657f5fe3ac5360dc528202de417daf2b16374acec411b864aa",
+    "sourceSha256": "cf1c823a06e8740134724a0225c62cb68d16bb9354bed645c972ad0bc0db2a9f"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-mouth.webp": {
+    "sha256": "0f4523d6e25262ec1f9324a9fa0daab70ff1281bae47216c98ef975c359a5c93",
+    "sourceSha256": "d704e43640a46141d6551d08da9bcaaf570c5b6a048adbb8cb70ceaedadea86c"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-rear-legs-thumb.webp": {
+    "sha256": "5464b05d32ba09593e95fe58e6f2bc7673acbf29ec504a8177fb8f586c32f61b",
+    "sourceSha256": "a9a74051b457fdf90116f202bc4abfb07e77e6d8e18a1ed9f3764f0f22a1bb0a"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-rear-legs.webp": {
+    "sha256": "e4f3099b66b77fe20b7771daf47918644d274c60201c36d1925e3b2cff306751",
+    "sourceSha256": "ec3573db557509098293bce967e495fcdf454494bf6a6aac1285813b65ea1a2f"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-spinal-plates-thumb.webp": {
+    "sha256": "f7c8519f47d8a6c2db4b7abd6b3ad13caea939b1c70d84166e992111d9f1c27f",
+    "sourceSha256": "f302246071bfc591271d8fdf53cb650005c47d6dbd40d1609a46bf00611553de"
+  },
+  "./assets/anatomy/row-bile-spewer-armored-spinal-plates.webp": {
+    "sha256": "96aa86ffc480d04ae67aada88ff4879737ad700db99091cd6b2cd63c5a74041c",
+    "sourceSha256": "bb586e849d5ef0de37f75cc7b2128dd0592823e6daac4883126df4473d96b1e4"
+  },
+  "./assets/anatomy/row-bile-spitter-head-thumb.webp": {
+    "sha256": "8bdccde989f4be347e395a4efeae5fada8a76ff798f10f4b2126abf551ca5ec6",
+    "sourceSha256": "15bbf25cdfaa14cd151dc719c1272ea8b9d3336d9fc3194ead0343c3b0fa9039"
+  },
+  "./assets/anatomy/row-bile-spitter-head.webp": {
+    "sha256": "1c0377dbfbe644b481d63e2f3f4c4b8fcffcf6892226967c35bddbf12ebcc37c",
+    "sourceSha256": "e526a7f4c91f5d6c6e58408de65c7cb7108d355a73319fd68e31cbc55f635388"
+  },
+  "./assets/anatomy/row-bile-spitter-limbs-thumb.webp": {
+    "sha256": "ee8242772093b92285cd3f28dea28fd18b0230880482afb640e7ffba773182d0",
+    "sourceSha256": "2a9e883002df5d62f2a2d2d441e62b924c99cb6ad07418d8f4d54762166d034e"
+  },
+  "./assets/anatomy/row-bile-spitter-limbs.webp": {
+    "sha256": "5293e4947f2e176bb9b36e46e1375ffe1914acca4fbd3732cadcbf76659dd1be",
+    "sourceSha256": "e6ee15ae80161e6b2ea4c909b36526f69b5a097fac44805a417d0410382a9a9e"
+  },
+  "./assets/anatomy/row-bile-spitter-main-thumb.webp": {
+    "sha256": "62ba52c4ce72d5ef03ea71fcdc59b5d5ed0c23f5cc95d5e9f86bbb172e50df3d",
+    "sourceSha256": "aad0c8857ffc2cf5979cc7483d8e7757c3b062a4144e02761e3f7aa296e527fa"
+  },
+  "./assets/anatomy/row-bile-spitter-main.webp": {
+    "sha256": "ef9a6da0a34266e60c83e12cebc18df536873924045fef81326d31e38d04cb12",
+    "sourceSha256": "ec2aab1d44d18833df8b62231b6e475726650e10e818b100fdeb0c3e3c4bb167"
+  },
+  "./assets/anatomy/row-bile-titan-lower-sac-thumb.webp": {
+    "sha256": "97fe11d9b194ced397a49f73e5854ad0703ec4864fdca1710c5eeb99b946ac0c",
+    "sourceSha256": "2ef0b555c7b8903b535c03fa43afcdbdf79f1a78165b86d1be8f580912e08b93"
+  },
+  "./assets/anatomy/row-bile-titan-lower-sac.webp": {
+    "sha256": "5ff9b2c900849841df6dc501b1ea06c35606fe71d9d30ca7926b98e2ef44a94d",
+    "sourceSha256": "f36e5c6ce9a25bef3f29efcf1fe939857c5bfdd61a4bef140ca6e15155b646ca"
+  },
+  "./assets/anatomy/row-bile-titan-main-thumb.webp": {
+    "sha256": "ed4152ce569029dd9202eb718d2a85ed76365ef6edaed38eb703a070839844eb",
+    "sourceSha256": "b0b7b51ead64263bbc1bb5cac87dc0b54cd1fd34c9f5c560195c91017cf44612"
+  },
+  "./assets/anatomy/row-bile-titan-main.webp": {
+    "sha256": "7a32fe20d57f31b8bf766c095da54d885adb02bf1122032d8a1960fb50dc63b6",
+    "sourceSha256": "19703e5030b53f415fc7adbe5867b3b6557fc94e79bc05758cb994acbeed2fd9"
+  },
+  "./assets/anatomy/row-bile-warrior-claws-thumb.webp": {
+    "sha256": "3b8ebf934348f5681e812abb2b1837b3018d7915e2ae23cfd45934c2e3f619af",
+    "sourceSha256": "7c4d3ec05a805bb3394d6de8db33295d6c18dcb7e29404689f817e37cb06af55"
+  },
+  "./assets/anatomy/row-bile-warrior-claws.webp": {
+    "sha256": "35ac17b02be586ed3788a523453cd993b55e4034e0a38caa08462d7a9d99aba2",
+    "sourceSha256": "de6b4e0f3bfab032d032ea943c2528f381931c01a66806d486b0127b95b1cca7"
+  },
+  "./assets/anatomy/row-bile-warrior-head-thumb.webp": {
+    "sha256": "7057cc151b538df21a36e265506beb109afcfc92cfcf6518ccf7c24b6d67ebcf",
+    "sourceSha256": "8c0bda8decf95989a7ec391f3613f2eb1793695b32a8fe4fd2801cc0966fbc2d"
+  },
+  "./assets/anatomy/row-bile-warrior-head.webp": {
+    "sha256": "d671a6f89f08396eb300af24fc6afcbf1310a30a712ac74ba998023bd5f3b667",
+    "sourceSha256": "c27e9b318885412953c27db978d999151a330e6c4f5b33f3aebadea98d144901"
+  },
+  "./assets/anatomy/row-bile-warrior-legs-thumb.webp": {
+    "sha256": "6529af35fefc8d947b43b82c12b3197b2a0c2eb1bc0cad984a30f0b1e07b9341",
+    "sourceSha256": "21d745d2d7bf8a67c2538defe5867b3127201a19f2ddcce427aa0ec6ae9cc9d0"
+  },
+  "./assets/anatomy/row-bile-warrior-legs.webp": {
+    "sha256": "ae28538311e43a211568a7e2eafbc1fe3662698252de8864e810089c95282e68",
+    "sourceSha256": "3f9d447503414a4261b06b73d2421379f63f15ecefecb198197ffa87757302f5"
+  },
+  "./assets/anatomy/row-bile-warrior-main-thumb.webp": {
+    "sha256": "e903752845e2803eea5e8a0e0f773918c580aac8ef80258daecfd867dfe78689",
+    "sourceSha256": "154f978908b93f35090b08225a784d763f985aa809a807fb63e95a5b6f565aa2"
+  },
+  "./assets/anatomy/row-bile-warrior-main.webp": {
+    "sha256": "181cb38e57f08f20d794fce73667c45fa6570404cce8a4b65b75c37ba4ebb98e",
+    "sourceSha256": "bbe3d70f06f3c5c709cbd582f1ebbe15acb43654f12027911fa9d08465361514"
+  },
+  "./assets/anatomy/row-brawler-main-thumb.webp": {
+    "sha256": "2e5f5ea9e6aead210818796478b01cab580dfaf6d50415a16c2aefecad65152c",
+    "sourceSha256": "1d1e604dbb45c82b3ff23c3c7d56dcd7bc9887d7bac9c774074f12b1d87c4524"
+  },
+  "./assets/anatomy/row-brawler-main.webp": {
+    "sha256": "1d974d8855c6ef463070af63827a4e0e417a12f21c0103da8daab2521877c673",
+    "sourceSha256": "00a7f8abd2051ab0ad06a5bf164cf7bce0c31b167e29cfe9ccb2c0fffcc32a53"
+  },
+  "./assets/anatomy/row-brood-commander-main-thumb.webp": {
+    "sha256": "c81c62ed0587cb55a87940363f6f685de139780cf92ad1c7a357beccda59d192",
+    "sourceSha256": "9a980794ebb98a056c2855bf8448b50e38013631024485206acd979a67ba9c4d"
+  },
+  "./assets/anatomy/row-brood-commander-main.webp": {
+    "sha256": "269af7b557551359d15b25e15a1f837beba7a7e0f75233e07ba136ce6c878697",
+    "sourceSha256": "c7f7fff27c11ca8c04548c290f4e34aa54f326cc8ccf62bd69d34893675c1591"
+  },
+  "./assets/anatomy/row-bunker-turret-main-thumb.webp": {
+    "sha256": "da73a8d3968d2d56f9a21e3da66041bc7baa9edfa6cde2a0514a6a98f2a91db8",
+    "sourceSha256": "64da36ab0aec8c745a965ee3e8a8d7f3a82f0d524af20b90e99a5213f427d3e2"
+  },
+  "./assets/anatomy/row-bunker-turret-main.webp": {
+    "sha256": "8928b32c2687220f2e4b6aac22ac65de3ebfd85bbbad012d3264201afe66631f",
+    "sourceSha256": "d53d0561379f28c7d5586043d08fdf342b75706167f88963c5c8e91eef0dd07d"
+  },
+  "./assets/anatomy/row-charger-main-thumb.webp": {
+    "sha256": "7ea95cc4b656263ca097bb3566632a7fea80398eb694a81d64e0fb84e6e19147",
+    "sourceSha256": "57eda4b36446268d4987c92b908a49db0783175f719e63d688f6c545f1530e02"
+  },
+  "./assets/anatomy/row-charger-main.webp": {
+    "sha256": "086e6b69d5bff27c32fa06de4d8b4604e274beae937f172aa2a35147983de821",
+    "sourceSha256": "38b05fe6fa9615c62a02e9d6f96e4d91dbb33cd8404ce395738823e405360115"
+  },
+  "./assets/anatomy/row-commissar-main-thumb.webp": {
+    "sha256": "2e5f5ea9e6aead210818796478b01cab580dfaf6d50415a16c2aefecad65152c",
+    "sourceSha256": "1d1e604dbb45c82b3ff23c3c7d56dcd7bc9887d7bac9c774074f12b1d87c4524"
+  },
+  "./assets/anatomy/row-commissar-main.webp": {
+    "sha256": "1d974d8855c6ef463070af63827a4e0e417a12f21c0103da8daab2521877c673",
+    "sourceSha256": "00a7f8abd2051ab0ad06a5bf164cf7bce0c31b167e29cfe9ccb2c0fffcc32a53"
+  },
+  "./assets/anatomy/row-conflagration-devastator-main-thumb.webp": {
+    "sha256": "a4c1caea90e5084341c264a7d6b38aca56dace955b300b0ac1254d94f6be002a",
+    "sourceSha256": "2802a142c2fe9536b9fde6f029c4ab0472375ffec781b8c8341b683ec2fad38d"
+  },
+  "./assets/anatomy/row-conflagration-devastator-main.webp": {
+    "sha256": "a86a125eaa5ad24f64d5ab018ffe5447c5c2ebc7c57b8cf2eef91f6510858793",
+    "sourceSha256": "db4a066ff71e9c0031c66414ca7fe94e096d18166ca80627cf9516c94c761175"
+  },
+  "./assets/anatomy/row-crescent-overseer-main-thumb.webp": {
+    "sha256": "dfcf36a3fa1a4331fe42645473a7cd4683415e724daa8e88517a4c8c204e8ec9",
+    "sourceSha256": "a644fe57421a50169c38f34181b1d1212936eff5dc6e2c6f5958f7ae1620c746"
+  },
+  "./assets/anatomy/row-crescent-overseer-main.webp": {
+    "sha256": "0a67805dfbb95ee6d10397bf3a38f44758e47b8e6633d0563431186c333fa5ed",
+    "sourceSha256": "dbffea73bb6e7245a3b8731c4c09709e4fe4822b97bfe6669a6b174c8eba0cea"
+  },
+  "./assets/anatomy/row-devastator-main-thumb.webp": {
+    "sha256": "402ccb72cfa7cf2d4205cc41716262d38289a8c97558f090ef0a1ca2a38dc42a",
+    "sourceSha256": "3053dbb04955e8c3ce6d51e429c91c5e9dd2f4b65a6d0ff92ac981dab830c723"
+  },
+  "./assets/anatomy/row-devastator-main.webp": {
+    "sha256": "949f38bd8abe454d9bebd9843e01827f9cf063a0a8ea38eae44412706664d1cf",
+    "sourceSha256": "c92d598ffaf792fe0228679d4bc3cf43fb8c41cb46618f8dd95b28266d911d50"
+  },
+  "./assets/anatomy/row-dragonroach-main-thumb.webp": {
+    "sha256": "ec417b16e4b5a6efc00cd0996df28f5aadfeadf7b9f11475f476bdf56cd43612",
+    "sourceSha256": "1f5c8257fe276ec64f6eaac19d74ed66aa250a75be42fa589c3f15f0060476dd"
+  },
+  "./assets/anatomy/row-dragonroach-main.webp": {
+    "sha256": "656ea070637d9d1bf405db9ed48f69a7e692fb337593c2b14c3f9d61b34d51b4",
+    "sourceSha256": "48761d85bff01ff71e077044a2c0779c9f9bfb56196025c9aa5d5be15ed5a565"
+  },
+  "./assets/anatomy/row-dropship-base-main-thumb.webp": {
+    "sha256": "574fb3898c221a9938a8bba39685bfbf534a076ab938c8ca9af6795ee5dd5b8f",
+    "sourceSha256": "6dc5a2fd55e63d8d0e4e30dd5a3369d21d06507780ab6bc3e97ae84be57a352f"
+  },
+  "./assets/anatomy/row-dropship-base-main.webp": {
+    "sha256": "d0f4a79400691eeba0764fb988692339d7027729f8d8b17c7d3b1b2f79fda180",
+    "sourceSha256": "ce8f9559eb12957ce0301faa60cf0a34fbc7d0e05583608edbf7e64fc33e954c"
+  },
+  "./assets/anatomy/row-dropship-main-thumb.webp": {
+    "sha256": "eab2ccd1504be8a0c37143bae0f79b5ad71cd57d6d22da1e5c42dd17df3036db",
+    "sourceSha256": "8c06b3a2a74bdfef401460cdba47cf0a45ac32b7ec66d7e9b545dec09bb92783"
+  },
+  "./assets/anatomy/row-dropship-main.webp": {
+    "sha256": "64963cd798b0fe9646420c0e38deabc891e7bc7b4dcd452ff0645124708dcf1a",
+    "sourceSha256": "e0929b8dff33d0d3bd4328b6caa1d2bb39d86839af98a1de86e3b0de5ce09ce1"
+  },
+  "./assets/anatomy/row-elevated-overseer-main-thumb.webp": {
+    "sha256": "70397113eab82a8bfca69bf9c72856af804b5bf1798da35a18ff3b5cb896bc0c",
+    "sourceSha256": "b07f3452f620473d0910ec11bde0f38e42a73e0350228ba4594ba18d51560a02"
+  },
+  "./assets/anatomy/row-elevated-overseer-main.webp": {
+    "sha256": "a005d760aa0b36969ed6c240fe2582866068314b4da4d9ccf0918297bbea6c74",
+    "sourceSha256": "95e13ce0338f924cd5a263bc4a96877e8c25d14a81b859f3107e15e1c0e1abc6"
+  },
+  "./assets/anatomy/row-factory-strider-armor-broken-head-body-broken-head-armor-thumb.webp": {
+    "sha256": "0806696cddee771221275dcac152116fd14d0f18142715a48b64494148bdbd67",
+    "sourceSha256": "b1ae44cb09e8d14e15860e6de686fbf1ef6ef6558a403c0c2f59911b525f3106"
+  },
+  "./assets/anatomy/row-factory-strider-armor-broken-head-body-broken-head-armor.webp": {
+    "sha256": "9ba5d5856f40de6057b4d64c747105d599eb2c95eae4c302a98a6f2fe4c7f52a",
+    "sourceSha256": "420a4a37bfbfcd465b6e43307bb1d69e125e558128a0acbbfce4aee5e81c0501"
+  },
+  "./assets/anatomy/row-factory-strider-armor-broken-leg-assembly-4-broken-leg-armor-thumb.webp": {
+    "sha256": "619b0754c11f7eee9fc4c1c6e2458737ae7bc084de3318ab522e05b306be69eb",
+    "sourceSha256": "80583fe8ffb8c30a6f9d5c147dc48727c6a134bce5947df87833f8af2a778f29"
+  },
+  "./assets/anatomy/row-factory-strider-armor-broken-leg-assembly-4-broken-leg-armor.webp": {
+    "sha256": "a6a7a814acae3f2aad647167470a470e8c25532d9f6e40ec0630832423a8d756",
+    "sourceSha256": "93d3a5d21729be2eaf8d9f655fb6562e5627c89028edf7f92492b978460e4b57"
+  },
+  "./assets/anatomy/row-factory-strider-main-thumb.webp": {
+    "sha256": "0702e1cc4849c69658b0e3cf861e36c122fd32310d5ec71360375c139bc27b8b",
+    "sourceSha256": "898c2dfb4c1059e738114a1cf45eef12d2d448e1872cd6ec27d1dc6c096964a8"
+  },
+  "./assets/anatomy/row-factory-strider-main.webp": {
+    "sha256": "0bf1b3b5b5db82a3ad7a49e0a7b54abdc544ecf1aee23ee0c6cc1ade86d14ba7",
+    "sourceSha256": "30e31fc339465d021ed21179ea6907249e5ed3186ebcdf3c787075e639b4a162"
+  },
+  "./assets/anatomy/row-fleshmob-main-thumb.webp": {
+    "sha256": "292f89b833800fc5ac6d3727cebbbe9f5d902906655567b931f9e6c3c393d30a",
+    "sourceSha256": "30b2ab4d304a04204076a1b77934b0b32cc2afa21c6bc5463700e8a2353af332"
+  },
+  "./assets/anatomy/row-fleshmob-main.webp": {
+    "sha256": "8ac4731326dec2f3ff3442d64bc530e94051e9ce6e0657873d5aad1badfde988",
+    "sourceSha256": "aa615d88f1d86b6a714f0419bc428f8b4ab6ef1afba472a9a810e2994c77ed70"
+  },
+  "./assets/anatomy/row-gatekeeper-arms-thumb.webp": {
+    "sha256": "cb42f1b0f60eea143d8a885540705ff11235e6ca97ce856cc4011479f6f18246",
+    "sourceSha256": "0a521527f40379f1c4969c55008919e4fd01a316c0a9d8addf6a0b2b5d24f64a"
+  },
+  "./assets/anatomy/row-gatekeeper-arms.webp": {
+    "sha256": "abb1b9ea3171747c367123ba940b820c5a98b7efa35a5003d32e14dc8c1d0e67",
+    "sourceSha256": "693cd0a6d001409820ff57ccc82e3e275677c901765e11f9917c170968aad7dd"
+  },
+  "./assets/anatomy/row-gatekeeper-legs-thumb.webp": {
+    "sha256": "062c2af8142bd600040abdf6b978045d34f0824f263172d511c0b2b5e4a2c3a4",
+    "sourceSha256": "770b2ab57f4df0e888cb1045f5c98e255027bea85ba05f52dbe53d069a614c60"
+  },
+  "./assets/anatomy/row-gatekeeper-legs.webp": {
+    "sha256": "e85cbda5247818660605b08447774a09aa193c255c51c082b47daf684ceb26fb",
+    "sourceSha256": "ef7cb33f9954ee1c8227e3a497a32f412d206670a02d750740bbf4a27edc3962"
+  },
+  "./assets/anatomy/row-gatekeeper-main-thumb.webp": {
+    "sha256": "582f66791db99e5a6ba71193e311fd516c975b031de41f4cfdae0b4c73a4b67f",
+    "sourceSha256": "ec8c9e5c4a5272ac02ca9211e985c26b0b564643a6416a94b4a0baba8f4cb4e9"
+  },
+  "./assets/anatomy/row-gatekeeper-main.webp": {
+    "sha256": "097a3064dd40c456d6d5595288a33641194cd438efac0aaaa9af967faaf955e3",
+    "sourceSha256": "368c3c002501448809a88935f04dfe84529b606b149f9eb6360fdba1359bbce6"
+  },
+  "./assets/anatomy/row-gatekeeper-shield-thumb.webp": {
+    "sha256": "ed2b35418f696e8cb02831441b5819ec555dbc1079b01a0526c4c55ecb3d8217",
+    "sourceSha256": "ee89eed24a96d95c3c1b1c3fa086ab2ee505f28d97b80d2e8a0f6ace2ae1df93"
+  },
+  "./assets/anatomy/row-gatekeeper-shield.webp": {
+    "sha256": "aeb631926b9a7c017e603bd51c02d1cd08781a4ae8a86aab8985ad2fffb273da",
+    "sourceSha256": "d167b9a97616b9fa0d63fbcec8a38f56399874d06a022c56c2209b005ae7c46d"
+  },
+  "./assets/anatomy/row-gunship-main-thumb.webp": {
+    "sha256": "dabb79e381aa174ae8c5988f12a2012d8c2df87bd0b787cc30b94f5eb2f6ecd0",
+    "sourceSha256": "7a1fe17615e11fb46d8a5654779ec4db55cb99ab3ba1ee417cbdd3e1fc9f1ec0"
+  },
+  "./assets/anatomy/row-gunship-main.webp": {
+    "sha256": "80a74c10c88ddbf18dd878de273a937e113f166b0c0ab7dd5fa2a906bd0f2ba0",
+    "sourceSha256": "9a0c430e4910512f446b2579b6d8c024c22ba83d7840abb0f7651cd3d93201d4"
+  },
+  "./assets/anatomy/row-harvester-armor-broken-damaged-chassis-thumb.webp": {
+    "sha256": "a4bce7ecbfc8f7507eb6be043d38684113b51b2047ddc1af6af417e24f32cd03",
+    "sourceSha256": "847773c39ea6711be71bb6948b808389bd43c307c5980fee119d5100376e3e80"
+  },
+  "./assets/anatomy/row-harvester-armor-broken-damaged-chassis.webp": {
+    "sha256": "8289df5e5259f1de8a3bab20dd79a1c118e8e97838dd483581cae917e40b6bc1",
+    "sourceSha256": "72239a8f1334df88038b90d069c859ae9697bf12fa807e632bcc3c8df6a352af"
+  },
+  "./assets/anatomy/row-harvester-main-thumb.webp": {
+    "sha256": "ab84022df243001a8e0b2ee9ca730c51d7eea8f1151a385871d448b24154a355",
+    "sourceSha256": "6d0cedfa7db74f5257870282299f31d79050de07fa1b86544777c744c44e9ddd"
+  },
+  "./assets/anatomy/row-harvester-main.webp": {
+    "sha256": "6bec1de89a9f39fb75baf26308f7ffaede059773e1e96c7e9687affb9eec90fe",
+    "sourceSha256": "0aa4cd11973c88cc5290defa7a4c9b026f506c23decb09bfa06e9095e60158b3"
+  },
+  "./assets/anatomy/row-harvester-shield-thumb.webp": {
+    "sha256": "299dad9e296eed5cc6feb24f8b98c70cb1bf2deaca3bb6529c03883dff7bab8e",
+    "sourceSha256": "e720665d7431290c73b0ac8393a3f821e88c2b5526be1499223fa2cbb45fc678"
+  },
+  "./assets/anatomy/row-harvester-shield.webp": {
+    "sha256": "28c7f14aa395803f5b3e4fdc031e8527cb4d495aa80ccf76b9f747c7b66d19d6",
+    "sourceSha256": "1b97738e95873e4926bc48803776a3133789de22b326088e91a31303a8573f12"
+  },
+  "./assets/anatomy/row-heavy-devastator-main-thumb.webp": {
+    "sha256": "f9fff8b3d16d97a37735cba5d186636eefc7319e4f459d567bd5974c887414dd",
+    "sourceSha256": "92f78d234c3ef0057d16bbc3ae325e71810570a80e4c0ba38da44fe9ef2ebc7f"
+  },
+  "./assets/anatomy/row-heavy-devastator-main.webp": {
+    "sha256": "8b6bf60ce05978a3b422053d6d393ad411ff0966f631c46a0a0bd1b58adc2f50",
+    "sourceSha256": "0218f5131de521260e65da36bc7ae0b770f2914f0618a67b5a0ebc39919c9b3d"
+  },
+  "./assets/anatomy/row-heavy-devastator-shield-thumb.webp": {
+    "sha256": "319c63e72f86eb688dc553ab2635f2d10aff3528baafe8f36ae976bdf8b1106b",
+    "sourceSha256": "abfe49de7569001cefaa3ed4437090761a2d010d2b721a99dd119128c8e96995"
+  },
+  "./assets/anatomy/row-heavy-devastator-shield.webp": {
+    "sha256": "daa915956042a425aef1f40520567cc5144999e65f4244cf605448bed98e9f9f",
+    "sourceSha256": "37add04e37a714de43e723d4b1aeba50b5a5ae3cd7d1e173d2174162187eefde"
+  },
+  "./assets/anatomy/row-hive-guard-main-thumb.webp": {
+    "sha256": "1182e40d447641cd14a9ec7c632c0c474703d08d9f93efd0ad71b4ead1c3bb59",
+    "sourceSha256": "d788693af97a20bc3f5219bcdb0c30a2a733b6d70dd29e032a850a80e7f51349"
+  },
+  "./assets/anatomy/row-hive-guard-main.webp": {
+    "sha256": "a107dfd5e359fbf4d27f3a48d3cb7d9b43810d6167db9beb63a5557cf64e6b3a",
+    "sourceSha256": "61c2a1df27aacb913bb9fab77bb71222fb962c71fe86c9626ab5a599cb5ae2ab"
+  },
+  "./assets/anatomy/row-hive-lord-main-thumb.webp": {
+    "sha256": "b5863b1b22d2f114ba82a9beff7cfbc0e5c02605336a3358bc68e57bf487b995",
+    "sourceSha256": "684bc16889d5431e5191ef944994040af5abe5293132d56797e2cdde5e5e6995"
+  },
+  "./assets/anatomy/row-hive-lord-main.webp": {
+    "sha256": "06af35e9e0499ee3e75579a1aaf9c07b5deaa86fb34c960315d6adde5add5af9",
+    "sourceSha256": "5ed062a2fd568a1ec32cc531dfcb4c8c1c1f2692573b2e54e63059a687bc2ac2"
+  },
+  "./assets/anatomy/row-hulk-bruiser-main-thumb.webp": {
+    "sha256": "5b2aca31f5e91247b51003f63ab75d4a07382afa1e9e28695f99ca2785be6826",
+    "sourceSha256": "6bcd85ee60dd7cd14a52f1f30c12b40cf274e391cce810e5f744e222820aa8a9"
+  },
+  "./assets/anatomy/row-hulk-bruiser-main.webp": {
+    "sha256": "1bd93203eaef06613405191a516e31a92cb2e24df1a4cc5bc8411bc08fd78a79",
+    "sourceSha256": "3700a09baa90683b954a92476f6eeb25547647be961107b129356d195a68452d"
+  },
+  "./assets/anatomy/row-hulk-firebomber-main-thumb.webp": {
+    "sha256": "1d027ce51939287e018d2528a7164e8826f9f35a5e2894de1f63a67f78c77c18",
+    "sourceSha256": "c70e4428e8103744f0b8ed674eaf7adcc478ed01dd3d9eec03aca4d955b1d36d"
+  },
+  "./assets/anatomy/row-hulk-firebomber-main.webp": {
+    "sha256": "02fd6ebff5a54c852daa11ceb367ef5edba0ad5adf2fbaf4519d941f8c682b1f",
+    "sourceSha256": "a02dce4a58b7a9b5e861590434bddf24bcc2d4333c23bc2526c89c4913265f66"
+  },
+  "./assets/anatomy/row-hulk-main-thumb.webp": {
+    "sha256": "3538908273761e66aaa4053e3b3574a7f33aca8d4c8614472f8b9708902d26cc",
+    "sourceSha256": "1ef15b07cd934502dd409ba5b69f69e7533b2ed4f4c0821ae495f1aa3a1fc70b"
+  },
+  "./assets/anatomy/row-hulk-main.webp": {
+    "sha256": "6274113588dca9c4481543153354e55c270bf3ba069038c40fef82330e72145e",
+    "sourceSha256": "dbceafb3e626a6d6edb9214659e9e67f787780c20f7331aa0ee6d826743b2048"
+  },
+  "./assets/anatomy/row-hulk-obliterator-main-thumb.webp": {
+    "sha256": "bd4ac4cecab9765719615bc47671dbb980974188f031aa87bd22159d50da16e5",
+    "sourceSha256": "aa9041381cc6c9ab29d72ff2dd93af0857d005f30b928cba2872fb7d1ebdd6ed"
+  },
+  "./assets/anatomy/row-hulk-obliterator-main.webp": {
+    "sha256": "2134e8f28b0f2d88e1418ec72ed917bf6cdc8b9a432da9fc2d5a9105cb039e06",
+    "sourceSha256": "82563081feff211ea81739257c7f1aec1afa4fb6dc28e3bdd3020b0cca88be2a"
+  },
+  "./assets/anatomy/row-hunter-hardened-main-thumb.webp": {
+    "sha256": "a8703a7446c09316cf50e4d0f054d3d694e9798f21d7b88313b0dce9e6875d0a",
+    "sourceSha256": "61ba12b6b6a587ca431798844821e5c6d04280b074203211488294c95ad0784b"
+  },
+  "./assets/anatomy/row-hunter-hardened-main.webp": {
+    "sha256": "203553e9daffd5e577c4d788a42f7bc43e12ff962c73e009c79869123a8e3ef0",
+    "sourceSha256": "a31671fb3879d11eeb3affdba1c59ab1b4298899c71520879b2110c5867bebc0"
+  },
+  "./assets/anatomy/row-impaler-main-thumb.webp": {
+    "sha256": "bc39128af0e1646f73175b87d37389de8e1da8e09568974e83dc39479662400b",
+    "sourceSha256": "baa04c62d5dfa0811444b18268171a357c6d081efea1e290553c30db8f1da479"
+  },
+  "./assets/anatomy/row-impaler-main.webp": {
+    "sha256": "c254a5a49eb8ccba7285675c5f060c4129a2751b1a8a60436b3b9111c3a191be",
+    "sourceSha256": "e26e70aecb5b1796cd829342eae7bbb184085c553de80a85a5e290c99e113bac"
+  },
+  "./assets/anatomy/row-incendiary-mg-devastator-main-thumb.webp": {
+    "sha256": "a4c1caea90e5084341c264a7d6b38aca56dace955b300b0ac1254d94f6be002a",
+    "sourceSha256": "2802a142c2fe9536b9fde6f029c4ab0472375ffec781b8c8341b683ec2fad38d"
+  },
+  "./assets/anatomy/row-incendiary-mg-devastator-main.webp": {
+    "sha256": "a86a125eaa5ad24f64d5ab018ffe5447c5c2ebc7c57b8cf2eef91f6510858793",
+    "sourceSha256": "38330aac0597eba5de347489e5c836d52dc7cf5e1c73e8499acef9de9a9c20cd"
+  },
+  "./assets/anatomy/row-incendiary-rocket-raider-main-thumb.webp": {
+    "sha256": "df8fbc92b5a57ff452c906df62d564afe8f4e67f58257833768c861d11352bae",
+    "sourceSha256": "67bd3ad4983b149efef6dc9ebd05515b114920eebb152ec4313af225e1646eb1"
+  },
+  "./assets/anatomy/row-incendiary-rocket-raider-main.webp": {
+    "sha256": "5e9b25fa79291be7a7bb571b7b3b82b7fc145f9c7f2857e871a2e4ad32030dc2",
+    "sourceSha256": "39fc2461228d894055b63aca0665dbae6fcd8b6d10fc92ad49c144c5a4b33891"
+  },
+  "./assets/anatomy/row-jet-brigade-commissar-main-thumb.webp": {
+    "sha256": "7461787aff0a228db0c88b93e43eea28a9cce9f2d1243e3eda22695705af4a92",
+    "sourceSha256": "2e119a8af99afb32d3b573c6a0e22c8ce90d068b2fb3addb8ddf04f0be8bdce6"
+  },
+  "./assets/anatomy/row-jet-brigade-commissar-main.webp": {
+    "sha256": "7d3f2821ef1ab90ed476f5c0e9068b6a0ed251f785f849eda18c3d55aed6dc9d",
+    "sourceSha256": "d38e0b0498bb4bda82ded8475874be8208ddbcab75d62ffbd4ada0077ad23b7e"
+  },
+  "./assets/anatomy/row-jet-brigade-devastator-main-thumb.webp": {
+    "sha256": "e54df28c26ccf061e07655c1e128dcbf6018ce5c7f5367006be5e2dd85583468",
+    "sourceSha256": "088b1fa1216d1efc20c85d2f203818c15a9ffb16ec697ab51dabd5ba3827fca9"
+  },
+  "./assets/anatomy/row-jet-brigade-devastator-main.webp": {
+    "sha256": "db6c83d1f18185890f0b99219526f57b98970681d45267a0809edae86976b259",
+    "sourceSha256": "fe294697a77e2601b13a3b17823e4b68c642d79f8344d79b707ff4aea016222a"
+  },
+  "./assets/anatomy/row-jet-brigade-hulk-bruiser-main-thumb.webp": {
+    "sha256": "d4d40786c32d8a6408bde31f5eaa1086e98ccefc093b2939fe67b89454d4d27c",
+    "sourceSha256": "c1fac4e36261a68cc0a69c1215bd2335e9dd0829222e67066fad946ba6e44a15"
+  },
+  "./assets/anatomy/row-jet-brigade-hulk-bruiser-main.webp": {
+    "sha256": "fd70c0f050d7b6157b99d3321b831f4ee3b851af1fdbb2d856ab5931164a0462",
+    "sourceSha256": "19414ebe0aeb3221f01c368c4319fc26defcab0759e4e2e8f64a52b4bb29255b"
+  },
+  "./assets/anatomy/row-jet-brigade-hulk-scorcher-main-thumb.webp": {
+    "sha256": "7454a5b392d36bcd2c66e3d7870ec358271f5bbb42796b76e9d89656c5ac6e74",
+    "sourceSha256": "d2f616e49cecbbf70f9d041a54fd198e22e1ab4e6d430ad114181f244fea7b71"
+  },
+  "./assets/anatomy/row-jet-brigade-hulk-scorcher-main.webp": {
+    "sha256": "411327cd346f86412335c7f76ebdcaf0f2e7a5a34d1ab85681fdad035876dff5",
+    "sourceSha256": "cc0b5dbc44ea1afdfc1c2d6870c093be398ff074bcf9008504ff9a64f4f5a4c1"
+  },
+  "./assets/anatomy/row-jet-brigade-mg-raider-main-thumb.webp": {
+    "sha256": "7461787aff0a228db0c88b93e43eea28a9cce9f2d1243e3eda22695705af4a92",
+    "sourceSha256": "2e119a8af99afb32d3b573c6a0e22c8ce90d068b2fb3addb8ddf04f0be8bdce6"
+  },
+  "./assets/anatomy/row-jet-brigade-mg-raider-main.webp": {
+    "sha256": "7d3f2821ef1ab90ed476f5c0e9068b6a0ed251f785f849eda18c3d55aed6dc9d",
+    "sourceSha256": "d38e0b0498bb4bda82ded8475874be8208ddbcab75d62ffbd4ada0077ad23b7e"
+  },
+  "./assets/anatomy/row-jet-brigade-trooper-main-thumb.webp": {
+    "sha256": "7461787aff0a228db0c88b93e43eea28a9cce9f2d1243e3eda22695705af4a92",
+    "sourceSha256": "2e119a8af99afb32d3b573c6a0e22c8ce90d068b2fb3addb8ddf04f0be8bdce6"
+  },
+  "./assets/anatomy/row-jet-brigade-trooper-main.webp": {
+    "sha256": "7d3f2821ef1ab90ed476f5c0e9068b6a0ed251f785f849eda18c3d55aed6dc9d",
+    "sourceSha256": "12035e22aae32de8fab44f5be8f6fe029076681f9679ca149c1d877ca4ce8e46"
+  },
+  "./assets/anatomy/row-leviathan-broken-damaged-rearward-middle-vertebra-thumb.webp": {
+    "sha256": "8891a89ffbc2c7f9f500883d082a461fa50a7d495ec2ca1bca45b9f792f59dc9",
+    "sourceSha256": "cc400e5845862d33e5bcea1ae31023d5a465ea2a0279cde34d0b5a37be52e410"
+  },
+  "./assets/anatomy/row-leviathan-broken-damaged-rearward-middle-vertebra.webp": {
+    "sha256": "7bc243c139a3157fe9af6005d1710257ad227874824977f8645e66487ad553c5",
+    "sourceSha256": "254392a4b2d9150008a664020c786475d22b84af5c344e26dbcbfc88b22814b6"
+  },
+  "./assets/anatomy/row-leviathan-main-thumb.webp": {
+    "sha256": "e2ad9475e0e9894559ed315dabf384bf0904f59e5786b5c7950dc70f7cd71761",
+    "sourceSha256": "d66e04aac5e8fc4a11def19d0e3c42d3f79e1a04d70c925628441131657b087e"
+  },
+  "./assets/anatomy/row-leviathan-main.webp": {
+    "sha256": "a09f4a3e4154073ac0a1b0656ac779b1c1e042dbb43e72edef30144ec0cd5d86",
+    "sourceSha256": "c57aca8615aecfa279ce26dae5bc90034d117274e511633c17de957998e12cf4"
+  },
+  "./assets/anatomy/row-marauder-main-thumb.webp": {
+    "sha256": "dbc9a05c91a9eb4b2aac7641e098e474698f746ab19aa597a9cbe8aae1b83230",
+    "sourceSha256": "11e92dca7ada05994f32998e871c3db651057e4649998c5dd4fdfad076a4660c"
+  },
+  "./assets/anatomy/row-marauder-main.webp": {
+    "sha256": "d548fed01d7edf869946fff77d258ecf05e775f14a22f0965255c3d32c8f9904",
+    "sourceSha256": "99afe67b822e715a0c68422b378938f755ac036fba9e0e1a139e07f426b174ea"
+  },
+  "./assets/anatomy/row-mg-raider-backpack-main-thumb.webp": {
+    "sha256": "38aadcad922822fa50b4cf414482fafc9ea944df4a05b91dbb1863451de1aae0",
+    "sourceSha256": "c94e0934d9db6b9bb604dc2550f4957e48715834f5db20691ef9028485a72240"
+  },
+  "./assets/anatomy/row-mg-raider-backpack-main.webp": {
+    "sha256": "f64c9b044e726c950b82e91fb5dc03f193f4071055a2bd988e601c1dfa90b483",
+    "sourceSha256": "71774385b8336f0b65cc9f9639f518273f3ea710b84d51008f2b585c1bcd1611"
+  },
+  "./assets/anatomy/row-mg-raider-main-thumb.webp": {
+    "sha256": "dbc9a05c91a9eb4b2aac7641e098e474698f746ab19aa597a9cbe8aae1b83230",
+    "sourceSha256": "11e92dca7ada05994f32998e871c3db651057e4649998c5dd4fdfad076a4660c"
+  },
+  "./assets/anatomy/row-mg-raider-main.webp": {
+    "sha256": "d548fed01d7edf869946fff77d258ecf05e775f14a22f0965255c3d32c8f9904",
+    "sourceSha256": "c9a8c2162b8c0a63e09422c529bdfd313a304c7f145f1fca015369a0ec73a54e"
+  },
+  "./assets/anatomy/row-mortar-emplacement-main-thumb.webp": {
+    "sha256": "7a62f03dd7a33585bbe034a02a1cb9fe7b41e2b52fcc5a704497c26d05ca4359",
+    "sourceSha256": "ea5dec488d8addd4b974d6bf9f277fb11e18c8aff7fa8658f58d335e0b58b631"
+  },
+  "./assets/anatomy/row-mortar-emplacement-main.webp": {
+    "sha256": "5805f48da5bbbdb87ffd1d19dd7c78305a33b8516efde7c330b92e4eadb49c9e",
+    "sourceSha256": "f08179e4b612a507c80562ff79cc15b2aacfba7c22c00e1da4b3077c0765b0bf"
+  },
+  "./assets/anatomy/row-noxious-scavenger-main-thumb.webp": {
+    "sha256": "cf6b2a13c88f7a7afb0df2f0d6c631e61275230a4b679cadf97da602491653b4",
+    "sourceSha256": "a68aea15237287f4108d74117736045567e9461a66ae37674d6817d44801227a"
+  },
+  "./assets/anatomy/row-noxious-scavenger-main.webp": {
+    "sha256": "cab72fbd7d96e68795430e29fc33f5aa8a8b3abf7042f174325b9e122d54bfc5",
+    "sourceSha256": "396cc25cd8d596bde69f0a12a0db7e4b5fd8cc3826a49da563daca353aa4b61d"
+  },
+  "./assets/anatomy/row-noxious-spewer-main-thumb.webp": {
+    "sha256": "dad7101a60734cfb519c4bf717caa615fa7890e3fbd87ebdc2eca375057ce8f7",
+    "sourceSha256": "f343b5a56d0d806758932cb9038798fb78a1d41e5c6bef6113a72e21610ae908"
+  },
+  "./assets/anatomy/row-noxious-spewer-main.webp": {
+    "sha256": "f1bcbc554c39257353f2b9f831d537e52b60c09a193ef7d1943d0ba815ec97ae",
+    "sourceSha256": "b534acee802039d2f3f0edbec889975ffc6f8260627ffbf3fa3e3317ac6b19ef"
+  },
+  "./assets/anatomy/row-nursing-spewer-main-thumb.webp": {
+    "sha256": "db77f241c7dd19deb6072b9e44d7a4180904efe88a9120906b0b5e0b8c6b0d0f",
+    "sourceSha256": "526574717a76f19cc9ef6859a3b332c880e58fba427b674e18eca7ed8d6e923e"
+  },
+  "./assets/anatomy/row-nursing-spewer-main.webp": {
+    "sha256": "baf31bd96254b063ddf0aa5ee7f374d4cf218a4d034c02c87e8c7acfccbd0432",
+    "sourceSha256": "c567e0a6952830fe5b3bfd4cbad25b6e804c80082a7b86f3f67ee75a2cf8dc9a"
+  },
+  "./assets/anatomy/row-obtruder-main-thumb.webp": {
+    "sha256": "f22128cc6c100841665320724678c4383df50b8688a4638ffdd9f96966e17d3c",
+    "sourceSha256": "6e5f5b2c1492095b433d272dbfa4f8c0da2475004f1e802429999356cd8f886a"
+  },
+  "./assets/anatomy/row-obtruder-main.webp": {
+    "sha256": "e2d9bc047d262be61f3443be575baf8e5753d9cd122b53276bac9ade395824de",
+    "sourceSha256": "abd4ce1772b234bd3a45c2e50717ba062f28fe4cd54f286fdae4b5f7db489f1e"
+  },
+  "./assets/anatomy/row-overseer-main-thumb.webp": {
+    "sha256": "dfcf36a3fa1a4331fe42645473a7cd4683415e724daa8e88517a4c8c204e8ec9",
+    "sourceSha256": "e2f28473b1d40edf60f7b3486e99e25b4b6d4841a475fc4cef5785d87ec3475d"
+  },
+  "./assets/anatomy/row-overseer-main.webp": {
+    "sha256": "0a67805dfbb95ee6d10397bf3a38f44758e47b8e6633d0563431186c333fa5ed",
+    "sourceSha256": "91257edb1cbfc654ca5f7ea2803c4ab937d5c135c35e09271fd80c66282822ba"
+  },
+  "./assets/anatomy/row-pouncer-main-thumb.webp": {
+    "sha256": "12960e7da061e6a5d942eaef59f6e3e527d0494573187b6cdd40a9e0c40c20a6",
+    "sourceSha256": "38b5854147a1b2eba45d90c5203bead352063795c8e02091ae2cc65cd4deebcc"
+  },
+  "./assets/anatomy/row-pouncer-main.webp": {
+    "sha256": "e766e50edd029177dc30fbd50251b1fbf192b5f635e88e8dab5cac41bd1423a3",
+    "sourceSha256": "f0231705e27ef6e8b3024a9c93926946ac70a0a463c0eee2f721c341549531e4"
+  },
+  "./assets/anatomy/row-predator-hunter-main-thumb.webp": {
+    "sha256": "67fcf3bafd3908ce6f0b2b523467d4bd24e5c83491343c6f42f747b7e025ca18",
+    "sourceSha256": "68420b2486d6fa59ffab53137cf7f27c232de23cb58cac51c81c9560c2d26b9e"
+  },
+  "./assets/anatomy/row-predator-hunter-main.webp": {
+    "sha256": "cdd8470e16ed5a078a97bb5dc1521634b18800497f214a642e2922dd8345dd14",
+    "sourceSha256": "ea966fbb4ef78817f438275d1ec7d4ee31ffc26039f206b2d7b5a93237e9d70c"
+  },
+  "./assets/anatomy/row-predator-stalker-main-thumb.webp": {
+    "sha256": "066067558457e5255be20b5f38f4835e68332e9871a14251b5c502169b4a0005",
+    "sourceSha256": "52424f0eb3dcf58fc13180c06d932a83057151ffbe4092a58ecec1ff91b725a8"
+  },
+  "./assets/anatomy/row-predator-stalker-main.webp": {
+    "sha256": "c8c36677f5456986d9df4e9c49ac80523560ceda5b46bdc8d05ff0d63c542d13",
+    "sourceSha256": "dc335165c19bffc4aac3b2dec464ee96e6cc632121b679e79e7f1ddea04a0559"
+  },
+  "./assets/anatomy/row-pyro-trooper-fuel-tanks-main-thumb.webp": {
+    "sha256": "b1d2da539a5e3fc270ad82a58e0a8d988959276f0f64a856ed8585227fe06088",
+    "sourceSha256": "2311a532024b00c19dcdc86cc4bf3d5029f3cf7b907e2caedf1daccc4ba930dd"
+  },
+  "./assets/anatomy/row-pyro-trooper-fuel-tanks-main.webp": {
+    "sha256": "43eb700db1831f16c804cd846bebd7f5c9c3ca5ccac6ddfb65d5c0fd2042202a",
+    "sourceSha256": "b7fd79df9ace84cc2d177b8427e6db373af1d38de44bed92860b67a3c7ebc6f6"
+  },
+  "./assets/anatomy/row-pyro-trooper-main-thumb.webp": {
+    "sha256": "01a7f88582eaa806bf2d01697498c1e287f7c126a311f3be6d742dbe755496e3",
+    "sourceSha256": "6ea337f798f407d71a088186d9b6f57e8f723ea5290610cfd4bf8d523a65b8ca"
+  },
+  "./assets/anatomy/row-pyro-trooper-main.webp": {
+    "sha256": "889182cb0be8e8620a62c119640542927a7a6aecf3dbeb6658f434139a33a680",
+    "sourceSha256": "5c51c11a1339f97c1df3f3384ad130dff8b6f2345f11bbd48cde5b606bc1640a"
+  },
+  "./assets/anatomy/row-radical-main-thumb.webp": {
+    "sha256": "d7a1c9ae06ff0a53149e081a3d9dc50d66a799863722273b6e7c5a210d837ce1",
+    "sourceSha256": "0b37754c69d1a50bab9230dd09ac36cc878aada76c23ce0bfb9bc5cbd755268e"
+  },
+  "./assets/anatomy/row-radical-main.webp": {
+    "sha256": "3fc9ad26482fd505742a6f46749a80bfa054c5dcadc2caf8becdc07c2f8f9518",
+    "sourceSha256": "bb39a3c55469d9885a371b6ac01858b9c37f0c8fcf6e145483effa63dd2d1c64"
+  },
+  "./assets/anatomy/row-reinforced-strider-main-thumb.webp": {
+    "sha256": "c7e1289c25c916cff5a307e6aabb30e9385effb9ef317fd8b2fe474ef0fc152b",
+    "sourceSha256": "c803b9ee2bf3ccd6cf85790a6a1b66fa888a778bbc53b8bbf0f0dd09d114690f"
+  },
+  "./assets/anatomy/row-reinforced-strider-main.webp": {
+    "sha256": "d930bd3c8a8b9808bd1bc6f506c8816e4a357e9bd06505c38e86852274c5487c",
+    "sourceSha256": "584c4becdc855a9603b483cac4b889492be80dd371c7bec52035502c0719bb77"
+  },
+  "./assets/anatomy/row-reinforced-strider-rockets-thumb.webp": {
+    "sha256": "820f5801dc4bcdcbf3de31d6df961ec70340fc5512638040a72a572d2309bbe1",
+    "sourceSha256": "b6b467f65c0e607c1cfd85ec5bb5905c4a0654990f9d8c2b49b8561cfa7bf4e5"
+  },
+  "./assets/anatomy/row-reinforced-strider-rockets.webp": {
+    "sha256": "e4bc4aeb090b74bfaaf44ea726a60c3e189e50f564eb4b6dcdefd2b8ba7c19fa",
+    "sourceSha256": "5fc0e0a7afed8b900f677ac12cc1c64b6ea6e26f8aefd0528237a0431796cf30"
+  },
+  "./assets/anatomy/row-rocket-devastator-main-thumb.webp": {
+    "sha256": "a6a58f46e1c990d6566016d76a1ae26462306ad39fa3883412209e563f1697ca",
+    "sourceSha256": "27d55ae1eb5f34d6c762b178b5382e44344ff17aea2d3975d5a05cb202c2741e"
+  },
+  "./assets/anatomy/row-rocket-devastator-main.webp": {
+    "sha256": "0a357d65b9cd91642237c44bd7e5d609808fcb6a01d246c65969921f6381d01b",
+    "sourceSha256": "dd93c10cd6b736b75611a45bb325a46811628f0e550276a0678290ec6dc18434"
+  },
+  "./assets/anatomy/row-rocket-raider-main-thumb.webp": {
+    "sha256": "2e5f5ea9e6aead210818796478b01cab580dfaf6d50415a16c2aefecad65152c",
+    "sourceSha256": "1d1e604dbb45c82b3ff23c3c7d56dcd7bc9887d7bac9c774074f12b1d87c4524"
+  },
+  "./assets/anatomy/row-rocket-raider-main.webp": {
+    "sha256": "1d974d8855c6ef463070af63827a4e0e417a12f21c0103da8daab2521877c673",
+    "sourceSha256": "00a7f8abd2051ab0ad06a5bf164cf7bce0c31b167e29cfe9ccb2c0fffcc32a53"
+  },
+  "./assets/anatomy/row-rupture-charger-main-thumb.webp": {
+    "sha256": "354c9991c13029eb6543b8067623071b039ad7db4796e33fb1b7067d04890fed",
+    "sourceSha256": "110eb0f91864c418797f276c9f4479b91d288dfb6489c30951dd7bbcfeacc3b9"
+  },
+  "./assets/anatomy/row-rupture-charger-main.webp": {
+    "sha256": "a1ae6a3bd4c788efb3c387da1d7ee0e8eeb0dbd450d3ebdb4ad9ed66259092a8",
+    "sourceSha256": "2ba579cedea7014f8e0c6385fef852e1f70e111540bd5ce476a745cad38289b1"
+  },
+  "./assets/anatomy/row-rupture-spewer-main-thumb.webp": {
+    "sha256": "8bdd38f1491168c96d4678d737b3058c4e6e1d071cf14a34340425a6ecc8f275",
+    "sourceSha256": "0f8be1d4dc8c914f9621676eb1abaa8f9f903f2ed51c47cb6561ac690e41e4d1"
+  },
+  "./assets/anatomy/row-rupture-spewer-main.webp": {
+    "sha256": "322f53cd510db685f143373cd8d80338871bfb4d222153a7615a88e7294e8aae",
+    "sourceSha256": "fed65da55ebb7ffbe0a6a922a2302f279c7daaebf4818e21c7e88272b33f7c1a"
+  },
+  "./assets/anatomy/row-rupture-warrior-main-thumb.webp": {
+    "sha256": "6386525489fcb61f5abf873a11ade8510198788e951f45cd1c0bac4cf3404064",
+    "sourceSha256": "980f86ef648d2670809c5c80920f5031c523a5989cc3ff41d6ef8c693d58e903"
+  },
+  "./assets/anatomy/row-rupture-warrior-main.webp": {
+    "sha256": "c2a774535932d5f640e4440de2fe05740467bd1a76b69bfb65e85b128ef516f5",
+    "sourceSha256": "dab46ea87ec5bff0c54995375e0a2dca32d318175fc18170ed341e6e45cfa0ad"
+  },
+  "./assets/anatomy/row-scavenger-main-thumb.webp": {
+    "sha256": "cf6b2a13c88f7a7afb0df2f0d6c631e61275230a4b679cadf97da602491653b4",
+    "sourceSha256": "525160e24381784f4af32790f1e46b39784e782bf9ca99b64153cc1ad4e62079"
+  },
+  "./assets/anatomy/row-scavenger-main.webp": {
+    "sha256": "cab72fbd7d96e68795430e29fc33f5aa8a8b3abf7042f174325b9e122d54bfc5",
+    "sourceSha256": "847130e884b8e72ae1da336ede9a79d5a33ebbb2a241e26c34a963f70d450909"
+  },
+  "./assets/anatomy/row-scout-strider-main-thumb.webp": {
+    "sha256": "9daa659be6c5e564bf3352dfc331a341d876f58b6882a7ad04073a2ee3ea4756",
+    "sourceSha256": "0f734a928737f0a67c8c37f0a23df8e5f703ff203f899b4bdfc6090fe9514e97"
+  },
+  "./assets/anatomy/row-scout-strider-main.webp": {
+    "sha256": "3486ff215fe59fb079f61287683782122abd9495eb2cc5dde70cf07d8fb6f059",
+    "sourceSha256": "b8e66e64deee81e0a75f0457a0c60a0493d2496cd1fc8e499dad14422a875053"
+  },
+  "./assets/anatomy/row-scout-strider-pilot-main-thumb.webp": {
+    "sha256": "2e5f5ea9e6aead210818796478b01cab580dfaf6d50415a16c2aefecad65152c",
+    "sourceSha256": "1d1e604dbb45c82b3ff23c3c7d56dcd7bc9887d7bac9c774074f12b1d87c4524"
+  },
+  "./assets/anatomy/row-scout-strider-pilot-main.webp": {
+    "sha256": "1d974d8855c6ef463070af63827a4e0e417a12f21c0103da8daab2521877c673",
+    "sourceSha256": "00a7f8abd2051ab0ad06a5bf164cf7bce0c31b167e29cfe9ccb2c0fffcc32a53"
+  },
+  "./assets/anatomy/row-scout-strider-pilot-thumb.webp": {
+    "sha256": "c537b9f520f19198c5d9248d7ea48f72d527e8d6bd08eaf1f3b429a05bc6d88b",
+    "sourceSha256": "178f8991b6471b582af7fd3006ffadb8d67d05d4019ee6a890096381506100a8"
+  },
+  "./assets/anatomy/row-scout-strider-pilot.webp": {
+    "sha256": "26d3f955fda1372b873f0a6b780e92602018a98fe465ea1ee09515fb67957485",
+    "sourceSha256": "713f676c063221c965a3a238c14a02d5d02f63c1d012466b8e4159a43bbc2465"
+  },
+  "./assets/anatomy/row-shredder-tank-hull-main-thumb.webp": {
+    "sha256": "3c5ed28c5b9904f84c2c4ac8673842c7efbaf9861f0b0daae9d7c02d2cd37334",
+    "sourceSha256": "f68be613db172778009a95a5c6d8818e961089f36c25d0e0973bdf68508d6ba1"
+  },
+  "./assets/anatomy/row-shredder-tank-hull-main.webp": {
+    "sha256": "59c442f8a41f2a8a3db234e8580fe60ad5dea6496b90799c16f29f8f65fde25e",
+    "sourceSha256": "6dfbcf64c00dd73b99c713dc4b739724a8318df398effdb4dd73aa7b727ccd12"
+  },
+  "./assets/anatomy/row-shredder-tank-turret-main-thumb.webp": {
+    "sha256": "0a0c235c7d9932ab66473e55ceb46d53c542d64f7373d0fd3ebdade5092f38b4",
+    "sourceSha256": "2f1f185ec30e37c1685b5a746f6b3f7f0ce9f81897d5a2c683a8f1acf2e25e47"
+  },
+  "./assets/anatomy/row-shredder-tank-turret-main.webp": {
+    "sha256": "3677db5e1b7e140ed092cf357caec1ece2fffc5cc4b653604503f964909d0ae4",
+    "sourceSha256": "2f63b1bdd04f31afad1fce8529bcc36c076198ca4fe57d6de6c594ef0a8a57ad"
+  },
+  "./assets/anatomy/row-shrieker-main-thumb.webp": {
+    "sha256": "c33a8d98cdb0611839050673130864607334d6afb8992ad5942acb050e6c4014",
+    "sourceSha256": "1864afcec64d38f2c8b215d83ede006022c2909f3dc4a7c8c16d0355c496271b"
+  },
+  "./assets/anatomy/row-shrieker-main.webp": {
+    "sha256": "3a525d179aa071845145d27fb659cb4fdef77e045469d7a29829b2cd75f8a0af",
+    "sourceSha256": "95fc3f71c6222cdee9203812b792c0c7eafe509a387585e094d0765e19138b79"
+  },
+  "./assets/anatomy/row-spore-burst-bile-titan-main-thumb.webp": {
+    "sha256": "1d6b06a17d84ab4a79dd3e99885b1231311abed5ca250ca6aadcc29def76e373",
+    "sourceSha256": "728def7c6707ef58c3efb8338521b89853f6eb5c5c3c5230e23968455e4d98d5"
+  },
+  "./assets/anatomy/row-spore-burst-bile-titan-main.webp": {
+    "sha256": "64d39cbd392dbb2389005f3c262a750d7289d7bdc2fe1fddaa6e7975ddc80489",
+    "sourceSha256": "a01f55767d81571d2e97db61d7dd46c6e4c0df7c1720a24d6c516633e97fdda2"
+  },
+  "./assets/anatomy/row-spore-burst-hunter-main-thumb.webp": {
+    "sha256": "e92269d8d2aedcbdf1c9621ae3f46fb3cb90483527d7b82e2ec2372d0d2276da",
+    "sourceSha256": "d66758cdbc0069b4d5b4616c1be6cfb1300c6e91d27fd7f5d1ea356a96556a09"
+  },
+  "./assets/anatomy/row-spore-burst-hunter-main.webp": {
+    "sha256": "9992d13e624ee06f252a5beb6502954158b34197c4d5d0fb986e02661a3b8703",
+    "sourceSha256": "3d7f04aee1622d686726fbb9e4469a74f8ef46cb9ff5575a41f3842c8a720326"
+  },
+  "./assets/anatomy/row-spore-burst-scavenger-main-thumb.webp": {
+    "sha256": "3bd0cfaf9a26db00c75e20a38c53d2ee7673e2b366636d7a2bab734f782ff634",
+    "sourceSha256": "1db3aa2dc2bb9b6700000661949b48ccdd20a753f9a7f7c6e4c898bd461cd107"
+  },
+  "./assets/anatomy/row-spore-burst-scavenger-main.webp": {
+    "sha256": "ef416e91bfead5419447bc6511783897e409b3ce0a9513d9f6305c2900a2a6ff",
+    "sourceSha256": "06a3c944364289405ec624432d39cdb06c73a742c39a49f78d4c79d639f1d551"
+  },
+  "./assets/anatomy/row-spore-burst-warrior-main-thumb.webp": {
+    "sha256": "6356847189e747c863e09bd90e2e4db5dd0df527c02b56eb0ce1ef142d02c72d",
+    "sourceSha256": "fbfd528813caa8a92b1d7a1ece511994109efe0a4c33192460e906176cb198be"
+  },
+  "./assets/anatomy/row-spore-burst-warrior-main.webp": {
+    "sha256": "ba905c3bb3a12e59d79c0bc77781e44999a65dde2becee410600099dcbd8e396",
+    "sourceSha256": "e47fe06b6009d2aa456076e773b2fadc0b4795f653b4884fb3cae2dae0ed18e7"
+  },
+  "./assets/anatomy/row-spore-charger-butt-thumb.webp": {
+    "sha256": "497ccb895ea86cca311a1f3a60c37a36c14c7f6a779b12a47c752fec36a628a9",
+    "sourceSha256": "f7547f43d2c423c7ba2d2591f4faf3bc0997148f08037092639547bcf1408fd7"
+  },
+  "./assets/anatomy/row-spore-charger-butt.webp": {
+    "sha256": "a86afdecac757e1c784d2151797214ed67907036a138da00409733883b9d646c",
+    "sourceSha256": "e757897d5f6595c3991bb72768a8e7b44ed3254cb857a9879c569db96707bd26"
+  },
+  "./assets/anatomy/row-spore-charger-claws-thumb.webp": {
+    "sha256": "34f0597e62b00a750c7d107c42752130f2dc08bf0f4d5cec96ceff445a9a8f24",
+    "sourceSha256": "7eede8d782ae1b709d84c71072f0a8725edc2b15ac0dbfe45934ede8cda4b114"
+  },
+  "./assets/anatomy/row-spore-charger-claws.webp": {
+    "sha256": "2870615b797fcd34265bad963bf2406905e2c59b061043ce6a941fada57478c3",
+    "sourceSha256": "96b82b14a23e47239b4e0f84e179b6666ee0a2c8e33ed00f0ab8de21f85a9fc0"
+  },
+  "./assets/anatomy/row-spore-charger-front-leg-armor-thumb.webp": {
+    "sha256": "5b1dba8b4452ae76349fe8650114fed05f3db7b2f0a49724df576a42f25e388f",
+    "sourceSha256": "dd5db573ab84b21117dc9fb7cdc497dd6273df8db351bad9e388a2cc0055969d"
+  },
+  "./assets/anatomy/row-spore-charger-front-leg-armor.webp": {
+    "sha256": "6427cf6bb594fddb4692b264698ed80cec6669078f15efd7a211c2304e60e591",
+    "sourceSha256": "627b7a04ab58a5bcbf10b1def67b10bad0d3d9cbe92e8acedd423c133ff62cd0"
+  },
+  "./assets/anatomy/row-spore-charger-head-thumb.webp": {
+    "sha256": "26cf97caccfeaa464fee6e7eee696989a19a68ac2e875a1df68d77734f493b61",
+    "sourceSha256": "39b4068ae4b11b37a95654af1e067039b725ae93a501afa4d17d2c83648ea379"
+  },
+  "./assets/anatomy/row-spore-charger-head.webp": {
+    "sha256": "e3251120c8b30193c9b30f721b86272c6024ca46cbfd650db6748b2366a8e364",
+    "sourceSha256": "0b7f176f5d93a97346286cd17ba4bcb8a0ac74986ec99391a71b8d23b2da2d06"
+  },
+  "./assets/anatomy/row-spore-charger-inner-flesh-thumb.webp": {
+    "sha256": "5e9dde12e609c4e5d6990eedf69e72f78c91fa3fc507f630533a9c7e78bbcfc3",
+    "sourceSha256": "0647f8ab7b9298f4ed4e3e6ae883ab3667212b96f829e31036f0edbfc13bd485"
+  },
+  "./assets/anatomy/row-spore-charger-inner-flesh.webp": {
+    "sha256": "a5015f1effbdf7ea33a36febf73634712ec37a121bbbcd00e150a2b10ca99c84",
+    "sourceSha256": "b55d86baed85d96dca0cd1d6427bbdd9fa5cd884cecfe10883d5d53b65ca330a"
+  },
+  "./assets/anatomy/row-spore-charger-leg-flesh-thumb.webp": {
+    "sha256": "b934ba1c4d3ad88dc1e117a9e9a1c40e817d8a5ca84c9d682780b74716ff84d9",
+    "sourceSha256": "d62d6121519e40176b8d6efd5f5b28a600d1e73b8b482964ba1021a6cce7e8d3"
+  },
+  "./assets/anatomy/row-spore-charger-leg-flesh.webp": {
+    "sha256": "2a622a1b0644dcb906c6063dce6c2f69038ea9021629a8833f935c3a5696f43a",
+    "sourceSha256": "af741d8934194e3e9d6c55c41094867280dadb01cd36e41ed5861ff251ab1dde"
+  },
+  "./assets/anatomy/row-spore-charger-main-thumb.webp": {
+    "sha256": "4eb9f30d3fb28f372af82e04ecc67609389bcd38efa841b83ca1f2dacccbe73d",
+    "sourceSha256": "746a72c2205a8abb0ada1ecf22474f327222bc2a3d5b1ae446f54287028b148a"
+  },
+  "./assets/anatomy/row-spore-charger-main.webp": {
+    "sha256": "5316fd66e1d83fe364bdb3445e698e16ed34fe105f07d18985846b51e0fbfdb7",
+    "sourceSha256": "c15f95061b7064495ea8a890fd6b4ed2ba6565398932dad5a448fba2671f36b1"
+  },
+  "./assets/anatomy/row-spore-charger-rear-armor-plates-thumb.webp": {
+    "sha256": "3299dd4d3c591d99da279aa382b36cba63dfc9599a410ff0bba7317430d2c409",
+    "sourceSha256": "2feb8363499fa940786b0a0901c8fda32bd27ffaaf778fa74d91caabe9e43dec"
+  },
+  "./assets/anatomy/row-spore-charger-rear-armor-plates.webp": {
+    "sha256": "25cd43a31fc52188b28cc1d7b8fc6e78bde8fbc7048eaf6ad55ca8fe83845e40",
+    "sourceSha256": "540ed22999103fa6a5cc58d1978ff03d2260f134d3d8e85384be8d8c1f16cc17"
+  },
+  "./assets/anatomy/row-spore-charger-rear-leg-armor-thumb.webp": {
+    "sha256": "49c039741c91f1b652b922e6080b6f521ffae0376fd8f8b80107171c142796e5",
+    "sourceSha256": "398335c1675e2861774387a6a68b8021b652fa02294c376bde2f3d0cb5799062"
+  },
+  "./assets/anatomy/row-spore-charger-rear-leg-armor.webp": {
+    "sha256": "10ceb96501bfa58f3b0c061a9a6b8259279db364400a0421bb56d70538a23c68",
+    "sourceSha256": "a950bbc1dafbe0ee0a24aaca40c519b10ad5cb9f18b70208ba64013f3ad738b5"
+  },
+  "./assets/anatomy/row-spore-charger-spore-flesh-thumb.webp": {
+    "sha256": "e56da2bfb2afd5297c3bcd26b60bd3b1ce994dc056ab4acdc69bcc2baaf96a85",
+    "sourceSha256": "91564a9bd8459807bdda235adb5c64211073d45e3eed8e84612b89d1db8cf04a"
+  },
+  "./assets/anatomy/row-spore-charger-spore-flesh.webp": {
+    "sha256": "869a15c3de420d5236f403d5e97f968ecb00831ea75b9f5788aa313cd41150ba",
+    "sourceSha256": "c157cecd33d11f8a825be25bd6a66a68fc35349861af6dfa8606c782f217269d"
+  },
+  "./assets/anatomy/row-spore-charger-torso-armor-thumb.webp": {
+    "sha256": "b6ce09126f7dd5edc220cf9dbfb68ecb2142cbbd7f96700a49418096f433b8e3",
+    "sourceSha256": "e712f069b87c4a9bd994e92a20a37d4d0e15d5e2184089f6e839145ebce81d3a"
+  },
+  "./assets/anatomy/row-spore-charger-torso-armor.webp": {
+    "sha256": "b962d1bc4bf11ae3d4157785c56d7d8f67e851d30388cc72b693eddc5ec97a6c",
+    "sourceSha256": "5ee91d830b76abc61ccc2f5a90c816e0a07b09a9c754b065ad9dc7b53d179f77"
+  },
+  "./assets/anatomy/row-spore-charger-underside-thumb.webp": {
+    "sha256": "3b8cc06ce75d2c97739d1832699c1433bc71b926528366af29c59ff6c98c55c4",
+    "sourceSha256": "82561074977ff89d4d498a01e5adfda2d6e4e93490b2955d0f9466aaf7ebbff1"
+  },
+  "./assets/anatomy/row-spore-charger-underside.webp": {
+    "sha256": "fad59e15bf0a1fcfc94cd0e1a6dc43c8cb1cb8f1cb3fbeaa1f410db25f20f41a",
+    "sourceSha256": "68429d0eaca960e89204113b49817ab08aa07f1f578915e30bfaf0f0802061c9"
+  },
+  "./assets/anatomy/row-stalker-main-thumb.webp": {
+    "sha256": "93c897afa8943cbec6b15fd0c8ac1aa5042b83b88c8f90c0b7763274e250ef24",
+    "sourceSha256": "75ad0867e49128e636f80589b849c79d0a4a092b57a727b9f734aedac782bf16"
+  },
+  "./assets/anatomy/row-stalker-main.webp": {
+    "sha256": "09ba6201903a09b2da5a33acfc3bef35936a4953138a295d315cda55efce8321",
+    "sourceSha256": "3136892f1c1c9b6bbab05a09f50b2e3de73e1f9ab7a64cffde39c127fcd465f1"
+  },
+  "./assets/anatomy/row-stingray-main-thumb.webp": {
+    "sha256": "305abb0d44fab98461d8c8b78982a890a895a01691169c9716149fd42358a44e",
+    "sourceSha256": "2f5f34e7bb81dff80e39514edff107aa09c42be4bf75599bdc84c293ef4a137c"
+  },
+  "./assets/anatomy/row-stingray-main.webp": {
+    "sha256": "699daadda2da9ee4b71396cee9567dc1e2d527b04ecad964140e3e6ba4ddd4d7",
+    "sourceSha256": "2e3547be94816cf60c035e3ce8e24b02843eefa84f324fd3a0f7d7ed89168d3f"
+  },
+  "./assets/anatomy/row-trooper-main-thumb.webp": {
+    "sha256": "2e5f5ea9e6aead210818796478b01cab580dfaf6d50415a16c2aefecad65152c",
+    "sourceSha256": "1d1e604dbb45c82b3ff23c3c7d56dcd7bc9887d7bac9c774074f12b1d87c4524"
+  },
+  "./assets/anatomy/row-trooper-main.webp": {
+    "sha256": "1d974d8855c6ef463070af63827a4e0e417a12f21c0103da8daab2521877c673",
+    "sourceSha256": "25b362fc8dbf5b18b331744ec51a7e1ccad8de147ea0b9e47afb153956e7dfaf"
+  },
+  "./assets/anatomy/row-veracitor-main-thumb.webp": {
+    "sha256": "486b6a134c49654b1b73493056099dc832448c5f7724a1fc4e2f8504b6405359",
+    "sourceSha256": "9093e13d3e0ab2662c4eb4a44e9dc1c53b0206ba7b77e50e408d58ecbf36f763"
+  },
+  "./assets/anatomy/row-veracitor-main.webp": {
+    "sha256": "cfc9215e349e06c0efd41973ca53e52436bdd2aaaf2ba41f402e810b3c7f9363",
+    "sourceSha256": "28517144f9030a19f392746444d3b9cd802aeb823ea842fbfbd8af2aff693e82"
+  },
+  "./assets/anatomy/row-veracitor-shield-thumb.webp": {
+    "sha256": "52a568145b83b2bca909f898b90254e1e81d8cede6c02b7172dc867a1588094f",
+    "sourceSha256": "bc3797d9c0677c14766a96bb2eb72e31eaeff43aa57910b0800168534aaad6ad"
+  },
+  "./assets/anatomy/row-veracitor-shield.webp": {
+    "sha256": "dbb4016ef0d5c2e82266f299315254a8089bb1b9158dbd091ae51dfc664f4d86",
+    "sourceSha256": "642148604f648de3ecc02ca856b74294e529b6c4b89cde493c6bb863b7ad07fd"
+  },
+  "./assets/anatomy/row-voteless-heavy-main-thumb.webp": {
+    "sha256": "99b23a29d7f41711308d9365e928a4a714593663a0ce9c3406ece46514a77476",
+    "sourceSha256": "9ef2d7cb1cbd22813bb037f696b0374609c24a8131a6547d549c44099b5a766f"
+  },
+  "./assets/anatomy/row-voteless-heavy-main.webp": {
+    "sha256": "7b4ad5d5efa94d0a4469951b1394d4a93cf2e8d5c4d46281c07c63dafbb3cb72",
+    "sourceSha256": "f1f454ec1be70fbba5f533885a134ecc30685647a07d4da39f17f2ee02603edb"
+  },
+  "./assets/anatomy/row-voteless-light-main-thumb.webp": {
+    "sha256": "bb8f6932c4cfc9e0a090822603562768664816fdde9a98d8f8b8f172ae5baaf3",
+    "sourceSha256": "a722e3e61bcd7a31a402569c317f657e2083e86421d09bc1f2f0cadb0bd89647"
+  },
+  "./assets/anatomy/row-voteless-light-main.webp": {
+    "sha256": "b5914828dc8931e2a3b04b842df5de376dc8e02f4a4de7950ada372ef42ea375",
+    "sourceSha256": "3b8805d7c78a00bcd514eeeca278d7f4f70c204128f6e527a1c87c60566212e0"
+  },
+  "./assets/anatomy/row-voteless-medium-main-thumb.webp": {
+    "sha256": "8e1d3c1094d3401a65db3e450cc2e7db892375ace0738d6254175211532571d3",
+    "sourceSha256": "51a1737df3da51b7521687c3a406aeaf31aeab996e2588bbc7f5eb8a8cf05fe2"
+  },
+  "./assets/anatomy/row-voteless-medium-main.webp": {
+    "sha256": "1ce463b9be3bb559dd716525068298e7a24fe0728fec4f2159f451da998b8632",
+    "sourceSha256": "2c73aa733432560af9386be051a0f050603a510337049e1f6e38429ba26d77fd"
+  },
+  "./assets/anatomy/row-vox-engine-main-thumb.webp": {
+    "sha256": "3710eacdfa144e73e5da54e06035eab47e865ca0fdd051129942d5e21740d9f0",
+    "sourceSha256": "673bed53a7d041fa20b49f28cae94f85cb031334269649f233b0e89a06ca847d"
+  },
+  "./assets/anatomy/row-vox-engine-main.webp": {
+    "sha256": "77cae14ce52ae0d60d2f11d89b35d7f4d9e4c989f1a4541b647b7cc6be10d8f5",
+    "sourceSha256": "cb322795cf13a495ea81216bee1d19aca0ca323e8aa41ca9877eedc82c51d493"
+  },
+  "./assets/anatomy/row-war-strider-main-thumb.webp": {
+    "sha256": "9a9f9351b7230bad609e580a0935c8ad92abc5c92c9073cd6eda4addffca5113",
+    "sourceSha256": "1829605d3dd165fbe09f9b67cc94fee98fba9939bda997c7e52436dddb74f318"
+  },
+  "./assets/anatomy/row-war-strider-main.webp": {
+    "sha256": "3a9bc964cf7040b3dcde5f41cd31eeadc2eae085896f04d0cf95b9b809a8cf59",
+    "sourceSha256": "8438688ac7e5a5a9f071e718cc22f8da10642ab42147c0fbedd841b618a2351b"
+  },
+  "./assets/anatomy/row-warp-ship-main-thumb.webp": {
+    "sha256": "9410404512ae2a1687d6a14f56f957218d7746b22bd688f749149665e04100c2",
+    "sourceSha256": "b736ea6015a20f9131eda27898a3fecee24dafc3e7ac1e0d154e5b7d2e7fd1ac"
+  },
+  "./assets/anatomy/row-warp-ship-main.webp": {
+    "sha256": "e49c252184a49ef090bb6c1dcacf64fc81b714ea94d0cb160b8bc025d0516ed4",
+    "sourceSha256": "71692f3b90afc8f8eab1dda36b9a1ecc6cf92ed504a4466ad99cfb305ed35abc"
+  },
+  "./assets/anatomy/row-warrior-hardened-main-thumb.webp": {
+    "sha256": "47bb5e6da43227cb141bbcf612b8fc85fd85b52217b78344d87512a2dc7e9b6e",
+    "sourceSha256": "3af463da2f3ebf2549799b3782245b48b8868ef3e415bc254cf38d8a9aab7115"
+  },
+  "./assets/anatomy/row-warrior-hardened-main.webp": {
+    "sha256": "d29b179faae8501c10ec2fbc05fa3c6c7655ede3fb3776041b50a4076b84088a",
+    "sourceSha256": "ba41919566ddd2cbf09b1298951ea9e73fdf90156daf78dd0f7a4df3b982e4dc"
+  },
+  "./assets/anatomy/row-watcher-main-thumb.webp": {
+    "sha256": "96a0d37fc45642cd5f001c10c1b4e707f103b2871637676126735ce39a0e33f3",
+    "sourceSha256": "2b2aaa83b24dd85f81736e3e38aab911f41a944b4cea6e812cf5257ba630d2a6"
+  },
+  "./assets/anatomy/row-watcher-main.webp": {
+    "sha256": "9112610e90cd5b71d74957fc70a10ed713291fddfe43fec4aeb362104ecaace8",
+    "sourceSha256": "064730937c22dc87e6766f2a6a3e67c3f0361866562961124f2b33f199289656"
+  },
   "./assets/anatomy/scout-strider-leg-thumb.webp": {
     "sha256": "fa4d285d6c94aebb0c705df0381fa3ee0d23db4228de49ea7145a12386d5d444",
     "sourceSha256": "8dc4e42f0ccd343d68219e1836d34f309a2b7618865821c9831a1e34ca224487"

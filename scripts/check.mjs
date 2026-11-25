@@ -4,6 +4,7 @@ await import('./test-units.mjs');
 await import('./test-structures.mjs');
 await import('./test-personal.mjs');
 await import('./test-anatomy.mjs');
+await import('./test-enemy-anatomy.mjs');
 await import('./test-support.mjs');
 await import('./test-ballistics.mjs');
 await import('./test-warbonds.mjs');
