@@ -38,8 +38,10 @@ const gameValue = (enemy, key, wikiText, actual, label) => {
   const game = enemy?.anatomyGame?.[key];
   if (!game) return false;
   usedGame.add(`${enemy.id}/${key}`);
-  eq(number(wikiText), game.wiki, `${label}: wiki ${key} is still the reviewed ${game.wiki} (site follows the game data sheet)`);
-  ok(Number.isFinite(actual) && actual !== game.wiki && /^Game data sheet, game build \d+$/.test(game.source), `${label}: game value ${actual} with its game data sheet source`);
+  // The game value comes first (user decision 2026-11-25). A wiki that has changed since the review is flagged for a
+  // look (re-import the game data sheet after a patch), not a failure, so a wiki refresh never blocks a deploy.
+  if (number(wikiText) !== game.wiki) console.warn(`CHECK ${label}: wiki ${key} is now ${wikiText}, reviewed ${game.wiki}; the site keeps the game data sheet value ${actual}`);
+  ok(Number.isFinite(actual) && /^Game data sheet, game build \d+$/.test(game.source), `${label}: game value ${actual} with its game data sheet source`);
   return true;
 };
 function matches(part, row, label, main, enemy) {

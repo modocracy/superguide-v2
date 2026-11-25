@@ -41,12 +41,15 @@ export function recoilStats(key) {
   if (!recoil) return [];
   const rocket = SELF_PROPELLED.has(key) ? L(' · 로켓이 스스로 날아가 반동이 거의 없는 것으로 보임', ' · the rocket flies on its own motor, so there is little kick (our reading)') : '';
   const pair = ([h, v]) => `${h} / ${v}`;
+  const screen = recoil.screen ?? [0, 1].map(a => (recoil.drift[a] + recoil.climb[a]) / 2);
   const limit = recoil.limit ? L(` · 위로 ${recoil.limit[0]}도부터 수직 반동 줄어듦`, ` · vertical kick eases off from ${recoil.limit[0]} degrees up`) : '';
   return [
     // (weapon kick + view climb) / 2 with the default attachments (game data sheet); only this one is shown
     // (user request 2026-11-25), and a weapon the sheet lacks shows no recoil cell.
     // A 0 / 0 recoil (beam weapons) is left out, and with it the detailed stats when they hold nothing else
     // (user request 2026-11-25).
-    ...(recoil.screen && recoil.screen.some(v => v) ? [{ label: L('반동', 'Recoil'), text: pair(recoil.screen), caption: L('수평 / 수직 · 기본 부착물 기준', 'Horizontal / vertical · default attachments') + rocket + limit }] : []),
+    // The game data sheet first; without it the wiki datamine's kick and climb, averaged the way the armory screen
+    // does, before attachments (user decision 2026-11-25: both usable, the sheet first).
+    ...(screen.some(v => v) ? [{ label: L('반동', 'Recoil'), text: pair(screen), caption: (recoil.screen ? L('수평 / 수직 · 기본 부착물 기준', 'Horizontal / vertical · default attachments') : L('수평 / 수직 · 부착물 제외', 'Horizontal / vertical · no attachments')) + rocket + limit }] : []),
   ];
 }

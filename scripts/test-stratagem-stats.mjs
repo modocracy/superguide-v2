@@ -73,6 +73,8 @@ for (const item of stratagems) {
 // Game data sheet cooldowns (user decision 2026-11-25) are the sheet's value.
 for (const id of GAME_COOLDOWNS) {
   const item = stratagems.find(entry => entry.id === id);
+  // The sheet first; a stratagem the sheet lacks keeps the wiki value, flagged for a look rather than failing.
+  if (item && gameCooldown(item) == null) { console.warn(`CHECK ${id}: not in the game data sheet, wiki cooldown kept`); ok(stratagemStats[id].cooldownSource !== 'game', `${id}: wiki cooldown kept`); continue; }
   ok(item && stratagemStats[id].cooldownSource === 'game' && stratagemStats[id].cooldown === gameCooldown(item), `${id}: cooldown from the game data sheet`);
 }
 for (const id of REVIEWED) {

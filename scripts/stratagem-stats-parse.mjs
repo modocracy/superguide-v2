@@ -17,12 +17,17 @@ export const value = text => {
 export const GAME_COOLDOWNS = ['reinforce', 'sos', 'eagle-rearm', 'seaf-artillery', 'cargo-container', 'hive-breaker', 'super-earth-flag', 'upload-data', 'aquifer-drill'];
 const ARROWS = { up: '↑', down: '↓', left: '←', right: '→' };
 const gameStratagems = JSON.parse(readFileSync(new URL('../db/source/game_sheets/stratagems.json', import.meta.url), 'utf8')).스트라타젬;
+// The game data sheet's cooldown, or null when the sheet has no such stratagem (or no cooldown for it).
 export function gameCooldown(item) {
   const found = gameStratagems.find(g => g.en.toLowerCase() === item.en.toLowerCase() && g.코드_en.map(a => ARROWS[a]).join('') === item.input);
-  if (!found) throw new Error(`${item.id}: no game data sheet stratagem with this English name and code`);
-  return found.재사용_대기_초;
+  return found?.재사용_대기_초 ?? null;
 }
-export const withGameCooldown = (item, stats) => (GAME_COOLDOWNS.includes(item.id) ? { ...stats, cooldown: gameCooldown(item), cooldownSource: 'game' } : stats);
+// Both sources stay usable, the game data sheet first (user decision 2026-11-25): a listed stratagem takes the
+// sheet's cooldown, and keeps the wiki's when the sheet lacks it.
+export const withGameCooldown = (item, stats) => {
+  const game = GAME_COOLDOWNS.includes(item.id) ? gameCooldown(item) : null;
+  return game != null ? { ...stats, cooldown: game, cooldownSource: 'game' } : stats;
+};
 
 const PERMITS = { supply: 'supply', offensive: 'offensive', offense: 'offensive', defensive: 'defensive' };
 // Type (permit) the user set over the wiki's Supply: these are mission tools (user decision 2026-11-19).
