@@ -1429,6 +1429,22 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .enemy-attack-table td.hits b { font: 800 20px/1 var(--cond); color: var(--accent-text); margin-right: 1px; }
 .enemy-attack-table td.hits.none { color: var(--text-3); }
 .enemy-attacks .note { margin-top: 10px; }
+/* Enemy view: part info, like the wiki Anatomy table, with the highlighted wiki image per part. */
+.enemy-part-table { min-width: 760px; font-size: 13.5px; }
+.enemy-part-table thead th { font-size: 13px; padding: 8px 10px; white-space: nowrap; }
+.enemy-part-table th, .enemy-part-table td { padding: 8px 10px; vertical-align: middle; }
+.enemy-part-table tbody th { width: auto; white-space: normal; color: var(--text); font-weight: 700; font-size: 14px; }
+.enemy-part-table tbody th small { display: block; color: var(--text-3); font-size: 12px; font-weight: 500; }
+.enemy-part-table td.photo { width: 96px; padding: 6px 8px; }
+.enemy-part-table .part-photo { width: 96px; }
+.enemy-part-table td .badge { white-space: nowrap; }
+.enemy-part-table tr.sub th { padding-left: 22px; border-left: 3px solid var(--line); }
+/* Phones: smaller photos so more of the row shows before the table scrolls sideways. */
+@media (max-width: 600px) {
+  .enemy-part-table { min-width: 640px; font-size: 13px; }
+  .enemy-part-table td.photo, .enemy-part-table .part-photo { width: 64px; }
+  .enemy-part-table th, .enemy-part-table td { padding: 6px 6px; }
+}
 /* Phones: the table fits the screen instead of scrolling, so the hit counts stay in view. */
 @media (max-width: 600px) {
   .enemy-details { padding: 14px 12px; }

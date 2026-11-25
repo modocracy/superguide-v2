@@ -59,7 +59,7 @@ const compare = { picks: [], part: '' }; // [{ weaponId, modeId }] kept across e
 // Only the hit count starts blank; primary-hit options fall back to each mode's
 // own defaults (e.g. W.A.S.P. counts sub-missile hits, not the parent blast).
 const DEFAULT_ASSUME = { hitCount: '' };
-const state = { enemy: DEFAULT_ENEMY, group: 'support', weapon: null, mode: null, shield: true, faction: '', q: '', assume: { ...DEFAULT_ASSUME }, pickerOpen: false, attacksOpen: false, detailsOpen: true, distance: 0 };
+const state = { enemy: DEFAULT_ENEMY, group: 'support', weapon: null, mode: null, shield: true, faction: '', q: '', assume: { ...DEFAULT_ASSUME }, pickerOpen: false, attacksOpen: false, partsOpen: false, detailsOpen: true, distance: 0 };
 // Shooting distances for range falloff (wiki Damage formula); 0 = full close-range damage.
 const DISTANCES = [0, 25, 50, 100, 150, 200];
 // Range only matters for a mode with a direct hit (a grenade launcher's 0 direct damage has nothing to lose).
@@ -193,9 +193,39 @@ function enemyDetails(enemy) {
     // A divider above Tactics, where Spawning and Behavior used to end their own panel.
     block(L('공략 요령', 'Tactics'), info.tactics, info.tacticsEn, true, Boolean(info.spawning?.length || info.behavior?.length)), block(L('실전 팁', 'Field tips'), info.tips, info.tipsEn, true)].filter(Boolean) : [];
   const table = attacks(enemy);
-  if (!blocks.length && !table) return '';
+  const anatomy = partInfo(enemy);
+  if (!blocks.length && !table && !anatomy) return '';
   return html`<details class="panel fold enemy-details" data-details ${state.detailsOpen ? raw('open') : ''}><summary><h2>${L('상세 정보', 'Details')}</h2></summary>
-    ${blocks.length ? html`<div class="enemy-lore">${blocks}</div>` : ''}${table}</details>`;
+    ${blocks.length ? html`<div class="enemy-lore">${blocks}</div>` : ''}${anatomy}${table}</details>`;
+}
+
+// "Part info": every calculated part like the wiki Anatomy table (health, armor, durability,
+// explosive resistance, % to main, what breaking it does) with the wiki's highlighted image.
+// An armor plate with a part beneath (part.next) gets a second row for the exposed part.
+// Folded by default; stays open across enemies once opened (state.partsOpen).
+function partInfo(enemy) {
+  if (!enemy.parts.length) return '';
+  const result = part => { const outcome = outcomeOf({ outcome: part.effect, target: part }); return outcome ? badge(outcome.label, outcome.tone) : ''; };
+  const transfer = part => part.partOnly ? L('없음', 'None') : part.toMain == null ? L('미확인', 'Unverified') : html`${num(part.toMain)}%${part.overflowCap
+    ? html`<small>${L(`상한 ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`, `cap ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`)}</small>`
+    : part.overflowCap == null ? html`<small>${L('상한 미확인', 'cap unverified')}</small>` : ''}`;
+  const row = (part, name, photo, sub = false) => html`<tr class="${sub ? 'sub' : ''}"><td class="photo">${photo}</td>
+    <th scope="row">${name}${part.prerequisite ? html`<small>${L(`${part.prerequisite} 후`, `after: ${T(part.prerequisite)}`)}</small>` : ''}</th>
+    <td>${part.hp == null ? L('미확인', 'Unverified') : num(partPool(part))}${part.mainOnly ? html`<small>${L('본체 공유', 'main pool')}</small>` : ''}</td>
+    <td>${num(part.armor)}</td><td>${pct(part.durability)}</td><td>${pct(part.exdr)}</td><td>${transfer(part)}</td>
+    <td>${result(part)}${part.constitution > 0 ? html`<small>${L(`출혈 여유 ${num(part.constitution)}`, `bleed-out ${num(part.constitution)}`)}</small>` : ''}</td></tr>`;
+  const rows = enemy.parts.flatMap(part => part.next
+    ? [row(part, T(part.name).split(' → ')[0], photoButton(enemy, part)), row(part.next, T(part.next.name), photoButton(enemy, part, 'exposed'), true)]
+    : [row(part, part.name, photoButton(enemy, part))]);
+  return html`<details class="enemy-attacks enemy-parts" data-parts ${state.partsOpen ? raw('open') : ''}><summary><h2>${L('부위 정보', 'Part info')}</h2><span class="count">${enemy.parts.length}</span></summary>
+    <div class="compare-scroll" role="region" aria-label="${L('적 부위표', 'Enemy parts')}" tabindex="0"><table class="compare-table enemy-part-table">
+      <thead><tr><th scope="col">${L('위치', 'Location')}</th><th scope="col">${L('부위', 'Part')}</th><th scope="col">${L('체력', 'Health')}</th><th scope="col">${L('장갑', 'Armor')}</th><th scope="col">${L('내구도', 'Durability')}</th><th scope="col">${L('폭발 저항', 'Explosive res.')}</th><th scope="col">${L('본체 전달', 'To main')}</th><th scope="col">${L('파괴 시', 'When destroyed')}</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <p class="note">${L('사진의 색칠된 영역이 그 부위이고, 누르면 크게 봅니다. 내구도는 무기의 내구 피해가 적용되는 비율, 본체 전달은 부위에 준 피해 중 본체 체력으로 넘어가는 비율입니다. 상한이 있으면 그 값까지만 본체로 넘어갑니다. 들여 쓴 줄은 바로 위 장갑을 벗긴 뒤 드러나는 부위입니다.',
+      'The colored area in the photo is the part; tap to enlarge. Durability is the share of a weapon\'s durable damage that applies; to main is the share of damage on the part that passes to main health, up to the cap when there is one. An indented row is the part exposed once the armor above it is off.')}</p>
+    <p class="sources">${external(`${enemy.source}#Anatomy`, L('위키 Anatomy', 'Wiki Anatomy'))}</p>
+  </details>`;
 }
 
 // The enemy's own attacks (wiki "Weapons Loadout" boxes, enemy-weapons.js) and a rough count of
@@ -321,8 +351,8 @@ function ranking(enemy, entries, selectedId) {
 }
 
 // --- Matchup detail -----------------------------------------------------------------------
-function photoButton(enemy, target) {
-  const photo = combatImages[enemy.id]?.[target.id]?.find(item => item.stage === 'initial');
+function photoButton(enemy, target, stage = 'initial') {
+  const photo = combatImages[enemy.id]?.[target.id]?.find(item => item.stage === stage);
   if (!photo) return html`<span class="part-photo" style="cursor:default;display:grid;place-items:center;font-size:11.5px;color:var(--text-3);text-align:center">${L(html`부위 사진<br>없음`, html`No part<br>photo`)}</span>`;
   const tw = photo.thumbnailWidth || 320, th = photo.thumbnailHeight || 213;
   const [x, y, w, h] = photo.thumbnailCrop || [0, 0, tw, th];
@@ -628,7 +658,7 @@ function openPhotos(targetId) {
   const photos = combatImages[enemy.id]?.[targetId] || [];
   sheetView = 'photo';
   showSheet(html`<div class="sheet-top"><span>${L('부위 위치', 'Part location')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
-    <div class="sheet-content image-viewer">${backToMatchup()}<h2 id="sheet-title" style="font-size:20px">${enemy.name} · ${target.name}</h2><p class="muted">${target.tip}${enemy.id === 'harvester' ? L(' 좌우는 적의 몸 기준입니다.', ' Left and right are from the enemy\'s point of view.') : ''}</p>
+    <div class="sheet-content image-viewer">${state.weapon ? backToMatchup() : ''}<h2 id="sheet-title" style="font-size:20px">${enemy.name} · ${target.name}</h2><p class="muted">${target.tip}${enemy.id === 'harvester' ? L(' 좌우는 적의 몸 기준입니다.', ' Left and right are from the enemy\'s point of view.') : ''}</p>
     ${photos.map(photo => { const caption = photo.caption || (target.next ? (photo.stage === 'initial' ? L('① 장갑이 남아 있는 상태', '① With the armor still on') : L('② 장갑을 벗긴 뒤 드러난 부위', '② Exposed once the armor is off')) : target.name);
       return html`<figure><figcaption>${caption}</figcaption><img src="${photo.src}" alt="${L(`${enemy.name} ${caption} — 색칠된 영역이 조준 부위`, `${T(enemy.name)} ${T(caption)} — the colored area is where to aim`)}" width="${photo.width}" height="${photo.height}" decoding="async"><span class="sources">${external(photo.source, L('위키 원본 이미지', 'Original wiki image'))}</span></figure>`; })}</div>`, `${T(enemy.name)} ${T(target.name)} ${L('사진', 'photos')}`);
 }
@@ -663,6 +693,7 @@ export function mount(container, context) {
   // <details> toggle does not bubble: listen in the capture phase.
   root.addEventListener('toggle', event => {
     if (event.target.matches?.('[data-attacks]')) state.attacksOpen = event.target.open;
+    if (event.target.matches?.('[data-parts]')) state.partsOpen = event.target.open;
     if (event.target.matches?.('[data-details]')) state.detailsOpen = event.target.open;
   }, true);
   root.addEventListener('change', onChange);
