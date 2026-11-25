@@ -281,7 +281,7 @@ function detailRows(w) {
   // Quick melee (melee.js): every Helldiver's strike, or the bayonet on the weapons that carry one.
   if ((w.category === 'primary' || w.category === 'secondary') && w.type !== 'melee') {
     const bayonet = bayonetWeapons.includes(w.id), hit = bayonet ? quickMelee.bayonet : quickMelee.helldiver;
-    add(bayonet ? L('총검 공격', 'Bayonet') : L('근접 공격', 'Quick melee'), num(hit.damage), '', L(`${bayonet ? '총검, ' : ''}관통 ${hit.ap}, 내구 피해 ${num(hit.durable)}`, `${bayonet ? 'Bayonet, ' : ''}AP ${hit.ap}, durable ${num(hit.durable)}`));
+    add(bayonet ? L('총검 공격', 'Bayonet') : L('근접 공격', 'Quick melee'), num(hit.damage), '', L(`관통 ${hit.ap}, 내구 피해 ${num(hit.durable)}`, `AP ${hit.ap}, durable ${num(hit.durable)}`));
   }
   return rows;
 }
