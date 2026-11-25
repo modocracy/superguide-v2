@@ -46,6 +46,14 @@ for (const [key, value] of Object.entries(weaponRecoil).filter(([, value]) => va
 }
 const lib = weaponRecoil['gear/liberator'].sim, comp = lib.muzzles.findIndex(m => m.en === 'Compensator');
 ok(configure(lib, { muzzle: comp }).climb[1] < lib.climb[1], 'liberator: the compensator cuts vertical climb');
+// Firing faster must not make the view climb less (the climb estimate once dropped part of each kick at high rates):
+// the average climb of 200 runs differs by under 5% between fire modes and fire rates.
+const meanClimb = (sim, choice) => { let sum = 0; for (let i = 0; i < 200; i++) { const f = simulate(configure(sim, choice), 0.9).frames.at(-1); sum += f.view[1]; } return sum / 200; };
+for (const [key, choices] of [['gear/liberator', [{ mode: 'auto' }, { mode: 'semi' }]], ['arsenal/stalwart', [{ rpm: 700 }, { rpm: 1150 }]], ['arsenal/maxigun', null]]) {
+  const sim = weaponRecoil[key].sim, list = choices ?? (sim.rpms ?? [sim.rpm]).map(rpm => ({ rpm }));
+  const climbs = list.map(choice => meanClimb(sim, choice));
+  ok(Math.max(...climbs) / Math.min(...climbs) < 1.05, `${key}: climb barely depends on fire mode or rate (${climbs.map(c => c.toFixed(2)).join(' / ')})`);
+}
 
 const { weaponDetail } = await import('../dist/ui/views/gear.js');
 const sample = personalWeapons.find(w => weaponRecoil[`gear/${w.id}`]?.sim);
