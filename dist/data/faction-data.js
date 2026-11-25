@@ -130,7 +130,7 @@ export const factionGuides = [
     intro: '무권자·플레시몹이 없는 편성입니다. 조종형 병기의 연결부와 보호막 밖 약점을 노릴 무기를 준비하세요.',
     coverage: '옵트루더·버레이시터·게이트키퍼 세 전용 유닛을 모두 안내합니다.',
     units: [unit('obtruder', '무리지어 플라스마를 발사하는 와처 변종입니다. 증원을 부르지 않으며 본체 체력은 400으로 일반 와처 600보다 낮고, 몸체 장갑도 1로 일반 와처의 2보다 낮습니다. 작은 눈 대신 몸체 연사나 대공포탄으로 대응하세요.', ['body'], 'watcher'), unit('veracitor', '조종사 보호막과 기체를 구분하세요. 기체 연결부는 조종사 보호막 밖의 처치 경로입니다.', ['chassis', 'hip']), unit('gatekeeper', '버레이시터보다 기체 중앙 장갑이 두껍습니다. 대전차 화력 또는 후방 약점을 비교하세요.', ['chassis', 'rear-weakspot'], 'veracitor')] },
-  { id: 'invasion', side: 'illuminate', name: '침공 함대', en: 'Invasion Fleet', source: 'https://helldiverscompanion.com/',
+  { id: 'invasion', side: 'illuminate', name: '침공 함대', en: 'Invasion Fleet', source: wiki('Invasion_Fleet'),
     intro: '일반 일루미닛 혼성 편성의 주요 위협입니다. 보병과 보호막을 가진 대형 병기의 대응 무기를 함께 확인하세요.',
     coverage: '주요 대표 유닛이며 전체 출현 목록은 아닙니다. 이 편성에만 적용되는 체력 보정은 가정하지 않습니다.',
     units: [unit('overseer', '방패를 우회해 넓은 흉부를 공격하세요. 가슴 외피 제거와 후속 공격을 포함한 대응을 표시합니다.'), unit('elevated-overseer', '움직이는 몸통에 연사하거나, 옆·뒤에서 보이는 제트팩을 직접 노리세요.'), unit('harvester', '보호막 제거 후 다리가 시작되는 가로 연결부를 노리세요.', ['joint'])] },
