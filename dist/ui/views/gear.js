@@ -205,6 +205,21 @@ function renderBrowse() {
 // Recoil for the detailed stats: the wiki's own recoil cell (EXTRA_STATS) and the base kick and climb (weapon-recoil.js).
 const recoilCells = w => [...(w.extraStats ?? []).filter(cell => cell.label === '반동').map(cell => ({ label: L('반동 수치', 'Recoil rating'), text: num(cell.value), unit: cell.unit, caption: cell.caption })), ...recoilStats(`gear/${w.id}`)];
 
+// The reload and tactical reload of a weapon, the missing ones taken from its default magazine (the free level 1
+// magazine of its attachment table) when that magazine's reload is the weapon's own. Modes of a weapon with several
+// (an underbarrel has no reload of its own) are left as they are.
+function withDefaultMagazineReload(w) {
+  if (w.reloadTactical != null || (personalProfiles[w.id]?.modes.length ?? 0) > 1) return w;
+  const mag = (weaponAttachments[w.id] ?? []).map(it => ({ ...it, part: attachmentParts[it.part] }))
+    .find(it => it.part.slot === 'magazine' && it.level === 1 && it.cost === 0)?.part.effects;
+  if (mag?.reloadTactical == null || mag.reload == null) return w;
+  // A heat weapon whose wiki reload is its heat sink's swap before overheating (Scythe 3 s): the overheated time
+  // (1.8 s) is the main reload, as for the Sickle.
+  const heatSwap = w.heatCapacity?.raw && w.reload === mag.reloadTactical;
+  if (w.reload != null && w.reload !== mag.reload && !heatSwap) return w;
+  return { ...w, reload: mag.reload, reloadTactical: mag.reloadTactical };
+}
+
 // The spare ammo line under the magazine: spare magazines (or fuel tanks), or rounds loaded one at a time.
 const spareText = w => w.spareMags != null ? (w.fuel ? L(`예비 연료통 ${num(w.spareMags)}개`, `${num(w.spareMags)} spare tanks`) : L(`예비 탄창 ${num(w.spareMags)}개`, `${num(w.spareMags)} spare magazines`))
   : w.spareRounds != null ? L(`예비탄 ${num(w.spareRounds)}발 · 한 발씩 장전`, `${num(w.spareRounds)} spare rounds · loaded one at a time`) : '';
@@ -266,11 +281,15 @@ function detailRows(w) {
   const roundsText = rr && (rr.clip
     ? L(`비웠을 때 한 번에 장전(더 빠름) · 남았을 때는 한 발씩: 첫 발 ${num(rr.first)}초, 이후 발당 ${num(rr.rest)}초`, `From empty, all at once (faster) · with rounds left, one at a time: ${num(rr.first)}s, then ${num(rr.rest)}s each`)
     : L(`비운 탄창을 다 채울 때 · 하나씩 장전: 첫 장전 ${num(rr.first)}초${rr.firstPartial != null ? `(남았을 때 ${num(rr.firstPartial)}초)` : ''}, 이후 한 번 넣을 때마다 ${num(rr.rest)}초`, `Filling it from empty · loaded one at a time: ${num(rr.first)}s for the first${rr.firstPartial != null ? ` (${num(rr.firstPartial)}s with rounds left)` : ''}, then ${num(rr.rest)}s each`));
-  if (w.reload != null) add(L('재장전', 'Reload'), num(w.reload), s, roundsText ? roundsText : w.reloadTactical == null ? L('탄창을 비웠을 때', 'From empty')
-    : w.reload < w.reloadTactical ? (w.heatCapacity?.raw ? L(`과열됐을 때 · 과열 전에 교체하면 ${num(w.reloadTactical)}초(방열판이 저절로 빠져 과열됐을 때가 더 빠름)`, `When overheated · ${num(w.reloadTactical)}s before that (the heat sink pops out by itself, so overheated is faster)`)
-      : L(`탄창을 비웠을 때 · 전술 재장전 ${num(w.reloadTactical)}초(비우고 장전하는 쪽이 더 빠름)`, `From empty · tactical reload ${num(w.reloadTactical)}s (emptying first is faster)`))
+  // Some customizable weapons' wiki infobox leaves the tactical reload out, while their default magazine (the free
+  // level 1 one in the attachment table) gives it; Liberator Legacy has no reload at all there. The default magazine
+  // fills the gap when its reload matches the weapon's (user request 2026-11-25).
+  const r = withDefaultMagazineReload(w);
+  if (r.reload != null) add(L('재장전', 'Reload'), num(r.reload), s, roundsText ? roundsText : r.reloadTactical == null ? L('탄창을 비웠을 때', 'From empty')
+    : r.reload < r.reloadTactical ? (w.heatCapacity?.raw ? L(`과열됐을 때 · 과열 전에 교체하면 ${num(r.reloadTactical)}초(방열판이 저절로 빠져 과열됐을 때가 더 빠름)`, `When overheated · ${num(r.reloadTactical)}s before that (the heat sink pops out by itself, so overheated is faster)`)
+      : L(`탄창을 비웠을 때 · 전술 재장전 ${num(r.reloadTactical)}초(비우고 장전하는 쪽이 더 빠름)`, `From empty · tactical reload ${num(r.reloadTactical)}s (emptying first is faster)`))
     // The same time with rounds left: there is no faster tactical reload (user request 2026-11-24).
-    : w.reloadTactical === w.reload ? L('전술 재장전 없음', 'No tactical reload') : L(`전술 재장전 ${num(w.reloadTactical)}초`, `Tactical reload ${num(w.reloadTactical)}s`));
+    : r.reloadTactical === r.reload ? L('전술 재장전 없음', 'No tactical reload') : L(`전술 재장전 ${num(r.reloadTactical)}초`, `Tactical reload ${num(r.reloadTactical)}s`));
   // Customizable weapons (an attachment table) read with the default attachments; others have no 'base' to name.
   // The game armory screen's value replaces the wiki value where the game data sheet has one.
   const customizable = w.category === 'primary' && weaponAttachments[w.id]?.length;
