@@ -667,19 +667,24 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .ballistic h4 { font-size: 13.5px; font-weight: 750; color: var(--text); }
 /* Recoil simulation (recoil-sim.js). */
 .recoil-group .recoil-sim { margin-top: 6px; }
-.recoil-sim h5 { font-size: 13px; font-weight: 750; color: var(--text-2); margin: 0; }
 .recoil-sim { display: grid; gap: 10px; grid-template-areas: 'side' 'view' 'notes'; }
 .recoil-sim-side { grid-area: side; display: grid; gap: 10px; align-content: start; }
 .recoil-sim-notes { grid-area: notes; display: grid; gap: 10px; align-content: start; }
 .recoil-sim .recoil-stats { grid-template-columns: minmax(0, 1fr); margin: 0 0 4px; }
 .recoil-sim-option { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
 .recoil-sim-option > span { min-width: 64px; font-size: 13px; font-weight: 650; color: var(--text-2); }
-.recoil-sim-view { grid-area: view; width: 100%; max-width: 320px; aspect-ratio: 1; background: var(--field); border: 1px solid var(--line-strong); }
-.recoil-sim-view .grid path { stroke: var(--line); stroke-width: 1; }
-.recoil-sim-view .hits circle { fill: var(--bleed); }
-.recoil-sim-view .trail { fill: none; stroke: var(--break); stroke-width: 1.2; stroke-linejoin: round; opacity: .45; }
-.recoil-sim-view .centre { stroke: var(--text); stroke-width: 2; }
-.recoil-sim-view .reticle { fill: none; stroke: var(--break); stroke-width: 2; }
+.recoil-sim-view { grid-area: view; width: 100%; max-width: 320px; aspect-ratio: 1; border-radius: 2px; }
+/* The view copies the game armory's recoil simulation, so it stays dark in both site themes. */
+.recoil-sim-view .board { fill: #070808; }
+.recoil-sim-view .grid path { stroke: rgba(255, 255, 255, .17); stroke-width: .8; }
+.recoil-sim-view .frame { fill: none; stroke: rgba(255, 255, 255, .38); stroke-width: 1; }
+.recoil-sim-view .title { fill: #d7d9d6; font-size: 13px; font-weight: 600; dominant-baseline: middle; }
+.recoil-sim-view .reload { fill: #d7d9d6; font-size: 13px; font-weight: 600; }
+.recoil-sim-view .reload[hidden] { display: none; }
+.recoil-sim-view .hits circle { fill: #8a8c8a; }
+.recoil-sim-view .hits circle.fresh { fill: #ffd60a; }
+.recoil-sim-view .trail { fill: none; stroke: #7fb2ff; stroke-width: 1; stroke-linejoin: round; opacity: .35; }
+.recoil-sim-view .reticle { fill: none; stroke: #7fb2ff; stroke-width: 1.4; opacity: .8; }
 .recoil-sim-readout { min-height: 1.4em; font-weight: 650; }
 .recoil-sim .caption { font-size: 12.5px; color: var(--text-3); }
 .ballistic-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; }

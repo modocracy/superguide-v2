@@ -92,24 +92,29 @@ export function configure(sim, { mode, rpm, muzzle } = {}) {
   return out;
 }
 
-// The box: SIZE px square, the crosshair low in it (like the game), and a scale that fits the whole burst.
-const SIZE = 240, PAD = 14, AIM_Y = SIZE * 0.72, BASE_PX = 24; // 24 px per degree when it all fits
+// The box: SIZE px square, the crosshair low in it (like the game), and a scale that fits the whole burst. Like the
+// game's armory view, one dot marks each round (a shotgun shot too: the dot falls inside the spread).
+const SIZE = 240, BASE_PX = 24, AIM_Y = SIZE * 0.72; // 24 px per degree when it all fits
+const PAD_X = 16, PAD_TOP = 26, PAD_BOTTOM = 30; // room for the frame, the title and the cross's arms
 const STEPS = [0.25, 0.5, 1, 2, 5, 10, 20]; // grid square sizes in degrees
+const dotOf = h => h.points[0];
 export function frameFor(run) {
   const xs = [0], ys = [0];
-  for (const h of run.hits) for (const [x, y] of h.points) { xs.push(x); ys.push(y); }
+  for (const h of run.hits) { const [x, y] = dotOf(h); xs.push(x); ys.push(y); }
   for (const f of run.frames) { xs.push(f.view[0] + f.drift[0]); ys.push(f.view[1] + f.drift[1]); }
   const top = Math.max(...ys), bottom = Math.min(...ys), side = Math.max(...xs.map(Math.abs));
-  const room = SIZE - 2 * PAD;
-  const px = Math.min(BASE_PX, room / Math.max(top - bottom, 1e-6), room / 2 / Math.max(side, 1e-6));
+  const px = Math.min(BASE_PX, (SIZE - PAD_TOP - PAD_BOTTOM) / Math.max(top - bottom, 1e-6), (SIZE - 2 * PAD_X) / 2 / Math.max(side, 1e-6));
   // Keep the crosshair low unless the hits need the room above it or below it.
-  const oy = clamp(AIM_Y, PAD + top * px, SIZE - PAD + bottom * px);
-  const grid = STEPS.find(step => step * px >= 18) ?? STEPS.at(-1);
+  const oy = clamp(AIM_Y, PAD_TOP + top * px, SIZE - PAD_BOTTOM + bottom * px);
+  // A fine grid like the game's (a square of 11 px or more).
+  const grid = STEPS.find(step => step * px >= 11) ?? STEPS.at(-1);
   return { px, ox: SIZE / 2, oy, grid };
 }
 
 const fmt = n => (Math.round(n * 10) / 10).toLocaleString();
 const SVG = 'http://www.w3.org/2000/svg';
+const FRESH = 0.6; // seconds a round's dot stays yellow, as the newest hits do in the game
+let uid = 0; // gradient ids per element
 
 // Node (the checks) has no HTMLElement: the element is defined only in a browser.
 const Base = globalThis.HTMLElement ?? class {};
@@ -132,32 +137,48 @@ class RecoilSim extends Base {
       sim.muzzles ? row(L('총구', 'Muzzle'), 'muzzle', sim.muzzles.map((m, i) => [i, `${L(m.ko, m.en)}${i === sim.muzzle ? L(' (기본)', ' (default)') : ''}`])) : '',
       row(L('패시브', 'Passive'), 'passive', [[true, L('반동 30% 감소', 'Recoil -30%')]]),
     ].join('');
-    // Three parts: the choices, the view and the notes; side by side on a wide full-screen card (app.css).
-    this.innerHTML = `<div class="recoil-sim-side"><h5>${L('반동 시뮬레이션', 'Recoil simulation')}</h5>
+    const id = `rs${++uid}`, arm = 22, title = L('반동 시뮬레이션', 'Recoil simulation');
+    // Three parts: the choices, the view and the notes; side by side on a wide full-screen card (app.css). The view
+    // copies the game armory's: a dark board with a fine grid, a thin frame with the title on its top edge, a
+    // glowing cross, yellow dots for the newest rounds and grey for older ones, and 'Reloading...' after the magazine.
+    this.innerHTML = `<div class="recoil-sim-side">
       <div class="recoil-sim-option"><span>${L('사격 자세', 'Stance')}</span>
-        <div class="segmented" role="group" aria-label="${L('사격 자세', 'Stance')}">${STANCES.map(([id, , name], i) => `<button type="button" data-stance="${i}" aria-pressed="${i === 0}">${name()}</button>`).join('')}</div>
+        <div class="segmented" role="group" aria-label="${L('사격 자세', 'Stance')}">${STANCES.map(([, , name], i) => `<button type="button" data-stance="${i}" aria-pressed="${i === 0}">${name()}</button>`).join('')}</div>
         <button class="button small primary" type="button" data-fire>${L('발사', 'Fire')}</button>
       </div>
       ${options}</div>
-      <svg class="recoil-sim-view" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="${L('반동 시뮬레이션 화면', 'Recoil simulation view')}">
+      <svg class="recoil-sim-view" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="${title}">
+        <defs>
+          <linearGradient id="${id}h"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+          <linearGradient id="${id}v" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+          <filter id="${id}g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.6"/></filter>
+        </defs>
+        <rect class="board" width="${SIZE}" height="${SIZE}"/>
         <g class="grid"></g>
         <path class="trail" d=""/>
         <g class="hits"></g>
-        <path class="centre" d=""/>
-        <circle class="reticle" r="6"/>
+        <g class="cross">
+          <g filter="url(#${id}g)" opacity=".8"><rect x="${-arm}" y="-1.2" width="${arm * 2}" height="2.4" fill="url(#${id}h)"/><rect x="-1.2" y="${-arm}" width="2.4" height="${arm * 2}" fill="url(#${id}v)"/></g>
+          <rect x="${-arm}" y="-.6" width="${arm * 2}" height="1.2" fill="url(#${id}h)"/><rect x="-.6" y="${-arm}" width="1.2" height="${arm * 2}" fill="url(#${id}v)"/>
+        </g>
+        <circle class="reticle" r="5"/>
+        <path class="frame" d="M6 24V12H9M${title.length * (/[가-힣]/.test(title) ? 13 : 7) + 16} 12H${SIZE - 6}V${SIZE - 6}H6V24"/>
+        <text class="title" x="12" y="12">${title}</text>
+        <text class="reload" x="14" y="${SIZE - 14}" hidden>${L('재장전 중...', 'Reloading...')}</text>
       </svg>
       <div class="recoil-sim-notes"><p class="recoil-sim-readout" aria-live="polite"></p>
       <p class="caption"><span class="recoil-sim-setup"></span> · <span class="recoil-sim-scale"></span></p>
-      <p class="caption">${L('십자 = 조준점(고정)<br>점 = 탄착군<br>선 = 총구 궤적<br>원 = 총구 방향<br>표는 연사 전체가 들어오게 배율이 바뀝니다.',
-        'Cross = aim point (fixed)<br>Dots = hit group<br>Line = muzzle path<br>Circle = muzzle direction<br>The scale changes so the whole burst fits.')}</p>
+      <p class="caption">${L('십자 = 조준점(고정)<br>점 = 탄착군(노란색 = 방금 쏜 탄, 산탄총도 한 발에 점 하나)<br>선 = 총구 궤적<br>원 = 총구 방향<br>표는 연사 전체가 들어오게 배율이 바뀝니다.',
+        'Cross = aim point (fixed)<br>Dots = hit group (yellow = just fired; a shotgun shot is one dot too)<br>Line = muzzle path<br>Circle = muzzle direction<br>The scale changes so the whole burst fits.')}</p>
       <p class="caption">${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 자체 연구 값이고, 한 발이 몇 도인지, 반동이 화면에 들어가는 속도와 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다(게임 데이터에서 찾지 못함). 화면을 직접 내리지 않는다고 보고 그렸습니다. 총구 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
         'The recoil values and spread are game data, the stance multipliers come from our own research, and the degrees per shot, how fast a kick moves the view and recovers, and how hits fall inside the spread are our estimate (not found in the game data). Drawn as if you do not pull the view down. The muzzle recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}</p></div>`;
     if (stats) this.querySelector('.recoil-sim-side').prepend(stats);
     this.grid = this.querySelector('.grid');
     this.trail = this.querySelector('.trail');
     this.hitLayer = this.querySelector('.hits');
-    this.centre = this.querySelector('.centre');
+    this.cross = this.querySelector('.cross');
     this.reticle = this.querySelector('.reticle');
+    this.reloadText = this.querySelector('.reload');
     this.out = this.querySelector('.recoil-sim-readout');
     this.scaleText = this.querySelector('.recoil-sim-scale');
     this.setupText = this.querySelector('.recoil-sim-setup');
@@ -186,7 +207,7 @@ class RecoilSim extends Base {
     this.setupText.textContent = L(`${this.modeName(sim.mode)} · 분당 ${fmt(sim.rpm)}발로 ${shots}발${pellets} · 조준하고 멈춘 기준`, `${this.modeName(sim.mode)} · ${shots} rounds at ${fmt(sim.rpm)} RPM${pellets} · aimed, still`);
   }
 
-  disconnectedCallback() { cancelAnimationFrame(this.raf); }
+  disconnectedCallback() { cancelAnimationFrame(this.raf); clearTimeout(this.reloadTimer); }
 
   sx(x) { return this.frame.ox + x * this.frame.px; }
   sy(y) { return this.frame.oy - y * this.frame.px; }
@@ -198,7 +219,7 @@ class RecoilSim extends Base {
     for (let x = ox % gap; x < SIZE; x += gap) lines.push(`M${x.toFixed(1)} 0V${SIZE}`);
     for (let y = oy % gap; y < SIZE; y += gap) lines.push(`M0 ${y.toFixed(1)}H${SIZE}`);
     this.grid.innerHTML = `<path d="${lines.join('')}"/>`;
-    this.centre.setAttribute('d', `M${ox - 8} ${oy}h16M${ox} ${oy - 8}v16`);
+    this.cross.setAttribute('transform', `translate(${ox} ${oy.toFixed(1)})`);
     this.scaleText.textContent = L(`칸 하나는 약 ${fmt(grid)}°`, `one square is about ${fmt(grid)}°`);
   }
 
@@ -207,23 +228,31 @@ class RecoilSim extends Base {
     this.reticle.setAttribute('cy', this.sy(y).toFixed(2));
   }
 
-  addHit(h) {
-    for (const [x, y] of h.points) {
-      const dot = document.createElementNS(SVG, 'circle');
-      dot.setAttribute('cx', this.sx(x).toFixed(2)); dot.setAttribute('cy', this.sy(y).toFixed(2));
-      dot.setAttribute('r', h.points.length > 1 ? '1.8' : '2.6');
-      this.hitLayer.append(dot);
-    }
+  addHit(h, fresh = true) {
+    const [x, y] = dotOf(h), dot = document.createElementNS(SVG, 'circle');
+    dot.setAttribute('cx', this.sx(x).toFixed(2)); dot.setAttribute('cy', this.sy(y).toFixed(2)); dot.setAttribute('r', '2');
+    if (fresh) dot.classList.add('fresh');
+    this.hitLayer.append(dot);
+    return dot;
   }
 
   readout(run) {
-    const last = run.frames.at(-1), xs = run.hits.flatMap(h => h.points.map(p => p[0]));
+    const last = run.frames.at(-1), xs = run.hits.map(h => dotOf(h)[0]);
     const climb = last.view[1] + last.drift[1], spread = Math.max(...xs) - Math.min(...xs);
     this.out.textContent = L(`마지막에 처음 조준보다 약 ${fmt(climb)}° 위 · 탄착 좌우 폭 약 ${fmt(spread)}°`, `Ends about ${fmt(climb)}° above the first aim · hits about ${fmt(spread)}° wide`);
   }
 
+  // 'Reloading...' for the weapon's reload time once the magazine is spent (2 s when the sheet has none).
+  reloading(sim) {
+    clearTimeout(this.reloadTimer);
+    this.reloadText.removeAttribute('hidden');
+    this.reloadTimer = setTimeout(() => this.reloadText.setAttribute('hidden', ''), (sim.reload || 2) * 1000);
+  }
+
   fire() {
     cancelAnimationFrame(this.raf);
+    clearTimeout(this.reloadTimer);
+    this.reloadText.setAttribute('hidden', '');
     const sim = configure(this.sim, this.choice);
     this.describe(sim);
     const run = simulate(sim, STANCES[this.stance][1] * (this.choice.passive ? PASSIVE : 1));
@@ -232,24 +261,30 @@ class RecoilSim extends Base {
     const n = run.frames.length, aim = new Float64Array(n * 2);
     run.frames.forEach((f, i) => { aim[i * 2] = f.view[0] + f.drift[0]; aim[i * 2 + 1] = f.view[1] + f.drift[1]; });
     this.hitLayer.replaceChildren();
+    this.trail.setAttribute('d', '');
     this.out.textContent = '';
+    const lastShot = run.hits.at(-1).t;
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      run.hits.forEach(h => this.addHit(h));
+      run.hits.forEach(h => this.addHit(h, lastShot - h.t < FRESH));
       let d = '';
       for (let i = 0; i < n; i++) d += `${i ? 'L' : 'M'}${this.sx(aim[i * 2]).toFixed(1)} ${this.sy(aim[i * 2 + 1]).toFixed(1)}`;
       this.trail.setAttribute('d', d);
       this.aimAt(aim[(n - 1) * 2], aim[(n - 1) * 2 + 1]);
       this.readout(run);
+      this.reloading(sim);
       return;
     }
     let shown = 0, path = '', last = null;
+    const fresh = []; // [time fired, dot] still yellow
     const start = performance.now();
     const tick = now => {
       const t = Math.min((now - start) / 1000, run.end);
       // Blend the two simulation steps around t so the motion does not step at the display's frame rate.
       const pos = t / STEP, i = Math.min(n - 1, Math.floor(pos)), j = Math.min(n - 1, i + 1), f = pos - i;
       const x = aim[i * 2] + (aim[j * 2] - aim[i * 2]) * f, y = aim[i * 2 + 1] + (aim[j * 2 + 1] - aim[i * 2 + 1]) * f;
-      while (shown < run.hits.length && run.hits[shown].t <= t) this.addHit(run.hits[shown++]);
+      while (shown < run.hits.length && run.hits[shown].t <= t) { const h = run.hits[shown++]; fresh.push([h.t, this.addHit(h)]); }
+      // The newest rounds stay yellow; older ones turn grey, but the last ones stay yellow when the burst ends.
+      while (fresh.length && t - fresh[0][0] > FRESH && fresh[0][0] < lastShot - FRESH) fresh.shift()[1].classList.remove('fresh');
       // The trail gains a point only once the aim has moved half a pixel.
       const ax = this.sx(x), ay = this.sy(y);
       if (!last || Math.hypot(ax - last[0], ay - last[1]) > 0.5) {
@@ -258,9 +293,11 @@ class RecoilSim extends Base {
         last = [ax, ay];
       }
       this.aimAt(x, y);
+      if (shown === run.hits.length && this.reloadText.hasAttribute('hidden') && t >= lastShot + 0.15 && !this.reloadShown) { this.reloadShown = true; this.reloading(sim); }
       if (t < run.end) this.raf = requestAnimationFrame(tick);
       else this.readout(run);
     };
+    this.reloadShown = false;
     this.raf = requestAnimationFrame(tick);
   }
 }
