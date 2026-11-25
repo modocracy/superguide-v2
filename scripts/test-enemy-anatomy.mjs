@@ -7,6 +7,8 @@
 // and rows still waiting for their image (the page shows "no photo") or an unreadable constitution cell
 // (shown as the wiki text) are only 'to check'. Value checks fail only when the table and the calculation
 // disagree, which scripts/test-anatomy.mjs (pinned to the reviewed wiki revisions) reports at the same time.
+// The rendered table (Korean page) has one row per wiki row, no 'undefined'/'NaN' text, a Korean name on
+// every row, and particles that agree with the quoted part name (‘몸통’과, ‘머리’를).
 import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
@@ -15,6 +17,7 @@ import { anatomyRowImages } from '../dist/data/anatomy-row-images.js';
 import { enemies } from '../dist/data/combat-data.js';
 import { rowPhoto } from '../dist/core/anatomy.js';
 import { buildEnemyAnatomy } from './build-enemy-anatomy.mjs';
+import { partInfo } from '../dist/ui/views/enemy.js';
 
 let checks = 0;
 const ok = (value, message) => { assert(value, message); checks++; };
@@ -81,4 +84,20 @@ for (const [enemyId, photos] of Object.entries(anatomyRowImages)) for (const [na
     eq(sha256(await readFile(path)), manifest[src]?.sha256, `${src}: WebP matches manifest`);
   }
 }
-console.log(`PASS enemy anatomy: ${checks} checks (${Object.keys(enemyAnatomy).length} enemies, ${rowsTotal} wiki rows, ${linked} matched to calculated parts, ${withPhoto} with a photo; wiki snapshot ${built.checkedAt})${toCheck.length ? `; to check (${toCheck.length}): ${toCheck.slice(0, 5).join('; ')}${toCheck.length > 5 ? '; ...' : ''}` : ''}.`);
+// --- Rendered part info table --------------------------------------------------------------------
+const hasFinal = word => { const code = word.trim().slice(-1).charCodeAt(0) - 0xac00; return code >= 0 && code < 11172 && code % 28 !== 0; };
+const PAIRS = { 을: true, 를: false, 과: true, 와: false, 은: true, 는: false, 이: true, 가: false };
+let rendered = 0;
+for (const enemy of enemies) {
+  const out = String(partInfo(enemy));
+  const label = `${enemy.id}: part info`;
+  eq((out.match(/<tr[ >]/g) || []).length, enemyAnatomy[enemy.id].rows.length + 1, `${label} has a row per wiki row`);
+  const text = out.replace(/<[^>]+>/g, ' ');
+  ok(!/\bundefined\b|\bNaN\b|\[object/.test(text), `${label} shows no undefined/NaN`);
+  for (const [, name] of out.matchAll(/<th scope="row">([^<]*)/g)) ok(/[가-힣]/.test(name), `${label}: "${name.trim()}" has a Korean name`);
+  for (const [, word, particle] of text.matchAll(/‘([^’]+)’(을|를|과|와|은|는)(?=\s)/g)) {
+    ok(PAIRS[particle] === hasFinal(word), `${label}: ‘${word}’${particle} particle`);
+  }
+  rendered++;
+}
+console.log(`PASS enemy anatomy: ${checks} checks (${Object.keys(enemyAnatomy).length} enemies, ${rowsTotal} wiki rows, ${linked} matched to calculated parts, ${withPhoto} with a photo; ${rendered} tables rendered; wiki snapshot ${built.checkedAt})${toCheck.length ? `; to check (${toCheck.length}): ${toCheck.slice(0, 5).join('; ')}${toCheck.length > 5 ? '; ...' : ''}` : ''}.`);

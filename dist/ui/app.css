@@ -1456,8 +1456,12 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 /* Phones: smaller photos so more of the row shows before the table scrolls sideways. */
 @media (max-width: 600px) {
   .enemy-part-table { min-width: 720px; font-size: 13px; }
-  .enemy-part-table td.photo, .enemy-part-table .part-photo { width: 64px; }
+  .enemy-part-table td.photo, .enemy-part-table .part-photo { width: 56px; }
   .enemy-part-table th, .enemy-part-table td { padding: 6px 6px; }
+  /* The photo and part name stay put while the numbers scroll sideways (photo cell 56 + 2 x 6 = 68px). */
+  .enemy-part-table td.photo, .enemy-part-table thead th:first-child { position: sticky; left: 0; z-index: 2; background: var(--surface); }
+  .enemy-part-table tbody th, .enemy-part-table thead th:nth-child(2) { position: sticky; left: 68px; z-index: 2; width: 92px; min-width: 92px; max-width: 92px; background: var(--surface); box-shadow: 6px 0 6px -6px rgba(0, 0, 0, .45); }
+  .enemy-part-table thead th:first-child, .enemy-part-table thead th:nth-child(2) { background: var(--surface-2); z-index: 3; }
 }
 /* Phones: the table fits the screen instead of scrolling, so the hit counts stay in view. */
 @media (max-width: 600px) {
