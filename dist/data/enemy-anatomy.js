@@ -10502,7 +10502,8 @@ export const enemyAnatomy = {
    },
    {
     "name": "Armor Broken: Middle Upper Leg Internals",
-    "part": "middle-upper-leg-internals",
+    "part": "middle-upper-thigh",
+    "stage": "exposed",
     "hp": 1000,
     "armor": 3,
     "durability": 25,

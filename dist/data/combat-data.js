@@ -212,6 +212,8 @@ const originalEnemies = [
     note: '다리와 몸통을 잇는 가로 관절이 치명 부위입니다. 눈은 파괴해도 생존하며 빔 공격이 강해질 수 있습니다.',
     // Every part matches Wiki Anatomy revision 140061 (checked 2026-10-31),
     // the Intact and Armor Broken tabs. Parts after the first four were added on 2026-09-28.
+    // The wiki's "Right & Middle Upper Thigh Armor (2)" row is two legs whose internals differ (wiki
+    // images): the right leg opens the "Right & Left" internals, the middle leg the "Middle" ones (2026-11-25).
     anatomyRevision: 140061, anatomyCheckedAt: '2026-10-31',
     anatomyMerged: { 'Armor Broken: Damaged Chassis': 'chassis' },
     anatomyOmitted: { Shield: 'The energy shield is the shield toggle (cleared before counting), not a part' },
@@ -230,11 +232,14 @@ const originalEnemies = [
         sourcePart: 'Left Upper Thigh Armor',
         next: part('left-upper-leg-internals', '노출된 윗다리 내부', 1000, 3, 25, 100, 45, true, 'kill', '장갑을 벗겨 드러난 윗다리 내부입니다. 파괴하면 죽습니다.', { sourcePart: 'Armor Broken: Right & Left Upper Leg Internals (3)' }),
       }),
-      part('upper-thigh', '오른쪽·가운데 윗다리 장갑 → 내부', 900, 4, 75, 100, 30, true, 'armor', '오른쪽이나 가운데 다리 위쪽 장갑을 벗긴 뒤 드러난 내부를 계속 맞히세요. 가운데 다리는 본체 전달률이 더 높습니다.', {
+      part('upper-thigh', '오른쪽 윗다리 장갑 → 내부', 900, 4, 75, 100, 30, true, 'armor', '오른쪽 다리 위쪽 장갑을 벗긴 뒤 드러난 내부를 계속 맞히세요.', {
         sourcePart: 'Right & Middle Upper Thigh Armor (2)',
         next: part('upper-leg-internals', '노출된 윗다리 내부', 1000, 3, 25, 100, 45, true, 'kill', '장갑을 벗겨 드러난 윗다리 내부입니다. 파괴하면 죽습니다.', { sourcePart: 'Armor Broken: Right & Left Upper Leg Internals (3)' }),
       }),
-      part('middle-upper-leg-internals', '노출된 가운데 윗다리 내부', 1000, 3, 25, 100, 60, true, 'kill', '가운데 다리 위쪽 장갑이 벗겨진 뒤 드러난 내부입니다. 파괴하면 죽습니다.', { prerequisite: '가운데 윗다리 장갑 제거 후', sourcePart: 'Armor Broken: Middle Upper Leg Internals' }),
+      part('middle-upper-thigh', '가운데 윗다리 장갑 → 내부', 900, 4, 75, 100, 30, true, 'armor', '가운데 다리 위쪽 장갑을 벗긴 뒤 드러난 내부를 계속 맞히세요. 바깥쪽 다리보다 본체로 넘어가는 피해가 큽니다.', {
+        sourcePart: 'Right & Middle Upper Thigh Armor (2)',
+        next: part('middle-upper-leg-internals', '노출된 가운데 윗다리 내부', 1000, 3, 25, 100, 60, true, 'kill', '가운데 다리 위쪽 장갑이 벗겨진 뒤 드러난 내부입니다. 파괴하면 죽습니다.', { sourcePart: 'Armor Broken: Middle Upper Leg Internals' }),
+      }),
       part('lower-thigh', '아랫다리 장갑 → 내부', 900, 4, 75, 100, 30, true, 'armor', '다리 아래쪽 장갑 한 장을 벗긴 뒤 드러난 내부를 계속 맞히세요.', {
         sourcePart: 'Lower Thigh Armor (3)',
         next: part('lower-leg-internals', '노출된 아랫다리 내부', 1000, 3, 25, 100, 60, true, 'kill', '장갑을 벗겨 드러난 아랫다리 내부입니다. 파괴하면 죽습니다.', { sourcePart: 'Armor Broken: Lower Leg Internals (3)' }),

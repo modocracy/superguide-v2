@@ -219,7 +219,25 @@ const ANATOMY_COLUMNS = [
 // Wiki rows with no site part of their own.
 const ANATOMY_NAMES = { 'Hull Main': '차체 본체', 'Turret Main': '포탑 본체', 'Fuel Tanks Main': '연료통 본체', 'Backpack Main': '전원 팩 본체', 'Pilot: Main': '조종사 본체', Pilot: '조종사', Rockets: '로켓',
   'Lower Sac': '뒤쪽 담즙낭', 'Armor Broken: Damaged Chassis': '손상된 몸통', Arms: '팔', Legs: '다리', 'Broken: Damaged Rearward- Middle Vertebra': '손상된 뒤쪽 중간 척추 외피' };
-const anatomyLayer = (enemy, row) => { const part = enemy.parts.find(item => item.id === row.part); return part && row.role !== 'pool' ? (row.stage === 'exposed' ? part.next : part) : null; };
+// Every site part a wiki row is (the "both copies" duplicate aside), the linked one first: one row can
+// be several calculated parts, like the Harvester's right and middle upper thigh armor.
+function anatomyLayers(enemy, row) {
+  const part = enemy.parts.find(item => item.id === row.part);
+  if (!part || row.role === 'pool') return [];
+  const linked = row.stage === 'exposed' ? part.next : part, key = wikiKey(linked.sourcePart);
+  const same = enemy.parts.flatMap(item => [item, ...(item.next ? [item.next] : [])]).filter(layer => layer !== linked && !(layer.copies > 1) && layer.sourcePart && wikiKey(layer.sourcePart) === key);
+  return [linked, ...same];
+}
+// Names that differ only at the front share the rest: "오른쪽 윗다리 장갑" + "가운데 윗다리 장갑" = "오른쪽·가운데 윗다리 장갑".
+// A name the others all end with is the general one: "다리 장갑" covers "왼앞다리 장갑" (Bile Titan "Leg Armor").
+function joinNames(names) {
+  const general = names.find(name => names.every(other => other.endsWith(name)));
+  if (general) return general;
+  const words = names.map(name => name.split(' '));
+  let shared = 0;
+  while (words.every(list => list.length > shared + 1 && list.at(-1 - shared) === words[0].at(-1 - shared))) shared++;
+  return shared ? `${words.map(list => list.slice(0, -shared).join(' ')).join('·')} ${words[0].slice(-shared).join(' ')}` : names.join('·');
+}
 // The site's Korean part name without its counting words ("한쪽", "한 개") or armor-to-flesh arrow.
 const siteName = layer => layer.name.replace(/ → .*$/, '').replace(/ 한 ?(쪽|개|문|정|곳|장)$/, '');
 // An energy shield (also the Harvester's, whose shield data has no kind) is 보호막; an arm shield is 방패.
@@ -228,8 +246,8 @@ function anatomyName(enemy, row) {
   if (lang === 'en') return row.name;
   if (row.role === 'main') return ANATOMY_NAMES[row.name] || '본체';
   if (row.name === 'Shield') return energyShield(enemy) ? '보호막' : '방패';
-  const layer = anatomyLayer(enemy, row);
-  return layer ? siteName(layer) : ANATOMY_NAMES[row.name] || row.name;
+  const layers = anatomyLayers(enemy, row);
+  return layers.length ? joinNames([...new Set(layers.map(siteName))]) : ANATOMY_NAMES[row.name] || row.name;
 }
 const dash = (value, format = num) => value == null ? '-' : format(value);
 // Constitution, then its decay and how long it takes to run out when left alone (total / decay a second).
@@ -742,13 +760,13 @@ function openAnatomy(index) {
   const enemy = enemyById.get(state.enemy);
   const row = enemyAnatomy[enemy.id]?.rows[index];
   if (!row) return;
-  const layer = anatomyLayer(enemy, row), photo = rowPhoto(enemy.id, row), cells = anatomyCells(enemy, row), notes = anatomyNotes(enemy, row);
+  const tips = [...new Set(anatomyLayers(enemy, row).map(layer => layer.tip).filter(Boolean))], photo = rowPhoto(enemy.id, row), cells = anatomyCells(enemy, row), notes = anatomyNotes(enemy, row);
   const name = `${anatomyName(enemy, row)}${row.count ? ` ×${row.count}` : ''}`;
   sheetView = 'photo';
   showSheet(html`<div class="sheet-top"><span>${L('부위 정보', 'Part info')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content image-viewer"><h2 id="sheet-title" style="font-size:20px">${enemy.name} · ${name}</h2>
     ${lang === 'en' ? '' : html`<p class="faint">${L('위키 이름', 'Wiki name')}: ${row.name}${row.count ? ` (${row.count})` : ''}</p>`}
-    ${layer?.tip ? html`<p class="muted">${layer.tip}</p>` : ''}${notes.map(note => html`<p class="muted">${note}</p>`)}
+    ${tips.map(tip => html`<p class="muted">${tip}</p>`)}${notes.map(note => html`<p class="muted">${note}</p>`)}
     ${photo ? html`<figure><img src="${photo.src}" alt="${L(`${enemy.name} ${name} — 색칠된 영역이 이 부위`, `${T(enemy.name)} ${row.name} — the colored area is this part`)}" width="${photo.width}" height="${photo.height}" decoding="async"><span class="sources">${external(photo.source, L('위키 원본 이미지', 'Original wiki image'))}</span></figure>`
       : html`<p class="faint">${L('위키에 이 부위의 이미지가 없습니다.', 'The wiki has no image of this part.')}</p>`}
     <dl class="anatomy-facts">${ANATOMY_COLUMNS.slice(1).map(([key, label, tip]) => html`<div><dt>${label}</dt><dd><b>${cells[key]}</b><p>${tip}</p></dd></div>`)}</dl>

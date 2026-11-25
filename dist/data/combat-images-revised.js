@@ -1441,12 +1441,29 @@ export const revisedCombatImages = {
         "retrievedAt": "2026-09-28"
       }
     ],
-    "middle-upper-leg-internals": [
+    "middle-upper-thigh": [
+      {
+        "src": "./assets/anatomy/revised-harvester-upper-thigh.webp",
+        "thumbnail": "./assets/anatomy/revised-harvester-upper-thigh-thumb.webp",
+        "title": "Harvester Right and Middle Upper Thigh Armor Front.png",
+        "stage": "initial",
+        "source": "https://helldivers.wiki.gg/wiki/File:Harvester_Right_and_Middle_Upper_Thigh_Armor_Front.png",
+        "originalUrl": "https://helldivers.wiki.gg/images/Harvester_Right_and_Middle_Upper_Thigh_Armor_Front.png?f32ed7",
+        "renderedUrl": "https://helldivers.wiki.gg/images/thumb/Harvester_Right_and_Middle_Upper_Thigh_Armor_Front.png/800px-Harvester_Right_and_Middle_Upper_Thigh_Armor_Front.png?f32ed7",
+        "thumbnailUrl": "https://helldivers.wiki.gg/images/thumb/Harvester_Right_and_Middle_Upper_Thigh_Armor_Front.png/320px-Harvester_Right_and_Middle_Upper_Thigh_Armor_Front.png?f32ed7",
+        "width": 800,
+        "height": 533,
+        "thumbnailWidth": 320,
+        "thumbnailHeight": 213,
+        "sha256": "b6f6b1ae79c2281bb871f060d8adde88ceb7ebc8deda2a4c1179e9d6dd56f430",
+        "thumbnailSha256": "de254de7412fb51c05692f48d5af59e7ea2566a5490ffcaf96776b332ffca002",
+        "retrievedAt": "2026-09-28"
+      },
       {
         "src": "./assets/anatomy/revised-harvester-middle-upper-leg-internals.webp",
         "thumbnail": "./assets/anatomy/revised-harvester-middle-upper-leg-internals-thumb.webp",
         "title": "Harvester Middle Upper Leg Internals Front.png",
-        "stage": "initial",
+        "stage": "exposed",
         "source": "https://helldivers.wiki.gg/wiki/File:Harvester_Middle_Upper_Leg_Internals_Front.png",
         "originalUrl": "https://helldivers.wiki.gg/images/Harvester_Middle_Upper_Leg_Internals_Front.png?9bccf6",
         "renderedUrl": "https://helldivers.wiki.gg/images/thumb/Harvester_Middle_Upper_Leg_Internals_Front.png/800px-Harvester_Middle_Upper_Leg_Internals_Front.png?9bccf6",
