@@ -26,8 +26,8 @@ export const weaponById = new Map(personalWeapons.map(weapon => [weapon.id, weap
 // (e.g. 스토커 is both the Stoker weapon and the Stalker enemy).
 export const displayName = w => L(w.name || w.en, w.en || w.name);
 
-// Base recoil cells for a gear or support weapon detail (weapon-recoil.js, key 'gear/<id>' or 'arsenal/<id>'):
-// how far the weapon kicks and how far the view climbs, horizontal / vertical, before stance and attachments.
+// The recoil cell for a gear or support weapon detail (weapon-recoil.js, key 'gear/<id>' or 'arsenal/<id>'): the
+// game armory screen's recoil, horizontal / vertical with the default attachments; the simulation is recoil-sim.js.
 // Launchers whose round flies on its own motor show the same small kick (2.5 / 10) as melee weapons; the
 // source does not say why, so the note says it is our reading (user request 2026-11-24).
 const SELF_PROPELLED = new Set(['arsenal/commando', 'arsenal/expendable-at', 'arsenal/expendable-napalm', 'arsenal/leveller', 'arsenal/spear', 'arsenal/wasp']);
@@ -43,9 +43,8 @@ export function recoilStats(key) {
   const pair = ([h, v]) => `${h} / ${v}`;
   const limit = recoil.limit ? L(` · 위로 ${recoil.limit[0]}도부터 수직 반동 줄어듦`, ` · vertical kick eases off from ${recoil.limit[0]} degrees up`) : '';
   return [
-    // The game armory screen's recoil: (weapon kick + view climb) / 2 with the default attachments (game data sheet).
-    ...(recoil.screen ? [{ label: L('반동', 'Recoil'), text: pair(recoil.screen), caption: L('수평 / 수직 · 기본 부착물 기준', 'Horizontal / vertical · default attachments') }] : []),
-    { label: L('무기 반동', 'Weapon kick'), text: pair(recoil.drift), caption: L('수평 / 수직', 'Horizontal / vertical') + rocket },
-    { label: L('화면 반동', 'View climb'), text: pair(recoil.climb), caption: L('수평 / 수직', 'Horizontal / vertical') + limit },
+    // (weapon kick + view climb) / 2 with the default attachments (game data sheet); only this one is shown
+    // (user request 2026-11-25), and a weapon the sheet lacks shows no recoil cell.
+    ...(recoil.screen ? [{ label: L('반동', 'Recoil'), text: pair(recoil.screen), caption: L('수평 / 수직 · 기본 부착물 기준', 'Horizontal / vertical · default attachments') + rocket + limit }] : []),
   ];
 }

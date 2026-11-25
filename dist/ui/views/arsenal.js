@@ -7,6 +7,7 @@ import { shieldRecovery } from '../../core/defense.js';
 import { wikiIcons } from '../../data/wiki-icons.js';
 import { html, raw, render, $, $$, icon, keycaps, badge, external } from '../dom.js';
 import { blastFigure, blastCaption } from '../blast.js';
+import { recoilSimHtml } from '../recoil-sim.js';
 import { ballisticsBlock } from '../ballistics-view.js';
 import { detailColumns, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { supportProjectileRecords, propelledModes } from '../../data/support-records.js';
@@ -561,7 +562,7 @@ export function stratagemDetail(item, { demolition = false, force = null, header
   const defense = defenseBlock(item);
   const changes = changesBlock(item, expanded);
   const firing = firingModesBlock(item, expanded);
-  const ballistics = ballisticsBlock(Object.entries(supportProjectileRecords[item.id] || {}).map(([modeId, record]) => ({ label: T(item.variants?.find(v => v.id === modeId)?.name) ?? MODE_LABELS[modeId] ?? item.name, record, propelled: propelledModes[item.id]?.includes(modeId) })), expanded, recoilStats(`arsenal/${item.id}`));
+  const ballistics = ballisticsBlock(Object.entries(supportProjectileRecords[item.id] || {}).map(([modeId, record]) => ({ label: T(item.variants?.find(v => v.id === modeId)?.name) ?? MODE_LABELS[modeId] ?? item.name, record, propelled: propelledModes[item.id]?.includes(modeId) })), expanded, recoilStats(`arsenal/${item.id}`), recoilSimHtml(`arsenal/${item.id}`));
   const statsLayout = expanded
     ? html`${variantStats || !blasts ? base : detailColumns(base, blasts)}
       ${firing}${ballistics}${detailColumns(timing, changes)}${detailColumns(spread, defense)}${durability}`

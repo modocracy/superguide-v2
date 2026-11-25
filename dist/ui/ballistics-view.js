@@ -2,7 +2,7 @@
 // weapon's projectiles, how much damage is left with range and how far the shot drops
 // (dist/core/ballistics.js). Charts follow the site's single-series style: one axis each, a
 // crosshair readout on hover, and the same numbers in the table under them.
-import { html } from './dom.js';
+import { html, raw } from './dom.js';
 import { detailDisclosure } from './item-detail.js';
 import { L } from '../core/i18n.js';
 import { num } from '../core/explain.js';
@@ -100,14 +100,16 @@ function recordBlock(label, recordId, propelled, extra = '') {
 // not in the key stats). No sub-headings (user request 2026-11-24): with one projectile its recoil cells end the same
 // grid; with several, each keeps its name and the recoil cells follow in a grid of their own; they alone are
 // enough to show the block.
-export function ballisticsBlock(entries, expanded = false, recoil = []) {
+// sim: the recoil simulation block (recoil-sim.js), after the recoil cells.
+export function ballisticsBlock(entries, expanded = false, recoil = [], sim = '') {
   const seen = new Set();
   const list = entries.filter(e => e.record && projectileBallistics[e.record]?.velocity > 0 && !seen.has(e.record) && seen.add(e.record));
-  if (!list.length && !recoil.length) return '';
+  if (!list.length && !recoil.length && !sim) return '';
   if (list.length) wireBallisticCharts();
   const recoilCell = c => html`<div><dt>${c.label}</dt><dd>${c.text}${c.unit ? html`<small>${c.unit}</small>` : ''}</dd>${c.caption ? html`<div class="caption">${c.caption}</div>` : ''}</div>`;
   const content = html`${list.map(e => recordBlock(list.length > 1 ? e.label : '', e.record, e.propelled, list.length === 1 ? recoil.map(recoilCell) : ''))}
     ${recoil.length && list.length !== 1 ? html`<div class="ballistic"><dl class="detail-grid">${recoil.map(recoilCell)}</dl></div>` : ''}
+    ${raw(sim)}
     ${list.length ? html`<p class="faint" style="font-size:12.5px">${L('탄 피해 계산에는 중력과 궤적을 반영하지 않습니다. 낙차는 중력 9.82m/s²에 중력 배율을 곱하고, 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage leaves out gravity and the flight path. Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
   `;
   return detailDisclosure(L('세부 수치', 'Detailed stats'), content, { className: 'ballistic-block', expanded });

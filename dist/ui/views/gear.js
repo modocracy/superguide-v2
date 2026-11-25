@@ -18,6 +18,7 @@ import { warbondSources } from '../../data/warbond-sources.js';
 import { num, strongest } from '../../core/explain.js';
 import { html, raw, render, $, $$, icon, badge, external } from '../dom.js';
 import { blastFigure, blastCaption } from '../blast.js';
+import { recoilSimHtml } from '../recoil-sim.js';
 import { ballisticsBlock } from '../ballistics-view.js';
 import { detailColumns, detailDisclosure, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { warbondChip } from '../warbond-chip.js';
@@ -494,7 +495,7 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
       ? html`${blast ? detailColumns(base, blast) : base}${variantTable(w)}`
       : html`${base}${blast}${variantTable(w)}`;
   }
-  const ballistics = ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))], expanded, recoilCells(w));
+  const ballistics = ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))], expanded, recoilCells(w), recoilSimHtml(`gear/${w.id}`));
   const art = weaponArt(w, 'gear-art large');
   const identity = html`<div class="detail-id gear-id${expandable ? ' item-detail-actions' : ''}"><div><h2 id="${titleId}">${displayName(w)}</h2><p>${lang === 'en' ? '' : w.en}</p>
       <div class="chips" style="margin-top:6px">${badge(group.name, 'outline')}${badge(typeName(w.type))}${warbondChip('gear', w.id)}${apOf(w) != null ? badge(`${apText(w)} · ${apBandOf({ ap: apOf(w) })?.name}`, 'accent') : ''}${traits(w)}</div>${holeTier(w) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[w.id]}</p>` : ''}</div>
