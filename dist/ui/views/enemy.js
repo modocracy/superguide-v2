@@ -198,8 +198,13 @@ function enemyDetails(enemy) {
   const table = attacks(enemy);
   const anatomy = partInfo(enemy);
   if (!blocks.length && !table && !anatomy) return '';
-  return html`<details class="panel fold enemy-details" data-details ${state.detailsOpen ? raw('open') : ''}><summary><h2>${L('상세 정보', 'Details')}</h2></summary>
-    ${blocks.length ? html`<div class="enemy-lore">${blocks}</div>` : ''}${anatomy}${table}</details>`;
+  // Part info and Attacks are panels of their own beside Details, not inside it; Details counts its lines (one per
+  // bullet) like the other two count their rows (user request 2026-11-25).
+  // The bullets the blocks show: a block shows only when it has Korean lines, in the current language.
+  const lines = info ? [['spawning', 'spawningEn'], ['behavior', 'behaviorEn'], ['tactics', 'tacticsEn'], ['tips', 'tipsEn']]
+    .reduce((n, [ko, en]) => n + (info[ko]?.length ? (lang === 'en' ? info[en] : info[ko])?.length ?? 0 : 0), 0) : 0;
+  return html`${blocks.length ? html`<details class="panel fold enemy-details" data-details ${state.detailsOpen ? raw('open') : ''}><summary><h2>${L('상세 정보', 'Details')}</h2><span class="count">${lines}</span></summary>
+    <div class="enemy-lore">${blocks}</div></details>` : ''}${anatomy}${table}`;
 }
 
 // "Part info": the enemy's wiki Anatomy table row for row (enemy-anatomy.js, built from the wiki
@@ -314,7 +319,7 @@ export function partInfo(enemy) {
       <th scope="row">${anatomyName(enemy, row)}${row.count ? html` <span class="faint">×${row.count}</span>` : ''}${anatomyNotes(enemy, row).map(note => html`<small>${note}</small>`)}</th>
       ${ANATOMY_COLUMNS.slice(1).map(([key]) => html`<td>${cells[key]}</td>`)}</tr>`;
   });
-  return html`<details class="enemy-attacks enemy-parts" data-parts ${state.partsOpen ? raw('open') : ''}><summary><h2>${L('부위 정보', 'Part info')}</h2><span class="count">${table.rows.length}</span></summary>
+  return html`<details class="panel fold enemy-details enemy-attacks enemy-parts" data-parts ${state.partsOpen ? raw('open') : ''}><summary><h2>${L('부위 정보', 'Part info')}</h2><span class="count">${table.rows.length}</span></summary>
     <div class="compare-scroll" role="region" aria-label="${L('적 부위표', 'Enemy parts')}" tabindex="0"><table class="compare-table enemy-part-table">
       <thead><tr><th scope="col">${L('위치', 'Location')}</th>${ANATOMY_COLUMNS.map(([, label, tip]) => html`<th scope="col">${tipHead(label, tip)}</th>`)}</tr></thead>
       <tbody>${rows}</tbody>
@@ -341,7 +346,7 @@ function attacks(enemy) {
   };
   const wiki = `https://helldivers.wiki.gg/wiki/${encodeURIComponent(info.page.replaceAll(' ', '_'))}#Weapons_Loadout`;
   // Folded by default; stays open across re-renders once the player opens it (state.attacksOpen).
-  return html`<details class="enemy-attacks" data-attacks ${state.attacksOpen ? raw('open') : ''}><summary><h2>${L('공격 패턴', 'Attacks')}</h2><span class="count">${info.attacks.length}</span></summary>
+  return html`<details class="panel fold enemy-details enemy-attacks" data-attacks ${state.attacksOpen ? raw('open') : ''}><summary><h2>${L('공격 패턴', 'Attacks')}</h2><span class="count">${info.attacks.length}</span></summary>
     <div class="compare-scroll" role="region" aria-label="${L('적 공격표', 'Enemy attacks')}" tabindex="0"><table class="compare-table enemy-attack-table">
       <colgroup><col class="col-attack"><col class="col-damage">${RATINGS.map(() => html`<col class="col-hits">`)}</colgroup>
       <thead><tr><th scope="col" rowspan="2">${L('공격', 'Attack')}</th><th scope="col" rowspan="2">${L('피해', 'Damage')}</th><th scope="colgroup" colspan="${RATINGS.length}" class="hits-head">${L('쓰러질 때까지 맞는 횟수 (몸통 기준)', 'Hits until downed (torso)')}</th></tr>
