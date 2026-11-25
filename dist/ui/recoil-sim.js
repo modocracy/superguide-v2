@@ -128,7 +128,7 @@ class RecoilSim extends Base {
       sim.muzzles ? row(L('총구', 'Muzzle'), 'muzzle', sim.muzzles.map((m, i) => [i, `${L(m.ko, m.en)}${i === sim.muzzle ? L(' (기본)', ' (default)') : ''}`])) : '',
       row(L('패시브', 'Passive'), 'passive', [[true, L('반동 30% 감소', 'Recoil -30%')]]),
     ].join('');
-    this.innerHTML = `<h4>${L('반동 시뮬레이션', 'Recoil simulation')}</h4>
+    this.innerHTML = `<h5>${L('반동 시뮬레이션', 'Recoil simulation')}</h5>
       <div class="recoil-sim-controls">
         <div class="segmented" role="group" aria-label="${L('자세', 'Stance')}">${STANCES.map(([id, , name], i) => `<button type="button" data-stance="${i}" aria-pressed="${i === 0}">${name()}</button>`).join('')}</div>
         <button class="button small primary" type="button" data-fire>${L('발사', 'Fire')}</button>
@@ -262,4 +262,4 @@ class RecoilSim extends Base {
 if (globalThis.customElements && !customElements.get('recoil-sim')) customElements.define('recoil-sim', RecoilSim);
 
 // The simulation block for a weapon key ('gear/<id>' or 'arsenal/<id>'), or '' when the weapon has no inputs.
-export const recoilSimHtml = key => (weaponRecoil[key]?.sim ? `<recoil-sim class="ballistic recoil-sim" data-key="${key}"></recoil-sim>` : '');
+export const recoilSimHtml = key => (weaponRecoil[key]?.sim ? `<recoil-sim class="recoil-sim" data-key="${key}"></recoil-sim>` : '');

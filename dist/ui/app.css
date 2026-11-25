@@ -666,6 +666,8 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .ballistic { display: grid; gap: 14px; margin-bottom: 16px; }
 .ballistic h4 { font-size: 13.5px; font-weight: 750; color: var(--text); }
 /* Recoil simulation (recoil-sim.js). */
+.recoil-group .recoil-sim { margin-top: 6px; }
+.recoil-sim h5 { font-size: 13px; font-weight: 750; color: var(--text-2); margin: 0; }
 .recoil-sim { display: grid; gap: 10px; }
 .recoil-sim-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .recoil-sim-option { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }

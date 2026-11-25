@@ -54,5 +54,11 @@ const detail = String(weaponDetail(sample));
 ok(detail.includes(`<dt>반동</dt><dd>${h} / ${v}</dd>`), `${sample.id}: gear detail shows the armory screen recoil`);
 ok(!detail.includes('무기 반동') && !detail.includes('화면 반동'), `${sample.id}: only the armory screen recoil is shown`);
 ok(detail.indexOf('<dt>반동</dt>') > detail.indexOf('세부 수치'), `${sample.id}: recoil sits in the detailed stats, not the key stats`);
-ok(detail.includes(`<recoil-sim class="ballistic recoil-sim" data-key="gear/${sample.id}">`), `${sample.id}: gear detail has the recoil simulation`);
+ok(detail.includes(`<recoil-sim class="recoil-sim" data-key="gear/${sample.id}">`), `${sample.id}: gear detail has the recoil simulation`);
+// A weapon with several rounds keeps its recoil in one titled group with the simulation, not after the last round.
+const { stratagemDetail } = await import('../dist/ui/views/arsenal.js');
+const groupOk = html => { const at = html.indexOf('<div class="ballistic recoil-group"><h4>반동</h4>'); return at >= 0 && html.indexOf('<dt>반동</dt>', at) > at && html.indexOf('<recoil-sim', at) > at; };
+ok(groupOk(detail), `${sample.id}: recoil and its simulation sit in one group`);
+const autocannon = String(stratagemDetail(stratagems.find(s => s.id === 'autocannon')));
+ok(groupOk(autocannon), 'autocannon (two rounds): recoil and its simulation sit in one group');
 console.log(`PASS recoil: ${checks} checks (${Object.keys(weaponRecoil).length} weapons, wiki datamine revision ${recoilSource.revision}).`);
