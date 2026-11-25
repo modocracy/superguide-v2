@@ -113,7 +113,7 @@ export function ballisticsBlock(entries, expanded = false, recoil = [], simKey =
   if (!list.length && !recoil.length && !sim) return '';
   const content = html`${list.map((e, i) => recordBlock(list.length > 1 ? e.label : '', e.record, e.propelled, i === 0 ? recoil.map(recoilCell) : ''))}
     ${recoil.length && !list.length ? html`<div class="ballistic"><dl class="detail-grid">${recoil.map(recoilCell)}</dl></div>` : ''}
-    ${list.length ? html`<p class="faint" style="font-size:12.5px;margin-bottom:16px">${L('탄 피해 계산에는 중력과 궤적을 반영하지 않습니다. 낙차는 중력 9.82m/s²에 중력 배율을 곱하고, 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage leaves out gravity and the flight path. Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
+    ${list.length ? html`<p class="faint" style="font-size:12.5px;margin:-10px 0 16px">${L('탄 피해 계산에는 중력과 궤적을 반영하지 않습니다. 낙차는 중력 9.82m/s²에 중력 배율을 곱하고, 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage leaves out gravity and the flight path. Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
     ${sim ? html`<div class="ballistic recoil-group"><h4>${L('반동 시뮬레이션', 'Recoil simulation')}</h4>${raw(sim)}</div>` : ''}
   `;
   return detailDisclosure(L('세부 수치', 'Detailed stats'), content, { className: 'ballistic-block', expanded });
