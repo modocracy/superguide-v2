@@ -109,9 +109,13 @@ for (const language of ['ko', 'en']) {
   }
 }
 setLang('ko');
-const modeHtml = String(await itemDetailContent('control-group', 'arsenal/epoch', 'charged'));
-ok(modeHtml.includes('data-variant="charged" aria-pressed="true"'), 'embedded stratagem selects URL mode');
-ok(modeHtml.includes('href="#/arsenal/epoch?m=charged"'), 'full-page link preserves mode');
+// The Lumberer Exosuit's weapons are mode tabs (the Epoch now shows its charge as ranges, without tabs).
+const modeHtml = String(await itemDetailContent('exo-experts', 'arsenal/lumberer', 'flame'));
+ok(modeHtml.includes('data-variant="flame" aria-pressed="true"'), 'embedded stratagem selects URL mode');
+ok(modeHtml.includes('href="#/arsenal/lumberer?m=flame"'), 'full-page link preserves mode');
+const epochHtml = String(await itemDetailContent('control-group', 'arsenal/epoch'));
+ok(!epochHtml.includes('data-variant=') && epochHtml.includes('400~800') && epochHtml.includes('AP 4~5'), 'epoch: no mode tabs, charge shown as ranges');
+ok((epochHtml.match(/class="ballistic"/g) ?? []).length === 1 && epochHtml.includes('AP 4~5 / 4~5 / 4~5 / 4~5'), 'epoch: one set of detailed stats with the charge as ranges');
 // Weapons with selectable firing modes get the same mode tabs as stratagems. Expected numbers are
 // read from the data, so a routine wiki refresh that changes a value or adds a weapon does not fail
 // these checks; they only confirm that whatever the data holds is shown in the right panel.
@@ -158,7 +162,8 @@ for (const w of singles) {
   if ((w.variants?.length ?? 0) > 1) ok(content.includes('class="compare-table gear-modes"'), `${w.id}: single-mode weapon keeps its component table`);
 }
 // Mode names are set in personal-profiles.mjs (code, not wiki data).
-const tabNames = id => [...String(weaponDetail(weaponById.get(id))).matchAll(/data-variant="[^"]+" aria-pressed="\w+">([^<]+)/g)].map(m => m[1]);
+// The tab text after its mode icon (mode-icons.js), if any.
+const tabNames = id => [...String(weaponDetail(weaponById.get(id))).matchAll(/data-variant="[^"]+" aria-pressed="\w+">(?:<svg class="mode-icon"[\s\S]*?<\/svg>)?([^<]+)/g)].map(m => m[1]);
 const expectedNames = { 'double-freedom': ['기본 사격', '일제 사격'], bushwhacker: ['기본 사격', '일제 사격'], variable: ['기본 사격', '일제 사격', '전탄 발사'], 'missile-pistol': ['비유도', '유도 사격'], warrant: ['비유도', '유도 사격'] };
 for (const [id, names] of Object.entries(expectedNames)) if (personalProfiles[id]?.modes.length > 1) eq(tabNames(id), names, `${id} mode names`);
 // Notes from wiki prose are optional: a reworded page drops them with a warning, never fails the build.
@@ -224,7 +229,7 @@ ok(embeddedWeapon.includes('href="#/gear/arbitrator?m=underbarrel"'), 'full-page
   eq((oneTwo.match(/class="item-detail-mode"/g) || []).length, personalProfiles['one-two'].modes.length, 'weapon shows every mode');
   eq((recoilless.match(/class="item-detail-mode"/g) || []).length, stratagemById.get('recoilless').variants.length, 'stratagem shows every mode');
   const airburstItem = stratagemById.get('airburst-launcher');
-  eq([...airburst.matchAll(/class="item-detail-mode"><h4>([^<]+)<\/h4>/g)].map(match => match[1]),
+  eq([...airburst.matchAll(/class="item-detail-mode"><h4>(?:<svg class="mode-icon"[\s\S]*?<\/svg>)?([^<]+)<\/h4>/g)].map(match => match[1]),
     [...airburstItem.variants.map(mode => mode.tab || mode.name), ...airburstItem.firingModes.map(mode => mode.name)],
     'stratagem shows every damage component and firing mode');
   ok(recoilless.includes('<h3>행성 조건과 함선 모듈에 따른 변화</h3>'), 'planet and ship changes are already visible');
@@ -251,7 +256,7 @@ if (caltrops) {
     else if (item.rpm != null) ok(shows(grid, '연사', num(item.rpm)), `${item.id}: fire rate shown`);
     else ok(!grid.includes('<dt>연사'), `${item.id}: no fire rate row without a fire rate`);
     const durable = item.variants?.length > 1 ? item.variants[0].durable : item.durable;
-    const cells = [['내구 피해', durable], [item.fuel ? '연료' : '탄창', item.magazine]];
+    const cells = [['내구 피해', durable], [item.fuel ? '연료' : '용량', item.magazine]];
     for (const [label, value] of cells) {
       if (value != null) ok(shows(grid, label, num(value)), `${item.id}: ${label} ${value} shown`);
       else ok(!grid.includes(`<dt>${label}</dt>`), `${item.id}: no ${label} cell without a value`);
@@ -269,7 +274,7 @@ if (caltrops) {
   ok(withModes.length > 0, 'some stratagems have firing modes');
   for (const item of withModes) {
     const content = String(stratagemDetail(item));
-    eq([...content.matchAll(/data-fire-mode="([^"]+)" aria-pressed="(\w+)">([^<]+)/g)].map(m => [m[1], m[2], m[3]]),
+    eq([...content.matchAll(/data-fire-mode="([^"]+)" aria-pressed="(\w+)">(?:<svg class="mode-icon"[\s\S]*?<\/svg>)?([^<]+)/g)].map(m => [m[1], m[2], m[3]]),
       item.firingModes.map((m, i) => [m.id, String(!i), m.name]), `${item.id}: one button per firing mode, first selected`);
     for (const [i, m] of item.firingModes.entries()) {
       const panel = content.split(`data-fire-mode-panel="${m.id}"`)[1]?.split('data-fire-mode-panel=')[0] ?? '';
@@ -403,4 +408,54 @@ try {
   if (savedDocument === undefined) delete globalThis.document; else globalThis.document = savedDocument;
   if (savedHistory === undefined) delete globalThis.history; else globalThis.history = savedHistory;
 }
+// Every effect the datamine records shows a cell (user request 2026-11-25): each stratagem mode panel shows a direct
+// and a blast cell when the records it covers have them, and each gear weapon with direct or blast forces shows its
+// cell. Fragments are left out on purpose (user decision 2026-11-19), so a direct force only from fragments (Frag,
+// Pineapple, Lure Mine) needs no direct cell.
+{
+  const { stratagems } = await import('../dist/core/catalog.js');
+  const { stratagemStats } = await import('../dist/data/stratagem-stats.js');
+  const { personalWeapons } = await import('../dist/data/personal-weapons.js');
+  const labelsOf = html => [...html.matchAll(/<dt>(.*?)<\/dt><dd class="force-lines">/g)].map(m => m[1].replace(/<[^>]+>/g, ''));
+  const panels = html => { const parts = html.split('data-variant-panel="').slice(1); return parts.length ? parts.map(p => [p.slice(0, p.indexOf('"')), p]) : [['', html]]; };
+  for (const item of stratagems) {
+    const forces = stratagemStats[item.id]?.forces ?? [];
+    if (!forces.length) continue;
+    const claimed = (item.variants ?? []).flatMap(v => [v.record ?? []].flat());
+    for (const [id, body] of panels(String(stratagemDetail(item)))) {
+      const variant = item.variants?.find(v => v.id === id);
+      const kinds = new Set(forces.filter(f => !variant || [variant.record ?? []].flat().includes(f.attack) || !claimed.includes(f.attack)).flatMap(f => f.parts.map(p => p.kind)));
+      const labels = labelsOf(body);
+      if (['direct', 'beam', 'arc', 'spray'].some(k => kinds.has(k))) ok(labels.some(l => /직격|광선|전격|분사/.test(l)), `${item.id} ${id}: direct effect cell`);
+      if (kinds.has('blast')) ok(labels.some(l => /폭발 효과/.test(l)), `${item.id} ${id}: blast effect cell`);
+    }
+  }
+  for (const w of personalWeapons) {
+    const rows = [w, ...(w.variants ?? [])].filter(r => !String(r.id ?? '').startsWith('shrapnel'));
+    const labels = labelsOf(String(weaponDetail(w)));
+    if (rows.some(r => r.delivery !== 'explosion' && (r.demolition != null || r.stun != null || r.push != null))) ok(labels.some(l => /직격/.test(l)), `${w.id}: direct effect cell`);
+    if (rows.some(r => (r.delivery === 'explosion' && (r.demolition != null || r.stun != null || r.push != null)) || r.splashDemolition != null || r.splashStun != null || r.splashPush != null)) ok(labels.some(l => /폭발/.test(l)), `${w.id}: blast effect cell`);
+  }
+}
+
+// Firing mode icons (mode-icons.js): every listed weapon and mode exists, and its tab and full-screen heading show it.
+{
+  const { modeIconKeys } = await import('../dist/ui/mode-icons.js');
+  const { stratagems } = await import('../dist/core/catalog.js');
+  const { personalWeapons } = await import('../dist/data/personal-weapons.js');
+  for (const [key, modes] of Object.entries(modeIconKeys)) {
+    const [kind, id] = key.split('/');
+    const strat = stratagems.find(s => s.id === id);
+    // A stratagem's icons mark its stat tabs (variants) or its firing mode block (firingModes).
+    const known = kind === 'gear' ? personalProfiles[id]?.modes.map(m => m.id) : (Object.keys(modes).every(m => strat?.firingModes?.some(f => f.id === m)) ? strat.firingModes : strat?.variants)?.map(v => v.id);
+    ok(known?.length > 1, `${key}: has firing modes`);
+    for (const mode of Object.keys(modes)) ok(known.includes(mode), `${key}: mode ${mode} exists`);
+    const item = kind === 'gear' ? personalWeapons.find(w => w.id === id) : stratagems.find(s => s.id === id);
+    const panel = String(kind === 'gear' ? weaponDetail(item) : stratagemDetail(item));
+    const full = String(kind === 'gear' ? weaponDetail(item, { expanded: true }) : stratagemDetail(item, { expanded: true }));
+    ok((panel.match(/class="mode-icon"/g) ?? []).length >= Object.keys(modes).length, `${key}: mode tabs show the icons`);
+    ok((full.match(/class="mode-icon"/g) ?? []).length >= Object.keys(modes).length, `${key}: full-screen mode headings show the icons`);
+  }
+}
+
 console.log(`PASS warbond detail: ${checks} checks (shared details, routes, grid order, history and scroll).`);

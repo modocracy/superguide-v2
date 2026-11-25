@@ -143,7 +143,7 @@ export const armorPassives = [
     "icon": "Peak Physique Armor Passive Icon.svg",
     "effects": [
       {"name":"근접 공격 대미지가 40% 증가합니다.","en":"Increases melee damage by 40%."},
-      {"name":"무기 취급 능력이 향상되어 무기 움직임에 휘둘리지 않습니다.","en":"Improves weapons handling with less drag on weapon movement.","exact":"인체공학 +30","exactEn":"Ergonomics +30"}
+      {"name":"무기의 인체공학 설계를 높여 무기 이동 시 항력을 줄입니다.","en":"Improves weapons handling with less drag on weapon movement.","exact":"인체공학형 +30","exactEn":"Ergonomics +30"}
     ],
     "source": "https://helldivers.wiki.gg/wiki/Peak_Physique",
     "revision": 140551,
@@ -202,7 +202,7 @@ export const armorPassives = [
     "icon": "Siege-Ready Armor Passive Icon.svg",
     "effects": [
       {"name":"주 무기의 재장전 속도가 30% 증가합니다.","en":"Increases reload speed of primary weapons by 30%."},
-      {"name":"모든 무기의 탄약 용량이 20% 증가합니다. 무기 배낭에는 영향을 주지 않습니다.","en":"Increases ammo capacity of all weapons by 20%. Does not affect weapon backpacks."}
+      {"name":"주 무기의 탄약 용량이 20% 증가합니다. 무기 배낭에는 영향을 주지 않습니다.","en":"Increases ammo capacity of all weapons by 20%. Does not affect weapon backpacks.","exact":"게임 설명은 주 무기지만 실제로는 모든 무기에 적용(게임 영어 설명도 all weapons)","exactEn":"The Korean game text says primary weapons, but it applies to every weapon (as the English text says)"}
     ],
     "tips": ["늘어나는 탄약의 소수점은 올림이고, 보조 무기와 탄약 배낭을 쓰지 않는 지원 무기에도 적용됩니다. 얼티메이텀과 원투의 유탄 발사기는 예외입니다."],
     "tipsEn": ["Extra ammo rounds up, and it also covers sidearms and support weapons without an ammo backpack. The Ultimatum and the One-Two's grenade launcher are left out."],
@@ -437,8 +437,8 @@ export const armorPassives = [
     "order": 27,
     "icon": "Oxygenator Armor Passive Icon.svg",
     "effects": [
-      {"name":"착용자의 걷기 속도와 달리기 속도가 증가합니다.","en":"Increases the wearer's walking speed and running speed.","exact":"걷기·달리기 속도 10% 증가(엎드림·웅크림·조준 중에는 제외)","exactEn":"Walk and run speed +10% (not while prone, crouching or aiming)"},
-      {"name":"슬라이딩 속도와 지속 시간이 증가합니다.","en":"Increases the speed and duration of slides.","exact":"슬라이딩이 약 160ms 더 길어 거리 50%(약 1m) 증가","exactEn":"Slides about 160 ms longer, 50% (about 1 m) farther"}
+      {"name":"착용자가 걷거나 달릴 때의 속도가 증가합니다.","en":"Increases the wearer's walking speed and running speed.","exact":"걷기·달리기 속도 10% 증가(엎드림·웅크림·조준 중에는 제외)","exactEn":"Walk and run speed +10% (not while prone, crouching or aiming)"},
+      {"name":"슬라이드의 속도와 지속시간이 증가합니다.","en":"Increases the speed and duration of slides.","exact":"슬라이딩이 약 160ms 더 길어 거리 50%(약 1m) 증가","exactEn":"Slides about 160 ms longer, 50% (about 1 m) farther"}
     ],
     "source": "https://helldivers.wiki.gg/wiki/Oxygenator",
     "revision": 133670,
@@ -470,7 +470,7 @@ export const armorPassives = [
     "icon": "True Grit Armor Passive Icon.svg",
     "effects": [
       {"name":"지원 무기의 재장전 속도가 30% 증가합니다.","en":"Increases reload speed of support weapons by 30%."},
-      {"name":"무기의 인체공학 설계를 약간 개선하여 무기 이동 시 항력을 줄입니다.","en":"Slightly increases weapon ergonomics to reduce drag on weapon movement.","exact":"인체공학 +20","exactEn":"Ergonomics +20"}
+      {"name":"무기의 인체공학 설계를 약간 개선하여 무기 이동 시 항력을 줄입니다.","en":"Slightly increases weapon ergonomics to reduce drag on weapon movement.","exact":"인체공학형 +20","exactEn":"Ergonomics +20"}
     ],
     "source": "https://helldivers.wiki.gg/wiki/True_Grit",
     "revision": 140562,

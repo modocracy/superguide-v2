@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 // Reads cooldown facts out of the wikitext saved by fetch-stratagem-stats.mjs.
 // Shared by build-stratagem-stats.mjs and test-stratagem-stats.mjs.
 export const field = (text, key) => {
@@ -9,6 +10,23 @@ export const value = text => {
   if (/^(unlimited|inf)$/i.test(text)) return 'unlimited';
   const match = /^(\d+(?:\.\d+)?)\s*s?$/i.exec(text);
   return match ? Number(match[1]) : null;
+};
+
+// Cooldowns from the game data sheet (db/source/game_sheets/stratagems.json, game build 26568081) for the
+// stratagems whose wiki page differs or gives none (user decision 2026-11-25), matched by English name and call code.
+export const GAME_COOLDOWNS = ['reinforce', 'sos', 'eagle-rearm', 'seaf-artillery', 'cargo-container', 'hive-breaker', 'super-earth-flag', 'upload-data', 'aquifer-drill'];
+const ARROWS = { up: '↑', down: '↓', left: '←', right: '→' };
+const gameStratagems = JSON.parse(readFileSync(new URL('../db/source/game_sheets/stratagems.json', import.meta.url), 'utf8')).스트라타젬;
+// The game data sheet's cooldown, or null when the sheet has no such stratagem (or no cooldown for it).
+export function gameCooldown(item) {
+  const found = gameStratagems.find(g => g.en.toLowerCase() === item.en.toLowerCase() && g.코드_en.map(a => ARROWS[a]).join('') === item.input);
+  return found?.재사용_대기_초 ?? null;
+}
+// Both sources stay usable, the game data sheet first (user decision 2026-11-25): a listed stratagem takes the
+// sheet's cooldown, and keeps the wiki's when the sheet lacks it.
+export const withGameCooldown = (item, stats) => {
+  const game = GAME_COOLDOWNS.includes(item.id) ? gameCooldown(item) : null;
+  return game != null ? { ...stats, cooldown: game, cooldownSource: 'game' } : stats;
 };
 
 const PERMITS = { supply: 'supply', offensive: 'offensive', offense: 'offensive', defensive: 'defensive' };

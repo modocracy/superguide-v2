@@ -38,3 +38,5 @@ if (missing.length) throw new Error(`Missing pages: ${missing.join(', ')}`);
 const body = { retrievedAt: new Date().toISOString().slice(0, 10), pages: Object.fromEntries(titles.map(title => [title, pages[title]])) };
 await writeFile(new URL('../db/source/wiki_anatomy.json', import.meta.url), JSON.stringify(body, null, 1) + '\n');
 console.log(`${titles.length} pages, ${Object.values(pages).reduce((sum, page) => sum + page.rows.length, 0)} anatomy rows`);
+// The enemy page's part info table is generated from this snapshot: keep it in step.
+await (await import('./build-enemy-anatomy.mjs')).writeEnemyAnatomy();

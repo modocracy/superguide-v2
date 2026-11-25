@@ -162,7 +162,7 @@ export default {
   "지옥폭탄은 폭발 범위가 넓어 발견될 위험이 적은 먼 곳에 불러도 철거할 수 있습니다.": "The Hellbomb's large blast lets you call it in far from the tower, where you are less likely to be spotted, and still destroy it.",
   "요새 안의 탐지 탑은 지옥폭탄을 부를 수 없고, 요새를 정리하는 데 꼭 부수지 않아도 됩니다.": "Detector Towers inside Fortresses do not offer a Hellbomb, and destroying them is not needed to clear the Fortress.",
   "캐넌 포탑의 포격을 유도해 부술 수도 있습니다.": "You can also bait Cannon Turret shots into destroying it.",
-  "150m 안에서는 SEAF 야포를 뺀 모든 스트라타젬을 부를 수 없습니다. 이 안에 던진 스트라타젬은 발동하지 않고 재사용 대기에도 들어가지 않습니다.": "Within 150m no stratagem except SEAF Artillery can be called in. Stratagems thrown inside neither activate nor go on cooldown.",
+  "150m 안에서는 SEAF 야포를 뺀 모든 스트라타젬을 부를 수 없습니다. 이 안에 던진 스트라타젬은 발동하지 않고 재사용 대기시간에도 들어가지 않습니다.": "Within 150m no stratagem except SEAF Artillery can be called in. Stratagems thrown inside neither activate nor go on cooldown.",
   "기본 절차는 아래쪽 터미널로 교란기를 끈 뒤 지옥폭탄이나 철거력 50 스트라타젬으로 부수는 것입니다.": "The usual way is to switch it off at the terminal at its base, then destroy it with a Hellbomb or a demolition force 50 stratagem.",
   "휴대용 지옥폭탄과 SEAF 야포의 소형 핵탄두·고성능 폭탄은 교란기를 끄지 않아도 부술 수 있습니다.": "The Portable Hellbomb and the SEAF Artillery Mini-Nuke and High-Yield Explosive shells destroy it without switching it off.",
   "교란기 두 개가 서로 150m 안에 있으면 두 터미널을 모두 끄거나, 휴대용 지옥폭탄으로 하나를 먼저 부수세요.": "If two jammers are within 150m of each other, switch off both terminals or destroy one first with a Portable Hellbomb.",

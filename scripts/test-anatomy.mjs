@@ -30,9 +30,23 @@ const unknown = part => Boolean(part.unknownReason);
 // the wiki table disagrees with them. Each entry names the wiki value it was
 // reviewed against, so a later wiki edit fails here and is looked at again.
 const usedOfficial = new Set();
+// anatomyGame: values the site takes from the game data sheet (db/source/game_sheets/enemies.json,
+// user decision 2026-11-25) where the wiki table differs. Like anatomyOfficial, each entry names the
+// reviewed wiki value, so a later wiki edit fails here and is looked at again.
+const usedGame = new Set();
+const gameValue = (enemy, key, wikiText, actual, label) => {
+  const game = enemy?.anatomyGame?.[key];
+  if (!game) return false;
+  usedGame.add(`${enemy.id}/${key}`);
+  // The game value comes first (user decision 2026-11-25). A wiki that has changed since the review is flagged for a
+  // look (re-import the game data sheet after a patch), not a failure, so a wiki refresh never blocks a deploy.
+  if (number(wikiText) !== game.wiki) console.warn(`CHECK ${label}: wiki ${key} is now ${wikiText}, reviewed ${game.wiki}; the site keeps the game data sheet value ${actual}`);
+  ok(Number.isFinite(actual) && /^Game data sheet, game build \d+$/.test(game.source), `${label}: game value ${actual} with its game data sheet source`);
+  return true;
+};
 function matches(part, row, label, main, enemy) {
   // A value the wiki gives as "-" is left uncalculated on the site.
-  const value = (actual, text, message) => text === '-' ? ok(actual === null && unknown(part), `${message} left uncalculated`) : eq(actual, number(text), message);
+  const value = (actual, text, message, field) => (field && gameValue(enemy, `${part.id}.${field}`, text, actual, label)) || (text === '-' ? ok(actual === null && unknown(part), `${message} left uncalculated`) : eq(actual, number(text), message));
   const official = enemy?.anatomyOfficial?.[`${part.id}.hp`];
   if (official) {
     usedOfficial.add(`${enemy.id}/${part.id}.hp`);
@@ -40,17 +54,17 @@ function matches(part, row, label, main, enemy) {
     ok(Number.isFinite(part.hp) && part.hp !== official.wiki && /^Patch [\d.]+ \(\d{4}-\d{2}-\d{2}\): /.test(official.source), `${label}: official health ${part.hp} with its patch-note source`);
   } else if (/^Main\b/.test(row.health)) ok(sharesMain(part, part.main || main), `${label}: health ${row.health} shares a main pool`);
   else if (/^Infinite/i.test(row.health)) ok(part.hp === null && unknown(part), `${label}: infinite health is left uncalculated`);
-  else value(part.hp, row.health, `${label}: health`);
-  value(part.armor, row.av, `${label}: armor`);
-  value(part.durability, row.durability, `${label}: durability`);
-  value(part.exdr, row.exdr, `${label}: explosive resistance`);
+  else value(part.hp, row.health, `${label}: health`, 'hp');
+  value(part.armor, row.av, `${label}: armor`, 'armor');
+  value(part.durability, row.durability, `${label}: durability`, 'durability');
+  value(part.exdr, row.exdr, `${label}: explosive resistance`, 'exdr');
   // A main-pool row is the pool itself, so it has no transfer of its own.
   // "-" means a separate pool that passes nothing on (0%, a separate device,
   // or a transfer the site leaves unverified); some rows leave the cap empty.
   if (isPoolRow(clean(row.part_name))) ok(part.toMain >= 100, `${label}: hits the main pool directly`);
   else if (row.percent_to_main === '-') ok(part.toMain === 0 || part.partOnly === true || part.toMain === null && unknown(part), `${label}: separate pool passes nothing to main`);
   else {
-    eq(part.toMain, number(row.percent_to_main), `${label}: % to main`);
+    if (!gameValue(enemy, `${part.id}.toMain`, row.percent_to_main, part.toMain, label)) eq(part.toMain, number(row.percent_to_main), `${label}: % to main`);
     if (!['-', undefined].includes(row.dmg_cap_main)) eq(part.overflowCap, { Yes: true, No: false }[row.dmg_cap_main], `${label}: damage cap to main`);
     else ok(part.overflowCap !== undefined, `${label}: cap left unverified`);
   }
@@ -95,6 +109,7 @@ for (const enemy of revised) {
     ok(main && byName.has(name), `${enemy.id}: main pool ${name}`);
     const row = byName.get(name);
     eq([main.hp, main.armor, main.exdr], [number(row.health), number(row.av), number(row.exdr)], `${enemy.id}: ${name}`);
+    if (main === enemy.main) gameValue(enemy, 'main.durability', row.durability, main.durability, `${enemy.id}: ${name}`);
     covered.add(name);
   };
   vitals(enemy.main, enemy.anatomyMain ?? 'Main');
@@ -119,7 +134,10 @@ for (const enemy of revised) {
   const uncovered = [...byName.keys()].filter(name => !covered.has(name));
   eq(uncovered, [], `${enemy.id}: every wiki anatomy row is a part`);
 }
+for (const enemy of revised) for (const key of Object.keys(enemy.anatomyGame || {})) {
+  ok(usedGame.has(`${enemy.id}/${key}`), `${enemy.id}: anatomyGame ${key} matches no part; remove it`);
+}
 for (const enemy of revised) for (const key of Object.keys(enemy.anatomyOfficial || {})) {
   ok(usedOfficial.has(`${enemy.id}/${key}`), `${enemy.id}: anatomyOfficial ${key} matches no part; remove it`);
 }
-console.log(`PASS anatomy: ${checked} checks; ${revised.length} enemies match Wiki Anatomy snapshot ${snapshot.retrievedAt} (${revised.filter(enemy => snapshot.pages[titleOf(enemy)].snapshot).length} from structure pages); ${usedOfficial.size} values follow the official patch notes.`);
+console.log(`PASS anatomy: ${checked} checks; ${revised.length} enemies match Wiki Anatomy snapshot ${snapshot.retrievedAt} (${revised.filter(enemy => snapshot.pages[titleOf(enemy)].snapshot).length} from structure pages); ${usedOfficial.size} values follow the official patch notes, ${usedGame.size} the game data sheet.`);

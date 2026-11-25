@@ -88,7 +88,7 @@ const REASONS = {
   'no-damage-assumed': L('선택한 명중 가정에서는 피해가 들어가지 않습니다.', 'The chosen hit assumption deals no damage.'),
   'leftover-events': L('장갑이 깨진 뒤 같은 발의 남은 전격·자탄이 안쪽에 닿는지 확인되지 않아 계산하지 않았습니다.', 'It is unverified whether the rest of the same shot (arcs, bomblets) reaches the inside once the armor breaks, so this was not calculated.'),
   'too-many-hits': L('필요 횟수가 계산 범위를 넘습니다.', 'The count needed is beyond the calculation range.'),
-  'beam-data-missing': L('광선 피해·지속시간 또는 부위 수치가 확인되지 않았습니다.', 'Beam damage, duration or part values are unverified.'),
+  'beam-data-missing': L('광선 피해·지속 시간 또는 부위 수치가 확인되지 않았습니다.', 'Beam damage, duration or part values are unverified.'),
   'beam-blocked': L('광선이 이 부위 장갑을 관통하지 못합니다.', 'The beam cannot penetrate this part\'s armor.'),
 };
 export const reasonText = row => ['unsupported', 'shield', 'part-unknown'].includes(row.reason)

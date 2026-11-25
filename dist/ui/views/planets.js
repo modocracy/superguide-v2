@@ -120,7 +120,7 @@ function biomeCard(biome) {
 }
 
 function biomesTab() {
-  return html`<p class="lede-note">${L(`행성의 지형과 기후를 정하는 생물군계입니다. 행성 목록은 은하 지도에서 갈 수 있는 행성 ${playablePlanetCount}개 기준입니다(슈퍼지구, 블랙홀, 파괴된 행성 제외).`, `The biome sets a planet's terrain and climate. Planet lists cover the ${playablePlanetCount} planets you can reach on the galaxy map (not Super Earth, black holes or destroyed planets).`)}</p>
+  return html`<p class="lede-note">${L(`행성의 지형과 기후를 정하는 생물군계입니다. 행성 목록은 은하 지도에서 갈 수 있는 행성 ${playablePlanetCount}개 기준입니다(슈퍼 지구, 블랙홀, 파괴된 행성 제외).`, `The biome sets a planet's terrain and climate. Planet lists cover the ${playablePlanetCount} planets you can reach on the galaxy map (not Super Earth, black holes or destroyed planets).`)}</p>
     <ul class="info-list biome-list">${biomes.map(biomeCard)}</ul>`;
 }
 

@@ -7,7 +7,7 @@ import { detailDisclosure } from './item-detail.js';
 import { L } from '../core/i18n.js';
 import { num } from '../core/explain.js';
 import { projectileBallistics } from '../data/ballistics.js';
-import { dragOf, falloffAt, distanceAt, trajectory } from '../core/ballistics.js';
+import { dragOf, falloffAt, trajectory } from '../core/ballistics.js';
 
 const MAX = 200;
 const MARKS = [25, 50, 100, 150, 200];
@@ -62,13 +62,11 @@ function chart(title, points, { top, bottom, ticks, label }) {
 
 // A rocket-propelled shot keeps its speed: no drag in the damage and drop math (its datamine drag
 // is still listed).
-// extra: cells appended at the end of the record's grid (the weapon's recoil, below the projectile numbers).
+// extra: cells appended at the end of the record's grid (the weapon's recoil, with the other numbers).
 function recordBlock(label, recordId, propelled, extra = '') {
   const { record, b, drag, at, endX, damage, drop, dropTop, markFalloff } = computeFlight(recordId, propelled);
   const cell = (name, value, unit, caption) => html`<div><dt>${name}</dt><dd>${value}${unit ? html`<small>${unit}</small>` : ''}</dd>${caption ? html`<div class="caption">${caption}</div>` : ''}</div>`;
   const ap = b.ap?.some(v => v != null) ? `AP ${b.ap.map(v => num(v)).join(' / ')}` : '—';
-  const d75 = distanceAt(b, 0.75), d50 = distanceAt(b, 0.5);
-  const fmtDistance = x => (x == null ? '—' : x >= 1000 ? `${num(round(x / 1000, 0.1))}km` : `${num(round(x, 1))}m`);
   const dropText = y => (dropTop < 2 ? `${num(Math.round(y * 100))}cm` : `${num(round(y, 0.1))}m`);
   return html`<div class="ballistic">
     ${label ? html`<h4>${label}</h4>` : ''}
@@ -80,7 +78,6 @@ function recordBlock(label, recordId, propelled, extra = '') {
       ${cell(L('중력 배율', 'Gravity multiplier'), num(b.gravity), '×', b.gravity ? L('클수록 많이 떨어짐', 'Higher drops more') : L('떨어지지 않고 곧게 날아감', 'Flies straight, no drop'))}
       ${cell(L('탄 수명', 'Lifetime'), b.lifetime ? num(b.lifetime) : L('제한 없음', 'No limit'), b.lifetime ? L('초', 's') : '', endX != null ? L(`약 ${num(Math.round(endX))}m에서 사라짐`, `Gone at about ${num(Math.round(endX))} m`) : '')}
       ${cell(L('각도별 관통', 'Penetration by angle'), ap, '', L('25° 미만 · 26~60° · 61~80° · 81~90°', 'Under 25° · 26-60° · 61-80° · 81-90°'))}
-      ${cell(L('피해 75% · 50% 거리', 'Damage at 75% · 50%'), drag ? `${fmtDistance(d75)} · ${fmtDistance(d50)}` : L('줄지 않음', 'No falloff'), '', drag ? L('위키 공식(중력 무시)', 'Wiki formula (no gravity)') : propelled ? L('로켓 추진이라 거리로 줄지 않음', 'Rocket-propelled, so no falloff') : L('항력이 없어 거리로 줄지 않음', 'No drag, so no falloff'))}
       ${extra}
     </dl>
     <div class="ballistic-charts">
@@ -103,15 +100,17 @@ function recordBlock(label, recordId, propelled, extra = '') {
 // not in the key stats). No sub-headings (user request 2026-11-24): with one projectile its recoil cells end the same
 // grid; with several, each keeps its name and the recoil cells follow in a grid of their own; they alone are
 // enough to show the block.
+// recoil: the weapon's recoil cells. They are numbers, so they join the numbers of the first round (or stand alone
+// when there is none); the recoil simulation is a disclosure of its own (recoil-sim.js, user request 2026-11-25).
 export function ballisticsBlock(entries, expanded = false, recoil = []) {
   const seen = new Set();
   const list = entries.filter(e => e.record && projectileBallistics[e.record]?.velocity > 0 && !seen.has(e.record) && seen.add(e.record));
-  if (!list.length && !recoil.length) return '';
   if (list.length) wireBallisticCharts();
   const recoilCell = c => html`<div><dt>${c.label}</dt><dd>${c.text}${c.unit ? html`<small>${c.unit}</small>` : ''}</dd>${c.caption ? html`<div class="caption">${c.caption}</div>` : ''}</div>`;
-  const content = html`${list.map(e => recordBlock(list.length > 1 ? e.label : '', e.record, e.propelled, list.length === 1 ? recoil.map(recoilCell) : ''))}
-    ${recoil.length && list.length !== 1 ? html`<div class="ballistic"><dl class="detail-grid">${recoil.map(recoilCell)}</dl></div>` : ''}
-    ${list.length ? html`<p class="faint" style="font-size:12.5px">${L('탄 피해는 중력과 궤적은 반영하지 않습니다. 낙차는 중력 9.82m/s²(helldiversotl.com이 게임 코드에서 확인한 값)에 중력 배율을 곱하고, 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage leaves out gravity and the flight path. Drop uses gravity of 9.82 m/s² (the value helldiversotl.com checked in the game code) times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
+  if (!list.length && !recoil.length) return '';
+  const content = html`${list.map((e, i) => recordBlock(list.length > 1 ? e.label : '', e.record, e.propelled, i === 0 ? recoil.map(recoilCell) : ''))}
+    ${recoil.length && !list.length ? html`<div class="ballistic"><dl class="detail-grid">${recoil.map(recoilCell)}</dl></div>` : ''}
+    ${list.length ? html`<p class="faint" style="font-size:12.5px;margin:-10px 0 16px">${L('탄 피해 계산에는 중력과 궤적을 반영하지 않습니다. 낙차는 중력 9.82m/s²에 중력 배율을 곱하고, 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage leaves out gravity and the flight path. Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
   `;
   return detailDisclosure(L('세부 수치', 'Detailed stats'), content, { className: 'ballistic-block', expanded });
 }

@@ -163,4 +163,14 @@ for (const [id, list] of Object.entries(weaponAttachments)) {
 setLang('ko');
 
 const total = Object.values(weaponAttachments).reduce((sum, list) => sum + list.length, 0);
+// A weapon whose wiki infobox leaves the tactical reload out takes it from its default magazine (the free level 1
+// one), and a heat weapon reads its heat sink's overheated and before-overheat times (user request 2026-11-25).
+const reloadText = id => { const html = String(weaponDetail(personalWeapons.find(w => w.id === id))); const at = html.indexOf('<dt>재장전</dt>'); return html.slice(at, at + 400).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' '); };
+ok(reloadText('hyena').includes('2.5 초') && reloadText('hyena').includes('전술 재장전 1.5초'), 'hyena: tactical reload from its default magazine');
+ok(reloadText('liberator-legacy').includes('3 초') && reloadText('liberator-legacy').includes('전술 재장전 2초'), 'liberator legacy: reload and tactical reload from its default magazine');
+ok(reloadText('scythe').includes('1.8 초') && reloadText('scythe').includes('과열 전에 교체하면 3초'), 'scythe: overheated and before-overheat times from its heat sink');
+for (const w of personalWeapons.filter(w => w.reloadTactical == null && (weaponAttachments[w.id] ?? []).some(it => attachmentParts[it.part].slot === 'magazine' && it.level === 1 && it.cost === 0 && attachmentParts[it.part].effects?.reloadTactical != null))) {
+  ok(!reloadText(w.id).includes('탄창을 비웠을 때 '), `${w.id}: its default magazine fills the tactical reload`);
+}
+
 console.log(`PASS attachments: ${checks} checks (${Object.keys(weaponAttachments).length} primaries, ${total} attachment rows, ${attachmentDiscrepancies.length} wiki discrepancy).`);

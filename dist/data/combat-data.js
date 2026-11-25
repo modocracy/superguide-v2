@@ -74,7 +74,7 @@ const voteless = (id, name, hp, headHp, forearmHp, upperArmHp, table, caps = { f
   parts: [
     part('head', '머리', headHp, 1, 0, 100, 100, true, 'kill', '몸통보다 체력이 낮은 머리를 직접 맞히세요.', { sourcePart: 'Head' }),
     part('forearm', '아래팔 한쪽', forearmHp, 0, 0, 100, 30, caps.forearm, 'break', '팔꿈치 아래의 팔 한쪽을 노리는 계산입니다. 팔 하나가 떨어져도 살아 있을 수 있습니다.', { sourcePart: 'Forearms (2)' }),
-    part('leg', '다리', 80, 0, 0, 100, 30, true, 'break', '다리를 끊어 쓰러뜨려도 기어와 공격할 수 있습니다. 확실히 끝내려면 머리를 노리세요.', { sourcePart: 'Legs' }),
+    part('leg', '다리', 80, 0, 0, 100, 30, true, 'break', '다리를 끊어 쓰러뜨려도 기어 와서 공격할 수 있습니다. 확실히 끝내려면 머리를 노리세요.', { sourcePart: 'Legs' }),
     part('upper-arm', '위팔 한쪽', upperArmHp, 0, 0, 100, 40, caps.upperArm, 'break', '팔꿈치 위의 팔 한쪽입니다. 떨어져도 바로 죽지 않지만 피해의 40%가 본체로 들어갑니다.', { constitution: 1000, sourcePart: 'Upper Arms (2)' }),
   ],
 });
@@ -87,9 +87,12 @@ const originalEnemies = [
     // Every part matches Wiki Anatomy revision 137700 (checked 2026-10-22).
     // Parts after the first three were added then.
     anatomyRevision: 141505, anatomyCheckedAt: '2026-11-08',
+    // The game data sheet gives the rear abdomen 0% explosive resistance (user decision 2026-11-25: follow the game).
+    anatomyGame: { 'butt.exdr': { wiki: 25, source: 'Game data sheet, game build 26568081' } },
+    anatomyLegacy: { 'butt.exdr': 25 },
     parts: [
       part('head', '머리', 1200, 4, 75, 25, 70, false, 'kill', '정면 머리 중앙을 노리세요. 등 장갑에 빗맞으면 다른 부위입니다.', { sourcePart: 'Head' }),
-      part('butt', '후방 복부', 950, 0, 80, 25, 150, false, 'bleed', '돌진을 피한 뒤 뒤쪽의 드러난 복부를 쏘세요. 파괴 후에도 바로 죽지 않을 수 있습니다.', { sourcePart: 'Butt' }),
+      part('butt', '후방 복부', 950, 0, 80, 0, 150, false, 'bleed', '돌진을 피한 뒤 뒤쪽의 드러난 복부를 쏘세요. 파괴 후에도 바로 죽지 않을 수 있습니다.', { sourcePart: 'Butt' }),
       part('front-leg', '앞다리 장갑 → 살점', 800, 4, 70, 25, 60, false, 'armor', '한쪽 앞다리에 집중하세요. 장갑을 벗긴 탄의 초과 피해는 살점으로 넘어가지 않습니다.', { sourcePart: 'Front Leg Armor (2)', next: legFlesh() }),
       ...chargerExtras({ mainHp: 2400, torsoHp: 800, legHp: 800, legDurability: 70 }),
     ],
@@ -101,9 +104,12 @@ const originalEnemies = [
     // Every part matches Wiki Anatomy revision 137702 (checked 2026-10-22).
     // Parts after the first three were added then.
     anatomyRevision: 141504, anatomyCheckedAt: '2026-11-08',
+    // The game data sheet gives the rear abdomen 0% explosive resistance (user decision 2026-11-25: follow the game).
+    anatomyGame: { 'butt.exdr': { wiki: 25, source: 'Game data sheet, game build 26568081' } },
+    anatomyLegacy: { 'butt.exdr': 25 },
     parts: [
       part('head', '머리', 1600, 4, 100, 25, 70, false, 'kill', '정면 머리를 노리세요. 일반 차저의 탄수를 그대로 적용하지 마세요.', { sourcePart: 'Head' }),
-      part('butt', '후방 복부', 950, 0, 100, 25, 50, false, 'bleed', '뒤쪽 복부를 부수면 출혈이 시작됩니다. 장갑은 없지만 내구도가 높습니다.', { sourcePart: 'Butt' }),
+      part('butt', '후방 복부', 950, 0, 100, 0, 50, false, 'bleed', '뒤쪽 복부를 부수면 출혈이 시작됩니다. 장갑은 없지만 내구도가 높습니다.', { sourcePart: 'Butt' }),
       part('front-leg', '앞다리 장갑 → 살점', 1000, 4, 80, 25, 60, false, 'armor', '장갑 제거 후 같은 다리의 살점을 공격하세요.', { sourcePart: 'Front Leg Armor (2)', next: legFlesh() }),
       ...chargerExtras({ mainHp: 3000, torsoHp: 1000, legHp: 1000, legDurability: 80 }),
     ],
@@ -212,6 +218,8 @@ const originalEnemies = [
     note: '다리와 몸통을 잇는 가로 관절이 치명 부위입니다. 눈은 파괴해도 생존하며 빔 공격이 강해질 수 있습니다.',
     // Every part matches Wiki Anatomy revision 140061 (checked 2026-10-31),
     // the Intact and Armor Broken tabs. Parts after the first four were added on 2026-09-28.
+    // The wiki's "Right & Middle Upper Thigh Armor (2)" row is two legs whose internals differ (wiki
+    // images): the right leg opens the "Right & Left" internals, the middle leg the "Middle" ones (2026-11-25).
     anatomyRevision: 140061, anatomyCheckedAt: '2026-10-31',
     anatomyMerged: { 'Armor Broken: Damaged Chassis': 'chassis' },
     anatomyOmitted: { Shield: 'The energy shield is the shield toggle (cleared before counting), not a part' },
@@ -230,11 +238,14 @@ const originalEnemies = [
         sourcePart: 'Left Upper Thigh Armor',
         next: part('left-upper-leg-internals', '노출된 윗다리 내부', 1000, 3, 25, 100, 45, true, 'kill', '장갑을 벗겨 드러난 윗다리 내부입니다. 파괴하면 죽습니다.', { sourcePart: 'Armor Broken: Right & Left Upper Leg Internals (3)' }),
       }),
-      part('upper-thigh', '오른쪽·가운데 윗다리 장갑 → 내부', 900, 4, 75, 100, 30, true, 'armor', '오른쪽이나 가운데 다리 위쪽 장갑을 벗긴 뒤 드러난 내부를 계속 맞히세요. 가운데 다리는 본체 전달률이 더 높습니다.', {
+      part('upper-thigh', '오른쪽 윗다리 장갑 → 내부', 900, 4, 75, 100, 30, true, 'armor', '오른쪽 다리 위쪽 장갑을 벗긴 뒤 드러난 내부를 계속 맞히세요.', {
         sourcePart: 'Right & Middle Upper Thigh Armor (2)',
         next: part('upper-leg-internals', '노출된 윗다리 내부', 1000, 3, 25, 100, 45, true, 'kill', '장갑을 벗겨 드러난 윗다리 내부입니다. 파괴하면 죽습니다.', { sourcePart: 'Armor Broken: Right & Left Upper Leg Internals (3)' }),
       }),
-      part('middle-upper-leg-internals', '노출된 가운데 윗다리 내부', 1000, 3, 25, 100, 60, true, 'kill', '가운데 다리 위쪽 장갑이 벗겨진 뒤 드러난 내부입니다. 파괴하면 죽습니다.', { prerequisite: '가운데 윗다리 장갑 제거 후', sourcePart: 'Armor Broken: Middle Upper Leg Internals' }),
+      part('middle-upper-thigh', '가운데 윗다리 장갑 → 내부', 900, 4, 75, 100, 30, true, 'armor', '가운데 다리 위쪽 장갑을 벗긴 뒤 드러난 내부를 계속 맞히세요. 바깥쪽 다리보다 본체로 넘어가는 피해가 큽니다.', {
+        sourcePart: 'Right & Middle Upper Thigh Armor (2)',
+        next: part('middle-upper-leg-internals', '노출된 가운데 윗다리 내부', 1000, 3, 25, 100, 60, true, 'kill', '가운데 다리 위쪽 장갑이 벗겨진 뒤 드러난 내부입니다. 파괴하면 죽습니다.', { sourcePart: 'Armor Broken: Middle Upper Leg Internals' }),
+      }),
       part('lower-thigh', '아랫다리 장갑 → 내부', 900, 4, 75, 100, 30, true, 'armor', '다리 아래쪽 장갑 한 장을 벗긴 뒤 드러난 내부를 계속 맞히세요.', {
         sourcePart: 'Lower Thigh Armor (3)',
         next: part('lower-leg-internals', '노출된 아랫다리 내부', 1000, 3, 25, 100, 60, true, 'kill', '장갑을 벗겨 드러난 아랫다리 내부입니다. 파괴하면 죽습니다.', { sourcePart: 'Armor Broken: Lower Leg Internals (3)' }),
@@ -284,10 +295,14 @@ const originalEnemies = [
     note: '기본 브루드 커맨더 기준이며 알파 커맨더와 다릅니다. 머리를 잃어도 출혈이 끝나기 전까지 돌진할 수 있습니다.',
     // Every part matches Wiki Anatomy revision 141213 (checked 2026-11-03).
     anatomyRevision: 141213, anatomyCheckedAt: '2026-11-03',
+    // The game data sheet (db/source/game_sheets/enemies.json) gives the head 100% and the claws 40% to main;
+    // the site follows the game there (user decision 2026-11-25).
+    anatomyGame: { 'head.toMain': { wiki: 50, source: 'Game data sheet, game build 26568081' }, 'claw.toMain': { wiki: 50, source: 'Game data sheet, game build 26568081' }, 'claw-both.toMain': { wiki: 50, source: 'Game data sheet, game build 26568081' } },
+    anatomyLegacy: { 'head.toMain': 50, 'claw.toMain': 50, 'claw-both.toMain': 50 },
     parts: [
-      part('head', '머리', 200, 2, 60, 100, 50, false, 'bleed', '머리가 떨어져도 즉시 멈추지 않습니다. 출혈이 끝날 때까지 접근을 피하세요.', { constitution: 300, sourcePart: 'Head' }),
-      part('claw', '앞발 한쪽', 200, 2, 50, 100, 50, false, 'break', '몸 앞의 큰 앞발 하나에 집중하는 계산입니다.', { sourcePart: 'Claws (2)' }),
-      part('claw-both', '앞발 양쪽', 200, 2, 50, 100, 50, false, 'kill', '양쪽 앞발을 모두 부수면 처치됩니다(위키 2026-11-02 기준). 한쪽을 부순 뒤 다른 쪽을 새로 조준하는 횟수입니다.', { sourcePart: 'Claws (2)', copies: 2 }),
+      part('head', '머리', 200, 2, 60, 100, 100, false, 'bleed', '머리가 떨어져도 즉시 멈추지 않습니다. 출혈이 끝날 때까지 접근을 피하세요.', { constitution: 300, sourcePart: 'Head' }),
+      part('claw', '앞발 한쪽', 200, 2, 50, 100, 40, false, 'break', '몸 앞의 큰 앞발 하나에 집중하는 계산입니다.', { sourcePart: 'Claws (2)' }),
+      part('claw-both', '앞발 양쪽', 200, 2, 50, 100, 40, false, 'kill', '양쪽 앞발을 모두 부수면 처치됩니다(위키 2026-11-02 기준). 한쪽을 부순 뒤 다른 쪽을 새로 조준하는 횟수입니다.', { sourcePart: 'Claws (2)', copies: 2 }),
       part('leg', '다리 한쪽', 170, 1, 40, 100, 60, false, 'break', '장갑이 얇은 옆 다리를 노려 이동과 돌진 속도를 낮추세요.', { sourcePart: 'Legs (4)' }),
     ],
   },
@@ -298,7 +313,7 @@ const originalEnemies = [
   spewer('nursing-spewer', '너싱 스퓨어', 'Nursing_Spewer', 2, '노란 복부의 너싱 스퓨어 기준입니다.', 135086, 'nursing-spewer', { anatomyRevision: 141638 }),
   // Noxious Strain (patch 1.007.202). The wiki page is a work in progress and
   // states its anatomy is identical to the Caustic Spewer (revision 142006).
-  spewer('noxious-spewer', '녹셔스 스퓨어', 'Noxious_Spewer', 2, '녹셔스 변종의 스퓨어입니다. 빠르게 다가와 물어서 독을 걸고, 중거리에서는 거미줄을 뱉어 질주를 막습니다. 장갑이 없는 복부가 터지면 주변 헬다이버와 적을 모두 묶는 거미줄 폭발이 일어납니다. 위키 부위 표는 커스틱 스퓨어와 같다고 적혀 있고 위키 문서는 아직 작성 중입니다.', 142006, 'noxious-spewer', { anatomyRevision: 142006, anatomyCheckedAt: '2026-11-08' }),
+  spewer('noxious-spewer', '녹셔스 스퓨어', 'Noxious_Spewer', 2, '녹셔스 변종의 스퓨어입니다. 빠르게 다가와 물어 독에 걸리게 하고, 중거리에서는 거미줄을 뱉어 질주를 막습니다. 장갑이 없는 복부가 터지면 주변 헬다이버와 적을 모두 묶는 거미줄 폭발이 일어납니다. 위키 부위 표는 커스틱 스퓨어와 같다고 적혀 있고 위키 문서는 아직 작성 중입니다.', 142006, 'noxious-spewer', { anatomyRevision: 142006, anatomyCheckedAt: '2026-11-08' }),
   {
     id: 'stalker', name: '스토커', faction: '테르미니드', source: wiki('Stalker'), sourceRevision: 135091,
     main: main(800, 1, 50, 0),
@@ -343,10 +358,13 @@ const originalEnemies = [
     // Every part matches Wiki Anatomy revision 136531 (checked 2026-09-28).
     // The limbs were added then.
     anatomyRevision: 136531, anatomyCheckedAt: '2026-09-28',
+    // The game data sheet gives the head 20 health (user decision 2026-11-25: follow the game).
+    anatomyGame: { 'head.hp': { wiki: 30, source: 'Game data sheet, game build 26568081' } },
+    anatomyLegacy: { 'head.hp': 30 },
     main: main(80, 0, 0, 0),
     note: '머리 또는 날개 한쪽을 파괴하면 추락합니다. 날개는 체력은 낮지만 내구도가 100%입니다. 떨어지는 사체도 피하세요.',
     parts: [
-      part('head', '머리', 30, 0, 0, 100, 100, true, 'kill', '날개 사이의 작은 머리를 노리세요.', { sourcePart: 'Head' }),
+      part('head', '머리', 20, 0, 0, 100, 100, true, 'kill', '날개 사이의 작은 머리를 노리세요.', { sourcePart: 'Head' }),
       part('wing', '날개 한쪽', 20, 0, 100, 100, 30, true, 'kill', '좌우 중 한쪽 날개에 직접 맞히세요. 날개의 내구 피해 기준으로 계산합니다.', { sourcePart: 'Wings (2)' }),
       part('limbs', '다리', 30, 0, 0, 100, 40, false, 'break', '몸 아래의 다리입니다. 부숴도 추락하지 않습니다.', { sourcePart: 'Limbs' }),
     ],
@@ -625,7 +643,7 @@ export const weaponProfiles = {
       delivery: 'explosive', directKind: 'none', explosionDurable: 190, innerRadius: 2, radius: 7,
       hitCondition: { kind: 'shrapnel', min: 0, max: 30, default: 6, defaultPct: 20 },
       bomblet: { standard: 110, durable: 35, ap: 3, explosion: 0, explosionAp: 0 },
-      note: '공중에서 터진 주폭발과 파편 피해를 계산하며, 주탄의 직격은 빼습니다. 기본은 파편 30개 중 6개가 이 부위에 맞는다고 보며, 명중 수를 바꾸거나 0개로 해서 파편을 뺄 수 있습니다. 폭발 중심이 이 부위에 닿는다고 보며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다.',
+      note: '공중에서 터진 주폭발과 파편 피해를 계산하며, 주탄의 직격은 뺍니다. 기본은 파편 30개 중 6개가 이 부위에 맞는다고 보며, 명중 수를 바꾸거나 0개로 해서 파편을 뺄 수 있습니다. 폭발 중심이 이 부위에 닿는다고 보며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다.',
     }),
   ]),
   'wasp': {
@@ -660,7 +678,7 @@ export const weaponProfiles = {
   ]),
   'railgun': profile('Railgun', [
     shot('safe', '안전 모드 · 기본 충전', 600, 225, 5, 0, 0, { falloff: true }),
-    shot('unsafe-max', '불안전 모드 · 최대 피해 충전', 1500, 562, 5, 0, 0, { falloff: true }),
+    shot('unsafe-max', '안전 해제 모드 · 최대 피해 충전', 1500, 562, 5, 0, 0, { falloff: true }),
   ], '모드마다 충전 정도가 다릅니다. 덜 충전하면 피해가 줄고, 과충전으로 터지는 자폭은 빼고 계산합니다.'),
 };
 

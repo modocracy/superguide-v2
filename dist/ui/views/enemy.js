@@ -2,6 +2,7 @@
 // primary, secondary, throwable) ranked by its quickest verified route, then open
 // any weapon for part-by-part detail.
 import { enemies, weaponProfiles, unsupportedWeapons, combatCheckedAt, damageSource } from '../../data/combat-data.js';
+import { bindTips, tipLabel } from '../tips.js';
 import { personalProfiles, personalUnsupported } from '../../core/personal-combat.js';
 import { personalWeapons } from '../../data/personal-weapons.js';
 import { weaponImages } from '../../data/weapon-images.js';
@@ -11,6 +12,8 @@ import { wikiIcons } from '../../data/wiki-icons.js';
 import { enemyPages, difficultyNames } from '../../data/enemy-pages.js';
 import { difficultyIcons } from '../../data/difficulty-icons.js';
 import { enemyWeapons, helldiverArmor } from '../../data/enemy-weapons.js';
+import { enemyAnatomy } from '../../data/enemy-anatomy.js';
+import { rowPhoto } from '../../core/anatomy.js';
 import { factionGuides } from '../../data/faction-data.js';
 import { stratagems, stratagemById } from '../../core/catalog.js';
 import { solveMatchup, withHitAssumption, spearCannotLock, partPool, isFatal, FATAL } from '../../core/combat.js';
@@ -59,7 +62,7 @@ const compare = { picks: [], part: '' }; // [{ weaponId, modeId }] kept across e
 // Only the hit count starts blank; primary-hit options fall back to each mode's
 // own defaults (e.g. W.A.S.P. counts sub-missile hits, not the parent blast).
 const DEFAULT_ASSUME = { hitCount: '' };
-const state = { enemy: DEFAULT_ENEMY, group: 'support', weapon: null, mode: null, shield: true, faction: '', q: '', assume: { ...DEFAULT_ASSUME }, pickerOpen: false, attacksOpen: false, detailsOpen: true, distance: 0 };
+const state = { enemy: DEFAULT_ENEMY, group: 'support', weapon: null, mode: null, shield: true, faction: '', q: '', assume: { ...DEFAULT_ASSUME }, pickerOpen: false, attacksOpen: false, partsOpen: false, detailsOpen: true, distance: 0 };
 // Shooting distances for range falloff (wiki Damage formula); 0 = full close-range damage.
 const DISTANCES = [0, 25, 50, 100, 150, 200];
 // Range only matters for a mode with a direct hit (a grenade launcher's 0 direct damage has nothing to lose).
@@ -193,9 +196,136 @@ function enemyDetails(enemy) {
     // A divider above Tactics, where Spawning and Behavior used to end their own panel.
     block(L('공략 요령', 'Tactics'), info.tactics, info.tacticsEn, true, Boolean(info.spawning?.length || info.behavior?.length)), block(L('실전 팁', 'Field tips'), info.tips, info.tipsEn, true)].filter(Boolean) : [];
   const table = attacks(enemy);
-  if (!blocks.length && !table) return '';
-  return html`<details class="panel fold enemy-details" data-details ${state.detailsOpen ? raw('open') : ''}><summary><h2>${L('상세 정보', 'Details')}</h2></summary>
-    ${blocks.length ? html`<div class="enemy-lore">${blocks}</div>` : ''}${table}</details>`;
+  const anatomy = partInfo(enemy);
+  if (!blocks.length && !table && !anatomy) return '';
+  // Part info and Attacks are panels of their own beside Details, not inside it; Details counts its lines (one per
+  // bullet) like the other two count their rows (user request 2026-11-25).
+  // The bullets the blocks show: a block shows only when it has Korean lines, in the current language.
+  const lines = info ? [['spawning', 'spawningEn'], ['behavior', 'behaviorEn'], ['tactics', 'tacticsEn'], ['tips', 'tipsEn']]
+    .reduce((n, [ko, en]) => n + (info[ko]?.length ? (lang === 'en' ? info[en] : info[ko])?.length ?? 0 : 0), 0) : 0;
+  return html`${blocks.length ? html`<details class="panel fold enemy-details" data-details ${state.detailsOpen ? raw('open') : ''}><summary><h2>${L('상세 정보', 'Details')}</h2><span class="count">${lines}</span></summary>
+    <div class="enemy-lore">${blocks}</div></details>` : ''}${anatomy}${table}`;
+}
+
+// "Part info": the enemy's wiki Anatomy table row for row (enemy-anatomy.js, built from the wiki
+// snapshot and checked against the calculation by scripts/test-enemy-anatomy.mjs), with the wiki's
+// highlighted image. Column heads explain themselves on hover or focus (the wiki's table notes), and
+// a row's photo opens every value with those notes (openAnatomy). Folded by default; stays open across
+// enemies once opened (state.partsOpen).
+const ANATOMY_COLUMNS = [
+  ['name', L('부위', 'Part'), L('개수(×2 등)가 붙은 부위는 하나하나 체력이 따로 있습니다. 개수가 없는 부위들은 체력을 함께 씁니다(위키 표 안내).', 'Each part with a count has its own health. Parts without a count share health pools (wiki table note).')],
+  ['hp', L('체력', 'Health'), L('부위의 체력입니다. ‘본체’로 적힌 부위는 체력이 따로 없고, 받은 피해가 모두 본체 체력으로 갑니다. 난이도에 따라 달라지면 가장 높은 난이도의 값입니다.', 'The part\'s health. Parts listed as "Main" have no health of their own: all damage dealt to them goes to the Main health pool. Where it changes with difficulty, the highest difficulty\'s value.')],
+  ['armor', L('장갑', 'Armor'), L('공격의 관통(AP)이 장갑보다 낮으면 피해가 들어가지 않고, 같으면 65%, 높으면 100%가 들어갑니다.', 'An attack with armor penetration (AP) below the armor deals no damage; equal AP deals 65%, higher AP 100%.')],
+  ['durability', L('내구도', 'Durability'), L('무기의 일반 피해와 내구 피해가 섞이는 비율입니다. 내구도 X%인 부위에는 일반 피해 × (100 − X)% + 내구 피해 × X%가 들어갑니다. 높을수록 내구 피해가 큰 무기가 유리합니다.', 'How a weapon\'s normal and durable damage blend. A part with X% durability takes normal damage × (100 − X)% + durable damage × X%. The higher it is, the more weapons with high durable damage pay off.')],
+  ['toMain', L('본체 전달', 'To main'), L('부위에 준 피해 중 본체 체력에도 함께 들어가는 비율입니다. 0%면 넘어가지 않습니다. ‘-’는 본체 자신이거나 해당하지 않는 줄입니다.', 'The share of damage dealt to the part that also goes to Main health. At 0% nothing passes on. "-" is Main itself or does not apply.')],
+  ['cap', L('전달 상한', 'Overflow cap'), L('‘예’면 본체로 넘어가는 피해가 이 부위의 체력과 출혈 체력을 합한 만큼으로 제한됩니다. ‘아니오’면 제한이 없습니다.', 'If "Yes", damage passed to Main is capped by the combined health and constitution of the part. "No" means no cap.')],
+  ['fatal', L('치명', 'Fatal'), L('‘예’면 이 부위를 부수면 적이 죽습니다. ‘쓰러뜨림’은 부술 때 적이 쓰러지거나 떨어지는 부위입니다. 아래 줄은 출혈 체력(위키 Constitution)으로, 체력이 바닥난 뒤에 쓰이는 두 번째 체력입니다. 총량, 초당 감소량, 그대로 두었을 때 다 줄어드는 시간(총량 ÷ 초당 감소량)이며, 본체나 치명 부위라면 그때 죽습니다. 초당 0이면 줄지 않아 추가 체력처럼 작동합니다.', 'If "Yes", destroying this part kills the enemy. "Downs" marks a part that knocks the enemy down or out of the sky. The lines below are the constitution: a second health pool used once Main or limb health is depleted, given as its total, its decay a second and how long it takes to run out when left alone (total / decay); for Main or a fatal part the enemy dies then. At 0/s it never decays and works as extra health.')],
+  ['exdr', L('폭발 저항', 'ExDR'), L('폭발 피해를 줄이는 비율(0~100%)입니다. 100%면 이 부위는 폭발 피해를 받지 않고 그 폭발이 본체를 노립니다. 이때 폭발 관통이 본체 장갑 이상이어야 하고, 폭발 하나당 한 번만, 그 폭발이 아직 본체에 피해를 주지 않았을 때만 일어납니다.', 'Explosion damage resistance, 0 to 100%. At 100% the part takes no explosion damage and the explosion targets Main instead. That needs explosion AP at or above Main\'s armor, happens once per explosion, and not if the same explosion already damaged Main.')],
+];
+// Wiki rows with no site part of their own.
+const ANATOMY_NAMES = { 'Hull Main': '차체 본체', 'Turret Main': '포탑 본체', 'Fuel Tanks Main': '연료통 본체', 'Backpack Main': '전원 팩 본체', 'Pilot: Main': '조종사 본체', Pilot: '조종사', Rockets: '로켓',
+  'Lower Sac': '뒤쪽 담즙낭', 'Armor Broken: Damaged Chassis': '손상된 몸통', Arms: '팔', Legs: '다리', 'Broken: Damaged Rearward- Middle Vertebra': '손상된 뒤쪽 중간 척추 외피' };
+// Every site part a wiki row is (the "both copies" duplicate aside), the linked one first: one row can
+// be several calculated parts, like the Harvester's right and middle upper thigh armor.
+function anatomyLayers(enemy, row) {
+  const part = enemy.parts.find(item => item.id === row.part);
+  if (!part || row.role === 'pool') return [];
+  const linked = row.stage === 'exposed' ? part.next : part, key = wikiKey(linked.sourcePart);
+  const same = enemy.parts.flatMap(item => [item, ...(item.next ? [item.next] : [])]).filter(layer => layer !== linked && !(layer.copies > 1) && layer.sourcePart && wikiKey(layer.sourcePart) === key);
+  return [linked, ...same];
+}
+// Names that differ only at the front share the rest: "오른쪽 윗다리 장갑" + "가운데 윗다리 장갑" = "오른쪽·가운데 윗다리 장갑".
+// A name the others all end with is the general one: "다리 장갑" covers "왼앞다리 장갑" (Bile Titan "Leg Armor").
+function joinNames(names) {
+  const general = names.find(name => names.every(other => other.endsWith(name)));
+  if (general) return general;
+  const words = names.map(name => name.split(' '));
+  let shared = 0;
+  while (words.every(list => list.length > shared + 1 && list.at(-1 - shared) === words[0].at(-1 - shared))) shared++;
+  return shared ? `${words.map(list => list.slice(0, -shared).join(' ')).join('·')} ${words[0].slice(-shared).join(' ')}` : names.join('·');
+}
+// The site's Korean part name without its counting words ("한쪽", "한 개") or armor-to-flesh arrow.
+const siteName = layer => layer.name.replace(/ → .*$/, '').replace(/ 한 ?(쪽|개|문|정|곳|장)$/, '');
+// An energy shield (also the Harvester's, whose shield data has no kind) is 보호막; an arm shield is 방패.
+const energyShield = enemy => enemy.shield?.kind === 'energy' || /energy|cockpit/i.test(enemy.anatomyOmitted?.Shield ?? '');
+function anatomyName(enemy, row) {
+  if (lang === 'en') return row.name;
+  if (row.role === 'main') return ANATOMY_NAMES[row.name] || '본체';
+  if (row.name === 'Shield') return energyShield(enemy) ? '보호막' : '방패';
+  const layers = anatomyLayers(enemy, row);
+  return layers.length ? joinNames([...new Set(layers.map(siteName))]) : ANATOMY_NAMES[row.name] || row.name;
+}
+const dash = (value, format = num) => value == null ? '-' : format(value);
+// Constitution, then its decay and how long it takes to run out when left alone (total / decay a second).
+const bleedLines = row => {
+  const seconds = row.bleed.hp / row.bleed.perSecond, shown = Math.round(seconds * 10) / 10, about = shown === seconds ? '' : L('약 ', 'about ');
+  return html`${L(`출혈 체력 ${num(row.bleed.hp)}`, `Constitution ${num(row.bleed.hp)}`)}<br>${L(`초당 ${num(row.bleed.perSecond)}씩 감소 · ${about}${num(shown)}초 뒤 ${row.fatal === 'no' ? '소진' : '죽음'}`, `-${num(row.bleed.perSecond)}/s · ${row.fatal === 'no' ? 'gone' : 'dies'} in ${about}${num(shown)} s`)}`;
+};
+const anatomyCells = (enemy, row) => {
+  const hp = row.official ? html`${num(row.official.hp)}<small>${L(`공식 패치 ${row.official.source.match(/^Patch ([\d.]+)/)?.[1] ?? ''} 값 · 위키 표 ${num(row.hp)}`, `official patch ${row.official.source.match(/^Patch ([\d.]+)/)?.[1] ?? ''} · wiki table ${num(row.hp)}`)}</small>`
+    : row.hp != null ? html`${num(row.hp)}${row.hpDefault != null ? html`<small>${L(`난이도 ${row.hpFrom}부터 · 기본 ${num(row.hpDefault)}`, `from difficulty ${row.hpFrom} · default ${num(row.hpDefault)}`)}</small>` : ''}`
+    : row.hpText === 'main' ? L('본체', 'Main') : row.hpText === 'main-hull' ? L('본체(차체)', 'Main (Hull)') : row.hpText === 'main-turret' ? L('본체(포탑)', 'Main (Turret)') : row.hpText === 'infinite' ? L('무한', 'Infinite') : row.hpText;
+  // A value taken from the game data sheet instead of the wiki table (user decision 2026-11-25).
+  const game = (key, text, format = num) => row.game?.[key] == null ? text : html`${text}<small>${L(`게임 데이터 값 · 위키 표 ${format(row.game[key])}`, `game data · wiki table ${format(row.game[key])}`)}</small>`;
+  return {
+    hp: game('hp', hp), armor: game('armor', dash(row.armor)), durability: game('durability', dash(row.durability, pct), pct), exdr: game('exdr', dash(row.exdr, pct), pct), toMain: game('toMain', dash(row.toMain, pct), pct),
+    cap: row.cap == null ? '-' : row.cap ? L('예', 'Yes') : L('아니오', 'No'),
+    // Fatal and constitution in one cell (user decision 2026-11-25): the flag, then how long it bleeds out.
+    fatal: html`${row.fatal === 'yes' ? badge(L('예', 'Yes'), 'kill') : row.fatal === 'both' ? badge(L('둘 다 부수면', 'When both are destroyed'), 'kill') : html`<span class="faint">${L('아니오', 'No')}</span>`}${row.downs ? html`<small>${L('쓰러뜨림', 'Downs')}</small>` : ''}${row.bleed
+      ? html`<small>${row.bleed.perSecond ? bleedLines(row) : L(`줄지 않는 추가 체력 ${num(row.bleed.hp)}`, `Extra health ${num(row.bleed.hp)} (never decays)`)}</small>`
+      : row.bleedText ? html`<small>${L('출혈 체력', 'Constitution')} ${row.bleedText}</small>` : ''}`,
+  };
+};
+// Notes under a row's name: which armor uncovers it, and what the calculator does with a row it does
+// not use as a part of its own.
+const wikiKey = text => text.replace(/\s*\((\d+)\)$/, ' ($1)');
+// The armor whose removal exposes this row. The wiki table does not say, so this comes from the
+// calculator's armor-then-flesh routes (a part's next layer); rows of the wiki's "Armor Broken" or
+// "Broken" tabs, or named "Exposed", that no route goes through get a general note.
+function exposedBy(enemy, row) {
+  const key = wikiKey(row.count ? `${row.name} (${row.count})` : row.name);
+  const armors = enemy.parts.filter(part => part.sourcePart && part.next?.sourcePart && wikiKey(part.next.sourcePart) === key);
+  if (armors.length) {
+    const ko = [...new Set(armors.map(siteName))], en = [...new Set(armors.map(part => part.sourcePart.replace(/\s*\(\d+\)$/, '')))];
+    const particle = josa(ko.at(-1), ['을', '를']).slice(ko.at(-1).length);
+    return L(`‘${ko.join('’·‘')}’${particle} 벗기면 드러남`, `Exposed once ${en.join(' or ')} is off`);
+  }
+  return /^(Armor Broken|Broken):|^Exposed\b/.test(row.name) ? L('장갑이 부서진 뒤 드러나는 부위', 'Exposed once its armor breaks') : '';
+}
+function anatomyNotes(enemy, row) {
+  const notes = [exposedBy(enemy, row)];
+  if (row.merged) { const part = enemy.parts.flatMap(item => [item, ...(item.next ? [item.next] : [])]).find(item => item.id === row.merged); notes.push(L(`횟수 계산에서는 ‘${siteName(part)}’${josa(siteName(part), ['과', '와']).slice(siteName(part).length)} 같은 값으로 합쳐 씀`, `Counted together with ${T(part.name).replace(/ → .*$/, '')} (same values)`)); }
+  // Why the calculator leaves the row out (anatomyOmitted reasons in the combat data).
+  if (row.omitted && row.name === 'Shield') notes.push(energyShield(enemy) ? L('횟수 계산은 보호막을 걷어 낸 뒤 기준', 'Shot counts start once the shield is down') : L('횟수 계산은 방패를 피해서 맞히는 기준', 'Shot counts assume hits that get past the shield'));
+  else if (row.omitted && row.name === 'Pilot') notes.push(L('횟수 계산은 아래 조종사 부위별로 함', 'Shot counts use the pilot parts below'));
+  else if (row.omitted && row.name === 'Rockets') notes.push(L('위키에 기폭 즉사 버그가 있다고 적혀 있어 횟수 계산에서 뺌', 'Left out of the shot counts: the wiki notes a bug in the detonation kill'));
+  else if (row.omitted) notes.push(L('횟수 계산에서 뺀 부위', 'Left out of the shot counts'));
+  return notes.filter(Boolean);
+}
+function anatomyPhoto(enemy, row, index) {
+  const photo = rowPhoto(enemy.id, row);
+  const label = L(`${enemy.name} ${anatomyName(enemy, row)} 상세 보기`, `${T(enemy.name)} ${row.name} details`);
+  if (!photo) return html`<button class="part-photo no-photo" type="button" data-anatomy="${index}" aria-label="${label}">${L(html`사진<br>없음`, html`No<br>photo`)}</button>`;
+  const tw = photo.thumbnailWidth || 320, th = photo.thumbnailHeight || 213;
+  return html`<button class="part-photo" type="button" data-anatomy="${index}" style="aspect-ratio:${tw}/${th}" aria-label="${label}"><img src="${photo.thumbnail}" alt="" width="${tw}" height="${th}" loading="lazy" decoding="async" style="width:100%;height:100%;left:0;top:0"><span class="zoom">${icon('expand', 14)}</span></button>`;
+}
+const tipHead = tipLabel;
+export function partInfo(enemy) {
+  const table = enemyAnatomy[enemy.id];
+  if (!table?.rows.length) return '';
+  const rows = table.rows.map((row, index) => {
+    const cells = anatomyCells(enemy, row);
+    return html`<tr><td class="photo">${anatomyPhoto(enemy, row, index)}</td>
+      <th scope="row">${anatomyName(enemy, row)}${row.count ? html` <span class="faint">×${row.count}</span>` : ''}${anatomyNotes(enemy, row).map(note => html`<small>${note}</small>`)}</th>
+      ${ANATOMY_COLUMNS.slice(1).map(([key]) => html`<td>${cells[key]}</td>`)}</tr>`;
+  });
+  return html`<details class="panel fold enemy-details enemy-attacks enemy-parts" data-parts ${state.partsOpen ? raw('open') : ''}><summary><h2>${L('부위 정보', 'Part info')}</h2><span class="count">${table.rows.length}</span></summary>
+    <div class="compare-scroll" role="region" aria-label="${L('적 부위표', 'Enemy parts')}" tabindex="0"><table class="compare-table enemy-part-table">
+      <thead><tr><th scope="col">${L('위치', 'Location')}</th>${ANATOMY_COLUMNS.map(([, label, tip]) => html`<th scope="col">${tipHead(label, tip)}</th>`)}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <p class="sources">${external(`${enemy.source}#Anatomy`, L('위키 Anatomy', 'Wiki Anatomy'))}<span>${L(`위키 판 ${table.revision}`, `wiki revision ${table.revision}`)}</span></p>
+  </details>`;
 }
 
 // The enemy's own attacks (wiki "Weapons Loadout" boxes, enemy-weapons.js) and a rough count of
@@ -216,7 +346,7 @@ function attacks(enemy) {
   };
   const wiki = `https://helldivers.wiki.gg/wiki/${encodeURIComponent(info.page.replaceAll(' ', '_'))}#Weapons_Loadout`;
   // Folded by default; stays open across re-renders once the player opens it (state.attacksOpen).
-  return html`<details class="enemy-attacks" data-attacks ${state.attacksOpen ? raw('open') : ''}><summary><h2>${L('공격 패턴', 'Attacks')}</h2><span class="count">${info.attacks.length}</span></summary>
+  return html`<details class="panel fold enemy-details enemy-attacks" data-attacks ${state.attacksOpen ? raw('open') : ''}><summary><h2>${L('공격 패턴', 'Attacks')}</h2><span class="count">${info.attacks.length}</span></summary>
     <div class="compare-scroll" role="region" aria-label="${L('적 공격표', 'Enemy attacks')}" tabindex="0"><table class="compare-table enemy-attack-table">
       <colgroup><col class="col-attack"><col class="col-damage">${RATINGS.map(() => html`<col class="col-hits">`)}</colgroup>
       <thead><tr><th scope="col" rowspan="2">${L('공격', 'Attack')}</th><th scope="col" rowspan="2">${L('피해', 'Damage')}</th><th scope="colgroup" colspan="${RATINGS.length}" class="hits-head">${L('쓰러질 때까지 맞는 횟수 (몸통 기준)', 'Hits until downed (torso)')}</th></tr>
@@ -224,8 +354,8 @@ function attacks(enemy) {
       <tbody>${info.attacks.map(attack => html`<tr><th scope="row">${L(attack.name, attack.en)}${lang === 'en' || attack.name === attack.en ? '' : html`<small>${attack.en}</small>`}</th><td>${damageCell(attack)}</td>
         ${RATINGS.map(([rating]) => attack.hits ? html`<td class="hits"><b>${attack.hits[rating]}</b>${L('회', '')}</td>` : html`<td class="hits none">-</td>`)}</tr>`)}</tbody>
     </table></div>
-    <p class="note">${L(html`횟수 칸은 <b>몸통 기준</b>입니다. 헬다이버 체력(${helldiverArmor.health})을 공격 한 번의 피해와 방어구 배율(50은 ${helldiverArmor.factors[50]}배, 100은 ${helldiverArmor.factors[100]}배, 150은 ${helldiverArmor.factors[150]}배)을 곱한 값으로 나눠 올렸습니다. 머리는 ${helldiverArmor.head}배, 팔다리는 ${num(Math.round(helldiverArmor.arm * 100) / 100)}배로 맞습니다.`,
-      html`The hit counts are <b>for torso hits</b>: Helldiver health ${helldiverArmor.health} divided by one hit's damage times the armor factor (50: x${helldiverArmor.factors[50]}, 100: x${helldiverArmor.factors[100]}, 150: x${helldiverArmor.factors[150]}), rounded up. Head hits take x${helldiverArmor.head}, limbs x${num(Math.round(helldiverArmor.arm * 100) / 100)}.`)}</p>
+    <p class="note">${L(html`횟수 칸은 <b>몸통 기준</b>입니다. 헬다이버 체력(${helldiverArmor.health})을 공격 한 번의 피해와 방어구 배율(50은 ${helldiverArmor.factors[50]}배, 100은 ${helldiverArmor.factors[100]}배, 150은 ${helldiverArmor.factors[150]}배)을 곱한 값으로 나눠 올렸습니다. 머리는 ${helldiverArmor.head}배, 팔다리는 ${num(Math.round(helldiverArmor.arm * 100) / 100)}배로 맞습니다. ‘-’는 횟수를 세지 않은 공격입니다. 폭발이 섞인 공격(거리와 맞는 부위에 따라 피해가 달라짐), 화염·부식·거미줄처럼 계속 피해를 주는 공격, 피해가 여러 값으로 적힌 공격이 해당합니다.`,
+      html`The hit counts are <b>for torso hits</b>: Helldiver health ${helldiverArmor.health} divided by one hit's damage times the armor factor (50: x${helldiverArmor.factors[50]}, 100: x${helldiverArmor.factors[100]}, 150: x${helldiverArmor.factors[150]}), rounded up. Head hits take x${helldiverArmor.head}, limbs x${num(Math.round(helldiverArmor.arm * 100) / 100)}. A "-" is an attack that is not counted: one with an explosion (its damage depends on distance and which parts it hits), one that keeps burning like fire, acid or webs, or one listed with several damage values.`)}</p>
     <p class="sources">${external(wiki, L('위키 Weapons Loadout', 'Wiki Weapons Loadout'))}${external(helldiverArmor.source.page, L('위키 방어구 배율표', 'Wiki armor rating table'))}</p>
   </details>`;
 }
@@ -236,7 +366,7 @@ function hero(enemy) {
   const sub = info?.subfaction && factionGuides.find(guide => guide.id === info.subfaction);
   const vitals = [
     [L('본체 체력', 'Main health'), num(m.hp)], [L('본체 장갑', 'Main armor'), m.armor], [L('내구도', 'Durability'), pct(m.durability)], [L('폭발 저항', 'Explosive resistance'), pct(m.exdr)],
-    ...(m.constitution ? [[L('출혈 여유', 'Bleed-out health'), num(m.constitution)]] : []),
+    ...(m.constitution ? [[L('출혈 체력', 'Bleed-out health'), num(m.constitution)]] : []),
     [L('화염 저항', 'Fire resistance'), fireText(info?.fireMult)], [L('경직치', 'Stagger threshold'), info?.staggerReq == null ? L('미확인', 'Unverified') : num(info.staggerReq)],
     // Enemies that can call reinforcements (wiki Behavior): worth killing first.
     ...(info?.reinforcements ? [[L('증원 호출', 'Calls reinforcements'), REINFORCEMENTS[info.reinforcements]]] : []),
@@ -633,6 +763,25 @@ function openPhotos(targetId) {
       return html`<figure><figcaption>${caption}</figcaption><img src="${photo.src}" alt="${L(`${enemy.name} ${caption} — 색칠된 영역이 조준 부위`, `${T(enemy.name)} ${T(caption)} — the colored area is where to aim`)}" width="${photo.width}" height="${photo.height}" decoding="async"><span class="sources">${external(photo.source, L('위키 원본 이미지', 'Original wiki image'))}</span></figure>`; })}</div>`, `${T(enemy.name)} ${T(target.name)} ${L('사진', 'photos')}`);
 }
 
+// A part info row in the side sheet: the wiki image large, then every value with the column's note.
+function openAnatomy(index) {
+  const enemy = enemyById.get(state.enemy);
+  const row = enemyAnatomy[enemy.id]?.rows[index];
+  if (!row) return;
+  const tips = [...new Set(anatomyLayers(enemy, row).map(layer => layer.tip).filter(Boolean))], photo = rowPhoto(enemy.id, row), cells = anatomyCells(enemy, row), notes = anatomyNotes(enemy, row);
+  const name = `${anatomyName(enemy, row)}${row.count ? ` ×${row.count}` : ''}`;
+  sheetView = 'photo';
+  showSheet(html`<div class="sheet-top"><span>${L('부위 정보', 'Part info')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+    <div class="sheet-content image-viewer"><h2 id="sheet-title" style="font-size:20px">${enemy.name} · ${name}</h2>
+    ${lang === 'en' ? '' : html`<p class="faint">${L('위키 이름', 'Wiki name')}: ${row.name}${row.count ? ` (${row.count})` : ''}</p>`}
+    ${tips.map(tip => html`<p class="muted">${tip}</p>`)}${notes.map(note => html`<p class="muted">${note}</p>`)}
+    ${photo ? html`<figure><img src="${photo.src}" alt="${L(`${enemy.name} ${name} — 색칠된 영역이 이 부위`, `${T(enemy.name)} ${row.name} — the colored area is this part`)}" width="${photo.width}" height="${photo.height}" decoding="async"><span class="sources">${external(photo.source, L('위키 원본 이미지', 'Original wiki image'))}</span></figure>`
+      : html`<p class="faint">${L('위키에 이 부위의 이미지가 없습니다.', 'The wiki has no image of this part.')}</p>`}
+    <dl class="anatomy-facts">${ANATOMY_COLUMNS.slice(1).map(([key, label, tip]) => html`<div><dt>${label}</dt><dd><b>${cells[key]}</b><p>${tip}</p></dd></div>`)}</dl>
+    <p class="sources" style="margin-top:12px">${external(`${enemy.source}#Anatomy`, L('위키 Anatomy', 'Wiki Anatomy'))}<span>${L(`위키 판 ${enemyAnatomy[enemy.id].revision}`, `wiki revision ${enemyAnatomy[enemy.id].revision}`)}</span></p></div>`,
+    `${T(enemy.name)} ${row.name} ${L('부위 정보', 'part info')}`);
+}
+
 // --- Lifecycle ----------------------------------------------------------------------------------
 export function mount(container, context) {
   root = container; ctx = context;
@@ -663,11 +812,13 @@ export function mount(container, context) {
   // <details> toggle does not bubble: listen in the capture phase.
   root.addEventListener('toggle', event => {
     if (event.target.matches?.('[data-attacks]')) state.attacksOpen = event.target.open;
+    if (event.target.matches?.('[data-parts]')) state.partsOpen = event.target.open;
     if (event.target.matches?.('[data-details]')) state.detailsOpen = event.target.open;
   }, true);
   root.addEventListener('change', onChange);
   root.addEventListener('input', onInput);
   root.addEventListener('click', onClick);
+  bindTips();
 }
 
 // Shared by the page and the part-by-part sheet (listenToSheet); `scope` is where the event came from.
@@ -716,6 +867,7 @@ function onClick(event) {
   } else if (target.dataset.modePick) {
     state.weapon ||= selectedWeaponId(); state.mode = target.dataset.modePick; resetAssumption(); renderMain(); syncUrl();
   } else if (target.dataset.photo) openPhotos(target.dataset.photo);
+  else if (target.dataset.anatomy) openAnatomy(Number(target.dataset.anatomy));
   else if (target.dataset.compareAdd) togglePick(target.dataset.compareAdd, target.dataset.compareMode);
   else if (target.hasAttribute('data-compare-clear')) { compare.picks = []; compare.part = ''; renderMain(); }
   else if (target.hasAttribute('data-compare-open')) { compare.part = ''; openCompare(); }

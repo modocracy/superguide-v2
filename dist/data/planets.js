@@ -472,7 +472,7 @@ export const specialEffects = [
   "detail": [
    "헬다이버들의 투표로 머물 행성을 정합니다. 4시간마다 후보 행성 투표가 열리고, 시간이 끝나면 가장 많은 표를 받은 행성 궤도로 바로 이동합니다.",
    "요청 신청서, 일반 샘플, 희귀 샘플을 기부해 전술 행동을 충전합니다. 한 사람이 24시간 동안 기부할 수 있는 양은 일반 샘플 75, 요청 신청서 50,000, 희귀 샘플 50입니다.",
-   "전술 행동은 한 번에 하나만 켜집니다. 목표량이 다 차면 바로 켜져 24시간 동안 정거장이 머무는 행성의 모든 임무에 적용되고, 끝나면 재사용 대기에 들어가 그동안은 기부를 받지 않습니다."
+   "전술 행동은 한 번에 하나만 켜집니다. 목표량이 다 차면 바로 켜져 24시간 동안 정거장이 머무는 행성의 모든 임무에 적용되고, 끝나면 재사용 대기시간에 들어가 그동안은 기부를 받지 않습니다."
   ],
   "detailEn": [
    "Helldivers vote on where it goes. A vote on candidate planets opens every 4 hours, and when it closes the station warps straight to the orbit of the planet with the most votes.",
@@ -531,7 +531,7 @@ export const specialEffects = [
   "descriptionEn": "DSS crews maintain deployment of a 24-hour rotating fleet of Eagle Fighters from the massive three-tiered Convocation Bay, supporting all Helldiver operations on the planet with close air support and halting enemy offensives for a short time.",
   "wiki": "https://helldivers.wiki.gg/wiki/Democracy_Space_Station",
   "detail": [
-   "전술 행동: 일반 샘플 6,480,000을 모으면 24시간 동안 켜지고, 재사용 대기는 4일입니다.",
+   "전술 행동: 일반 샘플 6,480,000을 모으면 24시간 동안 켜지고, 재사용 대기시간은 4일입니다.",
    "임무 중 이글 가스 공습이 주기적으로 떨어집니다. 헬다이버 주변 200m 안의 적을 노리며, 헬다이버가 주 목표나 보조 목표 구역 안에 있는 동안에는 새로 시작하지 않습니다.",
    "방어 캠페인 행성에서는 이글 폭풍이 머무는 동안 방어 제한 시간이 멈춥니다."
   ],
@@ -554,7 +554,7 @@ export const specialEffects = [
   "descriptionEn": "The DSS activates its Zero G Anti-Ship Missile System, targeting all large enemy spacecraft attempting to exit the planet's atmosphere. In addition, diverts excess manpower to Super Destroyer logistical support.",
   "wiki": "https://helldivers.wiki.gg/wiki/Democracy_Space_Station",
   "detail": [
-   "전술 행동: 요청 신청서 4,320,000,000을 모으면 24시간 동안 켜지고, 재사용 대기는 2일입니다.",
+   "전술 행동: 요청 신청서 4,320,000,000을 모으면 24시간 동안 켜지고, 재사용 대기시간은 2일입니다.",
    "이 행성에서 출발하는 방어 캠페인이 생기지 않습니다. 이미 진행 중인 방어 캠페인을 끝내지는 못합니다.",
    "모든 임무에 헬포드 공간 최적화 부스터가 자동으로 적용됩니다."
   ],
@@ -577,7 +577,7 @@ export const specialEffects = [
   "descriptionEn": "The DSS Logistics Armada supplies all Super Destroyers orbiting the planet with surplus 380mm shells. Ordnance support is also provided to SEAF operations, accelerating liberation efforts.",
   "wiki": "https://helldivers.wiki.gg/wiki/Democracy_Space_Station",
   "detail": [
-   "전술 행동: 희귀 샘플 4,320,000을 모으면 24시간 동안 켜지고, 재사용 대기는 5일입니다.",
+   "전술 행동: 희귀 샘플 4,320,000을 모으면 24시간 동안 켜지고, 재사용 대기시간은 5일입니다.",
    "임무 중 궤도 380mm 고폭 폭격을 한 번 더 쓸 수 있습니다. 직접 챙긴 380mm가 있으면 그것부터 쓰입니다.",
    "해방 캠페인 진행이 빨라지며, 설명과 달리 방어 캠페인과 침공 캠페인에도 적용됩니다."
   ],
@@ -614,7 +614,7 @@ export const operationModifiers = [
   "faction": null,
   "where": null,
   "detail": [
-   "함선 모듈로 줄인 재사용 대기에 25%가 더해집니다. 예를 들어 함선 모듈을 모두 올린 기관총 센트리는 77초에서 96초가 됩니다."
+   "함선 모듈로 줄인 재사용 대기시간에 25%가 더해집니다. 예를 들어 함선 모듈을 모두 올린 기관총 센트리는 77초에서 96초가 됩니다."
   ],
   "detailEn": [
    "The 25% is added on top of the cooldown already cut by ship modules. A fully upgraded Machine Gun Sentry, for example, goes from 77 to 96 seconds."
@@ -826,7 +826,7 @@ export const eventKinds = [
  },
  {
   "id": "event-stratagem-cooldown",
-  "name": "특정 스트라타젬 재사용 대기",
+  "name": "특정 스트라타젬 재사용 대기시간",
   "en": "One stratagem's cooldown",
   "lines": [
    "특정 스트라타젬의 쿨다운 시간이 N 감소합니다.",
@@ -911,7 +911,7 @@ export const hazards = [
   "name": "버그 지뢰",
   "en": "Bug Mine",
   "detail": [
-   "테르미니드에게 점령된 지역에만 있습니다. 밟거나 공격을 받으면 터지며 산성을 뿌려 피해를 주고 느리게 합니다. 여러 개의 산성은 겹치지 않습니다."
+   "테르미니드에게 점령된 지역에만 있습니다. 밟거나 공격을 받으면 터지며 산성을 뿌려 피해를 주고 느리게 합니다. 산성은 여러 번 묻어도 겹치지 않습니다."
   ],
   "detailEn": [
    "Only in Terminid-infested areas. It explodes when stepped on or damaged, splashing acid that damages and slows. Acid from several of them does not stack."
@@ -1185,7 +1185,7 @@ export const statusEffects = [
   "en": "Acid Splash",
   "detail": [
    "산성에 묻으면 4초 동안 느려지고 지속 피해를 받을 수 있습니다.",
-   "테르미니드의 산성 공격(스피터·스퓨어·차저·바일 타이탄 등)과 버그 지뢰, 스포어 버스트 변종이 겁니다."
+   "테르미니드의 산성 공격(스피터·스퓨어·차저·바일 타이탄 등), 버그 지뢰, 스포어 버스트 변종으로 걸립니다."
   ],
   "detailEn": [
    "Acid slows you for 4 seconds and may deal damage over time.",
@@ -1198,7 +1198,7 @@ export const statusEffects = [
   "name": "출혈",
   "en": "Bleed",
   "detail": [
-   "가슴 부상, 가시 식물, 철조망에 닿으면 걸리며 지속 피해를 받습니다. 셋은 따로 겹칩니다."
+   "가슴 부상, 가시 식물, 철조망에 닿으면 걸리며 지속 피해를 받습니다. 세 가지는 각각 따로 쌓입니다."
   ],
   "detailEn": [
    "A chest injury, spike plants and barbed wire each cause it, as separate effects, dealing damage over time."
@@ -1211,7 +1211,7 @@ export const statusEffects = [
   "en": "Fire",
   "detail": [
    "불은 AP 4 장갑까지 뚫고 기본 3초 동안 탑니다. 큰 적은 불 피해 배율이 높을 수 있습니다(임페일러 1.7배).",
-   "화염방사기처럼 직접 뿜는 불은 적을 혼란에 빠뜨리고 느리게 합니다(대형 이상 버그가 아닌 적 제외).",
+   "화염방사기처럼 직접 뿜는 불은 적을 혼란에 빠뜨리고 느리게 합니다(테르미니드가 아닌 대형 이상의 적은 제외).",
    "네이팜 이글·네이팜 포격·일회성 네이팜은 1초 동안 훨씬 강한 화상을 더합니다."
   ],
   "detailEn": [
@@ -1256,9 +1256,9 @@ export const statusEffects = [
   "name": "독",
   "en": "Poison",
   "detail": [
-   "녹셔스 변종만 겁니다. 6초 동안 초당 2(내구 5) 산성 피해를 주고, 강한 독은 화면도 흐리게 만듭니다.",
+   "녹셔스 변종만 사용합니다. 6초 동안 초당 2(내구 5) 산성 피해를 주고, 강한 독은 화면도 흐리게 만듭니다.",
    "독 취약이 쌓일수록 독 피해가 1.4·1.8·2.8·4.2배가 되며 최대 4중첩입니다. 각성제는 중첩을 2 줄이지만 독 피해는 막지 못합니다.",
-   "3중첩부터는 독이 걸린 동안 질주할 수 없으니 2중첩을 넘기지 마세요."
+   "3중첩부터는 독에 걸린 동안 질주할 수 없으니 2중첩을 넘기지 마세요."
   ],
   "detailEn": [
    "Only the Noxious Strain applies it: 2 per second (5 durable) acid damage for 6 seconds; Heavy Poison also blurs your screen.",

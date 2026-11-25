@@ -379,6 +379,10 @@ main[aria-busy] { opacity: .5; transition: opacity .2s .15s; }
 /* Explosion marker: the Helldivers Wiki 'Damage Explosion Icon' (Dogo314, CC BY-NC-SA 4.0), one 830-byte file, cached once. */
 .ico-blast { display: inline-block; width: 1.1em; height: .95em; margin-right: 3px; vertical-align: -.12em; background: url('../assets/icons/damage-explosion.svg') center / contain no-repeat; }
 /* Arc and gas markers: the wiki's 'Damage Arc Icon' and 'Damage Gas Icon' (Dogo314, CC BY-NC-SA 4.0), same size as the blast marker. */
+/* Direct hit: the wiki's Damage_Ballistic_Icon.svg (Dogo314). The file is near-white for the wiki's dark pages, so it
+   is used as a mask painted in the text colour and shows in both themes (user request 2026-11-25). */
+.ico-ballistic { display: inline-block; width: 1.1em; height: 1.1em; margin-right: 3px; vertical-align: -.18em; background-color: var(--text-2);
+  -webkit-mask: url('../assets/icons/damage-ballistic.svg') center / contain no-repeat; mask: url('../assets/icons/damage-ballistic.svg') center / contain no-repeat; }
 .ico-arc, .ico-gas, .ico-fire, .ico-laser { display: inline-block; width: 1.1em; height: 1.1em; margin-right: 3px; vertical-align: -.18em; background: center / contain no-repeat; }
 .ico-arc { background-image: url('../assets/icons/damage-arc.svg'); }
 .ico-gas { background-image: url('../assets/icons/damage-gas.svg'); }
@@ -469,6 +473,12 @@ details > summary::-webkit-details-marker { display: none; }
 .variant-tabs { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; margin-bottom: -8px; }
 .variant-tabs h3 { font-size: 14px; font-weight: 750; }
 .variant-panel:not([hidden]) { display: grid; gap: 12px; }
+/* Firing mode icons (mode-icons.js), in the mode tabs and the full-screen mode headings. */
+.mode-icon { width: 18px; height: 18px; flex: none; }
+.item-detail-mode > h4 .mode-icon { margin-right: 6px; vertical-align: -3px; }
+/* The mode panel's 'Key stats' title reads like the key stats title of a weapon without modes: same size and the
+   same space down to the grid (user request 2026-11-25). */
+.variant-panel > .variant-panel-title { font-size: 14px; font-weight: 750; margin: 8px 0 -12px; }
 .firing-modes { display: grid; gap: inherit; }
 .variant-note { font-size: 13.5px; color: var(--text-2); }
 .compare-modes { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
@@ -504,6 +514,10 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .sheet-body:has(> .wb-workspace) { overflow: hidden; }
 .sheet-top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; background: color-mix(in srgb, var(--bg-raise) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .sheet-top span { font: 700 13px/1 var(--cond); letter-spacing: .14em; color: var(--accent-text); text-transform: uppercase; }
+/* The mode tabs' copy in the top bar (item-detail.js stickyModes): compact, next to the close button. */
+.sheet-top .sheet-top-modes { margin-left: auto; padding: 2px; }
+.sheet-top .sheet-top-modes button { padding: 4px 9px; font-size: 12.5px; }
+@media (max-width: 560px) { .sheet-top.has-modes > span { display: none; } }
 .sheet-content { padding: 20px 20px 40px; display: grid; gap: 20px; }
 .detail-id { display: flex; gap: 14px; align-items: center; }
 .detail-id h2 { font-size: 24px; font-weight: 800; }
@@ -551,6 +565,8 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 }
 .sheet.expanded .sheet-top span { display: inline-flex; align-items: center; gap: 8px; }
 .sheet.expanded .sheet-top span::before { content: ''; width: 12px; height: 2px; background: var(--accent); }
+/* The note under the rounds on full screen starts where the card text starts, not at its border. */
+.sheet.expanded .ballistic-block > p.faint { padding: 0 16px; }
 .sheet.expanded > .sheet-body > .sheet-content { gap: 28px; padding-block: 26px 56px; }
 .sheet.expanded .sheet-content > .block > h3,
 .sheet.expanded .item-detail-section-heading > h3 {
@@ -665,6 +681,34 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .ballistic-block[open] > summary { margin-bottom: 8px; }
 .ballistic { display: grid; gap: 14px; margin-bottom: 16px; }
 .ballistic h4 { font-size: 13.5px; font-weight: 750; color: var(--text); }
+/* Recoil simulation (recoil-sim.js). */
+.recoil-sim-block { container-type: inline-size; }
+.recoil-sim-block[open] > summary { margin-bottom: 8px; }
+.recoil-sim { display: grid; gap: 10px; grid-template-areas: 'side' 'view' 'notes'; }
+.recoil-sim-side { grid-area: side; display: grid; gap: 10px; align-content: start; }
+.recoil-sim-notes { grid-area: notes; display: grid; gap: 10px; align-content: start; }
+/* A row of choices: its name stays on the left and the buttons wrap beside it, compact enough for four
+   underbarrels on one line in the panel (user request 2026-11-25). */
+.recoil-sim-option { display: flex; gap: 6px 8px; align-items: flex-start; }
+.recoil-sim-option > span { flex: none; min-width: 56px; padding-top: 9px; font-size: 13px; font-weight: 650; color: var(--text-2); }
+.recoil-sim-option .segmented { min-width: 0; }
+.recoil-sim-option .segmented button { padding: 5px 6px; font-size: 12px; gap: 4px; }
+.recoil-sim-option .button { flex: none; }
+.opt-default { font-size: 10.5px; opacity: .75; margin-left: 3px; }
+.recoil-sim-view { grid-area: view; width: 100%; max-width: 320px; aspect-ratio: 1; border-radius: 2px; }
+/* The view copies the game armory's recoil simulation, so it stays dark in both site themes. */
+.recoil-sim-view .board { fill: #070808; }
+.recoil-sim-view .grid path { stroke: rgba(255, 255, 255, .17); stroke-width: .8; }
+.recoil-sim-view .frame { fill: none; stroke: rgba(255, 255, 255, .38); stroke-width: 1; }
+.recoil-sim-view .hits circle { fill: #8a8c8a; }
+.recoil-sim-view .hits .fresh circle { fill: #ffd60a; }
+.recoil-sim-view .trail { fill: none; stroke: #7fb2ff; stroke-width: 1; stroke-linejoin: round; opacity: .35; }
+.recoil-sim-view .reticle { fill: none; stroke: #7fb2ff; stroke-width: 1.4; opacity: .8; }
+.recoil-sim .caption { font-size: 12.5px; color: var(--text-3); }
+/* Wide enough (the full-screen sheet): the view on the left, the choices and notes on the right. */
+@container (min-width: 700px) {
+  .recoil-sim { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); grid-template-areas: 'view side' 'view notes'; column-gap: 28px; align-items: start; }
+}
 .ballistic-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; }
 section.ballistic-block .ballistic {
   grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0;
@@ -1037,9 +1081,13 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 /* The check date sits at the end of the tab row instead of a line of its own. */
 .planet-head { display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; margin-bottom: 14px; }
 .planet-checked { font-size: 13.5px; color: var(--text-3); }
-.detail-grid dd.force-lines { display: grid; gap: 2px; font: 600 14px/1.5 var(--font); }
+.detail-grid dd.force-lines { display: grid; gap: 4px; font: 600 13px/1.4 var(--font); }
+/* Name small, number in the stat font; the pairs wrap as wholes with a gap between them. */
+.force-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; }
+.force-pair { white-space: nowrap; }
+.force-val { margin-left: 5px; font: 700 20px/1.2 var(--cond); letter-spacing: .01em; color: var(--text); }
 .force-note { font-size: 12.5px; font-weight: 600; color: var(--bleed); }
-.force-line b { color: var(--text-2); font-weight: 650; margin-right: 2px; }
+.force-line b { color: var(--text-2); font-weight: 650; }
 .planet-effects summary { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: 750; list-style: none; }
 .planet-effects summary::-webkit-details-marker { display: none; }
 .planet-effects summary::before { content: ''; width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 7px; border-color: transparent transparent transparent var(--accent-text); transition: transform .15s; }
@@ -1078,7 +1126,7 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .info-item { position: relative; display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding: 16px; background: var(--surface); border: 1px solid var(--line); scroll-margin-top: calc(var(--bar-h) + 16px); }
 .info-item::before { content: ''; position: absolute; left: 0; top: 0; right: 0; height: 3px; background: var(--accent); }
 .info-item[data-focus] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
-.info-icon { width: 64px; height: 64px; display: grid; place-items: center; padding: 6px; background: #141714; border: 1px solid var(--line-strong); }
+.info-icon { width: 64px; height: 64px; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; padding: 6px; background: #141714; border: 1px solid var(--line-strong); }
 .info-icon img { width: 100%; height: 100%; object-fit: contain; }
 .info-body { min-width: 0; }
 .info-body h3 { font-size: 17px; font-weight: 800; line-height: 1.25; }
@@ -1404,15 +1452,15 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .module-applied { margin-top: 6px; font-size: 13px; }
 .module-applied a { color: var(--accent-text); }
 /* Enemy view: the enemy's own attacks and rough torso-hit counts (enemy-weapons.js). */
-.enemy-attacks { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
-.enemy-details > summary + .enemy-attacks { margin-top: 0; padding-top: 0; border-top: 0; }
+/* Part info and Attacks are panels of their own after Details (user request 2026-11-25). */
+.enemy-details + .enemy-details { margin-top: 0; }
 :is(.enemy-attacks, .fold) summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; }
 :is(.enemy-attacks, .fold) summary::-webkit-details-marker { display: none; }
 :is(.enemy-attacks, .fold) summary::before { content: ''; width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 7px; border-color: transparent transparent transparent var(--accent-text); transition: transform .15s; }
 :is(.enemy-attacks, .fold)[open] > summary::before { transform: rotate(90deg); }
 :is(.enemy-attacks, .fold)[open] > summary { margin-bottom: 10px; }
 :is(.enemy-attacks, .fold) > summary h2 { font-size: 15px; font-weight: 800; margin: 0; }
-.enemy-attacks .count { font: 700 13px/1 var(--cond); color: var(--text-3); }
+.enemy-details > summary .count { font: 700 13px/1 var(--cond); color: var(--text-3); }
 .enemy-attack-table { min-width: 560px; table-layout: fixed; }
 .enemy-attack-table .col-attack { width: 34%; }
 .enemy-attack-table .col-damage { width: 20%; }
@@ -1429,6 +1477,40 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .enemy-attack-table td.hits b { font: 800 20px/1 var(--cond); color: var(--accent-text); margin-right: 1px; }
 .enemy-attack-table td.hits.none { color: var(--text-3); }
 .enemy-attacks .note { margin-top: 10px; }
+/* Enemy view: part info, like the wiki Anatomy table, with the highlighted wiki image per part. */
+.enemy-part-table { min-width: 780px; font-size: 13.5px; }
+.enemy-part-table thead th { font-size: 13px; padding: 8px 7px; white-space: nowrap; }
+.enemy-part-table th, .enemy-part-table td { padding: 8px 7px; vertical-align: middle; }
+.enemy-part-table tbody th { width: auto; white-space: normal; color: var(--text); font-weight: 700; font-size: 14px; }
+.enemy-part-table tbody th small { display: block; color: var(--text-3); font-size: 12px; font-weight: 500; }
+.enemy-part-table td.photo { width: 88px; padding: 6px 6px; }
+.enemy-part-table .part-photo { width: 88px; }
+.enemy-part-table td .badge { white-space: nowrap; }
+.enemy-part-table td small { display: block; color: var(--text-3); font-size: 12px; font-weight: 500; }
+.enemy-parts .sources { margin-top: 10px; }
+.part-photo.no-photo { display: grid; place-items: center; font-size: 11.5px; color: var(--text-3); text-align: center; cursor: pointer; }
+/* Column heads that explain themselves on hover or focus (one floating .tip-pop, placed by enemy.js). */
+.col-tip { border-bottom: 1px dotted var(--text-3); cursor: help; }
+.col-tip:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.tip-pop { position: fixed; z-index: 1000; max-width: min(320px, calc(100vw - 16px)); padding: 8px 10px; border-radius: 8px; background: var(--surface-3); color: var(--text); border: 1px solid var(--line-strong); font-size: 13px; line-height: 1.5; font-weight: 500; white-space: normal; box-shadow: 0 6px 18px rgba(0, 0, 0, .35); pointer-events: none; }
+/* A part's details in the side sheet: the wiki image, then every value with what it means. */
+.anatomy-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin: 14px 0 0; }
+.anatomy-facts > div { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--surface-2); }
+.anatomy-facts dt { font-size: 13px; color: var(--text-3); font-weight: 700; }
+.anatomy-facts dd { margin: 2px 0 0; }
+.anatomy-facts dd > b { font: 800 20px/1.2 var(--cond); }
+.anatomy-facts dd small { display: block; color: var(--text-3); font: 500 12.5px/1.4 inherit; }
+.anatomy-facts dd p { margin: 6px 0 0; font-size: 13px; color: var(--text-2); line-height: 1.5; }
+/* Phones: smaller photos so more of the row shows before the table scrolls sideways. */
+@media (max-width: 600px) {
+  .enemy-part-table { min-width: 720px; font-size: 13px; }
+  .enemy-part-table td.photo, .enemy-part-table .part-photo { width: 56px; }
+  .enemy-part-table th, .enemy-part-table td { padding: 6px 6px; }
+  /* The photo and part name stay put while the numbers scroll sideways (photo cell 56 + 2 x 6 = 68px). */
+  .enemy-part-table td.photo, .enemy-part-table thead th:first-child { position: sticky; left: 0; z-index: 2; background: var(--surface); }
+  .enemy-part-table tbody th, .enemy-part-table thead th:nth-child(2) { position: sticky; left: 68px; z-index: 2; width: 92px; min-width: 92px; max-width: 92px; background: var(--surface); box-shadow: 6px 0 6px -6px rgba(0, 0, 0, .45); }
+  .enemy-part-table thead th:first-child, .enemy-part-table thead th:nth-child(2) { background: var(--surface-2); z-index: 3; }
+}
 /* Phones: the table fits the screen instead of scrolling, so the hit counts stay in view. */
 @media (max-width: 600px) {
   .enemy-details { padding: 14px 12px; }
