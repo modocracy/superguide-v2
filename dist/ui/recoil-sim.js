@@ -37,7 +37,10 @@ export function simulate(sim, scale) {
   const view = [0, 0], drift = [0, 0];
   let pending = [0, 0], next = 0, fired = 0;
   const frames = [], hits = [];
-  for (let t = 0; t <= end + STEP / 2; t += STEP) {
+  const settle = Math.exp(-STEP / DRIFT_TAU), take = 1 - Math.exp(-STEP / CLIMB_TAU);
+  const steps = Math.ceil(end / STEP);
+  for (let i = 0; i <= steps; i++) {
+    const t = i * STEP;
     if (fired < shots && t + STEP / 2 >= next) {
       hits.push({ t, x: view[0] + drift[0], y: view[1] + drift[1] });
       const now = view[0] + drift[0];
@@ -46,7 +49,6 @@ export function simulate(sim, scale) {
       pending = c;
       fired++; next += gap;
     }
-    const settle = Math.exp(-STEP / DRIFT_TAU), take = 1 - Math.exp(-STEP / CLIMB_TAU);
     for (const a of [0, 1]) {
       drift[a] *= settle;
       const move = pending[a] * take;
@@ -58,6 +60,10 @@ export function simulate(sim, scale) {
 }
 
 const fmt = n => (Math.round(n * 10) / 10).toLocaleString();
+const SVG = 'http://www.w3.org/2000/svg';
+const C = SIZE / 2;
+// World point (degrees, up = positive) in the world group's own coordinates; the group moves with the view.
+const wx = x => C + x * PX, wy = y => C - y * PX;
 
 // Node (the checks) has no HTMLElement: the element is defined only in a browser.
 const Base = globalThis.HTMLElement ?? class {};
@@ -75,61 +81,88 @@ class RecoilSim extends Base {
       </div>
       <svg class="recoil-sim-view" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="${L('반동 시뮬레이션 화면', 'Recoil simulation view')}">
         <g class="grid">${Array.from({ length: HALF * 2 - 1 }, (_, i) => (i + 1) * PX).map(p => `<line x1="${p}" y1="0" x2="${p}" y2="${SIZE}"/><line x1="0" y1="${p}" x2="${SIZE}" y2="${p}"/>`).join('')}</g>
-        <g class="hits"></g>
-        <path class="start" d=""/>
-        <path class="centre" d="M${SIZE / 2 - 7} ${SIZE / 2}h14M${SIZE / 2} ${SIZE / 2 - 7}v14"/>
-        <circle class="reticle" cx="${SIZE / 2}" cy="${SIZE / 2}" r="6"/>
+        <g class="world">
+          <path class="trail" d=""/>
+          <g class="hits"></g>
+          <path class="start" d="M${C - 6} ${C}h12M${C} ${C - 6}v12"/>
+        </g>
+        <path class="centre" d="M${C - 7} ${C}h14M${C} ${C - 7}v14"/>
+        <circle class="reticle" cx="${C}" cy="${C}" r="6"/>
       </svg>
       <p class="recoil-sim-readout" aria-live="polite"></p>
       <p class="caption">${L(`최대 연사 속도(분당 ${fmt(this.sim.rpm)}발)로 ${shots}발 · 조준하고 멈춰 선 기준 · 칸 하나는 약 1°`, `${shots} rounds at the top fire rate (${fmt(this.sim.rpm)} RPM) · aimed, standing still · one square is about 1°`)}</p>
-      <p class="caption">${L('점 = 탄착, 원 = 총이 가리키는 곳, 십자 = 화면 가운데, 회색 + = 처음 조준한 곳. 반동 값과 자세 배율은 게임 자료이고, 한 발이 몇 도인지와 돌아오는 속도는 사이트 추정입니다. 화면을 직접 내리지 않는다고 보고 그렸습니다.',
-        'Dot = hit, circle = where the weapon points, cross = screen centre, grey + = where you first aimed. The recoil values and stance multipliers are game data; the degrees per shot and the recovery speed are our estimate. Drawn as if you do not pull the view down.')}</p>`;
+      <p class="caption">${L('점 = 탄착, 선 = 총이 지나간 길, 원 = 총이 가리키는 곳, 십자 = 화면 가운데, 회색 + = 처음 조준한 곳. 반동 값과 자세 배율은 게임 자료이고, 한 발이 몇 도인지와 돌아오는 속도는 사이트 추정입니다. 화면을 직접 내리지 않는다고 보고 그렸습니다.',
+        'Dot = hit, line = the path the weapon took, circle = where the weapon points, cross = screen centre, grey + = where you first aimed. The recoil values and stance multipliers are game data; the degrees per shot and the recovery speed are our estimate. Drawn as if you do not pull the view down.')}</p>`;
+    this.world = this.querySelector('.world');
+    this.trail = this.querySelector('.trail');
+    this.hitLayer = this.querySelector('.hits');
+    this.reticle = this.querySelector('.reticle');
+    this.out = this.querySelector('.recoil-sim-readout');
     this.querySelectorAll('[data-stance]').forEach(b => b.addEventListener('click', () => {
       this.stance = Number(b.dataset.stance);
       this.querySelectorAll('[data-stance]').forEach(o => o.setAttribute('aria-pressed', String(o === b)));
       this.fire();
     }));
     this.querySelector('[data-fire]').addEventListener('click', () => this.fire());
-    this.draw({ view: [0, 0], drift: [0, 0] }, []);
   }
 
   disconnectedCallback() { cancelAnimationFrame(this.raf); }
 
-  // Screen position of a world point (degrees, up = positive) while the view points at `view`.
-  at([vx, vy], x, y) { return [SIZE / 2 + (x - vx) * PX, SIZE / 2 - (y - vy) * PX]; }
-
-  draw(frame, hits) {
-    const [cx, cy] = this.at(frame.view, frame.view[0] + frame.drift[0], frame.view[1] + frame.drift[1]);
-    const reticle = this.querySelector('.reticle');
-    reticle.setAttribute('cx', cx.toFixed(1)); reticle.setAttribute('cy', cy.toFixed(1));
-    const [sx, sy] = this.at(frame.view, 0, 0);
-    this.querySelector('.start').setAttribute('d', `M${(sx - 6).toFixed(1)} ${sy.toFixed(1)}h12M${sx.toFixed(1)} ${(sy - 6).toFixed(1)}v12`);
-    this.querySelector('.hits').innerHTML = hits.map(h => { const [x, y] = this.at(frame.view, h.x, h.y); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6"/>`; }).join('');
+  // Moves the view (one transform on the world group) and the reticle; nothing else is rebuilt per frame.
+  place(vx, vy, dx, dy) {
+    this.world.setAttribute('transform', `translate(${(-vx * PX).toFixed(2)} ${(vy * PX).toFixed(2)})`);
+    this.reticle.setAttribute('cx', (C + dx * PX).toFixed(2));
+    this.reticle.setAttribute('cy', (C - dy * PX).toFixed(2));
   }
 
-  readout(run, hits) {
-    const last = run.frames.at(-1);
-    const xs = hits.map(h => h.x);
-    const spread = Math.max(...xs) - Math.min(...xs);
-    this.querySelector('.recoil-sim-readout').textContent = L(`화면이 위로 약 ${fmt(last.view[1])}° 올라감 · 좌우로 약 ${fmt(spread)}° 퍼짐`, `View climbed about ${fmt(last.view[1])}° · hits spread about ${fmt(spread)}° side to side`);
+  addHit(h) {
+    const dot = document.createElementNS(SVG, 'circle');
+    dot.setAttribute('cx', wx(h.x).toFixed(2)); dot.setAttribute('cy', wy(h.y).toFixed(2)); dot.setAttribute('r', '2.6');
+    this.hitLayer.append(dot);
+  }
+
+  readout(run) {
+    const xs = run.hits.map(h => h.x);
+    const climb = run.frames.at(-1).view[1], spread = Math.max(...xs) - Math.min(...xs);
+    this.out.textContent = L(`화면이 위로 약 ${fmt(climb)}° 올라감 · 좌우로 약 ${fmt(spread)}° 퍼짐`, `View climbed about ${fmt(climb)}° · hits spread about ${fmt(spread)}° side to side`);
   }
 
   fire() {
     cancelAnimationFrame(this.raf);
     const run = simulate(this.sim, STANCES[this.stance][1]);
+    // Flat [view x, view y, drift x, drift y] per step, so a frame reads without allocating.
+    const n = run.frames.length, buf = new Float64Array(n * 4);
+    run.frames.forEach((f, i) => buf.set([f.view[0], f.view[1], f.drift[0], f.drift[1]], i * 4));
+    const aim = i => [wx(buf[i * 4] + buf[i * 4 + 2]), wy(buf[i * 4 + 1] + buf[i * 4 + 3])];
+    this.hitLayer.replaceChildren();
+    this.out.textContent = '';
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      this.draw(run.frames.at(-1), run.hits); this.readout(run, run.hits); return;
+      run.hits.forEach(h => this.addHit(h));
+      this.trail.setAttribute('d', run.frames.map((_, i) => `${i ? 'L' : 'M'}${aim(i).map(v => v.toFixed(1)).join(' ')}`).join(''));
+      const k = (n - 1) * 4;
+      this.place(buf[k], buf[k + 1], buf[k + 2], buf[k + 3]);
+      this.readout(run);
+      return;
     }
+    let shown = 0, path = '', last = null;
     const start = performance.now();
     const tick = now => {
-      const t = (now - start) / 1000;
-      const frame = run.frames[Math.min(run.frames.length - 1, Math.round(t / STEP))];
-      const hits = run.hits.filter(h => h.t <= t);
-      this.draw(frame, hits);
+      const t = Math.min((now - start) / 1000, run.end);
+      // Blend the two simulation steps around t so the motion does not step at the display's frame rate.
+      const pos = t / STEP, i = Math.min(n - 1, Math.floor(pos)), j = Math.min(n - 1, i + 1), f = pos - i;
+      const v = k => buf[i * 4 + k] + (buf[j * 4 + k] - buf[i * 4 + k]) * f;
+      while (shown < run.hits.length && run.hits[shown].t <= t) this.addHit(run.hits[shown++]);
+      // The trail gains a point only once the aim has moved half a pixel.
+      const ax = wx(v(0) + v(2)), ay = wy(v(1) + v(3));
+      if (!last || Math.hypot(ax - last[0], ay - last[1]) > 0.5) {
+        path += `${last ? 'L' : 'M'}${ax.toFixed(1)} ${ay.toFixed(1)}`;
+        this.trail.setAttribute('d', path);
+        last = [ax, ay];
+      }
+      this.place(v(0), v(1), v(2), v(3));
       if (t < run.end) this.raf = requestAnimationFrame(tick);
-      else this.readout(run, run.hits);
+      else this.readout(run);
     };
-    this.querySelector('.recoil-sim-readout').textContent = '';
     this.raf = requestAnimationFrame(tick);
   }
 }

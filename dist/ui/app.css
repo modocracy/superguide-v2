@@ -671,6 +671,7 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .recoil-sim-view { width: 100%; max-width: 320px; aspect-ratio: 1; background: var(--field); border: 1px solid var(--line-strong); }
 .recoil-sim-view .grid line { stroke: var(--line); stroke-width: 1; }
 .recoil-sim-view .hits circle { fill: var(--bleed); }
+.recoil-sim-view .trail { fill: none; stroke: var(--break); stroke-width: 1.2; stroke-linejoin: round; opacity: .45; }
 .recoil-sim-view .start { stroke: var(--text-3); stroke-width: 2; }
 .recoil-sim-view .centre { stroke: var(--text-2); stroke-width: 1.5; }
 .recoil-sim-view .reticle { fill: none; stroke: var(--break); stroke-width: 2; }
