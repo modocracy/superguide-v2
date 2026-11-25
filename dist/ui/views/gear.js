@@ -271,7 +271,7 @@ function detailRows(w) {
     : w.reloadTactical === w.reload ? L('전술 재장전 없음', 'No tactical reload') : L(`전술 재장전 ${num(w.reloadTactical)}초`, `Tactical reload ${num(w.reloadTactical)}s`));
   // Customizable weapons (an attachment table) read with the level 1 attachments; others have no 'base' to name.
   const customizable = w.category === 'primary' && weaponAttachments[w.id]?.length;
-  if (w.ergonomics != null) add(L('인체공학형', 'Ergonomics'), num(w.ergonomics), '', customizable ? L('1레벨 부착물 기준 · 높을수록 조준이 빠름', 'With level 1 attachments · higher = faster aim') : L('높을수록 조준이 빠름', 'Higher = faster aim'));
+  if (w.ergonomics != null) add(L('인체공학형', 'Ergonomics'), num(w.ergonomics), '', customizable ? L('기본 부착물 기준 · 높을수록 조준이 빠름', 'With the default attachments · higher = faster aim') : L('높을수록 조준이 빠름', 'Higher = faster aim'));
   // Sway only where it differs from the standard 100% (user decision 2026-11-19).
   if (w.sway != null && w.sway !== 1) add(L('흔들림', 'Sway'), num(Math.round(w.sway * 100)), '%', L('표준 100% · 낮을수록 덜 흔들림', 'Standard 100% · lower sways less'));
   if (w.throwableCapacity != null) add(L('소지 수', 'Carried'), num(w.throwableCapacity), L('개', ''), w.throwableStart != null ? L(`출격 시 ${w.throwableStart}개`, `${w.throwableStart} at deployment`) : '');
@@ -281,7 +281,7 @@ function detailRows(w) {
   // Quick melee (melee.js): every Helldiver's strike, or the bayonet on the weapons that carry one.
   if ((w.category === 'primary' || w.category === 'secondary') && w.type !== 'melee') {
     const bayonet = bayonetWeapons.includes(w.id), hit = bayonet ? quickMelee.bayonet : quickMelee.helldiver;
-    add(bayonet ? L('총검 공격', 'Bayonet') : L('근접 공격', 'Quick melee'), num(hit.damage), '', L(`${bayonet ? '총검' : '기본 근접'}, 관통 ${hit.ap}, 내구 피해 ${num(hit.durable)}`, `${bayonet ? 'Bayonet' : 'Default strike'}, AP ${hit.ap}, durable ${num(hit.durable)}`));
+    add(bayonet ? L('총검 공격', 'Bayonet') : L('근접 공격', 'Quick melee'), num(hit.damage), '', L(`${bayonet ? '총검, ' : ''}관통 ${hit.ap}, 내구 피해 ${num(hit.durable)}`, `${bayonet ? 'Bayonet, ' : ''}AP ${hit.ap}, durable ${num(hit.durable)}`));
   }
   return rows;
 }
