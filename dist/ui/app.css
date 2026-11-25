@@ -677,8 +677,14 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .recoil-sim { display: grid; gap: 10px; grid-template-areas: 'side' 'view' 'notes'; }
 .recoil-sim-side { grid-area: side; display: grid; gap: 10px; align-content: start; }
 .recoil-sim-notes { grid-area: notes; display: grid; gap: 10px; align-content: start; }
-.recoil-sim-option { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
-.recoil-sim-option > span { min-width: 64px; font-size: 13px; font-weight: 650; color: var(--text-2); }
+/* A row of choices: its name stays on the left and the buttons wrap beside it, compact enough for four
+   underbarrels on one line in the panel (user request 2026-11-25). */
+.recoil-sim-option { display: flex; gap: 6px 8px; align-items: flex-start; }
+.recoil-sim-option > span { flex: none; min-width: 56px; padding-top: 9px; font-size: 13px; font-weight: 650; color: var(--text-2); }
+.recoil-sim-option .segmented { min-width: 0; }
+.recoil-sim-option .segmented button { padding: 5px 6px; font-size: 12px; gap: 4px; }
+.recoil-sim-option .button { flex: none; }
+.opt-default { font-size: 10.5px; opacity: .75; margin-left: 3px; }
 .recoil-sim-view { grid-area: view; width: 100%; max-width: 320px; aspect-ratio: 1; border-radius: 2px; }
 /* The view copies the game armory's recoil simulation, so it stays dark in both site themes. */
 .recoil-sim-view .board { fill: #070808; }

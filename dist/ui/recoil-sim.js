@@ -148,7 +148,7 @@ class RecoilSim extends Base {
     const options = [
       sim.modes?.length > 1 ? row(L('사격 방식', 'Fire mode'), 'mode', sim.modes.map(m => [m, MODE_NAMES[m]])) : '',
       sim.rpms ? row(L('연사 속도', 'Fire rate'), 'rpm', sim.rpms.map(r => [r, L(`분당 ${fmt(r)}`, `${fmt(r)} RPM`)])) : '',
-      ...(sim.slots ?? []).map(({ slot, options, fitted }) => row(SLOT_NAMES[slot], `slot:${slot}`, options.map((o, i) => [i, `${L(o.ko, o.en)}${i === fitted ? L(' (기본)', ' (default)') : ''}`]))),
+      ...(sim.slots ?? []).map(({ slot, options, fitted }) => row(SLOT_NAMES[slot], `slot:${slot}`, options.map((o, i) => [i, `${L(o.ko, o.en)}${i === fitted ? `<small class="opt-default">${L('기본', 'default')}</small>` : ''}`]))),
       row(L('패시브', 'Passive'), 'passive', [[true, L('반동 30% 감소', 'Recoil -30%')]]),
     ].join('');
     const id = `rs${++uid}`, arm = 22;
