@@ -250,16 +250,32 @@ const anatomyCells = (enemy, row) => {
       : row.bleedText ? html`<small>${L('출혈 체력', 'Constitution')} ${row.bleedText}</small>` : ''}`,
   };
 };
-// What the calculator does with a row it does not use as a part of its own.
-const anatomyNote = (enemy, row) => {
-  if (row.merged) { const part = enemy.parts.flatMap(item => [item, ...(item.next ? [item.next] : [])]).find(item => item.id === row.merged); return L(`횟수 계산에서는 ‘${siteName(part)}’와 같은 값으로 합쳐 씀`, `Counted together with ${T(part.name).replace(/ → .*$/, '')} (same values)`); }
+// Notes under a row's name: which armor uncovers it, and what the calculator does with a row it does
+// not use as a part of its own.
+const wikiKey = text => text.replace(/\s*\((\d+)\)$/, ' ($1)');
+// The armor whose removal exposes this row. The wiki table does not say, so this comes from the
+// calculator's armor-then-flesh routes (a part's next layer); rows of the wiki's "Armor Broken" or
+// "Broken" tabs, or named "Exposed", that no route goes through get a general note.
+function exposedBy(enemy, row) {
+  const key = wikiKey(row.count ? `${row.name} (${row.count})` : row.name);
+  const armors = enemy.parts.filter(part => part.sourcePart && part.next?.sourcePart && wikiKey(part.next.sourcePart) === key);
+  if (armors.length) {
+    const ko = [...new Set(armors.map(siteName))], en = [...new Set(armors.map(part => part.sourcePart.replace(/\s*\(\d+\)$/, '')))];
+    const particle = josa(ko.at(-1), ['을', '를']).slice(ko.at(-1).length);
+    return L(`‘${ko.join('’·‘')}’${particle} 벗기면 드러남`, `Exposed once ${en.join(' or ')} is off`);
+  }
+  return /^(Armor Broken|Broken):|^Exposed\b/.test(row.name) ? L('장갑이 부서진 뒤 드러나는 부위', 'Exposed once its armor breaks') : '';
+}
+function anatomyNotes(enemy, row) {
+  const notes = [exposedBy(enemy, row)];
+  if (row.merged) { const part = enemy.parts.flatMap(item => [item, ...(item.next ? [item.next] : [])]).find(item => item.id === row.merged); notes.push(L(`횟수 계산에서는 ‘${siteName(part)}’와 같은 값으로 합쳐 씀`, `Counted together with ${T(part.name).replace(/ → .*$/, '')} (same values)`)); }
   // Why the calculator leaves the row out (anatomyOmitted reasons in the combat data).
-  if (row.omitted && row.name === 'Shield') return energyShield(enemy) ? L('횟수 계산은 보호막을 걷어 낸 뒤 기준', 'Shot counts start once the shield is down') : L('횟수 계산은 방패를 피해서 맞히는 기준', 'Shot counts assume hits that get past the shield');
-  if (row.omitted && row.name === 'Pilot') return L('횟수 계산은 아래 조종사 부위별로 함', 'Shot counts use the pilot parts below');
-  if (row.omitted && row.name === 'Rockets') return L('위키에 기폭 즉사 버그가 있다고 적혀 있어 횟수 계산에서 뺌', 'Left out of the shot counts: the wiki notes a bug in the detonation kill');
-  if (row.omitted) return L('횟수 계산에서 뺀 부위', 'Left out of the shot counts');
-  return '';
-};
+  if (row.omitted && row.name === 'Shield') notes.push(energyShield(enemy) ? L('횟수 계산은 보호막을 걷어 낸 뒤 기준', 'Shot counts start once the shield is down') : L('횟수 계산은 방패를 피해서 맞히는 기준', 'Shot counts assume hits that get past the shield'));
+  else if (row.omitted && row.name === 'Pilot') notes.push(L('횟수 계산은 아래 조종사 부위별로 함', 'Shot counts use the pilot parts below'));
+  else if (row.omitted && row.name === 'Rockets') notes.push(L('위키에 기폭 즉사 버그가 있다고 적혀 있어 횟수 계산에서 뺌', 'Left out of the shot counts: the wiki notes a bug in the detonation kill'));
+  else if (row.omitted) notes.push(L('횟수 계산에서 뺀 부위', 'Left out of the shot counts'));
+  return notes.filter(Boolean);
+}
 function anatomyPhoto(enemy, row, index) {
   const photo = rowPhoto(enemy.id, row);
   const label = L(`${enemy.name} ${anatomyName(enemy, row)} 상세 보기`, `${T(enemy.name)} ${row.name} details`);
@@ -272,9 +288,9 @@ function partInfo(enemy) {
   const table = enemyAnatomy[enemy.id];
   if (!table?.rows.length) return '';
   const rows = table.rows.map((row, index) => {
-    const cells = anatomyCells(enemy, row), note = anatomyNote(enemy, row);
-    return html`<tr class="${row.stage === 'exposed' ? 'sub' : ''}"><td class="photo">${anatomyPhoto(enemy, row, index)}</td>
-      <th scope="row">${anatomyName(enemy, row)}${row.count ? html` <span class="faint">×${row.count}</span>` : ''}${note ? html`<small>${note}</small>` : ''}</th>
+    const cells = anatomyCells(enemy, row);
+    return html`<tr><td class="photo">${anatomyPhoto(enemy, row, index)}</td>
+      <th scope="row">${anatomyName(enemy, row)}${row.count ? html` <span class="faint">×${row.count}</span>` : ''}${anatomyNotes(enemy, row).map(note => html`<small>${note}</small>`)}</th>
       ${ANATOMY_COLUMNS.slice(1).map(([key]) => html`<td>${cells[key]}</td>`)}</tr>`;
   });
   return html`<details class="enemy-attacks enemy-parts" data-parts ${state.partsOpen ? raw('open') : ''}><summary><h2>${L('부위 정보', 'Part info')}</h2><span class="count">${table.rows.length}</span></summary>
@@ -282,8 +298,6 @@ function partInfo(enemy) {
       <thead><tr><th scope="col">${L('위치', 'Location')}</th>${ANATOMY_COLUMNS.map(([, label, tip]) => html`<th scope="col">${tipHead(label, tip)}</th>`)}</tr></thead>
       <tbody>${rows}</tbody>
     </table></div>
-    <p class="note">${L('위키 Anatomy 표를 줄마다 그대로 옮겼습니다. 머리글에 마우스를 올리면 설명이 나오고, 사진을 누르면 그 부위의 모든 수치를 설명과 함께 봅니다. 들여 쓴 줄은 바로 위 장갑을 벗긴 뒤 드러나는 부위입니다.',
-      'The wiki Anatomy table, row for row. Hover a column head for what it means; tap a photo for all of that part\'s values with explanations. An indented row is the part exposed once the armor above it is off.')}</p>
     <p class="sources">${external(`${enemy.source}#Anatomy`, L('위키 Anatomy', 'Wiki Anatomy'))}<span>${L(`위키 판 ${table.revision}`, `wiki revision ${table.revision}`)}</span></p>
   </details>`;
 }
@@ -728,13 +742,13 @@ function openAnatomy(index) {
   const enemy = enemyById.get(state.enemy);
   const row = enemyAnatomy[enemy.id]?.rows[index];
   if (!row) return;
-  const layer = anatomyLayer(enemy, row), photo = rowPhoto(enemy.id, row), cells = anatomyCells(enemy, row), note = anatomyNote(enemy, row);
+  const layer = anatomyLayer(enemy, row), photo = rowPhoto(enemy.id, row), cells = anatomyCells(enemy, row), notes = anatomyNotes(enemy, row);
   const name = `${anatomyName(enemy, row)}${row.count ? ` ×${row.count}` : ''}`;
   sheetView = 'photo';
   showSheet(html`<div class="sheet-top"><span>${L('부위 정보', 'Part info')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content image-viewer"><h2 id="sheet-title" style="font-size:20px">${enemy.name} · ${name}</h2>
     ${lang === 'en' ? '' : html`<p class="faint">${L('위키 이름', 'Wiki name')}: ${row.name}${row.count ? ` (${row.count})` : ''}</p>`}
-    ${layer?.tip ? html`<p class="muted">${layer.tip}</p>` : ''}${note ? html`<p class="muted">${note}</p>` : ''}
+    ${layer?.tip ? html`<p class="muted">${layer.tip}</p>` : ''}${notes.map(note => html`<p class="muted">${note}</p>`)}
     ${photo ? html`<figure><img src="${photo.src}" alt="${L(`${enemy.name} ${name} — 색칠된 영역이 이 부위`, `${T(enemy.name)} ${row.name} — the colored area is this part`)}" width="${photo.width}" height="${photo.height}" decoding="async"><span class="sources">${external(photo.source, L('위키 원본 이미지', 'Original wiki image'))}</span></figure>`
       : html`<p class="faint">${L('위키에 이 부위의 이미지가 없습니다.', 'The wiki has no image of this part.')}</p>`}
     <dl class="anatomy-facts">${ANATOMY_COLUMNS.slice(1).map(([key, label, tip]) => html`<div><dt>${label}</dt><dd><b>${cells[key]}</b><p>${tip}</p></dd></div>`)}</dl>
