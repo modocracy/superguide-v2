@@ -111,7 +111,7 @@ export function ballisticsBlock(entries, expanded = false, recoil = []) {
   const recoilCell = c => html`<div><dt>${c.label}</dt><dd>${c.text}${c.unit ? html`<small>${c.unit}</small>` : ''}</dd>${c.caption ? html`<div class="caption">${c.caption}</div>` : ''}</div>`;
   const content = html`${list.map(e => recordBlock(list.length > 1 ? e.label : '', e.record, e.propelled, list.length === 1 ? recoil.map(recoilCell) : ''))}
     ${recoil.length && list.length !== 1 ? html`<div class="ballistic"><dl class="detail-grid">${recoil.map(recoilCell)}</dl></div>` : ''}
-    ${list.length ? html`<p class="faint" style="font-size:12.5px">${L('탄 피해는 중력과 궤적은 반영하지 않습니다. 낙차는 중력 9.82m/s²(helldiversotl.com이 게임 코드에서 확인한 값)에 중력 배율을 곱하고, 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage leaves out gravity and the flight path. Drop uses gravity of 9.82 m/s² (the value helldiversotl.com checked in the game code) times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
+    ${list.length ? html`<p class="faint" style="font-size:12.5px">${L('탄 피해는 중력과 궤적은 반영하지 않습니다. 낙차는 중력 9.82m/s²에 중력 배율을 곱하고, 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage leaves out gravity and the flight path. Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
   `;
   return detailDisclosure(L('세부 수치', 'Detailed stats'), content, { className: 'ballistic-block', expanded });
 }
