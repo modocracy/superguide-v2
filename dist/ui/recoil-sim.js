@@ -11,13 +11,17 @@
 // estimates below, nor the stance multipliers, in the game data: they stay estimates.
 // Site estimates (the game data does not give them): one unit = 0.01 degrees per shot, drift settles with a
 // 0.12 s time constant, a climb kick plays out with a 0.06 s one, the view stays where it climbed (nobody pulls it
-// down), and each pellet lands evenly inside an ellipse whose half-widths are the spread. So the shape compares
-// weapons; the angles are approximate.
+// down), each pellet lands evenly inside an ellipse whose half-widths are the spread, and semi and burst fire pull
+// the trigger every 0.15 s at most. So the shape compares weapons; the angles are approximate.
+// Choices (user request 2026-11-25): stance, fire mode and fire rate (game data), the muzzle (its multipliers on
+// drift, climb and spread from the game data, against the default muzzle already in the inputs) and the armor passive
+// that cuts recoil by 30% (Engineering Kit, Fortified: 0.7 in the game data; it works in every stance, armor.js).
 import { weaponRecoil } from '../data/weapon-recoil.js';
 import { L } from '../core/i18n.js';
 
 const UNIT = 0.01, DRIFT_TAU = 0.12, CLIMB_TAU = 0.06, TURN = 0.57, MAX_SHOTS = 30, STEP = 1 / 240;
 const MRAD = 180 / Math.PI / 1000; // degrees per milliradian
+const PULL = 0.15, PASSIVE = 0.7; // seconds between trigger pulls (estimate); the recoil passive's multiplier
 const STANCES = [['stand', 0.9, () => L('서서', 'Standing')], ['crouch', 0.6, () => L('앉아서', 'Crouched')], ['prone', 0.4, () => L('엎드려서', 'Prone')]];
 
 const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
@@ -44,10 +48,14 @@ function scatter(sim, x, y) {
 
 // The whole burst, sampled every STEP seconds: view (where the screen points), drift (the weapon's offset from it)
 // and the hits (view + drift at each shot, with the points its pellets land on). Angles in degrees, up = positive,
-// 0 = where you first aimed.
+// 0 = where you first aimed. sim.mode ('auto', 'semi' or 'burst' of sim.burst rounds) sets when each round fires.
 export function simulate(sim, scale) {
   const shots = clamp(sim.magazine ?? 1, 1, MAX_SHOTS), gap = 60 / sim.rpm;
-  const end = (shots - 1) * gap + 0.5;
+  const mode = sim.mode ?? sim.modes?.[0] ?? 'auto';
+  const n = mode === 'burst' ? sim.burst || 1 : mode === 'semi' ? 1 : Infinity;
+  // Round k: a burst (or a single semi shot) at the fire rate, the next one a trigger pull later.
+  const timeOf = k => (n === Infinity ? k * gap : Math.floor(k / n) * ((n - 1) * gap + Math.max(gap, PULL)) + (k % n) * gap);
+  const end = timeOf(shots - 1) + 0.5;
   const view = [0, 0], drift = [0, 0];
   let pending = [0, 0], next = 0, fired = 0;
   const frames = [], hits = [];
@@ -61,7 +69,7 @@ export function simulate(sim, scale) {
       const d = kick(sim, 0, scale, view[0]), c = kick(sim, 1, scale, view[0]);
       for (const a of [0, 1]) if (Math.abs(d[a]) > Math.abs(drift[a])) drift[a] = d[a];
       pending = c;
-      fired++; next += gap;
+      fired++; next = timeOf(fired);
     }
     for (const a of [0, 1]) {
       drift[a] *= settle;
@@ -71,6 +79,14 @@ export function simulate(sim, scale) {
     frames.push({ t, view: [...view], drift: [...drift] });
   }
   return { frames, hits, shots, gap, end };
+}
+
+// The inputs for one set of choices: { mode, rpm, muzzle } (indexes into sim.muzzles).
+export function configure(sim, { mode, rpm, muzzle } = {}) {
+  const out = { ...sim, mode: mode ?? sim.modes?.[0] ?? 'auto', rpm: rpm ?? sim.rpm };
+  const fitted = sim.muzzles?.[sim.muzzle], chosen = sim.muzzles?.[muzzle ?? sim.muzzle];
+  if (fitted && chosen) for (const k of ['drift', 'climb', 'spread']) out[k] = sim[k].map((v, a) => v * chosen[k][a] / fitted[k][a]);
+  return out;
 }
 
 // The box: SIZE px square, the crosshair low in it (like the game), and a scale that fits the whole burst.
@@ -99,14 +115,25 @@ class RecoilSim extends Base {
     this.sim = weaponRecoil[this.dataset.key]?.sim;
     if (!this.sim || this.built) return;
     this.built = true;
+    const sim = this.sim;
     this.stance = 0;
-    const shots = clamp(this.sim.magazine ?? 1, 1, MAX_SHOTS);
-    const pellets = this.sim.pellets > 1 ? L(` · 한 발에 펠릿 ${this.sim.pellets}개`, ` · ${this.sim.pellets} pellets a shot`) : '';
+    this.choice = { mode: sim.modes?.[0] ?? 'auto', rpm: sim.rpm, muzzle: sim.muzzle ?? 0, passive: false };
+    const MODE_NAMES = { auto: L('자동', 'Auto'), semi: L('단발', 'Semi'), burst: L(`점사(${sim.burst}발)`, `Burst (${sim.burst})`) };
+    this.modeName = mode => MODE_NAMES[mode];
+    // A row of choices: data-choice names the field, data-value its value (JSON).
+    const row = (label, field, items) => `<div class="recoil-sim-option"><span>${label}</span><div class="segmented" role="group" aria-label="${label}">${items.map(([value, name]) => `<button type="button" data-choice="${field}" data-value='${JSON.stringify(value)}' aria-pressed="${value === this.choice[field]}">${name}</button>`).join('')}</div></div>`;
+    const options = [
+      sim.modes?.length > 1 ? row(L('사격 방식', 'Fire mode'), 'mode', sim.modes.map(m => [m, MODE_NAMES[m]])) : '',
+      sim.rpms ? row(L('연사 속도', 'Fire rate'), 'rpm', sim.rpms.map(r => [r, L(`분당 ${fmt(r)}`, `${fmt(r)} RPM`)])) : '',
+      sim.muzzles ? row(L('총구', 'Muzzle'), 'muzzle', sim.muzzles.map((m, i) => [i, `${L(m.ko, m.en)}${i === sim.muzzle ? L(' (기본)', ' (default)') : ''}`])) : '',
+      row(L('패시브', 'Passive'), 'passive', [[true, L('반동 30% 감소', 'Recoil -30%')]]),
+    ].join('');
     this.innerHTML = `<h4>${L('반동 시뮬레이션', 'Recoil simulation')}</h4>
       <div class="recoil-sim-controls">
         <div class="segmented" role="group" aria-label="${L('자세', 'Stance')}">${STANCES.map(([id, , name], i) => `<button type="button" data-stance="${i}" aria-pressed="${i === 0}">${name()}</button>`).join('')}</div>
         <button class="button small primary" type="button" data-fire>${L('발사', 'Fire')}</button>
       </div>
+      ${options}
       <svg class="recoil-sim-view" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="${L('반동 시뮬레이션 화면', 'Recoil simulation view')}">
         <g class="grid"></g>
         <path class="trail" d=""/>
@@ -115,9 +142,11 @@ class RecoilSim extends Base {
         <circle class="reticle" r="6"/>
       </svg>
       <p class="recoil-sim-readout" aria-live="polite"></p>
-      <p class="caption">${L(`최대 연사 속도(분당 ${fmt(this.sim.rpm)}발)로 ${shots}발${pellets} · 조준하고 멈춰 선 기준`, `${shots} rounds at the top fire rate (${fmt(this.sim.rpm)} RPM)${pellets} · aimed, standing still`)} · <span class="recoil-sim-scale"></span></p>
-      <p class="caption">${L('십자 = 처음 조준한 곳(고정), 점 = 탄착, 선 = 총이 지나간 길, 원 = 총이 가리키는 곳. 표는 연사 전체가 들어오게 배율이 바뀝니다. 반동 값과 탄퍼짐은 게임 자료, 자세 배율은 helldiversotl.com 연구 값이고, 한 발이 몇 도인지, 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다(게임 데이터에서 찾지 못함). 화면을 직접 내리지 않는다고 보고 그렸습니다.',
-        'Cross = where you first aimed (fixed), dot = hit, line = the path the weapon took, circle = where the weapon points. The scale changes so the whole burst fits. The recoil values and spread are game data, the stance multipliers come from helldiversotl.com research, and the degrees per shot, the recovery speed and how hits fall inside the spread are our estimate (not found in the game data). Drawn as if you do not pull the view down.')}</p>`;
+      <p class="caption"><span class="recoil-sim-setup"></span> · <span class="recoil-sim-scale"></span></p>
+      <p class="caption">${L('십자 = 조준점(고정)<br>점 = 탄착군<br>선 = 총구 궤적<br>원 = 총구 방향<br>표는 연사 전체가 들어오게 배율이 바뀝니다.',
+        'Cross = aim point (fixed)<br>Dots = hit group<br>Line = muzzle path<br>Circle = muzzle direction<br>The scale changes so the whole burst fits.')}</p>
+      <p class="caption">${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 helldiversotl.com 연구 값이고, 한 발이 몇 도인지, 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다(게임 데이터에서 찾지 못함). 화면을 직접 내리지 않는다고 보고 그렸습니다. 총구 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
+        'The recoil values and spread are game data, the stance multipliers come from helldiversotl.com research, and the degrees per shot, the recovery speed and how hits fall inside the spread are our estimate (not found in the game data). Drawn as if you do not pull the view down. The muzzle recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}</p>`;
     this.grid = this.querySelector('.grid');
     this.trail = this.querySelector('.trail');
     this.hitLayer = this.querySelector('.hits');
@@ -125,6 +154,14 @@ class RecoilSim extends Base {
     this.reticle = this.querySelector('.reticle');
     this.out = this.querySelector('.recoil-sim-readout');
     this.scaleText = this.querySelector('.recoil-sim-scale');
+    this.setupText = this.querySelector('.recoil-sim-setup');
+    this.querySelectorAll('[data-choice]').forEach(b => b.addEventListener('click', () => {
+      const field = b.dataset.choice, value = JSON.parse(b.dataset.value);
+      // The passive is a single on/off button; the others pick one of their row.
+      this.choice[field] = field === 'passive' ? !this.choice.passive : value;
+      this.querySelectorAll(`[data-choice="${field}"]`).forEach(o => o.setAttribute('aria-pressed', String(JSON.parse(o.dataset.value) === this.choice[field])));
+      this.fire();
+    }));
     this.querySelectorAll('[data-stance]').forEach(b => b.addEventListener('click', () => {
       this.stance = Number(b.dataset.stance);
       this.querySelectorAll('[data-stance]').forEach(o => o.setAttribute('aria-pressed', String(o === b)));
@@ -133,6 +170,14 @@ class RecoilSim extends Base {
     this.querySelector('[data-fire]').addEventListener('click', () => this.fire());
     this.setFrame({ px: BASE_PX, ox: SIZE / 2, oy: AIM_Y, grid: 1 });
     this.aimAt(0, 0);
+    this.describe(configure(sim, this.choice));
+  }
+
+  // What the next burst fires: mode, rate, rounds, pellets.
+  describe(sim) {
+    const shots = clamp(sim.magazine ?? 1, 1, MAX_SHOTS);
+    const pellets = sim.pellets > 1 ? L(` · 한 발에 펠릿 ${sim.pellets}개`, ` · ${sim.pellets} pellets a shot`) : '';
+    this.setupText.textContent = L(`${this.modeName(sim.mode)} · 분당 ${fmt(sim.rpm)}발로 ${shots}발${pellets} · 조준하고 멈춘 기준`, `${this.modeName(sim.mode)} · ${shots} rounds at ${fmt(sim.rpm)} RPM${pellets} · aimed, still`);
   }
 
   disconnectedCallback() { cancelAnimationFrame(this.raf); }
@@ -173,7 +218,9 @@ class RecoilSim extends Base {
 
   fire() {
     cancelAnimationFrame(this.raf);
-    const run = simulate(this.sim, STANCES[this.stance][1]);
+    const sim = configure(this.sim, this.choice);
+    this.describe(sim);
+    const run = simulate(sim, STANCES[this.stance][1] * (this.choice.passive ? PASSIVE : 1));
     this.setFrame(frameFor(run));
     // Flat [aim x, aim y] per step, so a frame reads without allocating.
     const n = run.frames.length, aim = new Float64Array(n * 2);

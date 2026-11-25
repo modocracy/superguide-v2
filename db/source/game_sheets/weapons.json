@@ -154,7 +154,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "08886d27a6f6db8c",
@@ -320,7 +321,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "0d382ae7ffea9d45",
@@ -462,7 +464,8 @@
    },
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "0db407ede5603524",
@@ -612,7 +615,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "19806b4fb83fdf7c",
@@ -757,7 +761,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "1bc68ac40fc9b672",
@@ -904,7 +909,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "1c6981ca2fb69508",
@@ -1049,7 +1055,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "1d5943301a29c940",
@@ -1241,7 +1248,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 7.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "262351741c53ff0c",
@@ -1407,7 +1415,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "297434e9e8a4cd5a",
@@ -1575,7 +1584,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "2b09c5cc8f46b23b",
@@ -1717,7 +1727,8 @@
    },
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "2b3c367b280f4094",
@@ -1883,7 +1894,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "2d62a25f36c08f33",
@@ -2028,7 +2040,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "32890a67670c5224",
@@ -2194,7 +2207,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "3357eebb0184fdee",
@@ -2341,7 +2355,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "345ac393dd820704",
@@ -2483,7 +2498,8 @@
    },
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "356de4a7808ef3e3",
@@ -2628,7 +2644,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "36390775d61159eb",
@@ -2773,7 +2790,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "390e6b3d2f26bd70",
@@ -2918,7 +2936,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "3aafba89b53b0f63",
@@ -3063,7 +3082,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "3bdedf634f477fa5",
@@ -3210,7 +3230,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "3d2fe75b0dc50142",
@@ -3378,7 +3399,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "4763c852d8ecee35",
@@ -3544,7 +3566,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "48c91e42b9f16512",
@@ -3689,7 +3712,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "51c6132ec1d10e7e",
@@ -3834,7 +3858,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "543ad246bcb333d4",
@@ -3979,7 +4004,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 1.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "54d86057f5dacfb9",
@@ -4149,7 +4175,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "587878fb76f4b9b1",
@@ -4298,7 +4325,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "5b596a4d21bc91a3",
@@ -4443,7 +4471,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "611ba777783b08a2",
@@ -4611,7 +4640,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "67381f685e9b69a8",
@@ -4756,7 +4786,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "6a7a54d5fb3a6d17",
@@ -4901,7 +4932,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "6db0cace51c8a0ed",
@@ -5048,7 +5080,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "767977bd472a62da",
@@ -5216,7 +5249,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "7c2107d3ff9b70eb",
@@ -5386,7 +5420,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "8372619b2702d743",
@@ -5554,7 +5589,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "8a4de24951a1726d",
@@ -5722,7 +5758,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 4.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "8dbf99607bd8e550",
@@ -5864,7 +5901,8 @@
    },
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "8f2158c7e969e2ab",
@@ -6032,7 +6070,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "8f3a6de385966f9e",
@@ -6223,7 +6262,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 5.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "96110f9d6b010e02",
@@ -6391,7 +6431,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "972baac825d4d165",
@@ -6536,7 +6577,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "9ab036439f74c115",
@@ -6704,7 +6746,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "9ff6afd33975861f",
@@ -6872,7 +6915,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 4.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "aa4564f90cdbf5f1",
@@ -7019,7 +7063,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "b041aefd97503fef",
@@ -7171,7 +7216,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "b43235dbd493750c",
@@ -7325,7 +7371,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "b846cdcf41967725",
@@ -7526,7 +7573,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 7.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "b9606c5aab32c3c2",
@@ -7680,7 +7728,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "c0b9fd065dbc29d0",
@@ -7825,7 +7874,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "c1841a7bae3d5cd8",
@@ -7970,7 +8020,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "c3c1bba1f445a81e",
@@ -8138,7 +8189,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 4.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "c6a5bb8b319217ac",
@@ -8304,7 +8356,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "c8378469e1936877",
@@ -8472,7 +8525,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 4.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "ca4bbef63c869c18",
@@ -8655,7 +8709,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "cb85e7f7ff8855f4",
@@ -8823,7 +8878,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "cd00bdc1149c2928",
@@ -8970,7 +9026,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "cd1f0c09cae0d533",
@@ -9115,7 +9172,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/env_illuminate/gameplay/il_turret_01",
@@ -9281,7 +9339,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/env_illuminate/gameplay/il_turret_tactical_obj",
@@ -9447,7 +9506,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_bugs/cha_scavenger_spitter/cha_scavenger_spitter",
@@ -9597,7 +9657,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/cha_cyborg_elite/cha_cyborg_elite",
@@ -9765,7 +9826,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/cha_cyborg_elite/cha_cyborg_elite_female",
@@ -9933,7 +9995,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/cha_cyborg_elite/cha_cyborg_elite_rusher",
@@ -10101,7 +10164,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/cha_cyborg_elite/cha_cyborg_elite_rusher_female",
@@ -10269,7 +10333,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/cha_soldier/cha_soldier_rpg",
@@ -10437,7 +10502,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 4.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/cha_soldier/cha_soldier_rpg_assassinate",
@@ -10605,7 +10671,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 4.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/cha_soldier/cha_soldier_rpg_ivory_legion",
@@ -10773,7 +10840,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 4.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/conscript_handgun/conscript_flaregun",
@@ -10918,7 +10986,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 10.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/conscript_handgun/conscript_handgun",
@@ -11063,7 +11132,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/conscript_handgun/conscript_handgun_flm",
@@ -11213,7 +11283,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/conscript_lmg/conscript_lmg",
@@ -11358,7 +11429,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/conscript_lmg/conscript_lmg_flm",
@@ -11508,7 +11580,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/conscript_smg/conscript_smg",
@@ -11653,7 +11726,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/conscript_smg/conscript_smg_flm",
@@ -11803,7 +11877,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/lieutenant_cannon/lieutenant_cannon",
@@ -11971,7 +12046,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/soldier_machinegun/soldier_machinegun",
@@ -12116,7 +12192,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/soldier_machinegun/soldier_machinegun_flm",
@@ -12266,7 +12343,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/soldier_riotgun/soldier_flamer",
@@ -12416,7 +12494,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/soldier_riotgun/soldier_riotgun",
@@ -12607,7 +12686,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 5.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/soldier_standard_rifle/soldier_standard_rifle",
@@ -12752,7 +12832,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/equipment/weapons/soldier_standard_rifle/soldier_standard_rifle_flm",
@@ -12902,7 +12983,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_big_walker_turret_cannon/cyborg_big_walker_turret_cannon",
@@ -13070,7 +13152,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_tank_hull_hmg/cyborg_tank_hull_mg",
@@ -13215,7 +13298,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_tank_turret_autocannons/cyborg_tank_turret_autocannons",
@@ -13360,7 +13444,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_tank_turret_autocannons/cyborg_turret_autocannons",
@@ -13505,7 +13590,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_tank_turret_cannon/cyborg_tank_turret_heavycannon",
@@ -13673,7 +13759,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_tank_turret_cannon/cyborg_turret_heavycannon",
@@ -13841,7 +13928,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_tank_turret_mortar/cyborg_turret_mortar",
@@ -14009,7 +14097,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_tank_turret_rocketlauncher/cyborg_tank_turret_rocketlauncher",
@@ -14179,7 +14268,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_turret_base",
@@ -14347,7 +14437,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_turret_command_bunker_hmg/cyborg_turret_command_bunker_hmg",
@@ -14492,7 +14583,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/turrets/cyborg_turret_small_autocannon/cyborg_turret_small_autocannon",
@@ -14660,7 +14752,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/vehicles/cyborg_assault_walker/cyborg_assault_walker",
@@ -14828,7 +14921,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/vehicles/cyborg_siege_engine/cyborg_siege_engine",
@@ -14996,7 +15090,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_cyborgs/vehicles/cyborg_walker_scout/cyborg_walker_scout_tier2",
@@ -15164,7 +15259,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 1.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/backpacks/drone_weapons/drone_laser_rifle/drone_laser_rifle_mount",
@@ -15347,7 +15443,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/backpacks/drone_weapons/drone_stun_gun/drone_stun_gun_mount",
@@ -15489,7 +15586,8 @@
    },
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/arc_shotgun/arc_shotgun",
@@ -15634,7 +15732,8 @@
    },
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle/assault_rifle",
@@ -15823,7 +15922,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle/assault_rifle_ap",
@@ -16001,7 +16101,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle/assault_rifle_exp",
@@ -16161,7 +16262,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_grenadier/assault_rifle_grenadier",
@@ -16318,7 +16420,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_helghast/assault_rifle_helghast",
@@ -16471,7 +16574,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_karbin/assault_rifle_karbin",
@@ -16655,7 +16759,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_large_calibre_01/assault_rifle_large_calibre_01",
@@ -16828,7 +16933,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_legacy/assault_rifle_legacy",
@@ -17011,7 +17117,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_nacho/assault_rifle_nacho",
@@ -17160,7 +17267,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_patriot/assault_rifle_patriot",
@@ -17317,7 +17425,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_rico/assault_rifle_rico",
@@ -17497,7 +17606,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_risk/assault_rifle_risk",
@@ -17652,7 +17762,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_rifle_whisper/assault_rifle_whisper",
@@ -17810,7 +17921,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_shotgun/assault_shotgun",
@@ -17993,7 +18105,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_shotgun/assault_shotgun_bir",
@@ -18163,7 +18276,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/assault_shotgun_incendiary/assault_shotgun_incendiary",
@@ -18329,7 +18443,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/battle_rifle/battle_rifle",
@@ -18503,7 +18618,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/battle_rifle_ceremonial/battle_rifle_ceremonial",
@@ -18657,7 +18773,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/bolt_action_rifle/bolt_action_rifle",
@@ -18803,7 +18920,40 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": {
+    "종류_번호": 287,
+    "en": "",
+    "ko": "",
+    "구경": 8.0,
+    "탄_수": 1,
+    "속도": 850.0,
+    "질량": 20.0,
+    "항력": 0.3,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 180,
+     "내구_피해": 50,
+     "관통": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "철거력": 10,
+     "경직": 20,
+     "밀어냄": 14,
+     "원소": "없음",
+     "상태": []
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/bolt_action_rifle_simo/sniper_rifle_simo",
@@ -18974,7 +19124,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/crossbow_greyfax/crossbow_greyfax",
@@ -19145,7 +19296,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.1
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/flamethrower_ripley/flamethrower_ripley",
@@ -19294,7 +19446,8 @@
     ]
    },
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/jet_rifle/jet_rifle",
@@ -19474,7 +19627,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.1
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/jet_rifle/jet_rifle_phoenix",
@@ -19674,7 +19828,8 @@
      "파편_탄_종류": 204
     },
     "장전_거리": 0.1
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/laser_rifle/laser_rifle",
@@ -19859,7 +20014,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/laser_rifle_charge/laser_rifle_charge",
@@ -20043,7 +20199,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/laser_rifle_long/laser_rifle_long",
@@ -20216,7 +20373,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/laser_rifle_long_hotshot/laser_rifle_long_hotshot",
@@ -20402,7 +20560,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/laser_shotgun/laser_shotgun",
@@ -20573,7 +20732,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/laser_smg_blaster/laser_smg_blaster",
@@ -20747,7 +20907,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/lever_action_rifle_01/lever_action_rifle_01",
@@ -20931,7 +21092,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/lmg_stalwart/lmg_stalwart",
@@ -21086,7 +21248,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/marksman_rifle_drake/marksman_rifle_drake",
@@ -21263,7 +21426,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/marksman_rifle_justice/marksman_rifle_justice",
@@ -21428,7 +21592,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/marksman_rifle_shark/marksman_rifle_shark",
@@ -21575,7 +21740,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/marksman_rifle_vigilance/marksman_rifle_vigilance",
@@ -21757,7 +21923,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/marksman_rifle_vigilance/marksman_rifle_vigilance_burst",
@@ -21928,7 +22095,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/personal_defense_weapon/personal_defense_weapon",
@@ -22111,7 +22279,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/personal_defense_weapon/personal_defense_weapon_pepper",
@@ -22274,7 +22443,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/plasma_rifle/plasma_rifle",
@@ -22452,7 +22622,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/plasma_rifle/plasma_rifle_charge",
@@ -22629,7 +22800,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/pump_grenade_launcher/pump_grenade_launcher",
@@ -22854,7 +23026,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 7.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/pump_shotgun/pump_shotgun",
@@ -23050,7 +23223,40 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": {
+    "종류_번호": 264,
+    "en": "",
+    "ko": "",
+    "구경": 8.0,
+    "탄_수": 9,
+    "속도": 385.0,
+    "질량": 6.0,
+    "항력": 0.5,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 54,
+     "내구_피해": 15,
+     "관통": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "철거력": 10,
+     "경직": 35,
+     "밀어냄": 30,
+     "원소": "없음",
+     "상태": []
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/pump_shotgun/pump_shotgun_flm",
@@ -23249,7 +23455,77 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": {
+    "종류_번호": 297,
+    "en": "10g Liberty Fire",
+    "ko": "10g 해방탄",
+    "구경": 8.0,
+    "탄_수": 5,
+    "속도": 150.0,
+    "질량": 6.0,
+    "항력": 0.5,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 30,
+     "내구_피해": 6,
+     "관통": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "철거력": 10,
+     "경직": 40,
+     "밀어냄": 20,
+     "원소": "없음",
+     "상태": [
+      {
+       "종류_번호": 5,
+       "값": 0.35
+      }
+     ]
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   },
+   "투사체_2": {
+    "종류_번호": 264,
+    "en": "",
+    "ko": "",
+    "구경": 8.0,
+    "탄_수": 9,
+    "속도": 385.0,
+    "질량": 6.0,
+    "항력": 0.5,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 54,
+     "내구_피해": 15,
+     "관통": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "철거력": 10,
+     "경직": 35,
+     "밀어냄": 30,
+     "원소": "없음",
+     "상태": []
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   }
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/pump_shotgun/pump_shotgun_slug",
@@ -23396,7 +23672,40 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": {
+    "종류_번호": 244,
+    "en": "10g Rifled Slugs",
+    "ko": "10g 선조탄",
+    "구경": 18.0,
+    "탄_수": 1,
+    "속도": 390.0,
+    "질량": 50.0,
+    "항력": 2.0,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 330,
+     "내구_피해": 90,
+     "관통": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "철거력": 10,
+     "경직": 30,
+     "밀어냄": 35,
+     "원소": "없음",
+     "상태": []
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/pump_shotgun_02/pump_shotgun_stun",
@@ -23594,7 +23903,77 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": {
+    "종류_번호": 187,
+    "en": "10g Flechettes",
+    "ko": "10g 플레셰트",
+    "구경": 8.0,
+    "탄_수": 11,
+    "속도": 385.0,
+    "질량": 6.0,
+    "항력": 0.3,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 35,
+     "내구_피해": 10,
+     "관통": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "철거력": 10,
+     "경직": 20,
+     "밀어냄": 20,
+     "원소": "없음",
+     "상태": []
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   },
+   "투사체_2": {
+    "종류_번호": 195,
+    "en": "10g STUN ROUNDS",
+    "ko": "10g 기절탄",
+    "구경": 5.5,
+    "탄_수": 20,
+    "속도": 800.0,
+    "질량": 4.5,
+    "항력": 0.3,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 6,
+     "내구_피해": 2,
+     "관통": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "철거력": 10,
+     "경직": 15,
+     "밀어냄": 10,
+     "원소": "없음",
+     "상태": [
+      {
+       "종류_번호": 40,
+       "값": 1.0
+      }
+     ]
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   }
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/pump_shotgun_dragon/pump_shotgun_dragon",
@@ -23741,7 +24120,45 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": {
+    "종류_번호": 352,
+    "en": "",
+    "ko": "",
+    "구경": 8.0,
+    "탄_수": 20,
+    "속도": 120.0,
+    "질량": 2.0,
+    "항력": 0.8,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 1.0,
+    "피해": {
+     "피해": 16,
+     "내구_피해": 3,
+     "관통": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "철거력": 10,
+     "경직": 35,
+     "밀어냄": 20,
+     "원소": "없음",
+     "상태": [
+      {
+       "종류_번호": 5,
+       "값": 0.6
+      }
+     ]
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/pump_shotgun_plasma/pump_shotgun_plasma",
@@ -23912,7 +24329,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 1.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/pump_shotgun_trench/pump_shotgun_trench",
@@ -24092,7 +24510,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/shotgun_double_freedom/shotgun_double_freedom",
@@ -24240,7 +24659,40 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": {
+    "종류_번호": 322,
+    "en": "",
+    "ko": "",
+    "구경": 8.0,
+    "탄_수": 12,
+    "속도": 385.0,
+    "질량": 6.0,
+    "항력": 0.5,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 70,
+     "내구_피해": 35,
+     "관통": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "철거력": 10,
+     "경직": 35,
+     "밀어냄": 30,
+     "원소": "없음",
+     "상태": []
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/shotgun_nacho/shotgun_nacho",
@@ -24418,7 +24870,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/smg_defender/smg_defender",
@@ -24576,7 +25029,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/smg_flamer/smg_flamer",
@@ -24732,7 +25186,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/smg_helghast/smg_helghast",
@@ -24879,7 +25334,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/smg_nacho/smg_nacho",
@@ -25028,7 +25484,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/smg_rhino/smg_rhino",
@@ -25184,7 +25641,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/smg_solvent/smg_solvent",
@@ -25342,7 +25800,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/sniper_rifle_helghast/sniper_rifle_helghast",
@@ -25519,7 +25978,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/triple_barrel_breakshotgun/triple_barrel_breakshotgun",
@@ -25664,7 +26124,40 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": {
+    "종류_번호": 264,
+    "en": "",
+    "ko": "",
+    "구경": 8.0,
+    "탄_수": 9,
+    "속도": 385.0,
+    "질량": 6.0,
+    "항력": 0.5,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 54,
+     "내구_피해": 15,
+     "관통": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "철거력": 10,
+     "경직": 35,
+     "밀어냄": 30,
+     "원소": "없음",
+     "상태": []
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/primary_weapons/volley_gun/volley_gun",
@@ -25822,7 +26315,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/automatic_pistol/automatic_pistol",
@@ -25980,7 +26474,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/caustic_dart_gun/caustic_dart_gun",
@@ -26134,7 +26629,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 1.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/energy_revolver/energy_revolver",
@@ -26298,7 +26794,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/flamer_pistol/flamer_pistol",
@@ -26445,7 +26942,8 @@
     ]
    },
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/grenade_pistol/grenade_pistol",
@@ -26667,7 +27165,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 4.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/hornet_pistol/hornet_pistol",
@@ -26862,7 +27361,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 5000.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/laser_pistol/laser_pistol",
@@ -27035,7 +27535,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/machine_pistol_bull/machine_pistol_bull",
@@ -27181,7 +27682,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/magnum_pistol/magnum_pistol",
@@ -27335,7 +27837,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/pistol_broomhandle/pistol_broomhandle",
@@ -27520,7 +28023,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.1
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/pistol_cricket/pistol_cricket",
@@ -27688,7 +28192,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/pistol_nacho/pistol_nacho",
@@ -27835,7 +28340,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/pistol_shark/pistol_shark",
@@ -28007,7 +28513,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/plasma_pistol/plasma_pistol",
@@ -28175,7 +28682,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/revolver_pistol/revolver_pistol",
@@ -28384,7 +28892,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/revolver_pistol_long/revolver_pistol_long",
@@ -28593,7 +29102,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/smart_pistol/smart_pistol",
@@ -28742,7 +29252,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/smart_pistol_missile/smart_pistol_missile",
@@ -28937,7 +29448,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/standard_pistol/standard_pistol",
@@ -29093,7 +29605,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/sidearm_weapons/stim_pistol_01/stim_pistol",
@@ -29255,7 +29768,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/air_burst_rocket_launcher/air_burst_rocket_launcher",
@@ -29453,7 +29967,8 @@
      "파편_탄_종류": 80
     },
     "장전_거리": 1.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/arc_thrower/arc_thrower",
@@ -29596,7 +30111,8 @@
    },
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/automatic_cannon/automatic_cannon",
@@ -29803,7 +30319,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/belt_fed_grenade_launcher/belt_fed_grenade_launcher",
@@ -29983,7 +30500,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 5.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/chemgun/chem_gun",
@@ -30126,7 +30644,8 @@
     ]
    },
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/energy_weapon_shark/energy_weapon_shark",
@@ -30279,7 +30798,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/expendable_machinegun/expendable_machinegun",
@@ -30428,7 +30948,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/expendable_massive_rocket_launcher/expendable_massive_rocket_launcher",
@@ -30596,7 +31117,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/expendable_napalm_launcher/expendable_napalm_launcher",
@@ -30780,7 +31302,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/faf_missile_launcher/faf_missile_launcher",
@@ -30953,7 +31476,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/faf_missile_launcher_helghast/faf_missile_launcher_helghast",
@@ -31126,7 +31650,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/flamethrower/flamethrower",
@@ -31273,7 +31798,8 @@
     ]
    },
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/grenade_launcher/grenade_launcher",
@@ -31465,7 +31991,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 7.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/grenade_launcher_tactical/grenade_launcher_tactical",
@@ -31665,7 +32192,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 4.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/harpoon_gun/harpoon_gun",
@@ -31853,7 +32381,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 1.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/heavy_flamethrower/heavy_flamethrower",
@@ -32010,7 +32539,8 @@
     3778614046,
     0
    ],
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/heavy_mg/heavy_mg",
@@ -32159,7 +32689,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/laser_cannon/laser_cannon",
@@ -32327,7 +32858,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/laser_guided_missile_launcher/laser_guided_missile_launcher",
@@ -32497,7 +33029,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/laser_pulse_cannon/laser_pulse_cannon",
@@ -32687,7 +33220,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/laser_rifle_ion/laser_rifle_ion",
@@ -32859,7 +33393,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/lat_oneshot/lat_oneshot",
@@ -33027,7 +33562,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/machinegun/machinegun",
@@ -33176,7 +33712,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/minigun/minigun",
@@ -33333,7 +33870,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/plasma_blaster/plasma_blaster",
@@ -33527,7 +34065,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 1.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/railgun/railgun",
@@ -33673,7 +34212,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/recoilless_rifle/recoilless_rifle",
@@ -33848,7 +34388,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/sniper_rifle/sniper_rifle",
@@ -34000,7 +34541,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/support_weapons/sniper_rifle_duo/sniper_rifle_duo",
@@ -34157,7 +34699,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/equipment/throwables/zipper_grenade/zipper_grenade",
@@ -34296,7 +34839,8 @@
     ]
    },
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/antitank_emplacement/antitank_emplacement",
@@ -34466,7 +35010,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/flamethrower_turret/flamethrower_turret",
@@ -34613,7 +35158,8 @@
     ]
    },
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/laser_cannon_turret/laser_cannon_turret",
@@ -34779,7 +35325,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/manned_turret/manned_turret",
@@ -34926,7 +35473,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/manned_turret/manned_turret_discoverable",
@@ -35073,7 +35621,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/mortar_turret/mortar_turret",
@@ -35241,7 +35790,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/mortar_turret/mortar_turret_gas",
@@ -35418,7 +35968,8 @@
     "폭발_지연": 0.5,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/mortar_turret/mortar_turret_staticfield",
@@ -35614,7 +36165,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/rocket_turret/rocket_turret",
@@ -35784,7 +36336,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/tesla_turret/tesla_turret",
@@ -35926,7 +36479,8 @@
    },
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/turret/gatling_turret",
@@ -36071,7 +36625,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/turret/power_generated_gatling_turret",
@@ -36216,7 +36771,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/turret/tutorial_turret",
@@ -36361,7 +36917,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/hellpod/turret_machinegun_gpmg/turret_machinegun_gpmg",
@@ -36508,7 +37065,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/vehicles/frv/armaments/frv_mg/frv_mg",
@@ -36655,7 +37213,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_helldivers/vehicles/frv_heavy/armaments/frv_flamethrower/frv_flamethrower",
@@ -36802,7 +37361,8 @@
     ]
    },
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "content/fac_illuminate/equipment/weapons/beamer_champion_gun/beamer_champion_gun",
@@ -36970,7 +37530,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_illuminate/equipment/weapons/beamer_champion_gun/beamer_champion_gun_direct",
@@ -37138,7 +37699,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_illuminate/equipment/weapons/jet_champion_rifle/jet_champion_rifle",
@@ -37283,7 +37845,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_illuminate/equipment/weapons/pathfinder_lightspear/pathfinder_lightspear",
@@ -37453,7 +38016,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_super_earth/equipment/support_weapons/shotgun_doublebarrel/shotgun_doublebarrel",
@@ -37600,7 +38164,40 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": {
+    "종류_번호": 220,
+    "en": "10g Magnum",
+    "ko": "10g 매그넘",
+    "구경": 8.0,
+    "탄_수": 9,
+    "속도": 385.0,
+    "질량": 6.0,
+    "항력": 0.5,
+    "중력_배율": 1.0,
+    "수명": 0.0,
+    "관통_감속": 0.25,
+    "피해": {
+     "피해": 65,
+     "내구_피해": 13,
+     "관통": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "철거력": 10,
+     "경직": 20,
+     "밀어냄": 20,
+     "원소": "없음",
+     "상태": []
+    },
+    "착탄_폭발": null,
+    "근접_기폭": 0.0,
+    "폭발_지연": 0.0,
+    "수명_끝_폭발": null,
+    "장전_거리": 0.0
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/fac_super_earth/tutorial/safety_turret",
@@ -37745,7 +38342,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/objectives/obj_common/sam_site/idle_sam_site",
@@ -37936,7 +38534,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/objectives/obj_common/sam_site/sam_site",
@@ -38127,7 +38726,8 @@
      "파편_탄_종류": null
     },
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "content/objectives/obj_common/shoulder_mounted_camera/shoulder_mounted_camera",
@@ -38290,7 +38890,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "d53ee03481ae73fd",
@@ -38444,7 +39045,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "d6fb1326fc0a95c1",
@@ -38614,7 +39216,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "e8a244ffa3a48fe4",
@@ -38780,7 +39383,8 @@
    "아크": null,
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   },
   {
    "경로": "ee4dee909ff50d5e",
@@ -38950,7 +39554,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "f2881f5807348116",
@@ -39095,7 +39700,8 @@
     "폭발_지연": 0.0,
     "수명_끝_폭발": null,
     "장전_거리": 0.0
-   }
+   },
+   "투사체_2": null
   },
   {
    "경로": "f5247de3abfb822b",
@@ -39237,7 +39843,8 @@
    },
    "분사": null,
    "연결_탄약_원값": null,
-   "투사체": null
+   "투사체": null,
+   "투사체_2": null
   }
  ],
  "부착물": [

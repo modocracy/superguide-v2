@@ -668,6 +668,8 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 /* Recoil simulation (recoil-sim.js). */
 .recoil-sim { display: grid; gap: 10px; }
 .recoil-sim-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.recoil-sim-option { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.recoil-sim-option > span { min-width: 64px; font-size: 13px; font-weight: 650; color: var(--text-2); }
 .recoil-sim-view { width: 100%; max-width: 320px; aspect-ratio: 1; background: var(--field); border: 1px solid var(--line-strong); }
 .recoil-sim-view .grid path { stroke: var(--line); stroke-width: 1; }
 .recoil-sim-view .hits circle { fill: var(--bleed); }

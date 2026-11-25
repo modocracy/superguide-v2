@@ -23,7 +23,7 @@ for (const [key, value] of Object.entries(weaponRecoil)) {
 }
 // The simulation runs a burst that climbs and stops.
 // Every pellet and the whole aim path fit in the box (240 px) with the crosshair fixed at the first aim.
-const { simulate, frameFor } = await import('../dist/ui/recoil-sim.js');
+const { simulate, frameFor, configure } = await import('../dist/ui/recoil-sim.js');
 for (const [key, value] of Object.entries(weaponRecoil).filter(([, value]) => value.sim)) {
   for (const scale of [0.9, 0.4]) {
     const run = simulate(value.sim, scale);
@@ -33,6 +33,19 @@ for (const [key, value] of Object.entries(weaponRecoil).filter(([, value]) => va
     ok(run.hits.every(h => h.points.every(inBox)) && run.frames.every(f => inBox([f.view[0] + f.drift[0], f.view[1] + f.drift[1]])) && inBox([0, 0]), `${key}: the burst fits in the box`);
   }
 }
+// Every fire mode, fire rate and muzzle choice runs; the default muzzle leaves the inputs as they are, and a muzzle
+// that cuts recoil lowers the climb.
+for (const [key, value] of Object.entries(weaponRecoil).filter(([, value]) => value.sim)) {
+  const sim = value.sim;
+  ok(sim.modes?.every(m => ['auto', 'semi', 'burst'].includes(m)) !== false && (!sim.modes?.includes('burst') || sim.burst > 0), `${key}: fire modes are known`);
+  ok(!sim.muzzles || (sim.muzzles[sim.muzzle] && JSON.stringify(configure(sim, {}).drift) === JSON.stringify(sim.drift)), `${key}: the default muzzle keeps the sheet values`);
+  for (const mode of sim.modes ?? ['auto']) for (const rpm of sim.rpms ?? [sim.rpm]) for (const muzzle of (sim.muzzles ?? [null]).map((_, i) => i)) {
+    const run = simulate(configure(sim, { mode, rpm, muzzle }), 0.9 * 0.7);
+    ok(run.hits.length === run.shots && run.hits.every((h, i) => i === 0 || h.t > run.hits[i - 1].t), `${key} ${mode} ${rpm} ${muzzle}: every round fires in order`);
+  }
+}
+const lib = weaponRecoil['gear/liberator'].sim, comp = lib.muzzles.findIndex(m => m.en === 'Compensator');
+ok(configure(lib, { muzzle: comp }).climb[1] < lib.climb[1], 'liberator: the compensator cuts vertical climb');
 
 const { weaponDetail } = await import('../dist/ui/views/gear.js');
 const sample = personalWeapons.find(w => weaponRecoil[`gear/${w.id}`]?.sim);
