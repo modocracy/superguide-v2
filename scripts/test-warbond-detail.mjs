@@ -251,7 +251,7 @@ if (caltrops) {
     else if (item.rpm != null) ok(shows(grid, '연사', num(item.rpm)), `${item.id}: fire rate shown`);
     else ok(!grid.includes('<dt>연사'), `${item.id}: no fire rate row without a fire rate`);
     const durable = item.variants?.length > 1 ? item.variants[0].durable : item.durable;
-    const cells = [['내구 피해', durable], [item.fuel ? '연료' : '탄창', item.magazine]];
+    const cells = [['내구 피해', durable], [item.fuel ? '연료' : '용량', item.magazine]];
     for (const [label, value] of cells) {
       if (value != null) ok(shows(grid, label, num(value)), `${item.id}: ${label} ${value} shown`);
       else ok(!grid.includes(`<dt>${label}</dt>`), `${item.id}: no ${label} cell without a value`);

@@ -244,7 +244,7 @@ function detailRows(w) {
   // Spare ammo is the magazine cell's second line (user request 2026-11-24); a heat weapon has no magazine,
   // so its spare heatsinks go under 'until overheat' instead.
   const spare = spareText(w), heat = w.heatCapacity?.raw;
-  if (w.magazine != null) add(w.fuel ? L('연료', 'Fuel') : L('탄창', 'Magazine'), num(w.magazine), w.fuel ? '' : L('발', ''), spare);
+  if (w.magazine != null) add(w.fuel ? L('연료', 'Fuel') : L('용량', 'Capacity'), num(w.magazine), w.fuel ? '' : L('발', ''), spare);
   else if (w.spareMags != null && !heat) add(L('예비 탄창', 'Spare magazines'), num(w.spareMags), L('개', ''), L('최대 보유', 'Maximum carried'));
   extra('ammo');
   if (heat) {
@@ -271,7 +271,7 @@ function detailRows(w) {
     : w.reloadTactical === w.reload ? L('전술 재장전 없음', 'No tactical reload') : L(`전술 재장전 ${num(w.reloadTactical)}초`, `Tactical reload ${num(w.reloadTactical)}s`));
   // Customizable weapons (an attachment table) read with the level 1 attachments; others have no 'base' to name.
   const customizable = w.category === 'primary' && weaponAttachments[w.id]?.length;
-  if (w.ergonomics != null) add(L('인체공학성', 'Ergonomics'), num(w.ergonomics), '', customizable ? L('1레벨 부착물 기준 · 높을수록 조준이 빠름', 'With level 1 attachments · higher = faster aim') : L('높을수록 조준이 빠름', 'Higher = faster aim'));
+  if (w.ergonomics != null) add(L('인체공학형', 'Ergonomics'), num(w.ergonomics), '', customizable ? L('1레벨 부착물 기준 · 높을수록 조준이 빠름', 'With level 1 attachments · higher = faster aim') : L('높을수록 조준이 빠름', 'Higher = faster aim'));
   // Sway only where it differs from the standard 100% (user decision 2026-11-19).
   if (w.sway != null && w.sway !== 1) add(L('흔들림', 'Sway'), num(Math.round(w.sway * 100)), '%', L('표준 100% · 낮을수록 덜 흔들림', 'Standard 100% · lower sways less'));
   if (w.throwableCapacity != null) add(L('소지 수', 'Carried'), num(w.throwableCapacity), L('개', ''), w.throwableStart != null ? L(`출격 시 ${w.throwableStart}개`, `${w.throwableStart} at deployment`) : '');
@@ -348,7 +348,7 @@ const signed = n => n > 0 ? `+${num(n)}` : num(n);
 const change = v => v.startsWith('=') ? L(`${v.slice(1).trim()}로 고정`, `set to ${v.slice(1).trim()}`) : v;
 const DEG = '\u00b0C'; // degree sign
 const EFFECTS = [
-  ['ergonomics', () => L('인체공학성', 'Ergonomics'), signed],
+  ['ergonomics', () => L('인체공학형', 'Ergonomics'), signed],
   ['zoom', () => L('조준 거리', 'Zoom'), v => v.map(n => `${num(n)}m`).join(' / ')],
   ['sway', () => L('흔들림', 'Sway'), change],
   ['fireRate', () => L('연사', 'Fire rate'), v => L(`분당 ${num(v)}발`, `${num(v)} RPM`)],

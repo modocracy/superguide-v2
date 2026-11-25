@@ -231,7 +231,7 @@ function ammoCells(item) {
   const wikiNote = item.magazineWiki != null ? L(`게임 데이터 기준 · 위키 표기 ${num(item.magazineWiki)}`, `Game data · wiki says ${num(item.magazineWiki)}`) : '';
   return [
     item.durable != null ? cell(L('내구 피해', 'Durable damage'), num(item.durable), item.damageKind === 'dps' ? '/s' : '', L('단단한 부위에 들어가는 피해', 'Damage against durable parts')) : '',
-    item.magazine != null ? cell(item.fuel ? L('연료', 'Fuel') : L('탄창', 'Magazine'), num(item.magazine), item.fuel ? '' : item.countUnit ? L('개', '') : L('발', ''), [spare, wikiNote].filter(Boolean).join(' · ')) : '',
+    item.magazine != null ? cell(item.fuel ? L('연료', 'Fuel') : L('용량', 'Capacity'), num(item.magazine), item.fuel ? '' : item.countUnit ? L('개', '') : L('발', ''), [spare, wikiNote].filter(Boolean).join(' · ')) : '',
     item.magazine == null && item.spareMags != null ? cell(item.fuel ? L('예비 연료통', 'Spare tanks') : L('예비 탄창', 'Spare magazines'), num(item.spareMags), L('개', ''), L('최대 보유', 'Maximum carried')) : '',
     item.magazine == null && item.spareRounds != null ? cell(L('예비탄', 'Spare rounds'), num(item.spareRounds), L('발', ''), L('최대 보유', 'Maximum carried')) : '',
     // Beam weapons that heat up (datamine heatdata, stratagem-stats.js): how long they fire in a row before
@@ -515,7 +515,7 @@ const statGrid = (item, effects = [], expanded = false) => {
   // A support weapon with no known reach leaves the area cell out instead of showing 미확인 (user request 2026-11-23).
   const unverifiedArea = item.category === 'support' && reach.dim && reach.text === L('미확인', 'Unverified');
   const handling = [
-    ...(ergonomics == null ? [] : [{ label: L('인체공학성', 'Ergonomics'), text: num(ergonomics), caption: L('높을수록 조준이 빠름', 'Higher = faster aim') }]),
+    ...(ergonomics == null ? [] : [{ label: L('인체공학형', 'Ergonomics'), text: num(ergonomics), caption: L('높을수록 조준이 빠름', 'Higher = faster aim') }]),
     // Sway only where it differs from the standard 100% (user decision 2026-11-19).
     ...(sway == null || sway === 1 ? [] : [{ label: L('흔들림', 'Sway'), text: num(Math.round(sway * 100)), unit: '%', caption: L('표준 100% · 낮을수록 덜 흔들림', 'Standard 100% · lower sways less') }]),
     ...(unlock ? [{ label: L('해금', 'Unlock'), text: L(`레벨 ${unlock.level}`, `Level ${unlock.level}`), caption: unlock.requisition ? L(`요청 신청서 ${num(unlock.requisition)}`, `${num(unlock.requisition)} Requisition Slips`) : L('처음부터 사용 가능', 'Available from the start') }] : []),

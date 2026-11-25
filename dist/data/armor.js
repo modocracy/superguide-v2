@@ -143,7 +143,7 @@ export const armorPassives = [
     "icon": "Peak Physique Armor Passive Icon.svg",
     "effects": [
       {"name":"근접 공격 대미지가 40% 증가합니다.","en":"Increases melee damage by 40%."},
-      {"name":"무기의 인체공학 설계를 개선하여 무기 이동 시 항력을 줄입니다.","en":"Improves weapons handling with less drag on weapon movement.","exact":"인체공학 +30","exactEn":"Ergonomics +30"}
+      {"name":"무기의 인체공학 설계를 개선하여 무기 이동 시 항력을 줄입니다.","en":"Improves weapons handling with less drag on weapon movement.","exact":"인체공학형 +30","exactEn":"Ergonomics +30"}
     ],
     "source": "https://helldivers.wiki.gg/wiki/Peak_Physique",
     "revision": 140551,
@@ -470,7 +470,7 @@ export const armorPassives = [
     "icon": "True Grit Armor Passive Icon.svg",
     "effects": [
       {"name":"지원 무기의 재장전 속도가 30% 증가합니다.","en":"Increases reload speed of support weapons by 30%."},
-      {"name":"무기의 인체공학 설계를 약간 개선하여 무기 이동 시 항력을 줄입니다.","en":"Slightly increases weapon ergonomics to reduce drag on weapon movement.","exact":"인체공학 +20","exactEn":"Ergonomics +20"}
+      {"name":"무기의 인체공학 설계를 약간 개선하여 무기 이동 시 항력을 줄입니다.","en":"Slightly increases weapon ergonomics to reduce drag on weapon movement.","exact":"인체공학형 +20","exactEn":"Ergonomics +20"}
     ],
     "source": "https://helldivers.wiki.gg/wiki/True_Grit",
     "revision": 140562,
