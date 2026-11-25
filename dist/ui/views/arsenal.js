@@ -548,9 +548,34 @@ const statGrid = (item, effects = [], expanded = false) => {
   return html`<dl class="detail-grid">${[direct, blast].filter(stat => !absent(stat)).map(statCell)}${durable}${absent(ap) ? '' : statCell(ap)}${extra('damage')}${unverifiedArea ? '' : statCell(reach)}${extra('reach')}${ammo}${extra('ammo')}${rateCell(item)}${reloadCell(item)}${sentryCells.map(statCell)}${timeCells.map(statCell)}${bodyCells.map(statCell)}${handling.map(statCell)}${effects}</dl>`;
 };
 
+// Weapons whose shot grows with the charge rather than switching modes (user request 2026-11-25): no mode tabs; the
+// key stats and the blast show the uncharged to fully charged values as 'a~b'. The data keeps both modes, which other
+// views pick by name (faction picks use 'epoch:charged').
+const CHARGE_RANGE = new Set(['epoch']);
+// Two renderings of the same stat grid made into one: a value or caption that differs shows as 'low~high', number by
+// number when the rest of the text is the same ('AP 4~5'), else whole ('중장갑~대전차').
+function rangeGrid(low, high) {
+  const CELL = /<div><dt>([\s\S]*?)<\/dt><dd([^>]*)>([\s\S]*?)<\/dd>(?:<div class="caption">([\s\S]*?)<\/div>)?<\/div>/g;
+  const merge = (a = '', b = '') => {
+    if (a === b) return a;
+    const pa = a.split(/(\d[\d,.]*)/), pb = b.split(/(\d[\d,.]*)/);
+    if (pa.length === pb.length && pa.every((part, i) => i % 2 || part === pb[i])) return pa.map((part, i) => (i % 2 && part !== pb[i] ? `${part}~${pb[i]}` : part)).join('');
+    return `${a}~${b}`;
+  };
+  const highCells = [...high.matchAll(CELL)];
+  let index = 0;
+  return low.replace(CELL, (whole, dt, attrs, dd, caption) => {
+    const other = highCells[index++];
+    if (!other || other[1] !== dt) return whole;
+    const text = merge(caption, other[4]);
+    return `<div><dt>${dt}</dt><dd${attrs}>${merge(dd, other[3])}</dd>${text ? `<div class="caption">${text}</div>` : ''}</div>`;
+  });
+}
+
 export function stratagemDetail(item, { demolition = false, force = null, header = null, titleId = 'sheet-title', variant = state.variant, compare = true, expandable = false, expanded = false } = {}) {
   const cat = categoryOf(item.category);
-  const variants = item.variants?.length > 1 ? item.variants : null;
+  const charge = CHARGE_RANGE.has(item.id) && item.variants?.length > 1 ? [withVariant(item, item.variants[0]), withVariant(item, item.variants.at(-1))] : null;
+  const variants = item.variants?.length > 1 && !charge ? item.variants : null;
   const current = variantOf(item, variant);
   const combat = item.category === 'support';
   const notes = [item.rangeNote, item.notes, ...(item.modes || [])].filter(Boolean);
@@ -568,10 +593,14 @@ export function stratagemDetail(item, { demolition = false, force = null, header
       })))
       : html`<div class="variant-tabs"><h3>${modeTitle}</h3><div class="segmented" role="group" aria-label="${item.variantLabel || L('모드 선택', 'Mode')}">${variants.map(v => html`<button type="button" data-variant="${v.id}" aria-pressed="${String(v === current)}">${modeIcon(`arsenal/${item.id}`, v.id)}${v.tab || v.name}</button>`)}</div></div>
         ${variantStats.map(entry => itemVariantPanel(entry.mode.id, current.id, modeStats(entry)))}`;
+  } else if (charge) {
+    const cells = specialCells(item, force);
+    base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${raw(rangeGrid(String(statsWithEffects(charge[0], cells, expanded)), String(statsWithEffects(charge[1], cells, expanded))))}
+      <p class="faint" style="font-size:12.5px;margin-top:8px">${L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged')}</p></section>`;
   } else {
     base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${statsWithEffects(item, specialCells(item, force), expanded)}</section>`;
   }
-  const blasts = variantStats ? '' : blastFigure(item);
+  const blasts = variantStats ? '' : charge ? blastFigure(charge[1], charge[0]) : blastFigure(item);
   const spread = spreadBlock(item);
   const timing = timingBlock(item, expanded);
   const durability = durabilityBlock(item);
@@ -586,7 +615,7 @@ export function stratagemDetail(item, { demolition = false, force = null, header
     : html`${firing}${base}${blasts}${spread}${timing}${durability}${defense}${ballistics}${recoilSim}${changes}`;
   const heroHead = html`<div class="detail-id${expandable && !item.input ? ' item-detail-actions' : ''}"><img class="strat-icon large" src="${wikiIcons[item.id]?.src}" alt="" width="64" height="64">
       <div><h2 id="${titleId}">${item.name}</h2><p>${subtitle(item)}</p>
-      <div class="chips" style="margin-top:6px">${badge(cat.name, 'outline')}${warbondChip('arsenal', item.id)}${item.ap != null ? badge(`AP ${item.ap} · ${apBandOf(item).name}`, 'accent') : ''}${item.tags.map(tag => badge(tag))}${stratagemStats[item.id]?.oneHanded ? badge(L('한손', 'One-handed')) : ''}${holeTag(item)}${reloadTags(item)}</div>${holeNote(item)}</div>
+      <div class="chips" style="margin-top:6px">${badge(cat.name, 'outline')}${warbondChip('arsenal', item.id)}${charge ? badge(`AP ${charge[0].ap}~${charge[1].ap} · ${apBandOf(charge[0]).name}~${apBandOf(charge[1]).name}`, 'accent') : item.ap != null ? badge(`AP ${item.ap} · ${apBandOf(item).name}`, 'accent') : ''}${item.tags.map(tag => badge(tag))}${stratagemStats[item.id]?.oneHanded ? badge(L('한손', 'One-handed')) : ''}${holeTag(item)}${reloadTags(item)}</div>${holeNote(item)}</div>
       ${expandable && !item.input ? itemDetailToggle(expanded) : ''}</div>
     ${item.input ? html`<div class="item-detail-actions item-detail-strat-bar"><div class="block"><h3>${L('호출 코드', 'Stratagem code')}</h3>${keycaps(item.input, 'large')}</div>${expandable ? itemDetailToggle(expanded) : ''}</div>` : ''}
     <p class="item-detail-summary" style="font-size:16px">${item.summary}</p>`;

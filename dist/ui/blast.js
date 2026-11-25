@@ -35,21 +35,28 @@ export const blastCaption = item => item.innerRadius >= item.radius ? L('경계�
 
 let figureCount = 0;
 
-export function blastFigure(item) {
+// low: the same weapon's smallest blast when it grows with the charge (Epoch): the figure is drawn at item's size and
+// its numbers read 'low~high' (user request 2026-11-25).
+export function blastFigure(item, low = null) {
   if (item.radius == null || item.innerRadius == null) return '';
+  const span = (a, b) => (low && a !== b ? `${num(a)}~${num(b)}` : num(b));
   // The falloff ring fades from the inner circle to nothing at the outer edge along the damage curve
   // (core/combat.js blastFalloff), so the full-damage core reads as the range that counts (user decision 2026-11-23).
   // Half damage: x = 1/4 of the band on the standard curve (1 - sqrt x), x = sqrt(1/2) on the wide one (1 - x^2).
   const fade = `blast-fade-${++figureCount}`;
   const wide = WIDE_BLASTS.has(item.id);
   const flat = item.innerRadius >= item.radius;
-  const half = Math.round((item.innerRadius + (item.radius - item.innerRadius) * (wide ? Math.SQRT1_2 : 0.25)) * 10) / 10;
+  const halfOf = it => Math.round((it.innerRadius + (it.radius - it.innerRadius) * (wide ? Math.SQRT1_2 : 0.25)) * 10) / 10;
+  const half = halfOf(item);
+  const inR = span(low?.innerRadius, item.innerRadius), outR = span(low?.radius, item.radius), halfR = span(low && halfOf(low), half);
   // Falloff penetration as core/combat.js blastAt has it (one less, never below 2), named by armor class, since
   // big blasts still go through medium or heavy armor out there.
   const fallAp = item.splashAp != null ? Math.max(2, item.splashAp - 1) : null;
   const fallBand = fallAp != null ? apBandOf({ ap: fallAp }).name : '';
-  const fallKo = fallAp == null ? '관통력도 1 낮아짐' : fallAp === item.splashAp ? `관통력은 그대로 AP ${fallAp}(${fallBand})` : `관통력은 AP ${fallAp}(${fallBand}, 1 낮음)`;
-  const fallEn = fallAp == null ? 'with 1 less penetration' : fallAp === item.splashAp ? `still at AP ${fallAp} (${fallBand})` : `at AP ${fallAp} (${fallBand}) instead of ${item.splashAp}`;
+  const lowFall = low?.splashAp != null ? Math.max(2, low.splashAp - 1) : fallAp;
+  const fallAt = lowFall !== fallAp ? `${lowFall}~${fallAp}` : `${fallAp}`, bandAt = lowFall !== fallAp ? `${apBandOf({ ap: lowFall }).name}~${fallBand}` : fallBand;
+  const fallKo = fallAp == null ? '관통력도 1 낮아짐' : fallAp === item.splashAp ? `관통력은 그대로 AP ${fallAt}(${bandAt})` : `관통력은 AP ${fallAt}(${bandAt}, 1 낮음)`;
+  const fallEn = fallAp == null ? 'with 1 less penetration' : fallAp === item.splashAp ? `still at AP ${fallAt} (${bandAt})` : `at AP ${fallAt} (${bandAt}), 1 less`;
   const b = text => html`<b style="color:var(--text)">${text}</b>`;
   // The inner circle is to scale, like the enemy behind it; the floor only keeps a tiny one visible (none is
   // that small today: the smallest is 1 m of 10 m).
@@ -58,7 +65,7 @@ export function blastFigure(item) {
   const refW = ref.span ? ref.span * outer / item.radius : ref.height * outer / item.radius / ref.ratio, refH = refW * ref.ratio;
   const refSize = ref.lengthwise ? L(`길이 약 ${num(ref.span)}m`, `about ${num(ref.span)} m long`) : ref.span ? L(`다리 폭 약 ${num(ref.span)}m`, `legs about ${num(ref.span)} m across`) : L(`키 약 ${num(ref.height)}m`, `about ${num(ref.height)} m tall`);
   return html`<section class="block"><h3>${L('폭발 반경', 'Blast radius')}</h3><div class="blast">
-    <svg width="220" height="220" viewBox="0 0 132 132" role="img" aria-label="${L(`폭발 반경: 중심 ${item.innerRadius}m, 외곽 ${item.radius}m`, `Blast radius: inner ${item.innerRadius}m, outer ${item.radius}m`)}">
+    <svg width="220" height="220" viewBox="0 0 132 132" role="img" aria-label="${L(`폭발 반경: 중심 ${inR}m, 외곽 ${outR}m`, `Blast radius: inner ${inR}m, outer ${outR}m`)}">
       <defs><radialGradient id="${fade}" gradientUnits="userSpaceOnUse" cx="66" cy="66" r="${outer}">
         ${[0, 0.25, 0.5, 0.75, 1].map(x => html`<stop offset="${(inner + (outer - inner) * x) / outer}" style="stop-color:var(--accent);stop-opacity:${Math.round(0.3 * blastFalloff(x, wide) * 1000) / 1000}"/>`)}
       </radialGradient></defs>
@@ -70,15 +77,15 @@ export function blastFigure(item) {
       <path d="M66 66H${66 - inner}" stroke="var(--accent-text)" stroke-width="1.6"/>
       <circle cx="66" cy="66" r="2.5" fill="var(--text)"/>
       <g class="blast-label" aria-hidden="true">
-        <text class="blast-inner" x="62" y="59" text-anchor="end">${L('중심', 'Inner')} ${num(item.innerRadius)}m</text>
-        <text class="blast-outer" x="${66 + outer - 2}" y="80" text-anchor="end">${L('외곽', 'Outer')} ${num(item.radius)}m</text>
+        <text class="blast-inner" x="62" y="59" text-anchor="end">${L('중심', 'Inner')} ${inR}m</text>
+        <text class="blast-outer" x="${66 + outer - 2}" y="80" text-anchor="end">${L('외곽', 'Outer')} ${outR}m</text>
       </g>
     </svg>
     <p>${L(html`${flat
-        ? html`${b(`${num(item.radius)}m`)} 안 어디서나 최대 피해, 바깥은 피해 없음.`
-        : html`${b(`중심 ${num(item.innerRadius)}m`)}까지 최대 피해(실제 효과 범위).<br>바깥은 ${b(`${num(item.radius)}m`)}까지 줄어들고(${b(`${num(half)}m`)}에서 절반) ${fallKo}.`}<br><span class="faint">충격파·함선 강화 제외. 뒤 그림은 같은 축척의 ${ref.name}(${refSize}).</span>`,
+        ? html`${b(`${outR}m`)} 안 어디서나 최대 피해, 바깥은 피해 없음.`
+        : html`${b(`중심 ${inR}m`)}까지 최대 피해(실제 효과 범위).<br>바깥은 ${b(`${outR}m`)}까지 줄어들고(${b(`${halfR}m`)}에서 절반) ${fallKo}.`}<br><span class="faint">충격파·함선 강화 제외. 뒤 그림은 같은 축척의 ${ref.name}(${refSize}).</span>`,
       html`${flat
-        ? html`Full damage anywhere within ${b(`${num(item.radius)}m`)}, none beyond.`
-        : html`Full damage within ${b(`${num(item.innerRadius)}m`)}: the range that counts.<br>It fades out by ${b(`${num(item.radius)}m`)} (half at ${b(`${num(half)}m`)}), ${fallEn}.`}<br><span class="faint">No shockwaves or ship modules. Behind: a ${ref.name} (${refSize}), same scale.</span>`)}</p>
+        ? html`Full damage anywhere within ${b(`${outR}m`)}, none beyond.`
+        : html`Full damage within ${b(`${inR}m`)}: the range that counts.<br>It fades out by ${b(`${outR}m`)} (half at ${b(`${halfR}m`)}), ${fallEn}.`}<br><span class="faint">No shockwaves or ship modules. Behind: a ${ref.name} (${refSize}), same scale.</span>`)}</p>
   </div></section>`;
 }

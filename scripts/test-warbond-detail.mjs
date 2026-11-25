@@ -109,9 +109,12 @@ for (const language of ['ko', 'en']) {
   }
 }
 setLang('ko');
-const modeHtml = String(await itemDetailContent('control-group', 'arsenal/epoch', 'charged'));
-ok(modeHtml.includes('data-variant="charged" aria-pressed="true"'), 'embedded stratagem selects URL mode');
-ok(modeHtml.includes('href="#/arsenal/epoch?m=charged"'), 'full-page link preserves mode');
+// The Lumberer Exosuit's weapons are mode tabs (the Epoch now shows its charge as ranges, without tabs).
+const modeHtml = String(await itemDetailContent('exo-experts', 'arsenal/lumberer', 'flame'));
+ok(modeHtml.includes('data-variant="flame" aria-pressed="true"'), 'embedded stratagem selects URL mode');
+ok(modeHtml.includes('href="#/arsenal/lumberer?m=flame"'), 'full-page link preserves mode');
+const epochHtml = String(await itemDetailContent('control-group', 'arsenal/epoch'));
+ok(!epochHtml.includes('data-variant=') && epochHtml.includes('400~800') && epochHtml.includes('AP 4~5'), 'epoch: no mode tabs, charge shown as ranges');
 // Weapons with selectable firing modes get the same mode tabs as stratagems. Expected numbers are
 // read from the data, so a routine wiki refresh that changes a value or adds a weapon does not fail
 // these checks; they only confirm that whatever the data holds is shown in the right panel.
