@@ -473,6 +473,9 @@ details > summary::-webkit-details-marker { display: none; }
 .variant-tabs { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; margin-bottom: -8px; }
 .variant-tabs h3 { font-size: 14px; font-weight: 750; }
 .variant-panel:not([hidden]) { display: grid; gap: 12px; }
+/* Firing mode icons (mode-icons.js), in the mode tabs and the full-screen mode headings. */
+.mode-icon { width: 18px; height: 18px; flex: none; }
+.item-detail-mode > h4 .mode-icon { margin-right: 6px; vertical-align: -3px; }
 /* The mode panel's 'Key stats' title reads like the key stats title of a weapon without modes: same size and the
    same space down to the grid (user request 2026-11-25). */
 .variant-panel > .variant-panel-title { font-size: 14px; font-weight: 750; margin: 8px 0 -12px; }

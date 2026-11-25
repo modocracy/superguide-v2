@@ -158,7 +158,8 @@ for (const w of singles) {
   if ((w.variants?.length ?? 0) > 1) ok(content.includes('class="compare-table gear-modes"'), `${w.id}: single-mode weapon keeps its component table`);
 }
 // Mode names are set in personal-profiles.mjs (code, not wiki data).
-const tabNames = id => [...String(weaponDetail(weaponById.get(id))).matchAll(/data-variant="[^"]+" aria-pressed="\w+">([^<]+)/g)].map(m => m[1]);
+// The tab text after its mode icon (mode-icons.js), if any.
+const tabNames = id => [...String(weaponDetail(weaponById.get(id))).matchAll(/data-variant="[^"]+" aria-pressed="\w+">(?:<svg class="mode-icon"[\s\S]*?<\/svg>)?([^<]+)/g)].map(m => m[1]);
 const expectedNames = { 'double-freedom': ['기본 사격', '일제 사격'], bushwhacker: ['기본 사격', '일제 사격'], variable: ['기본 사격', '일제 사격', '전탄 발사'], 'missile-pistol': ['비유도', '유도 사격'], warrant: ['비유도', '유도 사격'] };
 for (const [id, names] of Object.entries(expectedNames)) if (personalProfiles[id]?.modes.length > 1) eq(tabNames(id), names, `${id} mode names`);
 // Notes from wiki prose are optional: a reworded page drops them with a warning, never fails the build.
@@ -430,6 +431,24 @@ try {
     const labels = labelsOf(String(weaponDetail(w)));
     if (rows.some(r => r.delivery !== 'explosion' && (r.demolition != null || r.stun != null || r.push != null))) ok(labels.some(l => /직격/.test(l)), `${w.id}: direct effect cell`);
     if (rows.some(r => (r.delivery === 'explosion' && (r.demolition != null || r.stun != null || r.push != null)) || r.splashDemolition != null || r.splashStun != null || r.splashPush != null)) ok(labels.some(l => /폭발/.test(l)), `${w.id}: blast effect cell`);
+  }
+}
+
+// Firing mode icons (mode-icons.js): every listed weapon and mode exists, and its tab and full-screen heading show it.
+{
+  const { modeIconKeys } = await import('../dist/ui/mode-icons.js');
+  const { stratagems } = await import('../dist/core/catalog.js');
+  const { personalWeapons } = await import('../dist/data/personal-weapons.js');
+  for (const [key, modes] of Object.entries(modeIconKeys)) {
+    const [kind, id] = key.split('/');
+    const known = kind === 'gear' ? personalProfiles[id]?.modes.map(m => m.id) : stratagems.find(s => s.id === id)?.variants?.map(v => v.id);
+    ok(known?.length > 1, `${key}: has firing modes`);
+    for (const mode of Object.keys(modes)) ok(known.includes(mode), `${key}: mode ${mode} exists`);
+    const item = kind === 'gear' ? personalWeapons.find(w => w.id === id) : stratagems.find(s => s.id === id);
+    const panel = String(kind === 'gear' ? weaponDetail(item) : stratagemDetail(item));
+    const full = String(kind === 'gear' ? weaponDetail(item, { expanded: true }) : stratagemDetail(item, { expanded: true }));
+    ok((panel.match(/class="mode-icon"/g) ?? []).length >= Object.keys(modes).length, `${key}: mode tabs show the icons`);
+    ok((full.match(/class="mode-icon"/g) ?? []).length >= Object.keys(modes).length, `${key}: full-screen mode headings show the icons`);
   }
 }
 

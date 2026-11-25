@@ -9,6 +9,7 @@ import { html, raw, render, $, $$, icon, keycaps, badge, external } from '../dom
 import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
 import { recoilSimBlock } from '../recoil-sim.js';
+import { modeIcon } from '../mode-icons.js';
 import { detailColumns, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { supportProjectileRecords, propelledModes } from '../../data/support-records.js';
 import { warbondChip } from '../warbond-chip.js';
@@ -561,10 +562,10 @@ export function stratagemDetail(item, { demolition = false, force = null, header
   if (variantStats) {
     base = expanded
       ? detailModeList(modeTitle, variantStats.map(entry => ({
-        name: entry.mode.tab || entry.mode.name,
+        name: html`${modeIcon(`arsenal/${item.id}`, entry.mode.id)}${entry.mode.tab || entry.mode.name}`,
         content: modeStats(entry),
       })))
-      : html`<div class="variant-tabs"><h3>${modeTitle}</h3><div class="segmented" role="group" aria-label="${item.variantLabel || L('모드 선택', 'Mode')}">${variants.map(v => html`<button type="button" data-variant="${v.id}" aria-pressed="${String(v === current)}">${v.tab || v.name}</button>`)}</div></div>
+      : html`<div class="variant-tabs"><h3>${modeTitle}</h3><div class="segmented" role="group" aria-label="${item.variantLabel || L('모드 선택', 'Mode')}">${variants.map(v => html`<button type="button" data-variant="${v.id}" aria-pressed="${String(v === current)}">${modeIcon(`arsenal/${item.id}`, v.id)}${v.tab || v.name}</button>`)}</div></div>
         ${variantStats.map(entry => itemVariantPanel(entry.mode.id, current.id, modeStats(entry)))}`;
   } else {
     base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${statsWithEffects(item, specialCells(item, force), expanded)}</section>`;

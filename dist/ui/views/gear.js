@@ -20,6 +20,7 @@ import { html, raw, render, $, $$, icon, badge, external } from '../dom.js';
 import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
 import { recoilSimBlock } from '../recoil-sim.js';
+import { modeIcon } from '../mode-icons.js';
 import { detailColumns, detailDisclosure, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { warbondChip } from '../warbond-chip.js';
 import { bindTips, tipLabel } from '../tips.js';
@@ -364,7 +365,7 @@ const NO_RECOIL_SIM = ['underbarrel', 'all-barrels', 'volley', 'total'];
 
 // Modes the player switches between get tabs in the compact panel.
 function modeTabs(w, modes, current) {
-  return html`<div class="variant-tabs"><h3>${L('발사 모드', 'Firing mode')}</h3><div class="segmented" role="group" aria-label="${L('모드 선택', 'Mode')}">${modes.map(({ mode }) => html`<button type="button" data-variant="${mode.id}" aria-pressed="${String(mode === current)}">${mode.name}</button>`)}</div></div>
+  return html`<div class="variant-tabs"><h3>${L('발사 모드', 'Firing mode')}</h3><div class="segmented" role="group" aria-label="${L('모드 선택', 'Mode')}">${modes.map(({ mode }) => html`<button type="button" data-variant="${mode.id}" aria-pressed="${String(mode === current)}">${modeIcon(`gear/${w.id}`, mode.id)}${mode.name}</button>`)}</div></div>
     ${modes.map(entry => itemVariantPanel(entry.mode.id, current.id, modeStats(entry, w)))}`;
 }
 
@@ -510,7 +511,7 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
   let stats;
   if (modeDetails.length) {
     const byMode = expanded
-      ? detailModeList(L('발사 모드', 'Firing mode'), modeDetails.map(entry => ({ name: entry.mode.name, content: modeStats(entry, w) })))
+      ? detailModeList(L('발사 모드', 'Firing mode'), modeDetails.map(entry => ({ name: html`${modeIcon(`gear/${w.id}`, entry.mode.id)}${entry.mode.name}`, content: modeStats(entry, w) })))
       : modeTabs(w, modeDetails, current);
     stats = byMode;
   } else {
