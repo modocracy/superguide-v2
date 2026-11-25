@@ -2762,7 +2762,7 @@ export const enemyPages = {
   "behavior": [
    "서 있는 동안 150m 안의 헬다이버는 이글 스트라타젬을 쓸 수 없습니다. 호출 코드 자리에 '대공으로 인해 차단됨'이라고 뜹니다.",
    "가끔 하늘로 쏘아 올려 위치가 드러납니다.",
-   "범위 가장자리 근처에서 이글을 부르면 이글 1이 범위에 들어와 공격받고, 수리하는 동안 모든 이글 스트라타젬이 이글 재무장을 쓴 것처럼 재사용 대기에 들어갑니다."
+   "범위 가장자리 근처에서 이글을 부르면 이글 1이 범위에 들어와 공격받고, 수리하는 동안 모든 이글 스트라타젬이 이글 재무장을 쓴 것처럼 재사용 대기시간에 들어갑니다."
   ],
   "behaviorEn": [
    "While it stands, Helldivers within 150m cannot use Eagle stratagems; the call-in code is replaced by an \"Obstructed by Anti-Air\" message.",

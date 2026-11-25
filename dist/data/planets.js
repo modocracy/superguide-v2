@@ -472,7 +472,7 @@ export const specialEffects = [
   "detail": [
    "헬다이버들의 투표로 머물 행성을 정합니다. 4시간마다 후보 행성 투표가 열리고, 시간이 끝나면 가장 많은 표를 받은 행성 궤도로 바로 이동합니다.",
    "요청 신청서, 일반 샘플, 희귀 샘플을 기부해 전술 행동을 충전합니다. 한 사람이 24시간 동안 기부할 수 있는 양은 일반 샘플 75, 요청 신청서 50,000, 희귀 샘플 50입니다.",
-   "전술 행동은 한 번에 하나만 켜집니다. 목표량이 다 차면 바로 켜져 24시간 동안 정거장이 머무는 행성의 모든 임무에 적용되고, 끝나면 재사용 대기에 들어가 그동안은 기부를 받지 않습니다."
+   "전술 행동은 한 번에 하나만 켜집니다. 목표량이 다 차면 바로 켜져 24시간 동안 정거장이 머무는 행성의 모든 임무에 적용되고, 끝나면 재사용 대기시간에 들어가 그동안은 기부를 받지 않습니다."
   ],
   "detailEn": [
    "Helldivers vote on where it goes. A vote on candidate planets opens every 4 hours, and when it closes the station warps straight to the orbit of the planet with the most votes.",
@@ -531,7 +531,7 @@ export const specialEffects = [
   "descriptionEn": "DSS crews maintain deployment of a 24-hour rotating fleet of Eagle Fighters from the massive three-tiered Convocation Bay, supporting all Helldiver operations on the planet with close air support and halting enemy offensives for a short time.",
   "wiki": "https://helldivers.wiki.gg/wiki/Democracy_Space_Station",
   "detail": [
-   "전술 행동: 일반 샘플 6,480,000을 모으면 24시간 동안 켜지고, 재사용 대기는 4일입니다.",
+   "전술 행동: 일반 샘플 6,480,000을 모으면 24시간 동안 켜지고, 재사용 대기시간은 4일입니다.",
    "임무 중 이글 가스 공습이 주기적으로 떨어집니다. 헬다이버 주변 200m 안의 적을 노리며, 헬다이버가 주 목표나 보조 목표 구역 안에 있는 동안에는 새로 시작하지 않습니다.",
    "방어 캠페인 행성에서는 이글 폭풍이 머무는 동안 방어 제한 시간이 멈춥니다."
   ],
@@ -554,7 +554,7 @@ export const specialEffects = [
   "descriptionEn": "The DSS activates its Zero G Anti-Ship Missile System, targeting all large enemy spacecraft attempting to exit the planet's atmosphere. In addition, diverts excess manpower to Super Destroyer logistical support.",
   "wiki": "https://helldivers.wiki.gg/wiki/Democracy_Space_Station",
   "detail": [
-   "전술 행동: 요청 신청서 4,320,000,000을 모으면 24시간 동안 켜지고, 재사용 대기는 2일입니다.",
+   "전술 행동: 요청 신청서 4,320,000,000을 모으면 24시간 동안 켜지고, 재사용 대기시간은 2일입니다.",
    "이 행성에서 출발하는 방어 캠페인이 생기지 않습니다. 이미 진행 중인 방어 캠페인을 끝내지는 못합니다.",
    "모든 임무에 헬포드 공간 최적화 부스터가 자동으로 적용됩니다."
   ],
@@ -577,7 +577,7 @@ export const specialEffects = [
   "descriptionEn": "The DSS Logistics Armada supplies all Super Destroyers orbiting the planet with surplus 380mm shells. Ordnance support is also provided to SEAF operations, accelerating liberation efforts.",
   "wiki": "https://helldivers.wiki.gg/wiki/Democracy_Space_Station",
   "detail": [
-   "전술 행동: 희귀 샘플 4,320,000을 모으면 24시간 동안 켜지고, 재사용 대기는 5일입니다.",
+   "전술 행동: 희귀 샘플 4,320,000을 모으면 24시간 동안 켜지고, 재사용 대기시간은 5일입니다.",
    "임무 중 궤도 380mm 고폭 폭격을 한 번 더 쓸 수 있습니다. 직접 챙긴 380mm가 있으면 그것부터 쓰입니다.",
    "해방 캠페인 진행이 빨라지며, 설명과 달리 방어 캠페인과 침공 캠페인에도 적용됩니다."
   ],
@@ -614,7 +614,7 @@ export const operationModifiers = [
   "faction": null,
   "where": null,
   "detail": [
-   "함선 모듈로 줄인 재사용 대기에 25%가 더해집니다. 예를 들어 함선 모듈을 모두 올린 기관총 센트리는 77초에서 96초가 됩니다."
+   "함선 모듈로 줄인 재사용 대기시간에 25%가 더해집니다. 예를 들어 함선 모듈을 모두 올린 기관총 센트리는 77초에서 96초가 됩니다."
   ],
   "detailEn": [
    "The 25% is added on top of the cooldown already cut by ship modules. A fully upgraded Machine Gun Sentry, for example, goes from 77 to 96 seconds."
@@ -826,7 +826,7 @@ export const eventKinds = [
  },
  {
   "id": "event-stratagem-cooldown",
-  "name": "특정 스트라타젬 재사용 대기",
+  "name": "특정 스트라타젬 재사용 대기시간",
   "en": "One stratagem's cooldown",
   "lines": [
    "특정 스트라타젬의 쿨다운 시간이 N 감소합니다.",

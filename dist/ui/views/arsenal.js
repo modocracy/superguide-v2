@@ -94,7 +94,7 @@ const seconds = value => `${num(Math.round(value))}${L('초', 's')}`;
 function cardCooldown(item) {
   const cooldown = timingOf(item)?.cooldown;
   if (cooldown == null) return '';
-  const label = modulesOn() ? L('재사용 대기 · 함선 모듈 적용', 'Cooldown with ship modules') : L('재사용 대기 · 함선 모듈 미적용', 'Cooldown without ship modules');
+  const label = modulesOn() ? L('재사용 대기시간 · 함선 모듈 적용', 'Cooldown with ship modules') : L('재사용 대기시간 · 함선 모듈 미적용', 'Cooldown without ship modules');
   return html`<span class="card-cooldown" title="${label}" aria-label="${label} ${seconds(cooldown)}">${seconds(cooldown)}</span>`;
 }
 
@@ -315,9 +315,9 @@ function planetLines(t) {
   const lines = stratagemEffects.filter(effect => !effect.types || effect.types.includes(t.type)).flatMap(effect => {
     const label = `${T(effect.name)} (${EFFECT_KIND[effect.kind]})`;
     if (effect.disable) return [L(`${label}: 스트라타젬이 간헐적으로 막힘`, `${label}: stratagems are disabled at times`)];
-    if (effect.cooldownUp && t.cooldown != null) return [L(`${label}: 재사용 대기 증가(수치 미확인)`, `${label}: longer cooldown (amount unverified)`)];
+    if (effect.cooldownUp && t.cooldown != null) return [L(`${label}: 재사용 대기시간 증가(수치 미확인)`, `${label}: longer cooldown (amount unverified)`)];
     const rows = [];
-    if (effect.cooldown && t.cooldown != null) rows.push(L(`${label}: 재사용 대기 +${pct(effect.cooldown)}% → ${num(Math.round(t.cooldown * effect.cooldown))}${s}`, `${label}: cooldown +${pct(effect.cooldown)}% → ${num(Math.round(t.cooldown * effect.cooldown))}${s}`));
+    if (effect.cooldown && t.cooldown != null) rows.push(L(`${label}: 재사용 대기시간 +${pct(effect.cooldown)}% → ${num(Math.round(t.cooldown * effect.cooldown))}${s}`, `${label}: cooldown +${pct(effect.cooldown)}% → ${num(Math.round(t.cooldown * effect.cooldown))}${s}`));
     if (effect.callIn && t.callIn != null) rows.push(L(`${label}: 호출 시간 +${pct(effect.callIn)}% → ${num(Math.round(t.callIn * effect.callIn * 100) / 100)}${s}`, `${label}: call-in +${pct(effect.callIn)}% → ${num(Math.round(t.callIn * effect.callIn * 100) / 100)}${s}`));
     if (effect.rearm && t.rearm != null) rows.push(L(`${label}: 재무장 +${pct(effect.rearm)}% → ${num(Math.round(t.rearm * effect.rearm * 100) / 100)}${s}`, `${label}: rearm +${pct(effect.rearm)}% → ${num(Math.round(t.rearm * effect.rearm * 100) / 100)}${s}`));
     return rows;
@@ -341,7 +341,7 @@ function changesBlock(item, expanded = false) {
   if (!lines.length && !modules.length) return '';
   const title = L('행성 조건과 함선 모듈에 따른 변화', 'Changes under planet conditions and ship modules');
   const content = html`${lines.length ? html`<ul class="notes">${lines.map(line => html`<li>${line}</li>`)}</ul>
-    <p class="faint" style="font-size:12.5px">${L('재사용 대기와 호출에 표시된 값에 비율을 곱한 값입니다.', 'The rate applied to the cooldown and call-in values shown above.')} <a href="#/planets?tab=modifiers">${L('작전 제한 조건 보기', 'See operation modifiers')}</a></p>` : ''}
+    <p class="faint" style="font-size:12.5px">${L('재사용 대기시간과 호출에 표시된 값에 비율을 곱한 값입니다.', 'The rate applied to the cooldown and call-in values shown above.')} <a href="#/planets?tab=modifiers">${L('작전 제한 조건 보기', 'See operation modifiers')}</a></p>` : ''}
     ${modules.length ? html`<p class="faint" style="font-size:12.5px;margin-top:8px">${L('함선 모듈(모두 최고 단계)', 'Ship modules (all fully upgraded)')}: ${modules.map(module => `${lang === 'en' ? module.en : module.name} (${effect(module)})`).join(' · ')}</p>` : ''}`;
   return expanded ? html`<section class="block item-detail-changes"><h3>${title}</h3><div class="item-detail-card">${content}</div></section>`
     : html`<details class="planet-effects"><summary>${title}</summary>${content}</details>`;
@@ -372,7 +372,6 @@ function timingBlock(item, expanded = false) {
   const upgraded = expanded && !on ? timingOf(item, true) : null;
   const s = L('초', 's');
   const caption = key => {
-    const base = t[`${key}Base`];
     const value = t[key];
     const unit = key === 'uses' ? L('회', '') : s;
     if (!on) {
@@ -381,8 +380,9 @@ function timingBlock(item, expanded = false) {
       const adjusted = num(key === 'cooldown' ? Math.round(enhanced) : enhanced);
       return L(`함선 모듈 적용 시 ${adjusted}${unit}`, `With ship modules: ${adjusted}${unit}`);
     }
-    // With modules on, a changed value explains itself in its label's tooltip (moduleNote); the caption stays empty.
-    return value !== base ? '' : L('함선 모듈 영향 없음', 'No ship module changes it');
+    // With modules on, a changed value explains itself in its label's tooltip (moduleNote) and an unchanged one says
+    // nothing (user request 2026-11-25): the caption stays empty.
+    return '';
   };
   // The ship module change as a tooltip on the label (user request 2026-11-25), e.g. cooldown 480 s -> 410 s.
   const NAMES = { cooldown: ['재사용 대기시간', 'the cooldown'], rearm: ['재무장 시간', 'the rearm time'], uses: ['사용 횟수', 'the uses'], callIn: ['호출 시간', 'the call-in time'] };
@@ -396,7 +396,7 @@ function timingBlock(item, expanded = false) {
   };
   const label = (key, text) => moduleNote(key) ? tipLabel(text, moduleNote(key)) : text;
   const cell = (label, value, unit, text) => html`<div><dt>${label}</dt><dd>${value}${unit ? html`<small>${unit}</small>` : ''}</dd>${text ? html`<div class="caption">${text}</div>` : ''}</div>`;
-  return html`<section class="block"><h3>${L('재사용 대기와 호출', 'Cooldown and call-in')}</h3>
+  return html`<section class="block"><h3>${L('재사용 대기시간과 호출', 'Cooldown and call-in')}</h3>
     <dl class="detail-grid">
       ${t.cooldown != null ? cell(label('cooldown', L('재사용 대기시간', 'Cooldown')), num(Math.round(t.cooldown)), s, caption('cooldown')) : ''}
       ${t.rearm != null ? cell(label('rearm', L('재무장 시간', 'Rearm time')), num(t.rearm), s, caption('rearm')) : ''}

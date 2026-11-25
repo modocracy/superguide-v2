@@ -227,7 +227,7 @@
     "en": "It fires upward now and then, giving away its position."
    },
    {
-    "ko": "범위 가장자리 근처에서 이글을 부르면 이글 1이 범위에 들어와 공격받고, 수리하는 동안 모든 이글 스트라타젬이 이글 재무장을 쓴 것처럼 재사용 대기에 들어갑니다.",
+    "ko": "범위 가장자리 근처에서 이글을 부르면 이글 1이 범위에 들어와 공격받고, 수리하는 동안 모든 이글 스트라타젬이 이글 재무장을 쓴 것처럼 재사용 대기시간에 들어갑니다.",
     "en": "Calling an Eagle near the edge of its range can bring Eagle 1 into its coverage; she is shot at, and every Eagle stratagem goes on cooldown as if Eagle Rearm had been used while she is repaired."
    }
   ],
