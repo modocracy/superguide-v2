@@ -143,8 +143,10 @@ class RecoilSim extends Base {
     const SLOT_NAMES = { muzzle: L('총구', 'Muzzle'), underbarrel: L('총열 하부', 'Underbarrel') };
     const MODE_NAMES = { auto: L('자동', 'Auto'), semi: L('단발', 'Semi'), burst: L(`점사(${sim.burst}발)`, `Burst (${sim.burst})`) };
     this.modeName = mode => MODE_NAMES[mode];
-    // A row of choices: data-choice names the field, data-value its value (JSON).
-    const row = (label, field, items) => `<div class="recoil-sim-option"><span>${label}</span><div class="segmented" role="group" aria-label="${label}">${items.map(([value, name]) => `<button type="button" data-choice="${field}" data-value='${JSON.stringify(value)}' aria-pressed="${value === this.choice[field]}">${name}</button>`).join('')}</div></div>`;
+    // A row of choices: data-choice names the field, data-value its value (JSON). A slot's pick lives under
+    // choice.slots, so the fitted part shows as picked from the start.
+    const picked = field => field.startsWith('slot:') ? this.choice.slots[field.slice(5)] : this.choice[field];
+    const row = (label, field, items) => `<div class="recoil-sim-option"><span>${label}</span><div class="segmented" role="group" aria-label="${label}">${items.map(([value, name]) => `<button type="button" data-choice="${field}" data-value='${JSON.stringify(value)}' aria-pressed="${value === picked(field)}">${name}</button>`).join('')}</div></div>`;
     const options = [
       sim.modes?.length > 1 ? row(L('사격 방식', 'Fire mode'), 'mode', sim.modes.map(m => [m, MODE_NAMES[m]])) : '',
       sim.rpms ? row(L('연사 속도', 'Fire rate'), 'rpm', sim.rpms.map(r => [r, L(`분당 ${fmt(r)}`, `${fmt(r)} RPM`)])) : '',
