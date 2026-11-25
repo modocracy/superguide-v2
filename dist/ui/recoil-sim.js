@@ -9,17 +9,14 @@
 // view is more than about 0.57 degrees to one side a kick back towards the middle is cut to 1/16.
 // The build PC's reference (db/source/game_sheets/recoil_reconstruction.md, 2026-11-25) found none of the site
 // estimates below, nor the stance multipliers, in the game data: they stay estimates.
-// Vertical climb follows a spring fitted to recordings of the game armory's recoil simulation view. It is an estimate:
-// recordings of real firing in a mission climb steadily instead (user decision 2026-11-25: keep it, marked as an
-// estimate, until the mission measurements settle it). (recoil_reconstruction.md
-// section 8, approved 2026-11-25): each round adds SPRING_KICK x its climb kick to the view's vertical speed, and
-// between rounds the view is pulled back, y'' = -w^2 y - 2 z w y' (w = 4.95 rad/s, z = 0.45). It climbs, overshoots
-// and then holds (Coyote at 600 RPM peaks around the 8th round and holds at about 0.8 of the peak); one round alone
-// peaks at its kick after 0.25 s, so one unit is still 0.01 degrees per round.
-// Site estimates (the game data does not give them): one unit = 0.01 degrees per round, drift settles with a
-// 0.12 s time constant, a horizontal climb kick plays out with a 0.01 s one and stays (the recordings did not settle
-// the horizontal), each pellet lands evenly inside an ellipse whose half-widths are the spread, and semi and burst
-// fire pull the trigger every 0.15 s at most. So the shape compares weapons; the angles are approximate.
+// The view climbs steadily and stays where it climbed (nobody pulls it down), and one recoil unit is 0.01 / 12 degrees
+// per round: real firing recorded in a mission (Stalwart, first person, 2026-11-25) climbed about 0.015 degrees a
+// round without levelling off. The spring fitted to the armory's recoil simulation view (recoil_reconstruction.md
+// section 8) climbed and held instead; that view does not draw the real view (user decision 2026-11-25: follow the
+// mission recording, still an estimate from one weapon, and show no angles on the page).
+// Site estimates (the game data does not give them): the unit above, drift settles with a 0.12 s time constant, a
+// climb kick plays out with a 0.01 s one, each pellet lands evenly inside an ellipse whose half-widths are the
+// spread, and semi and burst fire pull the trigger every 0.15 s at most.
 // Choices (user request 2026-11-25): stance, fire mode and fire rate (game data), the muzzle and the underbarrel
 // (their multipliers on drift, climb and spread from the game data, against the fitted parts already in the inputs;
 // chokes and the duckbill change only the spread) and the armor passive
@@ -29,8 +26,7 @@ import { L } from '../core/i18n.js';
 import { html, raw } from './dom.js';
 import { detailDisclosure } from './item-detail.js';
 
-const UNIT = 0.01, DRIFT_TAU = 0.12, CLIMB_TAU = 0.01, TURN = 0.57, MAX_SHOTS = 30, STEP = 1 / 240;
-const SPRING_W = 4.95, SPRING_Z = 0.45, SPRING_KICK = 8.64; // vertical climb spring (armory view recordings, estimate)
+const UNIT = 0.01 / 12, DRIFT_TAU = 0.12, CLIMB_TAU = 0.01, TURN = 0.57, MAX_SHOTS = 30, STEP = 1 / 240;
 const MRAD = 180 / Math.PI / 1000; // degrees per milliradian
 const PULL = 0.15, PASSIVE = 0.7; // seconds between trigger pulls (estimate); the recoil passive's multiplier
 const STANCES = [['stand', 0.9, () => L('서서', 'Standing')], ['crouch', 0.6, () => L('앉아서', 'Crouched')], ['prone', 0.4, () => L('엎드려서', 'Prone')]];
@@ -68,7 +64,7 @@ export function simulate(sim, scale) {
   const timeOf = k => (n === Infinity ? k * gap : Math.floor(k / n) * ((n - 1) * gap + Math.max(gap, PULL)) + (k % n) * gap);
   const end = timeOf(shots - 1) + 0.5;
   const view = [0, 0], drift = [0, 0];
-  let pending = [0, 0], climbSpeed = 0, next = 0, fired = 0;
+  let pending = [0, 0], next = 0, fired = 0;
   const frames = [], hits = [];
   const settle = Math.exp(-STEP / DRIFT_TAU), take = 1 - Math.exp(-STEP / CLIMB_TAU);
   const steps = Math.ceil(end / STEP);
@@ -79,17 +75,11 @@ export function simulate(sim, scale) {
       hits.push({ t, x, y, points: scatter(sim, x, y) });
       const d = kick(sim, 0, scale, view[0]), c = kick(sim, 1, scale, view[0]);
       for (const a of [0, 1]) if (Math.abs(d[a]) > Math.abs(drift[a])) drift[a] = d[a];
-      pending = [c[0], 0];
-      climbSpeed += c[1] * SPRING_KICK;
+      pending = c;
       fired++; next = timeOf(fired);
     }
     for (const a of [0, 1]) {
       drift[a] *= settle;
-      if (a === 1) {
-        climbSpeed += (-SPRING_W * SPRING_W * view[1] - 2 * SPRING_Z * SPRING_W * climbSpeed) * STEP;
-        view[1] += climbSpeed * STEP;
-        continue;
-      }
       const move = pending[a] * take;
       view[a] += move; pending[a] -= move;
     }
@@ -108,11 +98,12 @@ export function configure(sim, { mode, rpm, slots = {} } = {}) {
   return out;
 }
 
-// The box: SIZE px square, the crosshair low in it (like the game), and a scale that fits the whole burst. Like the
+// The box: SIZE px square, the crosshair low in it (like the game), and one scale for every weapon so they compare by
+// size; it only shrinks when a burst would not fit (wide shotgun spreads). Like the
 // game's armory view, a dot marks each round; a shotgun shot shows a smaller dot per pellet (user request 2026-11-25).
-const SIZE = 240, BASE_PX = 24, AIM_Y = SIZE * 0.72; // 24 px per degree when it all fits
+const SIZE = 240, BASE_PX = 240, AIM_Y = SIZE * 0.72; // 240 px per degree when it all fits
 const PAD_X = 16, PAD_TOP = 18, PAD_BOTTOM = 30; // room for the frame and the cross's arms
-const STEPS = [0.25, 0.5, 1, 2, 5, 10, 20]; // grid square sizes in degrees
+const STEPS = [0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20]; // grid square sizes in degrees
 export function frameFor(run) {
   const xs = [0], ys = [0];
   for (const h of run.hits) for (const [x, y] of h.points) { xs.push(x); ys.push(y); }
@@ -181,20 +172,18 @@ class RecoilSim extends Base {
         <circle class="reticle" r="5"/>
         <rect class="frame" x="6" y="6" width="${SIZE - 12}" height="${SIZE - 12}"/>
       </svg>
-      <div class="recoil-sim-notes"><p class="recoil-sim-readout" aria-live="polite"></p>
-      <p class="caption"><span class="recoil-sim-setup"></span> · <span class="recoil-sim-scale"></span></p>
-      <p class="caption">${L('십자 = 조준점(고정)<br>점 = 탄착군(노란색 = 방금 쏜 탄, 산탄총은 펠릿마다 작은 점)<br>선 = 총구 궤적<br>원 = 총구 방향<br>표는 연사 전체가 들어오게 배율이 바뀝니다.',
-        'Cross = aim point (fixed)<br>Dots = hit group (yellow = just fired; a shotgun shows a small dot per pellet)<br>Line = muzzle path<br>Circle = muzzle direction<br>The scale changes so the whole burst fits.')}</p>
-      <p class="caption">${L('반동·탄퍼짐·부착물·패시브 배율은 게임 자료이고, 수직 회복과 각도는 추정입니다(회복은 게임 무기고 화면 기준, 실제 사격과 다를 수 있음).', 'Recoil, spread, attachment and passive multipliers are game data; the vertical recovery and the angles are estimates (the recovery follows the game armory view and may differ from real firing).')}
-        <span class="col-tip" tabindex="0" data-tip="${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 자체 연구 값이고, 수직으로 오르고 돌아오는 움직임은 게임 무기고의 반동 시뮬레이션 화면에 맞춘 추정으로, 실제 임무에서 쏠 때는 몇 발 뒤 멈추지 않고 꾸준히 오르는 것으로 보여 다를 수 있습니다. 한 발이 몇 도인지, 수평으로 움직이고 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다(게임 데이터에서 찾지 못함). 총구·총열 하부 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
-        'The recoil values and spread are game data, the stance multipliers come from our own research, the vertical climb and recovery are an estimate fitted to the recoil simulation view in the game armory (real firing in a mission seems to climb steadily instead), and the degrees per shot, the horizontal movement and recovery, and how hits fall inside the spread are our estimate (not found in the game data). The muzzle and underbarrel recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}">${L('자세히', 'Details')}</span></p></div>`;
+      <div class="recoil-sim-notes">
+      <p class="caption"><span class="recoil-sim-setup"></span></p>
+      <p class="caption">${L('십자 = 조준점(고정)<br>점 = 탄착군(노란색 = 방금 쏜 탄, 산탄총은 펠릿마다 작은 점)<br>선 = 총구 궤적<br>원 = 총구 방향<br>표 배율은 모든 무기가 같고, 탄착이 넘칠 때만 줄어듭니다.',
+        'Cross = aim point (fixed)<br>Dots = hit group (yellow = just fired; a shotgun shows a small dot per pellet)<br>Line = muzzle path<br>Circle = muzzle direction<br>Every weapon uses the same scale; it shrinks only when a burst would not fit.')}</p>
+      <p class="caption">${L('반동·탄퍼짐·부착물·패시브 배율은 게임 자료이고, 한 발 크기와 꾸준히 오르는 모양은 추정입니다.', 'Recoil, spread, attachment and passive multipliers are game data; the size of a round and the steady climb are estimates.')}
+        <span class="col-tip" tabindex="0" data-tip="${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 자체 연구 값이고, 화면은 직접 내리지 않으면 돌아오지 않고 꾸준히 오르며, 한 발의 크기는 추정입니다. 게임 무기고의 반동 시뮬레이션 화면은 실제 시야를 그대로 그리지 않는 것으로 보여 따르지 않았습니다. 수평으로 움직이는 속도와 탄퍼짐 안에서 퍼지는 모양도 사이트 추정입니다(게임 데이터에서 찾지 못함). 총구·총열 하부 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
+        'The recoil values and spread are game data, the stance multipliers come from our own research, the view climbs steadily unless you pull it down, and the size of a round is an estimate; the recoil simulation view in the game armory does not seem to draw the real view, so it is not followed. The horizontal movement and how hits fall inside the spread are our estimate too (not found in the game data). The muzzle and underbarrel recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}">${L('자세히', 'Details')}</span></p></div>`;
     this.grid = this.querySelector('.grid');
     this.trail = this.querySelector('.trail');
     this.hitLayer = this.querySelector('.hits');
     this.cross = this.querySelector('.cross');
     this.reticle = this.querySelector('.reticle');
-    this.out = this.querySelector('.recoil-sim-readout');
-    this.scaleText = this.querySelector('.recoil-sim-scale');
     this.setupText = this.querySelector('.recoil-sim-setup');
     this.querySelectorAll('[data-choice]').forEach(b => b.addEventListener('click', () => {
       const field = b.dataset.choice, value = JSON.parse(b.dataset.value);
@@ -253,7 +242,6 @@ class RecoilSim extends Base {
     for (let y = oy % gap; y < SIZE; y += gap) lines.push(`M0 ${y.toFixed(1)}H${SIZE}`);
     this.grid.innerHTML = `<path d="${lines.join('')}"/>`;
     this.cross.setAttribute('transform', `translate(${ox} ${oy.toFixed(1)})`);
-    this.scaleText.textContent = L(`칸 하나는 약 ${fmt(grid)}°`, `one square is about ${fmt(grid)}°`);
   }
 
   aimAt(x, y) {
@@ -274,13 +262,6 @@ class RecoilSim extends Base {
     return shot;
   }
 
-  // The view recovers once firing stops, so the readout gives the highest hit rather than where the aim ends.
-  readout(run) {
-    const dots = run.hits.flatMap(h => h.points), xs = dots.map(d => d[0]);
-    const climb = Math.max(...dots.map(d => d[1])), spread = Math.max(...xs) - Math.min(...xs);
-    this.out.textContent = L(`탄착이 처음 조준보다 최대 약 ${fmt(climb)}° 위 · 좌우 폭 약 ${fmt(spread)}°`, `Hits up to about ${fmt(climb)}° above the first aim · about ${fmt(spread)}° wide`);
-  }
-
   fire() {
     cancelAnimationFrame(this.raf);
     const sim = configure(this.sim, this.choice);
@@ -292,7 +273,6 @@ class RecoilSim extends Base {
     run.frames.forEach((f, i) => { aim[i * 2] = f.view[0] + f.drift[0]; aim[i * 2 + 1] = f.view[1] + f.drift[1]; });
     this.hitLayer.replaceChildren();
     this.trail.setAttribute('d', '');
-    this.out.textContent = '';
     const lastShot = run.hits.at(-1).t;
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       run.hits.forEach(h => this.addHit(h, lastShot - h.t < FRESH));
@@ -300,7 +280,6 @@ class RecoilSim extends Base {
       for (let i = 0; i < n; i++) d += `${i ? 'L' : 'M'}${this.sx(aim[i * 2]).toFixed(1)} ${this.sy(aim[i * 2 + 1]).toFixed(1)}`;
       this.trail.setAttribute('d', d);
       this.aimAt(aim[(n - 1) * 2], aim[(n - 1) * 2 + 1]);
-      this.readout(run);
       return;
     }
     let shown = 0, path = '', last = null;
@@ -323,7 +302,6 @@ class RecoilSim extends Base {
       }
       this.aimAt(x, y);
       if (t < run.end) this.raf = requestAnimationFrame(tick);
-      else this.readout(run);
     };
     this.raf = requestAnimationFrame(tick);
   }

@@ -51,15 +51,13 @@ ok(configure(lib, { slots: { muzzle: comp } }).climb[1] < lib.climb[1], 'liberat
 ok(configure(lib, { slots: { underbarrel: grip } }).climb[1] < lib.climb[1], 'liberator: the vertical foregrip cuts vertical climb');
 const sweeper = weaponRecoil['gear/sweeper'].sim, full = slotOf(sweeper, 'muzzle').options.findIndex(o => o.en === 'Full Choke');
 ok(configure(sweeper, { slots: { muzzle: full } }).spread[0] < sweeper.spread[0], 'sweeper: the full choke tightens the spread');
-// The vertical climb spring keeps the shape fitted to the game armory view (recoil_reconstruction.md section 8; an
-// estimate, since real firing in a mission climbs steadily): one round alone peaks
-// at its kick (one unit = 0.01 degrees) about 0.25 s later, and the Coyote at 600 RPM peaks around the 8th round and
-// then holds at about 0.8 of the peak. No randomness and no drift here, to see the spring alone.
-const coyote = { ...weaponRecoil['gear/coyote'].sim, random: [[0, 1], [0, 1]], drift: [0, 0] };
-const single = simulate({ ...coyote, magazine: 1 }, 1), top = single.frames.reduce((a, f) => (f.view[1] > a.view[1] ? f : a));
-ok(Math.abs(top.view[1] / (coyote.climb[1] * 0.01) - 1) < 0.03 && Math.abs(top.t - 0.25) < 0.02, `coyote: one round peaks at its kick after 0.25 s (${top.view[1].toFixed(3)} at ${top.t.toFixed(3)} s)`);
-const ys = simulate(coyote, 1).hits.map(h => h.y), peak = Math.max(...ys), hold = ys.slice(19).reduce((a, y) => a + y, 0) / ys.slice(19).length;
-ok(Math.abs(ys.indexOf(peak) + 1 - 8) <= 1 && hold / peak > 0.7 && hold / peak < 0.9, `coyote: peaks near round 8 and holds near 0.8 of it (round ${ys.indexOf(peak) + 1}, ${(hold / peak).toFixed(2)})`);
+// The view climbs steadily (no recovery) by about 0.015 degrees a round for the Stalwart standing, as real firing
+// in a mission did (2026-11-25), and firing faster or slower climbs the same per round.
+const stalwart = { ...weaponRecoil['arsenal/stalwart'].sim, random: [[0, 1], [0, 1]], drift: [0, 0] };
+const steady = simulate(stalwart, 0.9).hits.map(h => h.y);
+ok(steady.every((y, i) => i === 0 || y > steady[i - 1]) && Math.abs(steady.at(-1) / (steady.length - 1) - 0.015) < 0.002, `stalwart: climbs steadily about 0.015 degrees a round (${(steady.at(-1) / (steady.length - 1)).toFixed(4)})`);
+const perRound = rpm => { const ys = simulate({ ...stalwart, rpm }, 0.9).hits.map(h => h.y); return ys.at(-1) / (ys.length - 1); };
+ok(Math.abs(perRound(700) / perRound(1150) - 1) < 0.05, 'stalwart: the same climb per round at 700 and 1150 RPM');
 
 const { weaponDetail } = await import('../dist/ui/views/gear.js');
 const sample = personalWeapons.find(w => weaponRecoil[`gear/${w.id}`]?.sim);

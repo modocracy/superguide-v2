@@ -704,7 +704,6 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .recoil-sim-view .hits .fresh circle { fill: #ffd60a; }
 .recoil-sim-view .trail { fill: none; stroke: #7fb2ff; stroke-width: 1; stroke-linejoin: round; opacity: .35; }
 .recoil-sim-view .reticle { fill: none; stroke: #7fb2ff; stroke-width: 1.4; opacity: .8; }
-.recoil-sim-readout { min-height: 1.4em; font-weight: 650; }
 .recoil-sim .caption { font-size: 12.5px; color: var(--text-3); }
 /* Wide enough (the full-screen sheet): the view on the left, the choices and notes on the right. */
 @container (min-width: 700px) {
