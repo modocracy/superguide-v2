@@ -116,13 +116,14 @@ for (const s of siteEnemies) {
     partAll++;
     const zs = ref.부위.filter(z => z.체력 === p.hp && z.장갑 === p.armor && pct(z.내구) === p.durability);
     if (!zs.length) { partRows.push(`| ${s.name} | ${p.name} | ${p.hp} / ${p.armor} / ${p.durability}% / 전달 ${p.toMain}% | (체력, 장갑, 내구가 같은 부위 없음) |`); continue; }
-    if (zs.some(z => pct(z.본체_전달) === p.toMain)) { partSame++; continue; }
-    partRows.push(`| ${s.name} | ${p.name} | ${p.hp} / ${p.armor} / ${p.durability}% / 전달 ${p.toMain}% | 전달 ${[...new Set(zs.map(z => pct(z.본체_전달)))].join(' 또는 ')}% (${zs.map(z => z.이름).join(', ')}) |`);
+    // 폭발 저항: 게임 시트 '폭발_저항'(규칙은 game_sheets/README.md)과 사이트 exdr
+    if (zs.some(z => pct(z.본체_전달) === p.toMain && (p.exdr == null || z.폭발_저항 === p.exdr))) { partSame++; continue; }
+    partRows.push(`| ${s.name} | ${p.name} | ${p.hp} / ${p.armor} / ${p.durability}% / 전달 ${p.toMain}% / 폭발 저항 ${p.exdr ?? '-'}% | 전달 ${[...new Set(zs.map(z => pct(z.본체_전달)))].join(' 또는 ')}% / 폭발 저항 ${[...new Set(zs.map(z => z.폭발_저항))].join(' 또는 ')}% (${zs.map(z => z.이름).join(', ')}) |`);
   }
 }
 lines.push('## 적 본체 (체력 / 장갑 / 내구)', '', `같음 ${enemySame}, 다름 ${enemyRows.length}, 게임 이름과 짝 없음 ${enemyMissing}(변종 등 게임 백과사전 이름이 다른 것)`, '');
 if (enemyRows.length) lines.push('| 적 | 사이트 | 게임 |', '|---|---|---|', ...enemyRows, '');
-lines.push('## 적 부위 (체력 / 장갑 / 내구 / 본체 전달)', '', `같음 ${partSame} / ${partAll}. 게임 부위 이름은 해시로만 풀린 것이 많아 값으로 짝을 지음`, '');
+lines.push('## 적 부위 (체력 / 장갑 / 내구 / 본체 전달 / 폭발 저항)', '', `같음 ${partSame} / ${partAll}. 게임 부위 이름은 해시로만 풀린 것이 많아 값으로 짝을 지음`, '');
 if (partRows.length) lines.push('| 적 | 부위 | 사이트 | 게임 |', '|---|---|---|---|', ...partRows, '');
 summary.push(`적 본체 같음 ${enemySame} 다름 ${enemyRows.length}, 부위 같음 ${partSame}/${partAll}`);
 

@@ -39,6 +39,8 @@ export function recoilStats(key) {
   const pair = ([h, v]) => `${h} / ${v}`;
   const limit = recoil.limit ? L(` · 위로 ${recoil.limit[0]}도부터 수직 반동 줄어듦`, ` · vertical kick eases off from ${recoil.limit[0]} degrees up`) : '';
   return [
+    // The game armory screen's recoil: (weapon kick + view climb) / 2 with the default attachments (game data sheet).
+    ...(recoil.screen ? [{ label: L('반동', 'Recoil'), text: pair(recoil.screen), caption: L('게임 무기고 화면 값 · 수평 / 수직 · 기본 부착물 기준', 'As on the game armory screen · horizontal / vertical · default attachments') }] : []),
     { label: L('무기 반동', 'Weapon kick'), text: pair(recoil.drift), caption: L('수평 / 수직', 'Horizontal / vertical') + rocket },
     { label: L('화면 반동', 'View climb'), text: pair(recoil.climb), caption: L('수평 / 수직', 'Horizontal / vertical') + limit },
   ];
