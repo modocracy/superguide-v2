@@ -266,7 +266,6 @@ export default {
   "대용량": "High capacity",
   "약 · 위키 운용 거리": "Approx. · Wiki effective range",
   "플라즈마": "Plasma",
-  "탄종 변화": "Shot type varies",
   "완전 충전": "Full charge",
   "별도 충돌 폭발": "Separate impact explosion",
   "설치식": "Deployable",
