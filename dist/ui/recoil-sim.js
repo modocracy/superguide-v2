@@ -16,8 +16,9 @@
 // CLIMB_TAU was 0.06 s; with the replace rule that dropped up to 42% of each kick at high fire rates, so faster fire
 // climbed less, a trend that came only from the estimate. At 0.01 s even 1,500 RPM applies 98% of a kick before
 // the next round (user request 2026-11-25).
-// Choices (user request 2026-11-25): stance, fire mode and fire rate (game data), the muzzle (its multipliers on
-// drift, climb and spread from the game data, against the default muzzle already in the inputs) and the armor passive
+// Choices (user request 2026-11-25): stance, fire mode and fire rate (game data), the muzzle and the underbarrel
+// (their multipliers on drift, climb and spread from the game data, against the fitted parts already in the inputs;
+// chokes and the duckbill change only the spread) and the armor passive
 // that cuts recoil by 30% (Engineering Kit, Fortified: 0.7 in the game data; it works in every stance, armor.js).
 import { weaponRecoil } from '../data/weapon-recoil.js';
 import { L } from '../core/i18n.js';
@@ -86,11 +87,13 @@ export function simulate(sim, scale) {
   return { frames, hits, shots, gap, end };
 }
 
-// The inputs for one set of choices: { mode, rpm, muzzle } (indexes into sim.muzzles).
-export function configure(sim, { mode, rpm, muzzle } = {}) {
+// The inputs for one set of choices: { mode, rpm, slots } (slots: slot name -> index into that slot's options).
+export function configure(sim, { mode, rpm, slots = {} } = {}) {
   const out = { ...sim, mode: mode ?? sim.modes?.[0] ?? 'auto', rpm: rpm ?? sim.rpm };
-  const fitted = sim.muzzles?.[sim.muzzle], chosen = sim.muzzles?.[muzzle ?? sim.muzzle];
-  if (fitted && chosen) for (const k of ['drift', 'climb', 'spread']) out[k] = sim[k].map((v, a) => v * chosen[k][a] / fitted[k][a]);
+  for (const { slot, options, fitted } of sim.slots ?? []) {
+    const from = options[fitted], to = options[slots[slot] ?? fitted];
+    for (const k of ['drift', 'climb', 'spread']) out[k] = out[k].map((v, a) => v * to[k][a] / from[k][a]);
+  }
   return out;
 }
 
@@ -127,7 +130,8 @@ class RecoilSim extends Base {
     this.built = true;
     const sim = this.sim;
     this.stance = 0;
-    this.choice = { mode: sim.modes?.[0] ?? 'auto', rpm: sim.rpm, muzzle: sim.muzzle ?? 0, passive: false };
+    this.choice = { mode: sim.modes?.[0] ?? 'auto', rpm: sim.rpm, slots: Object.fromEntries((sim.slots ?? []).map(s => [s.slot, s.fitted])), passive: false };
+    const SLOT_NAMES = { muzzle: L('총구', 'Muzzle'), underbarrel: L('총열 하부', 'Underbarrel') };
     const MODE_NAMES = { auto: L('자동', 'Auto'), semi: L('단발', 'Semi'), burst: L(`점사(${sim.burst}발)`, `Burst (${sim.burst})`) };
     this.modeName = mode => MODE_NAMES[mode];
     // A row of choices: data-choice names the field, data-value its value (JSON).
@@ -135,7 +139,7 @@ class RecoilSim extends Base {
     const options = [
       sim.modes?.length > 1 ? row(L('사격 방식', 'Fire mode'), 'mode', sim.modes.map(m => [m, MODE_NAMES[m]])) : '',
       sim.rpms ? row(L('연사 속도', 'Fire rate'), 'rpm', sim.rpms.map(r => [r, L(`분당 ${fmt(r)}`, `${fmt(r)} RPM`)])) : '',
-      sim.muzzles ? row(L('총구', 'Muzzle'), 'muzzle', sim.muzzles.map((m, i) => [i, `${L(m.ko, m.en)}${i === sim.muzzle ? L(' (기본)', ' (default)') : ''}`])) : '',
+      ...(sim.slots ?? []).map(({ slot, options, fitted }) => row(SLOT_NAMES[slot], `slot:${slot}`, options.map((o, i) => [i, `${L(o.ko, o.en)}${i === fitted ? L(' (기본)', ' (default)') : ''}`]))),
       row(L('패시브', 'Passive'), 'passive', [[true, L('반동 30% 감소', 'Recoil -30%')]]),
     ].join('');
     const id = `rs${++uid}`, arm = 22;
@@ -169,9 +173,9 @@ class RecoilSim extends Base {
       <p class="caption"><span class="recoil-sim-setup"></span> · <span class="recoil-sim-scale"></span></p>
       <p class="caption">${L('십자 = 조준점(고정)<br>점 = 탄착군(노란색 = 방금 쏜 탄, 산탄총도 한 발에 점 하나)<br>선 = 총구 궤적<br>원 = 총구 방향<br>표는 연사 전체가 들어오게 배율이 바뀝니다.',
         'Cross = aim point (fixed)<br>Dots = hit group (yellow = just fired; a shotgun shot is one dot too)<br>Line = muzzle path<br>Circle = muzzle direction<br>The scale changes so the whole burst fits.')}</p>
-      <p class="caption">${L('반동·탄퍼짐·총구·패시브 배율은 게임 자료이고, 궤적의 크기와 회복 속도는 추정입니다.', 'Recoil, spread, muzzle and passive multipliers are game data; the size of the path and the recovery speed are estimates.')}
-        <span class="col-tip" tabindex="0" data-tip="${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 자체 연구 값이고, 한 발이 몇 도인지, 반동이 화면에 들어가는 속도와 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다(게임 데이터에서 찾지 못함). 화면을 직접 내리지 않는다고 보고 그렸습니다. 총구 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
-        'The recoil values and spread are game data, the stance multipliers come from our own research, and the degrees per shot, how fast a kick moves the view and recovers, and how hits fall inside the spread are our estimate (not found in the game data). Drawn as if you do not pull the view down. The muzzle recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}">${L('자세히', 'Details')}</span></p></div>`;
+      <p class="caption">${L('반동·탄퍼짐·부착물·패시브 배율은 게임 자료이고, 궤적의 크기와 회복 속도는 추정입니다.', 'Recoil, spread, attachment and passive multipliers are game data; the size of the path and the recovery speed are estimates.')}
+        <span class="col-tip" tabindex="0" data-tip="${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 자체 연구 값이고, 한 발이 몇 도인지, 반동이 화면에 들어가는 속도와 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다(게임 데이터에서 찾지 못함). 화면을 직접 내리지 않는다고 보고 그렸습니다. 총구·총열 하부 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
+        'The recoil values and spread are game data, the stance multipliers come from our own research, and the degrees per shot, how fast a kick moves the view and recovers, and how hits fall inside the spread are our estimate (not found in the game data). Drawn as if you do not pull the view down. The muzzle and underbarrel recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}">${L('자세히', 'Details')}</span></p></div>`;
     this.grid = this.querySelector('.grid');
     this.trail = this.querySelector('.trail');
     this.hitLayer = this.querySelector('.hits');
@@ -183,8 +187,12 @@ class RecoilSim extends Base {
     this.querySelectorAll('[data-choice]').forEach(b => b.addEventListener('click', () => {
       const field = b.dataset.choice, value = JSON.parse(b.dataset.value);
       // The passive is a single on/off button; the others pick one of their row.
-      this.choice[field] = field === 'passive' ? !this.choice.passive : value;
-      this.querySelectorAll(`[data-choice="${field}"]`).forEach(o => o.setAttribute('aria-pressed', String(JSON.parse(o.dataset.value) === this.choice[field])));
+      // A slot's pick goes under choice.slots; the passive is a single on/off button; the others pick one of their row.
+      const slot = field.startsWith('slot:') ? field.slice(5) : null;
+      if (slot) this.choice.slots[slot] = value;
+      else this.choice[field] = field === 'passive' ? !this.choice.passive : value;
+      const now = slot ? this.choice.slots[slot] : this.choice[field];
+      this.querySelectorAll(`[data-choice="${field}"]`).forEach(o => o.setAttribute('aria-pressed', String(JSON.parse(o.dataset.value) === now)));
       this.fire();
     }));
     this.querySelectorAll('[data-stance]').forEach(b => b.addEventListener('click', () => {

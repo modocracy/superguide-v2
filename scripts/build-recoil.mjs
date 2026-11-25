@@ -17,9 +17,10 @@
 //     and the magazine (`탄창`; for a heat weapon the rounds before it overheats, `열.과열까지_발사`); the spread [horizontal, vertical] in MRAD after the default attachments and the pellets
 //     per shot (the sheet's projectile `탄_수`, else the site's `pellets`). Left out for spray weapons, which have no fire rate.
 //     Choices on the page (user request 2026-11-25): modes = the fire modes ('auto', 'semi', 'burst' from `조작.발사_방식`)
-//     with burst = rounds per burst (`조작.점사_발수`), rpms = the fire rates when there are several, and muzzles = the
-//     muzzles that change recoil (a weapon's muzzle slot in weapon-attachments.js, plus its default and No Attachment),
-//     each with its multipliers on drift, climb and spread from the sheet's attachment stats; muzzle = the default's index.
+//     with burst = rounds per burst (`조작.점사_발수`), rpms = the fire rates when there are several, and slots = the
+//     muzzle and underbarrel choices that change recoil or spread (the weapon's slots in weapon-attachments.js, plus
+//     the fitted part and the empty choice), each with its multipliers on drift, climb and spread from the sheet's
+//     attachment stats; fitted = the default's index.
 //     A recoil multiplier (`반동_*_곱`) scales drift and climb, a camera one (`카메라반동_*_곱`) only climb.
 // A weapon matches its record by its English name (upper case). Melee weapons and throwables are left out: their
 // recoil is a placeholder. Do not edit the output.
@@ -45,14 +46,20 @@ export async function buildRecoil() {
     return { drift: [p('반동_수평_곱'), p('반동_수직_곱')], climb: [r(p('반동_수평_곱') * p('카메라반동_수평_곱')), r(p('반동_수직_곱') * p('카메라반동_수직_곱'))],
       spread: [p('탄퍼짐_수평_곱'), p('탄퍼짐_수직_곱')] };
   };
-  // Muzzle (slot 4) multipliers by English name; every copy of a name must agree.
-  const muzzleFactors = new Map();
-  for (const a of sheetFile.부착물.filter(a => a.부위_번호.includes(4))) {
-    const f = { ko: a.ko, ...factors(a.바꾸는_값?.능력치) }, seen = muzzleFactors.get(a.en);
-    if (seen && JSON.stringify(seen) !== JSON.stringify(f)) throw new Error(`Muzzle ${a.en}: copies disagree`);
-    muzzleFactors.set(a.en, f);
-  }
-  const changesRecoil = f => [...f.drift, ...f.climb].some(v => v !== 1);
+  // The attachment slots whose parts change recoil or spread (user request 2026-11-25): the site's slot name, the
+  // sheet's slot number and the names of its empty choice. Optics and magazines change neither.
+  const SLOTS = { muzzle: { sheet: 4, none: ['no attachment', 'no choke'] }, underbarrel: { sheet: 1, none: ['no underbarrel', 'no attachment'] } };
+  // Multipliers by slot and lower-case English name (the sheet and the wiki differ in case); copies must agree.
+  const slotFactors = Object.fromEntries(Object.entries(SLOTS).map(([slot, { sheet: n }]) => {
+    const map = new Map();
+    for (const a of sheetFile.부착물.filter(a => a.부위_번호.includes(n))) {
+      const f = { ko: a.ko, ...factors(a.바꾸는_값?.능력치) }, name = a.en.toLowerCase(), seen = map.get(name);
+      if (seen && JSON.stringify({ ...seen, ko: '' }) !== JSON.stringify({ ...f, ko: '' })) throw new Error(`${slot} ${a.en}: copies disagree`);
+      if (!seen) map.set(name, f);
+    }
+    return [slot, map];
+  }));
+  const changes = f => [...f.drift, ...f.climb, ...f.spread].some(v => v !== 1);
   const MODES = { 자동: 'auto', 단발: 'semi', 점사: 'burst' };
   const COPY = /drone|frv|mount|vehicle|exosuit|emplacement/i;
   const simOf = g => {
@@ -74,17 +81,27 @@ export async function buildRecoil() {
     const values = [...new Set((named.length ? named : own).map(g => JSON.stringify({ screen: [g.조작.화면.수평_반동, g.조작.화면.수직_반동], ergonomics: g.조작.화면.인체공학, ...(simOf(g) && { sim: simOf(g) }) })))];
     return values.length === 1 ? JSON.parse(values[0]) : null;
   };
-  // The muzzle choices of a customizable weapon, when one of them changes recoil.
-  const muzzlesOf = (key, defaults) => {
+  // The attachment choices of a customizable weapon, per slot whose parts change recoil or spread: the fitted part,
+  // the empty choice and every part that changes either, in the order of the weapon's attachment table.
+  const slotsOf = (key, defaults) => {
     const id = key.startsWith('gear/') ? key.slice(5) : null;
-    const names = [...new Set((weaponAttachments[id] ?? []).map(it => attachmentParts[it.part]).filter(part => part.slot === 'muzzle').map(part => part.name))];
-    const known = names.filter(name => muzzleFactors.has(name));
-    if (!known.some(name => changesRecoil(muzzleFactors.get(name)))) return {};
-    const fitted = known.find(name => (defaults ?? []).includes(muzzleFactors.get(name).ko) && name !== 'No Attachment') ?? (known.includes('No Attachment') ? 'No Attachment' : null);
-    if (!fitted) throw new Error(`${key}: default muzzle not found`);
-    const muzzles = known.filter(name => name === fitted || name === 'No Attachment' || changesRecoil(muzzleFactors.get(name)))
-      .map(name => ({ en: name, ko: muzzleFactors.get(name).ko, drift: muzzleFactors.get(name).drift, climb: muzzleFactors.get(name).climb, spread: muzzleFactors.get(name).spread }));
-    return { muzzles, muzzle: muzzles.findIndex(m => m.en === fitted) };
+    const parts = (weaponAttachments[id] ?? []).map(it => attachmentParts[it.part]);
+    const slots = [];
+    for (const [slot, { none }] of Object.entries(SLOTS)) {
+      const map = slotFactors[slot];
+      const names = [...new Set(parts.filter(part => part.slot === slot).map(part => part.name))].filter(name => map.has(name.toLowerCase()));
+      const f = name => map.get(name.toLowerCase());
+      if (!names.some(name => changes(f(name)))) continue;
+      const empty = names.find(name => none.includes(name.toLowerCase()));
+      // The fitted part by its game name; else the empty choice; else a part that changes nothing, which acts the same
+      // (the Liberator Legacy's table has no empty underbarrel).
+      const fitted = names.find(name => (defaults ?? []).includes(f(name).ko) && name !== empty) ?? empty ?? names.find(name => !changes(f(name)));
+      if (!fitted) throw new Error(`${key}: default ${slot} not found`);
+      const options = names.filter(name => name === fitted || name === empty || changes(f(name)))
+        .map(name => ({ en: name, ko: f(name).ko, drift: f(name).drift, climb: f(name).climb, spread: f(name).spread }));
+      slots.push({ slot, options, fitted: options.findIndex(o => o.en === fitted) });
+    }
+    return slots.length ? { slots } : {};
   };
   const weapons = [
     ...personalWeapons.filter(w => w.type !== 'melee' && w.category !== 'throwable').map(w => ({ key: `gear/${w.id}`, en: w.en, code: w.code, pellets: w.pellets })),
@@ -98,7 +115,7 @@ export async function buildRecoil() {
     const limit = limits.get(norm(en));
     const game = screenOf(code, en);
     if (game?.sim && game.sim.pellets == null) game.sim.pellets = pellets > 1 ? pellets : 1;
-    if (game?.sim) Object.assign(game.sim, muzzlesOf(key, game.sim.defaults)), delete game.sim.defaults;
+    if (game?.sim) Object.assign(game.sim, slotsOf(key, game.sim.defaults)), delete game.sim.defaults;
     if (!game) noScreen.push(key);
     recoil[key] = { drift: [record.drift.x, record.drift.y], climb: [record.climb.x, record.climb.y], ...(limit && { limit }), ...game };
   }

@@ -555,6 +555,8 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 }
 .sheet.expanded .sheet-top span { display: inline-flex; align-items: center; gap: 8px; }
 .sheet.expanded .sheet-top span::before { content: ''; width: 12px; height: 2px; background: var(--accent); }
+/* Notes under a stats grid or the rounds on full screen start where the card text starts, not at its border. */
+.sheet.expanded .item-detail-mode > p.faint, .sheet.expanded .ballistic-block > p.faint { padding: 0 16px; }
 .sheet.expanded > .sheet-body > .sheet-content { gap: 28px; padding-block: 26px 56px; }
 .sheet.expanded .sheet-content > .block > h3,
 .sheet.expanded .item-detail-section-heading > h3 {

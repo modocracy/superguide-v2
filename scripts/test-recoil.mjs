@@ -34,19 +34,24 @@ for (const [key, value] of Object.entries(weaponRecoil).filter(([, value]) => va
     ok(run.hits.every(h => inBox(h.points[0])) && run.frames.every(f => inBox([f.view[0] + f.drift[0], f.view[1] + f.drift[1]])) && inBox([0, 0]), `${key}: the burst fits in the box`);
   }
 }
-// Every fire mode, fire rate and muzzle choice runs; the default muzzle leaves the inputs as they are, and a muzzle
+// Every fire mode, fire rate and attachment choice runs; the fitted parts leave the inputs as they are, and a part
 // that cuts recoil lowers the climb.
 for (const [key, value] of Object.entries(weaponRecoil).filter(([, value]) => value.sim)) {
   const sim = value.sim;
   ok(sim.modes?.every(m => ['auto', 'semi', 'burst'].includes(m)) !== false && (!sim.modes?.includes('burst') || sim.burst > 0), `${key}: fire modes are known`);
-  ok(!sim.muzzles || (sim.muzzles[sim.muzzle] && JSON.stringify(configure(sim, {}).drift) === JSON.stringify(sim.drift)), `${key}: the default muzzle keeps the sheet values`);
-  for (const mode of sim.modes ?? ['auto']) for (const rpm of sim.rpms ?? [sim.rpm]) for (const muzzle of (sim.muzzles ?? [null]).map((_, i) => i)) {
-    const run = simulate(configure(sim, { mode, rpm, muzzle }), 0.9 * 0.7);
-    ok(run.hits.length === run.shots && run.hits.every((h, i) => i === 0 || h.t > run.hits[i - 1].t), `${key} ${mode} ${rpm} ${muzzle}: every round fires in order`);
+  ok(!sim.slots || (sim.slots.every(s => s.options[s.fitted]) && JSON.stringify(configure(sim, {})) === JSON.stringify(configure(sim, { slots: Object.fromEntries(sim.slots.map(s => [s.slot, s.fitted])) })) && JSON.stringify(configure(sim, {}).drift) === JSON.stringify(sim.drift)), `${key}: the fitted parts keep the sheet values`);
+  const picks = (sim.slots ?? []).flatMap(s => s.options.map((_, i) => ({ [s.slot]: i })));
+  for (const mode of sim.modes ?? ['auto']) for (const rpm of sim.rpms ?? [sim.rpm]) for (const slots of picks.length ? picks : [{}]) {
+    const run = simulate(configure(sim, { mode, rpm, slots }), 0.9 * 0.7);
+    ok(run.hits.length === run.shots && run.hits.every((h, i) => i === 0 || h.t > run.hits[i - 1].t), `${key} ${mode} ${rpm} ${JSON.stringify(slots)}: every round fires in order`);
   }
 }
-const lib = weaponRecoil['gear/liberator'].sim, comp = lib.muzzles.findIndex(m => m.en === 'Compensator');
-ok(configure(lib, { muzzle: comp }).climb[1] < lib.climb[1], 'liberator: the compensator cuts vertical climb');
+const lib = weaponRecoil['gear/liberator'].sim, slotOf = (sim, slot) => sim.slots.find(s => s.slot === slot);
+const comp = slotOf(lib, 'muzzle').options.findIndex(o => o.en === 'Compensator'), grip = slotOf(lib, 'underbarrel').options.findIndex(o => o.en === 'Vertical Foregrip');
+ok(configure(lib, { slots: { muzzle: comp } }).climb[1] < lib.climb[1], 'liberator: the compensator cuts vertical climb');
+ok(configure(lib, { slots: { underbarrel: grip } }).climb[1] < lib.climb[1], 'liberator: the vertical foregrip cuts vertical climb');
+const sweeper = weaponRecoil['gear/sweeper'].sim, full = slotOf(sweeper, 'muzzle').options.findIndex(o => o.en === 'Full Choke');
+ok(configure(sweeper, { slots: { muzzle: full } }).spread[0] < sweeper.spread[0], 'sweeper: the full choke tightens the spread');
 // Firing faster must not make the view climb less (the climb estimate once dropped part of each kick at high rates):
 // the average climb of 200 runs differs by under 5% between fire modes and fire rates.
 const meanClimb = (sim, choice) => { let sum = 0; for (let i = 0; i < 200; i++) { const f = simulate(configure(sim, choice), 0.9).frames.at(-1); sum += f.view[1]; } return sum / 200; };

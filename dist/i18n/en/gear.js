@@ -3,6 +3,8 @@
 export default {
   "주 총열": "Main barrel",
   "부착물 없음": "No Attachment",
+  "총열 하부 없음": "No Underbarrel",
+  "초크 없음": "No Choke",
   "하부 부착 무기": "Underbarrel attachment",
   "일제 사격": "Volley",
   "플레셰트탄": "Flechette",
