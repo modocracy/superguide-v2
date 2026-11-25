@@ -212,8 +212,8 @@ const ANATOMY_COLUMNS = [
   ['armor', L('장갑', 'Armor'), L('공격의 관통(AP)이 장갑보다 낮으면 피해가 들어가지 않고, 같으면 65%, 높으면 100%가 들어갑니다.', 'An attack with armor penetration (AP) below the armor deals no damage; equal AP deals 65%, higher AP 100%.')],
   ['durability', L('내구도', 'Durability'), L('무기의 일반 피해와 내구 피해가 섞이는 비율입니다. 내구도 X%인 부위에는 일반 피해 × (100 − X)% + 내구 피해 × X%가 들어갑니다. 높을수록 내구 피해가 큰 무기가 유리합니다.', 'How a weapon\'s normal and durable damage blend. A part with X% durability takes normal damage × (100 − X)% + durable damage × X%. The higher it is, the more weapons with high durable damage pay off.')],
   ['toMain', L('본체 전달', 'To main'), L('부위에 준 피해 중 본체 체력에도 함께 들어가는 비율입니다. 0%면 넘어가지 않습니다. ‘-’는 본체 자신이거나 해당하지 않는 줄입니다.', 'The share of damage dealt to the part that also goes to Main health. At 0% nothing passes on. "-" is Main itself or does not apply.')],
-  ['cap', L('전달 상한', 'Overflow cap'), L('‘예’면 본체로 넘어가는 피해가 이 부위의 체력과 출혈 여유를 합한 만큼으로 제한됩니다. ‘아니오’면 제한이 없습니다.', 'If "Yes", damage passed to Main is capped by the combined health and constitution of the part. "No" means no cap.')],
-  ['fatal', L('치명', 'Fatal'), L('‘예’면 이 부위를 부수면 적이 죽습니다. ‘쓰러뜨림’은 부술 때 적이 쓰러지거나 떨어지는 부위입니다. 아래 줄은 출혈 여유(위키 Constitution)로, 체력이 바닥난 뒤에 쓰이는 두 번째 체력입니다. 총량, 초당 감소량, 그대로 두었을 때 다 줄어드는 시간(총량 ÷ 초당 감소량)이며, 본체나 치명 부위라면 그때 죽습니다. 초당 0이면 줄지 않아 추가 체력처럼 작동합니다.', 'If "Yes", destroying this part kills the enemy. "Downs" marks a part that knocks the enemy down or out of the sky. The lines below are the constitution: a second health pool used once Main or limb health is depleted, given as its total, its decay a second and how long it takes to run out when left alone (total / decay); for Main or a fatal part the enemy dies then. At 0/s it never decays and works as extra health.')],
+  ['cap', L('전달 상한', 'Overflow cap'), L('‘예’면 본체로 넘어가는 피해가 이 부위의 체력과 출혈 체력을 합한 만큼으로 제한됩니다. ‘아니오’면 제한이 없습니다.', 'If "Yes", damage passed to Main is capped by the combined health and constitution of the part. "No" means no cap.')],
+  ['fatal', L('치명', 'Fatal'), L('‘예’면 이 부위를 부수면 적이 죽습니다. ‘쓰러뜨림’은 부술 때 적이 쓰러지거나 떨어지는 부위입니다. 아래 줄은 출혈 체력(위키 Constitution)로, 체력이 바닥난 뒤에 쓰이는 두 번째 체력입니다. 총량, 초당 감소량, 그대로 두었을 때 다 줄어드는 시간(총량 ÷ 초당 감소량)이며, 본체나 치명 부위라면 그때 죽습니다. 초당 0이면 줄지 않아 추가 체력처럼 작동합니다.', 'If "Yes", destroying this part kills the enemy. "Downs" marks a part that knocks the enemy down or out of the sky. The lines below are the constitution: a second health pool used once Main or limb health is depleted, given as its total, its decay a second and how long it takes to run out when left alone (total / decay); for Main or a fatal part the enemy dies then. At 0/s it never decays and works as extra health.')],
   ['exdr', L('폭발 저항', 'ExDR'), L('폭발 피해를 줄이는 비율(0~100%)입니다. 100%면 이 부위는 폭발 피해를 받지 않고 그 폭발이 본체를 노립니다. 이때 폭발 관통이 본체 장갑 이상이어야 하고, 폭발 하나당 한 번만, 그 폭발이 아직 본체에 피해를 주지 않았을 때만 일어납니다.', 'Explosion damage resistance, 0 to 100%. At 100% the part takes no explosion damage and the explosion targets Main instead. That needs explosion AP at or above Main\'s armor, happens once per explosion, and not if the same explosion already damaged Main.')],
 ];
 // Wiki rows with no site part of their own.
@@ -235,7 +235,7 @@ const dash = (value, format = num) => value == null ? '-' : format(value);
 // Constitution, then its decay and how long it takes to run out when left alone (total / decay a second).
 const bleedLines = row => {
   const seconds = row.bleed.hp / row.bleed.perSecond, shown = Math.round(seconds * 10) / 10, about = shown === seconds ? '' : L('약 ', 'about ');
-  return html`${L(`출혈 여유 ${num(row.bleed.hp)}`, `Constitution ${num(row.bleed.hp)}`)}<br>${L(`초당 ${num(row.bleed.perSecond)}씩 감소 · ${about}${num(shown)}초 뒤 ${row.fatal === 'no' ? '소진' : '죽음'}`, `-${num(row.bleed.perSecond)}/s · ${row.fatal === 'no' ? 'gone' : 'dies'} in ${about}${num(shown)} s`)}`;
+  return html`${L(`출혈 체력 ${num(row.bleed.hp)}`, `Constitution ${num(row.bleed.hp)}`)}<br>${L(`초당 ${num(row.bleed.perSecond)}씩 감소 · ${about}${num(shown)}초 뒤 ${row.fatal === 'no' ? '소진' : '죽음'}`, `-${num(row.bleed.perSecond)}/s · ${row.fatal === 'no' ? 'gone' : 'dies'} in ${about}${num(shown)} s`)}`;
 };
 const anatomyCells = (enemy, row) => {
   const hp = row.official ? html`${num(row.official.hp)}<small>${L(`공식 패치 ${row.official.source.match(/^Patch ([\d.]+)/)?.[1] ?? ''} 값 · 위키 표 ${num(row.hp)}`, `official patch ${row.official.source.match(/^Patch ([\d.]+)/)?.[1] ?? ''} · wiki table ${num(row.hp)}`)}</small>`
@@ -247,7 +247,7 @@ const anatomyCells = (enemy, row) => {
     // Fatal and constitution in one cell (user decision 2026-11-25): the flag, then how long it bleeds out.
     fatal: html`${row.fatal === 'yes' ? badge(L('예', 'Yes'), 'kill') : row.fatal === 'both' ? badge(L('둘 다 부수면', 'When both are destroyed'), 'kill') : html`<span class="faint">${L('아니오', 'No')}</span>`}${row.downs ? html`<small>${L('쓰러뜨림', 'Downs')}</small>` : ''}${row.bleed
       ? html`<small>${row.bleed.perSecond ? bleedLines(row) : L(`줄지 않는 추가 체력 ${num(row.bleed.hp)}`, `Extra health ${num(row.bleed.hp)} (never decays)`)}</small>`
-      : row.bleedText ? html`<small>${L('출혈 여유', 'Constitution')} ${row.bleedText}</small>` : ''}`,
+      : row.bleedText ? html`<small>${L('출혈 체력', 'Constitution')} ${row.bleedText}</small>` : ''}`,
   };
 };
 // What the calculator does with a row it does not use as a part of its own.
@@ -326,7 +326,7 @@ function hero(enemy) {
   const sub = info?.subfaction && factionGuides.find(guide => guide.id === info.subfaction);
   const vitals = [
     [L('본체 체력', 'Main health'), num(m.hp)], [L('본체 장갑', 'Main armor'), m.armor], [L('내구도', 'Durability'), pct(m.durability)], [L('폭발 저항', 'Explosive resistance'), pct(m.exdr)],
-    ...(m.constitution ? [[L('출혈 여유', 'Bleed-out health'), num(m.constitution)]] : []),
+    ...(m.constitution ? [[L('출혈 체력', 'Bleed-out health'), num(m.constitution)]] : []),
     [L('화염 저항', 'Fire resistance'), fireText(info?.fireMult)], [L('경직치', 'Stagger threshold'), info?.staggerReq == null ? L('미확인', 'Unverified') : num(info.staggerReq)],
     // Enemies that can call reinforcements (wiki Behavior): worth killing first.
     ...(info?.reinforcements ? [[L('증원 호출', 'Calls reinforcements'), REINFORCEMENTS[info.reinforcements]]] : []),
