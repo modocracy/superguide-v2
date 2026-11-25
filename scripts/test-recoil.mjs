@@ -82,6 +82,12 @@ ok(groupOk(detail), `${sample.id}: the recoil cell is with the numbers and the s
 const arbitrator = personalWeapons.find(w => w.id === 'arbitrator');
 ok(/<div data-variant-hide="underbarrel" ><details class="block recoil-sim-block/.test(String(weaponDetail(arbitrator))), 'arbitrator: the simulation shows for the main barrel');
 ok(/<div data-variant-hide="underbarrel" hidden><details class="block recoil-sim-block/.test(String(weaponDetail(arbitrator, { variant: 'underbarrel' }))), 'arbitrator: the simulation hides for the underbarrel');
+// No simulation for one-round weapons and self-flying rockets, and no recoil cell (nor detailed stats) for a 0 / 0 beam.
+const { hasRecoilSim } = await import('../dist/ui/recoil-sim.js');
+for (const key of ['arsenal/expendable-at', 'arsenal/quasar', 'arsenal/railgun', 'arsenal/commando', 'arsenal/wasp', 'arsenal/speargun', 'gear/exploding-crossbow']) ok(!hasRecoilSim(key), `${key}: no recoil simulation`);
+for (const key of ['arsenal/stalwart', 'arsenal/autocannon', 'gear/liberator', 'gear/breaker']) ok(hasRecoilSim(key), `${key}: has the recoil simulation`);
+const laserCannon = String(stratagemDetail(stratagems.find(s => s.id === 'laser-cannon')));
+ok(!laserCannon.includes('<dt>반동</dt>') && !laserCannon.includes('ballistic-block'), 'laser cannon: no 0 / 0 recoil cell and no detailed stats');
 const autocannon = String(stratagemDetail(stratagems.find(s => s.id === 'autocannon')));
 ok(groupOk(autocannon), 'autocannon (two rounds): the recoil cell is with the numbers and the simulation is its own card');
 console.log(`PASS recoil: ${checks} checks (${Object.keys(weaponRecoil).length} weapons, wiki datamine revision ${recoilSource.revision}).`);

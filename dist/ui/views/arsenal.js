@@ -400,8 +400,8 @@ function timingBlock(item, expanded = false) {
     <dl class="detail-grid">
       ${t.cooldown != null ? cell(label('cooldown', L('재사용 대기시간', 'Cooldown')), num(Math.round(t.cooldown)), s, caption('cooldown')) : ''}
       ${t.rearm != null ? cell(label('rearm', L('재무장 시간', 'Rearm time')), num(t.rearm), s, caption('rearm')) : ''}
-      ${typeof t.uses === 'number' ? cell(label('uses', t.rearm != null ? L('재무장당 사용', 'Uses per rearm') : L('사용 횟수', 'Uses')), num(t.uses), L('회', ''), caption('uses')) : ''}
       ${t.callIn != null ? cell(label('callIn', L('호출 시간', 'Call-in time')), num(t.callIn), s, caption('callIn')) : ''}
+      ${typeof t.uses === 'number' ? cell(label('uses', t.rearm != null ? L('재무장당 사용', 'Uses per rearm') : L('사용 횟수', 'Uses')), num(t.uses), L('회', ''), caption('uses')) : ''}
     </dl>
   </section>`;
 }

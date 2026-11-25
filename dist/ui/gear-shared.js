@@ -45,6 +45,8 @@ export function recoilStats(key) {
   return [
     // (weapon kick + view climb) / 2 with the default attachments (game data sheet); only this one is shown
     // (user request 2026-11-25), and a weapon the sheet lacks shows no recoil cell.
-    ...(recoil.screen ? [{ label: L('반동', 'Recoil'), text: pair(recoil.screen), caption: L('수평 / 수직 · 기본 부착물 기준', 'Horizontal / vertical · default attachments') + rocket + limit }] : []),
+    // A 0 / 0 recoil (beam weapons) is left out, and with it the detailed stats when they hold nothing else
+    // (user request 2026-11-25).
+    ...(recoil.screen && recoil.screen.some(v => v) ? [{ label: L('반동', 'Recoil'), text: pair(recoil.screen), caption: L('수평 / 수직 · 기본 부착물 기준', 'Horizontal / vertical · default attachments') + rocket + limit }] : []),
   ];
 }

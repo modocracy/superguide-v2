@@ -334,8 +334,14 @@ if (globalThis.customElements && !customElements.get('recoil-sim')) customElemen
 // full screen shows everything without folds. '' when the weapon has no inputs.
 // hideFor: the panel's mode tabs the simulation does not cover (it hides while one of them is picked; current = the
 // picked one now).
+// No simulation where a burst says nothing (user request 2026-11-25): a weapon that fires one round before it
+// reloads (the expendable and one-shot launchers, Quasar, Railgun, Nova, Speargun, Missile Pistol ...) and the
+// launchers whose rockets or bolts fly on their own.
+const NO_SIM = new Set(['arsenal/commando', 'arsenal/wasp', 'gear/exploding-crossbow']);
+export const hasRecoilSim = key => { const sim = weaponRecoil[key]?.sim; return !!sim && (sim.magazine ?? 1) > 1 && !NO_SIM.has(key); };
+
 export function recoilSimBlock(key, expanded = false, { hideFor = [], current = null } = {}) {
-  if (!weaponRecoil[key]?.sim) return '';
+  if (!hasRecoilSim(key)) return '';
   const block = detailDisclosure(L('반동 시뮬레이션', 'Recoil simulation'), raw(`<recoil-sim class="recoil-sim" data-key="${key}"></recoil-sim>`), { className: 'recoil-sim-block', expanded });
   return hideFor.length ? html`<div data-variant-hide="${hideFor.join(' ')}" ${hideFor.includes(current) ? raw('hidden') : ''}>${block}</div>` : block;
 }
