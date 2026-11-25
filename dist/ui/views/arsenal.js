@@ -381,16 +381,27 @@ function timingBlock(item, expanded = false) {
       const adjusted = num(key === 'cooldown' ? Math.round(enhanced) : enhanced);
       return L(`함선 모듈 적용 시 ${adjusted}${unit}`, `With ship modules: ${adjusted}${unit}`);
     }
-    return value !== base ? L(`기본 ${num(base)}${unit}`, `Base ${num(base)}${unit}`)
-      : L('함선 모듈 영향 없음', 'No ship module changes it');
+    // With modules on, a changed value explains itself in its label's tooltip (moduleNote); the caption stays empty.
+    return value !== base ? '' : L('함선 모듈 영향 없음', 'No ship module changes it');
   };
+  // The ship module change as a tooltip on the label (user request 2026-11-25), e.g. cooldown 480 s -> 410 s.
+  const NAMES = { cooldown: ['재사용 대기시간', 'the cooldown'], rearm: ['재무장 시간', 'the rearm time'], uses: ['사용 횟수', 'the uses'], callIn: ['호출 시간', 'the call-in time'] };
+  const moduleNote = key => {
+    const base = t[`${key}Base`], value = t[key];
+    if (!on || base == null || value == null || value === base) return '';
+    const unit = key === 'uses' ? L('회', '') : s, shown = num(key === 'cooldown' ? Math.round(value) : value);
+    const [ko, en] = NAMES[key], fewer = value < base;
+    return L(`함선 모듈 업그레이드 시 ${ko}${key === 'uses' ? '가' : '이'} ${num(base)}${unit}에서 ${shown}${unit}${fewer ? '로 줄어듭니다' : '로 늘어납니다'}.`,
+      `With the ship module upgrades ${en} goes from ${num(base)}${unit} to ${shown}${unit}.`);
+  };
+  const label = (key, text) => moduleNote(key) ? tipLabel(text, moduleNote(key)) : text;
   const cell = (label, value, unit, text) => html`<div><dt>${label}</dt><dd>${value}${unit ? html`<small>${unit}</small>` : ''}</dd>${text ? html`<div class="caption">${text}</div>` : ''}</div>`;
   return html`<section class="block"><h3>${L('재사용 대기와 호출', 'Cooldown and call-in')}</h3>
     <dl class="detail-grid">
-      ${t.cooldown != null ? cell(L('재사용 대기', 'Cooldown'), num(Math.round(t.cooldown)), s, caption('cooldown')) : ''}
-      ${t.rearm != null ? cell(L('재무장 시간', 'Rearm time'), num(t.rearm), s, caption('rearm')) : ''}
-      ${typeof t.uses === 'number' ? cell(t.rearm != null ? L('재무장당 사용', 'Uses per rearm') : L('사용 횟수', 'Uses'), num(t.uses), L('회', ''), caption('uses')) : ''}
-      ${t.callIn != null ? cell(L('호출 시간', 'Call-in time'), num(t.callIn), s, caption('callIn')) : ''}
+      ${t.cooldown != null ? cell(label('cooldown', L('재사용 대기시간', 'Cooldown')), num(Math.round(t.cooldown)), s, caption('cooldown')) : ''}
+      ${t.rearm != null ? cell(label('rearm', L('재무장 시간', 'Rearm time')), num(t.rearm), s, caption('rearm')) : ''}
+      ${typeof t.uses === 'number' ? cell(label('uses', t.rearm != null ? L('재무장당 사용', 'Uses per rearm') : L('사용 횟수', 'Uses')), num(t.uses), L('회', ''), caption('uses')) : ''}
+      ${t.callIn != null ? cell(label('callIn', L('호출 시간', 'Call-in time')), num(t.callIn), s, caption('callIn')) : ''}
     </dl>
   </section>`;
 }
