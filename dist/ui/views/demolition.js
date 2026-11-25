@@ -15,6 +15,7 @@ import { personalNames } from '../../core/search.js';
 import { num, unitText } from '../../core/explain.js';
 import { L, T, lang } from '../../core/i18n.js';
 import { html, raw, render, $, $$, icon, badge, external } from '../dom.js';
+import { bindTips, tipLabel } from '../tips.js';
 
 const MAX_FORCE = 60;
 const structureById = new Map(structures.map(item => [item.id, item]));
@@ -282,8 +283,9 @@ const scrollToResult = () => requestAnimationFrame(() => $('#demo-result', root)
 
 export function mount(container, context) {
   root = container; ctx = context;
-  render(root, html`<div class="page-head"><div><div class="eyebrow">Demolition</div><h1>${L('철거', 'Demolition')}</h1><p>${L('시설마다 필요한 ‘철거력’이 있고, 한 번의 명중·폭발이 그 값을 넘어야 무너집니다. 일부 시설은 체력을 깎아서도 부술 수 있습니다.', 'Every structure needs a certain demolition force, and a single hit or explosion has to reach it. Some structures can also be destroyed by wearing down their health.')}</p>
-      <p>${L('주요·보조 임무 자리에 붙은 둥지와 기지는 다 부수지 않아도 임무가 완료됩니다. 다만 굴과 제조소에서 적이 계속 나오고 순찰대까지 오면 앞뒤로 끼이니, 여유가 있으면 부수는 것이 좋습니다. 따로 떨어진 둥지와 기지는 부수면 임무 평가에 들어갑니다.', 'Nests and bases attached to a main or side objective do not have to be destroyed to complete it. Their holes and Fabricators keep spawning enemies, though, and once patrols arrive you get caught from both sides, so destroy them if you have time. Separate nests and bases count toward the mission rating when destroyed.')}</p></div>
+  bindTips();
+  render(root, html`<div class="page-head"><div><div class="eyebrow">Demolition</div><h1>${L('철거', 'Demolition')}</h1><p>${L('시설마다 필요한 ‘철거력’이 있고, 한 번의 명중·폭발이 그 값을 넘어야 무너집니다. 일부 시설은 체력을 깎아서도 부술 수 있습니다.', 'Every structure needs a certain demolition force, and a single hit or explosion has to reach it. Some structures can also be destroyed by wearing down their health.')}
+        ${tipLabel(L('자세히', 'Details'), L('주요·보조 임무 자리에 붙은 둥지와 기지는 다 부수지 않아도 임무가 완료됩니다. 다만 굴과 제조소에서 적이 계속 나오고 순찰대까지 오면 앞뒤로 끼이니, 여유가 있으면 부수는 것이 좋습니다. 따로 떨어진 둥지와 기지는 부수면 임무 평가에 들어갑니다.', 'Nests and bases attached to a main or side objective do not have to be destroyed to complete it. Their holes and Fabricators keep spawning enemies, though, and once patrols arrive you get caught from both sides, so destroy them if you have time. Separate nests and bases count toward the mission rating when destroyed.'))}</p></div>
     <span class="badge outline">${L(`시설 ${structures.length}곳 · 철거력 확인 ${confirmedCount}종`, `${structures.length} structures · ${confirmedCount} stratagems with verified force`)}</span></div>
   <div class="segmented" role="group" aria-label="${L('찾는 방법', 'Look up by')}" style="margin-bottom:16px"><button type="button" data-by="structure">${icon('demolition', 16)} ${L('시설로 찾기', 'By structure')}</button><button type="button" data-by="weapon">${icon('arsenal', 16)} ${L('스트라타젬으로 찾기', 'By stratagem')}</button><button type="button" data-by="gear">${icon('gear', 16)} ${L('장비로 찾기', 'By gear')}</button></div>
   <div id="demo-body"></div>`);
