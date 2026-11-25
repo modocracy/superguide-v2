@@ -453,6 +453,8 @@ export function attachmentTable(w, expanded = false) {
 
 // Special effects: demolition, stagger and push force of each attack record (db/weapons.js datamine fields), as
 // cells at the end of the key stats (user request 2026-11-24: no separate block).
+// One force in an effect cell: its name small, its number in the stat font (user request 2026-11-25).
+const forcePair = (name, value) => html`<span class="force-pair"><b>${name}</b><span class="force-val">${value}</span></span>`;
 function specialCells(w) {
   // Only the strongest direct hit and the strongest blast (user decision 2026-11-19): highest
   // demolition, then stagger, then push. A record delivered as an explosion counts as a blast; a shot that
@@ -467,7 +469,7 @@ function specialCells(w) {
   const top = list => strongest(list.map(row => ({ ...row, demo: row.demolition })));
   const rows = [top(all.filter(row => !row.blast)), top(all.filter(row => row.blast))].filter(Boolean);
   return rows.map(row => html`<div><dt>${row.blast ? html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}` : tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)}</dt><dd class="force-lines">
-    <span class="force-line"><b>${L('철거력', 'Demolition')}</b> ${row.demolition ?? '?'} · <b>${L('저지력', 'Stagger')}</b> ${row.stun ?? '?'} · <b>${L('넉백', 'Push')}</b> ${row.push ?? '?'}</span></dd></div>`);
+    <span class="force-line">${forcePair(L('철거력', 'Demolition'), row.demolition ?? '?')}${forcePair(L('저지력', 'Stagger'), row.stun ?? '?')}${forcePair(L('넉백', 'Push'), row.push ?? '?')}</span></dd></div>`);
 }
 // The key stats grid with the special effect cells at its end; their note is a tooltip on each cell's label
 // (user request 2026-11-25).

@@ -406,11 +406,13 @@ const streamOf = item => item.extraStats?.some(cell => cell.icon === 'gas') ? 'g
 // Explosions carry the blast icon, arc attacks the arc icon, beams the laser icon and a spray what it sprays.
 const kindIcon = (kind, item) => BLAST_KINDS.includes(kind) ? 'ico-blast' : kind === 'arc' ? 'ico-arc' : kind === 'beam' ? 'ico-laser'
   : kind === 'spray' && streamOf(item) ? `ico-${streamOf(item)}` : '';
+// One force in an effect cell: its name small, its number in the stat font (user request 2026-11-25).
+const forcePair = (name, value) => html`<span class="force-pair"><b>${name}</b><span class="force-val">${value}</span></span>`;
 function fallbackRows(profile, value) {
   const top = key => profile.modes.map(mode => mode[key]).filter(force => force != null)
     .reduce((best, force) => best == null || (typeof force === 'number' ? force : force.max) > (typeof best === 'number' ? best : best.max) ? force : best, null);
   const rows = [['direct', tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)], ['explosion', html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}`]].map(([key, label]) => [label, top(key)]).filter(([, force]) => force != null)
-    .map(([label, force]) => ({ label, text: html`<span class="force-line"><b>${L('철거력', 'Demolition')}</b> ${value(force)}</span>` }));
+    .map(([label, force]) => ({ label, text: html`<span class="force-line">${forcePair(L('철거력', 'Demolition'), value(force))}</span>` }));
   return rows.length ? rows : [{ label: tipLabel(L('철거력', 'Demolition'), FORCE_NOTE), text: html`<span class="force-line dim">${L('확인 중', 'Unverified')}</span>` }];
 }
 // Combat modes of the detailed stats block with no matching table variant.
@@ -427,7 +429,7 @@ function specialCells(item, profile, variant = null) {
   const value = force => force == null ? '?' : typeof force === 'number' ? num(force) : `${num(force.min)}~${num(force.max)}`;
   // Where the demolition data keeps a range (sources disagree), show that range instead of the datamine number.
   const range = kind => profile?.modes?.map(mode => kind === 'blast' ? mode.explosion : mode.direct).find(force => force && typeof force === 'object');
-  const line = (demo, stun, push) => html`<span class="force-line"><b>${L('철거력', 'Demolition')}</b> ${demo} · <b>${L('저지력', 'Stagger')}</b> ${stun ?? '?'} · <b>${L('넉백', 'Push')}</b> ${push ?? '?'}</span>`;
+  const line = (demo, stun, push) => html`<span class="force-line">${forcePair(L('철거력', 'Demolition'), demo)}${forcePair(L('저지력', 'Stagger'), stun ?? '?')}${forcePair(L('넉백', 'Push'), push ?? '?')}</span>`;
   // Only the strongest direct hit and the strongest blast (user decision 2026-11-19): highest
   // demolition, then stagger, then push. Fragments are left out.
   const parts = forces.flatMap(group => group.parts);

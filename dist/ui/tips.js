@@ -10,7 +10,10 @@ function showTip(event) {
   const head = event.target.closest?.('[data-tip]');
   if (!head) return;
   let pop = document.getElementById('tip-pop');
-  if (!pop) { pop = document.createElement('div'); pop.id = 'tip-pop'; pop.className = 'tip-pop'; pop.setAttribute('role', 'tooltip'); document.body.append(pop); }
+  if (!pop) { pop = document.createElement('div'); pop.id = 'tip-pop'; pop.className = 'tip-pop'; pop.setAttribute('role', 'tooltip'); }
+  // A modal dialog (the detail sheet) sits in the top layer: the box must live inside it to show above it.
+  const host = head.closest('dialog') ?? document.body;
+  if (pop.parentElement !== host) host.append(pop);
   pop.textContent = head.dataset.tip;
   pop.hidden = false;
   head.setAttribute('aria-describedby', 'tip-pop');
