@@ -84,7 +84,9 @@ ok(/<div data-variant-hide="underbarrel" hidden><details class="block recoil-sim
 // No simulation for one-round weapons and self-flying rockets, and no recoil cell (nor detailed stats) for a 0 / 0 beam.
 const { hasRecoilSim } = await import('../dist/ui/recoil-sim.js');
 for (const key of ['arsenal/expendable-at', 'arsenal/quasar', 'arsenal/railgun', 'arsenal/commando', 'arsenal/wasp', 'arsenal/speargun', 'gear/exploding-crossbow']) ok(!hasRecoilSim(key), `${key}: no recoil simulation`);
-for (const key of ['arsenal/stalwart', 'arsenal/autocannon', 'gear/liberator', 'gear/breaker']) ok(hasRecoilSim(key), `${key}: has the recoil simulation`);
+for (const key of ['arsenal/stalwart', 'arsenal/autocannon', 'gear/liberator', 'gear/breaker', 'arsenal/maxigun', 'arsenal/belt-fed-gl']) ok(hasRecoilSim(key), `${key}: has the recoil simulation`);
+// The whole magazine fires (user request 2026-11-25); a backpack-fed weapon fires its backpack.
+for (const [key, rounds] of [['arsenal/stalwart', 250], ['arsenal/maxigun', 1000], ['arsenal/belt-fed-gl', 120]]) ok(simulate(weaponRecoil[key].sim, 0.9).hits.length === rounds, `${key}: fires all ${rounds} rounds`);
 const laserCannon = String(stratagemDetail(stratagems.find(s => s.id === 'laser-cannon')));
 ok(!laserCannon.includes('<dt>반동</dt>') && !laserCannon.includes('ballistic-block'), 'laser cannon: no 0 / 0 recoil cell and no detailed stats');
 const autocannon = String(stratagemDetail(stratagems.find(s => s.id === 'autocannon')));

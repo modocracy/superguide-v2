@@ -1,6 +1,6 @@
 // Recoil simulation on a weapon's detail page (user request 2026-11-25), drawn like the game armory's recoil
 // simulation: the crosshair stays fixed where you first aimed and the hits climb away from it. Press fire and the
-// weapon shoots a magazine (up to 30 rounds) at its fire rate; a shotgun's pellets scatter over its spread.
+// weapon shoots its whole magazine at its fire rate (user request 2026-11-25); a shotgun's pellets scatter over its spread.
 // Inputs (weapon-recoil.js `sim`, game data sheet): drift (the weapon moves on screen) and climb (the view moves),
 // [horizontal, vertical] after the default attachments, each with a horizontal bias and random ratios
 // [vertical, horizontal], the fire rate, the magazine, the spread [horizontal, vertical] in MRAD and the pellets.
@@ -26,7 +26,7 @@ import { L } from '../core/i18n.js';
 import { html, raw } from './dom.js';
 import { detailDisclosure } from './item-detail.js';
 
-const UNIT = 0.01 / 12, DRIFT_TAU = 0.12, CLIMB_TAU = 0.01, TURN = 0.57, MAX_SHOTS = 30, STEP = 1 / 240;
+const UNIT = 0.01 / 12, DRIFT_TAU = 0.12, CLIMB_TAU = 0.01, TURN = 0.57, STEP = 1 / 240;
 const MRAD = 180 / Math.PI / 1000; // degrees per milliradian
 const PULL = 0.15, PASSIVE = 0.7; // seconds between trigger pulls (estimate); the recoil passive's multiplier
 const STANCES = [['stand', 0.9, () => L('서서', 'Standing')], ['crouch', 0.6, () => L('앉아서', 'Crouched')], ['prone', 0.4, () => L('엎드려서', 'Prone')]];
@@ -57,7 +57,7 @@ function scatter(sim, x, y) {
 // and the hits (view + drift at each shot, with the points its pellets land on). Angles in degrees, up = positive,
 // 0 = where you first aimed. sim.mode ('auto', 'semi' or 'burst' of sim.burst rounds) sets when each round fires.
 export function simulate(sim, scale) {
-  const shots = clamp(sim.magazine ?? 1, 1, MAX_SHOTS), gap = 60 / sim.rpm;
+  const shots = Math.max(1, sim.magazine ?? 1), gap = 60 / sim.rpm;
   const mode = sim.mode ?? sim.modes?.[0] ?? 'auto';
   const n = mode === 'burst' ? sim.burst || 1 : mode === 'semi' ? 1 : Infinity;
   // Round k: a burst (or a single semi shot) at the fire rate, the next one a trigger pull later.
@@ -212,7 +212,7 @@ class RecoilSim extends Base {
 
   // What the next burst fires: mode, rate, rounds, pellets.
   describe(sim) {
-    const shots = clamp(sim.magazine ?? 1, 1, MAX_SHOTS);
+    const shots = Math.max(1, sim.magazine ?? 1);
     const pellets = sim.pellets > 1 ? L(` · 한 발에 펠릿 ${sim.pellets}개`, ` · ${sim.pellets} pellets a shot`) : '';
     this.setupText.textContent = L(`${this.modeName(sim.mode)} · 분당 ${fmt(sim.rpm)}발로 ${shots}발${pellets} · 조준하고 멈춘 기준`, `${this.modeName(sim.mode)} · ${shots} rounds at ${fmt(sim.rpm)} RPM${pellets} · aimed, still`);
   }
