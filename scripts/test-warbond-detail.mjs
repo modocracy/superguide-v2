@@ -403,4 +403,34 @@ try {
   if (savedDocument === undefined) delete globalThis.document; else globalThis.document = savedDocument;
   if (savedHistory === undefined) delete globalThis.history; else globalThis.history = savedHistory;
 }
+// Every effect the datamine records shows a cell (user request 2026-11-25): each stratagem mode panel shows a direct
+// and a blast cell when the records it covers have them, and each gear weapon with direct or blast forces shows its
+// cell. Fragments are left out on purpose (user decision 2026-11-19), so a direct force only from fragments (Frag,
+// Pineapple, Lure Mine) needs no direct cell.
+{
+  const { stratagems } = await import('../dist/core/catalog.js');
+  const { stratagemStats } = await import('../dist/data/stratagem-stats.js');
+  const { personalWeapons } = await import('../dist/data/personal-weapons.js');
+  const labelsOf = html => [...html.matchAll(/<dt>(.*?)<\/dt><dd class="force-lines">/g)].map(m => m[1].replace(/<[^>]+>/g, ''));
+  const panels = html => { const parts = html.split('data-variant-panel="').slice(1); return parts.length ? parts.map(p => [p.slice(0, p.indexOf('"')), p]) : [['', html]]; };
+  for (const item of stratagems) {
+    const forces = stratagemStats[item.id]?.forces ?? [];
+    if (!forces.length) continue;
+    const claimed = (item.variants ?? []).flatMap(v => [v.record ?? []].flat());
+    for (const [id, body] of panels(String(stratagemDetail(item)))) {
+      const variant = item.variants?.find(v => v.id === id);
+      const kinds = new Set(forces.filter(f => !variant || [variant.record ?? []].flat().includes(f.attack) || !claimed.includes(f.attack)).flatMap(f => f.parts.map(p => p.kind)));
+      const labels = labelsOf(body);
+      if (['direct', 'beam', 'arc', 'spray'].some(k => kinds.has(k))) ok(labels.some(l => /직격|광선|전격|분사/.test(l)), `${item.id} ${id}: direct effect cell`);
+      if (kinds.has('blast')) ok(labels.some(l => /폭발 효과/.test(l)), `${item.id} ${id}: blast effect cell`);
+    }
+  }
+  for (const w of personalWeapons) {
+    const rows = [w, ...(w.variants ?? [])].filter(r => !String(r.id ?? '').startsWith('shrapnel'));
+    const labels = labelsOf(String(weaponDetail(w)));
+    if (rows.some(r => r.delivery !== 'explosion' && (r.demolition != null || r.stun != null || r.push != null))) ok(labels.some(l => /직격/.test(l)), `${w.id}: direct effect cell`);
+    if (rows.some(r => (r.delivery === 'explosion' && (r.demolition != null || r.stun != null || r.push != null)) || r.splashDemolition != null || r.splashStun != null || r.splashPush != null)) ok(labels.some(l => /폭발/.test(l)), `${w.id}: blast effect cell`);
+  }
+}
+
 console.log(`PASS warbond detail: ${checks} checks (shared details, routes, grid order, history and scroll).`);
