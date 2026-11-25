@@ -2066,7 +2066,7 @@ export const enemyAnatomy = {
     "hp": 950,
     "armor": 0,
     "durability": 80,
-    "exdr": 25,
+    "exdr": 0,
     "toMain": 150,
     "cap": false,
     "bleed": null,
@@ -2075,7 +2075,10 @@ export const enemyAnatomy = {
     "images": [
      "Charger Butt Side.png",
      "Charger Butt Rear.png"
-    ]
+    ],
+    "game": {
+     "exdr": 25
+    }
    },
    {
     "name": "Claws",
@@ -2259,7 +2262,7 @@ export const enemyAnatomy = {
     "hp": 950,
     "armor": 0,
     "durability": 100,
-    "exdr": 25,
+    "exdr": 0,
     "toMain": 50,
     "cap": false,
     "bleed": null,
@@ -2268,7 +2271,10 @@ export const enemyAnatomy = {
     "images": [
      "Charger Behemoth Butt Side.png",
      "Charger Behemoth Butt Rear.png"
-    ]
+    ],
+    "game": {
+     "exdr": 25
+    }
    },
    {
     "name": "Claws",
@@ -2452,7 +2458,7 @@ export const enemyAnatomy = {
     "hp": 950,
     "armor": 0,
     "durability": 100,
-    "exdr": 25,
+    "exdr": 0,
     "toMain": 150,
     "cap": false,
     "bleed": null,
@@ -2461,7 +2467,10 @@ export const enemyAnatomy = {
     "images": [
      "Caustic Charger Butt Side.png",
      "Caustic Charger Butt Rear.png"
-    ]
+    ],
+    "game": {
+     "exdr": 25
+    }
    },
    {
     "name": "Spore Flesh",
@@ -2646,7 +2655,7 @@ export const enemyAnatomy = {
     "hp": 950,
     "armor": 0,
     "durability": 80,
-    "exdr": 25,
+    "exdr": 0,
     "toMain": 150,
     "cap": false,
     "bleed": null,
@@ -2655,7 +2664,10 @@ export const enemyAnatomy = {
     "images": [
      "Rupture Charger Butt Side.png",
      "Rupture Charger Butt Rear.png"
-    ]
+    ],
+    "game": {
+     "exdr": 25
+    }
    },
    {
     "name": "Underside",

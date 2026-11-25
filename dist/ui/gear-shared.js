@@ -32,6 +32,11 @@ export const displayName = w => L(w.name || w.en, w.en || w.name);
 // source does not say why, so the note says it is our reading (user request 2026-11-24).
 const SELF_PROPELLED = new Set(['arsenal/commando', 'arsenal/expendable-at', 'arsenal/expendable-napalm', 'arsenal/leveller', 'arsenal/spear', 'arsenal/wasp']);
 
+// Ergonomics as the game's armory screen shows it (default attachments included, game data sheet), else null
+// and the view keeps the wiki value (user decision 2026-11-25).
+export const gameErgonomics = key => weaponRecoil[key]?.ergonomics ?? null;
+export const GAME_SCREEN = () => L('게임 무기고 화면 값', 'As on the game armory screen');
+
 export function recoilStats(key) {
   const recoil = weaponRecoil[key];
   if (!recoil) return [];

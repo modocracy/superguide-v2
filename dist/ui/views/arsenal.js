@@ -11,7 +11,7 @@ import { ballisticsBlock } from '../ballistics-view.js';
 import { detailColumns, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { supportProjectileRecords, propelledModes } from '../../data/support-records.js';
 import { warbondChip } from '../warbond-chip.js';
-import { recoilStats } from '../gear-shared.js';
+import { recoilStats, gameErgonomics, GAME_SCREEN } from '../gear-shared.js';
 import { L, T, lang } from '../../core/i18n.js';
 import { timingOf, modulesOn, setModulesOn, sentryLoadOf } from '../../core/modules.js';
 import { stratagemEffects } from '../../data/planet-stratagem-effects.js';
@@ -468,7 +468,9 @@ const statCell = detailStatCell;
 const statGrid = (item, effects = [], expanded = false) => {
   const [direct, blast, ap, reach] = stats(item);
   const [durable, ...ammo] = ammoCells(item);
-  const { ergonomics, sway, unlock, times, body } = stratagemStats[item.id] ?? {};
+  const { ergonomics: wikiErgonomics, sway, unlock, times, body } = stratagemStats[item.id] ?? {};
+  // The game armory screen's ergonomics where the game data sheet has it (user decision 2026-11-25).
+  const ergonomics = gameErgonomics(`arsenal/${item.id}`) ?? wikiErgonomics;
   // Lifetime, strike duration and pack recharge from the wiki datamine (stratagem-stats.js `times`); a shield
   // relay's lifetime is already in its defense table.
   const s = L('초', 's');
@@ -515,7 +517,7 @@ const statGrid = (item, effects = [], expanded = false) => {
   // A support weapon with no known reach leaves the area cell out instead of showing 미확인 (user request 2026-11-23).
   const unverifiedArea = item.category === 'support' && reach.dim && reach.text === L('미확인', 'Unverified');
   const handling = [
-    ...(ergonomics == null ? [] : [{ label: L('인체공학형', 'Ergonomics'), text: num(ergonomics), caption: L('높을수록 조준이 빠름', 'Higher = faster aim') }]),
+    ...(ergonomics == null ? [] : [{ label: L('인체공학형', 'Ergonomics'), text: num(ergonomics), caption: gameErgonomics(`arsenal/${item.id}`) != null ? `${GAME_SCREEN()} · ${L('높을수록 조준이 빠름', 'Higher = faster aim')}` : L('높을수록 조준이 빠름', 'Higher = faster aim') }]),
     // Sway only where it differs from the standard 100% (user decision 2026-11-19).
     ...(sway == null || sway === 1 ? [] : [{ label: L('흔들림', 'Sway'), text: num(Math.round(sway * 100)), unit: '%', caption: L('표준 100% · 낮을수록 덜 흔들림', 'Standard 100% · lower sways less') }]),
     ...(unlock ? [{ label: L('해금', 'Unlock'), text: L(`레벨 ${unlock.level}`, `Level ${unlock.level}`), caption: unlock.requisition ? L(`요청 신청서 ${num(unlock.requisition)}`, `${num(unlock.requisition)} Requisition Slips`) : L('처음부터 사용 가능', 'Available from the start') }] : []),

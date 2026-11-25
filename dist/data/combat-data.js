@@ -87,9 +87,12 @@ const originalEnemies = [
     // Every part matches Wiki Anatomy revision 137700 (checked 2026-10-22).
     // Parts after the first three were added then.
     anatomyRevision: 141505, anatomyCheckedAt: '2026-11-08',
+    // The game data sheet gives the rear abdomen 0% explosive resistance (user decision 2026-11-25: follow the game).
+    anatomyGame: { 'butt.exdr': { wiki: 25, source: 'Game data sheet, game build 26568081' } },
+    anatomyLegacy: { 'butt.exdr': 25 },
     parts: [
       part('head', '머리', 1200, 4, 75, 25, 70, false, 'kill', '정면 머리 중앙을 노리세요. 등 장갑에 빗맞으면 다른 부위입니다.', { sourcePart: 'Head' }),
-      part('butt', '후방 복부', 950, 0, 80, 25, 150, false, 'bleed', '돌진을 피한 뒤 뒤쪽의 드러난 복부를 쏘세요. 파괴 후에도 바로 죽지 않을 수 있습니다.', { sourcePart: 'Butt' }),
+      part('butt', '후방 복부', 950, 0, 80, 0, 150, false, 'bleed', '돌진을 피한 뒤 뒤쪽의 드러난 복부를 쏘세요. 파괴 후에도 바로 죽지 않을 수 있습니다.', { sourcePart: 'Butt' }),
       part('front-leg', '앞다리 장갑 → 살점', 800, 4, 70, 25, 60, false, 'armor', '한쪽 앞다리에 집중하세요. 장갑을 벗긴 탄의 초과 피해는 살점으로 넘어가지 않습니다.', { sourcePart: 'Front Leg Armor (2)', next: legFlesh() }),
       ...chargerExtras({ mainHp: 2400, torsoHp: 800, legHp: 800, legDurability: 70 }),
     ],
@@ -101,9 +104,12 @@ const originalEnemies = [
     // Every part matches Wiki Anatomy revision 137702 (checked 2026-10-22).
     // Parts after the first three were added then.
     anatomyRevision: 141504, anatomyCheckedAt: '2026-11-08',
+    // The game data sheet gives the rear abdomen 0% explosive resistance (user decision 2026-11-25: follow the game).
+    anatomyGame: { 'butt.exdr': { wiki: 25, source: 'Game data sheet, game build 26568081' } },
+    anatomyLegacy: { 'butt.exdr': 25 },
     parts: [
       part('head', '머리', 1600, 4, 100, 25, 70, false, 'kill', '정면 머리를 노리세요. 일반 차저의 탄수를 그대로 적용하지 마세요.', { sourcePart: 'Head' }),
-      part('butt', '후방 복부', 950, 0, 100, 25, 50, false, 'bleed', '뒤쪽 복부를 부수면 출혈이 시작됩니다. 장갑은 없지만 내구도가 높습니다.', { sourcePart: 'Butt' }),
+      part('butt', '후방 복부', 950, 0, 100, 0, 50, false, 'bleed', '뒤쪽 복부를 부수면 출혈이 시작됩니다. 장갑은 없지만 내구도가 높습니다.', { sourcePart: 'Butt' }),
       part('front-leg', '앞다리 장갑 → 살점', 1000, 4, 80, 25, 60, false, 'armor', '장갑 제거 후 같은 다리의 살점을 공격하세요.', { sourcePart: 'Front Leg Armor (2)', next: legFlesh() }),
       ...chargerExtras({ mainHp: 3000, torsoHp: 1000, legHp: 1000, legDurability: 80 }),
     ],
