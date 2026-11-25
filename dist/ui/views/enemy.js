@@ -213,24 +213,30 @@ const ANATOMY_COLUMNS = [
   ['durability', L('내구도', 'Durability'), L('무기의 일반 피해와 내구 피해가 섞이는 비율입니다. 내구도 X%인 부위에는 일반 피해 × (100 − X)% + 내구 피해 × X%가 들어갑니다. 높을수록 내구 피해가 큰 무기가 유리합니다.', 'How a weapon\'s normal and durable damage blend. A part with X% durability takes normal damage × (100 − X)% + durable damage × X%. The higher it is, the more weapons with high durable damage pay off.')],
   ['toMain', L('본체 전달', 'To main'), L('부위에 준 피해 중 본체 체력에도 함께 들어가는 비율입니다. 0%면 넘어가지 않습니다. ‘-’는 본체 자신이거나 해당하지 않는 줄입니다.', 'The share of damage dealt to the part that also goes to Main health. At 0% nothing passes on. "-" is Main itself or does not apply.')],
   ['cap', L('전달 상한', 'Overflow cap'), L('‘예’면 본체로 넘어가는 피해가 이 부위의 체력과 출혈 여유를 합한 만큼으로 제한됩니다. ‘아니오’면 제한이 없습니다.', 'If "Yes", damage passed to Main is capped by the combined health and constitution of the part. "No" means no cap.')],
-  ['fatal', L('치명', 'Fatal'), L('‘예’면 이 부위를 부수면 적이 죽습니다. ‘쓰러뜨림’은 부술 때 적이 쓰러지거나 떨어지는 부위입니다. 아래 줄은 출혈 여유(위키 Constitution)로, 체력이 바닥난 뒤에 쓰이는 두 번째 체력입니다. 총량과 초당 줄어드는 양이며, 다 줄어들면 죽습니다. 초당 0이면 줄지 않아 추가 체력처럼 작동합니다.', 'If "Yes", destroying this part kills the enemy. "Downs" marks a part that knocks the enemy down or out of the sky. The line below is the constitution: a second health pool used once Main or limb health is depleted, given as its total and its decay a second; the enemy dies when it runs out. At 0/s it never decays and works as extra health.')],
+  ['fatal', L('치명', 'Fatal'), L('‘예’면 이 부위를 부수면 적이 죽습니다. ‘쓰러뜨림’은 부술 때 적이 쓰러지거나 떨어지는 부위입니다. 아래 줄은 출혈 여유(위키 Constitution)로, 체력이 바닥난 뒤에 쓰이는 두 번째 체력입니다. 총량, 초당 감소량, 그대로 두었을 때 다 줄어드는 시간(총량 ÷ 초당 감소량)이며, 본체나 치명 부위라면 그때 죽습니다. 초당 0이면 줄지 않아 추가 체력처럼 작동합니다.', 'If "Yes", destroying this part kills the enemy. "Downs" marks a part that knocks the enemy down or out of the sky. The lines below are the constitution: a second health pool used once Main or limb health is depleted, given as its total, its decay a second and how long it takes to run out when left alone (total / decay); for Main or a fatal part the enemy dies then. At 0/s it never decays and works as extra health.')],
   ['exdr', L('폭발 저항', 'ExDR'), L('폭발 피해를 줄이는 비율(0~100%)입니다. 100%면 이 부위는 폭발 피해를 받지 않고 그 폭발이 본체를 노립니다. 이때 폭발 관통이 본체 장갑 이상이어야 하고, 폭발 하나당 한 번만, 그 폭발이 아직 본체에 피해를 주지 않았을 때만 일어납니다.', 'Explosion damage resistance, 0 to 100%. At 100% the part takes no explosion damage and the explosion targets Main instead. That needs explosion AP at or above Main\'s armor, happens once per explosion, and not if the same explosion already damaged Main.')],
 ];
 // Wiki rows with no site part of their own.
-const ANATOMY_NAMES = { 'Hull Main': '차체 본체', 'Turret Main': '포탑 본체', 'Fuel Tanks Main': '연료통 본체', 'Backpack Main': '배낭 본체', 'Pilot: Main': '조종사 본체', Pilot: '조종사', Rockets: '로켓',
-  'Lower Sac': '아래쪽 담즙낭', 'Armor Broken: Damaged Chassis': '손상된 몸통', Arms: '팔', Legs: '다리', 'Broken: Damaged Rearward- Middle Vertebra': '손상된 뒤쪽 중간 척추 외피' };
+const ANATOMY_NAMES = { 'Hull Main': '차체 본체', 'Turret Main': '포탑 본체', 'Fuel Tanks Main': '연료통 본체', 'Backpack Main': '전원 팩 본체', 'Pilot: Main': '조종사 본체', Pilot: '조종사', Rockets: '로켓',
+  'Lower Sac': '뒤쪽 담즙낭', 'Armor Broken: Damaged Chassis': '손상된 몸통', Arms: '팔', Legs: '다리', 'Broken: Damaged Rearward- Middle Vertebra': '손상된 뒤쪽 중간 척추 외피' };
 const anatomyLayer = (enemy, row) => { const part = enemy.parts.find(item => item.id === row.part); return part && row.role !== 'pool' ? (row.stage === 'exposed' ? part.next : part) : null; };
 // The site's Korean part name without its counting words ("한쪽", "한 개") or armor-to-flesh arrow.
 const siteName = layer => layer.name.replace(/ → .*$/, '').replace(/ 한 ?(쪽|개|문|정|곳|장)$/, '');
+// An energy shield (also the Harvester's, whose shield data has no kind) is 보호막; an arm shield is 방패.
+const energyShield = enemy => enemy.shield?.kind === 'energy' || /energy|cockpit/i.test(enemy.anatomyOmitted?.Shield ?? '');
 function anatomyName(enemy, row) {
   if (lang === 'en') return row.name;
   if (row.role === 'main') return ANATOMY_NAMES[row.name] || '본체';
-  // An energy shield (also the Harvester's, whose shield data has no kind) is 보호막; an arm shield is 방패.
-  if (row.name === 'Shield') return enemy.shield?.kind === 'energy' || /energy|cockpit/i.test(enemy.anatomyOmitted?.Shield ?? '') ? '보호막' : '방패';
+  if (row.name === 'Shield') return energyShield(enemy) ? '보호막' : '방패';
   const layer = anatomyLayer(enemy, row);
   return layer ? siteName(layer) : ANATOMY_NAMES[row.name] || row.name;
 }
 const dash = (value, format = num) => value == null ? '-' : format(value);
+// Constitution, then its decay and how long it takes to run out when left alone (total / decay a second).
+const bleedLines = row => {
+  const seconds = row.bleed.hp / row.bleed.perSecond, shown = Math.round(seconds * 10) / 10, about = shown === seconds ? '' : L('약 ', 'about ');
+  return html`${L(`출혈 여유 ${num(row.bleed.hp)}`, `Constitution ${num(row.bleed.hp)}`)}<br>${L(`초당 ${num(row.bleed.perSecond)}씩 감소 · ${about}${num(shown)}초 뒤 ${row.fatal === 'no' ? '소진' : '죽음'}`, `-${num(row.bleed.perSecond)}/s · ${row.fatal === 'no' ? 'gone' : 'dies'} in ${about}${num(shown)} s`)}`;
+};
 const anatomyCells = (enemy, row) => {
   const hp = row.official ? html`${num(row.official.hp)}<small>${L(`공식 패치 ${row.official.source.match(/^Patch ([\d.]+)/)?.[1] ?? ''} 값 · 위키 표 ${num(row.hp)}`, `official patch ${row.official.source.match(/^Patch ([\d.]+)/)?.[1] ?? ''} · wiki table ${num(row.hp)}`)}</small>`
     : row.hp != null ? html`${num(row.hp)}${row.hpDefault != null ? html`<small>${L(`난이도 ${row.hpFrom}부터 · 기본 ${num(row.hpDefault)}`, `from difficulty ${row.hpFrom} · default ${num(row.hpDefault)}`)}</small>` : ''}`
@@ -240,14 +246,18 @@ const anatomyCells = (enemy, row) => {
     cap: row.cap == null ? '-' : row.cap ? L('예', 'Yes') : L('아니오', 'No'),
     // Fatal and constitution in one cell (user decision 2026-11-25): the flag, then how long it bleeds out.
     fatal: html`${row.fatal === 'yes' ? badge(L('예', 'Yes'), 'kill') : row.fatal === 'both' ? badge(L('둘 다 부수면', 'When both are destroyed'), 'kill') : html`<span class="faint">${L('아니오', 'No')}</span>`}${row.downs ? html`<small>${L('쓰러뜨림', 'Downs')}</small>` : ''}${row.bleed
-      ? html`<small>${row.bleed.perSecond ? L(`출혈 여유 ${num(row.bleed.hp)} · 초당 ${num(row.bleed.perSecond)}씩 줄어듦`, `Constitution ${num(row.bleed.hp)} · -${num(row.bleed.perSecond)}/s`) : L(`줄지 않는 추가 체력 ${num(row.bleed.hp)}`, `Extra health ${num(row.bleed.hp)} (never decays)`)}</small>`
+      ? html`<small>${row.bleed.perSecond ? bleedLines(row) : L(`줄지 않는 추가 체력 ${num(row.bleed.hp)}`, `Extra health ${num(row.bleed.hp)} (never decays)`)}</small>`
       : row.bleedText ? html`<small>${L('출혈 여유', 'Constitution')} ${row.bleedText}</small>` : ''}`,
   };
 };
 // What the calculator does with a row it does not use as a part of its own.
 const anatomyNote = (enemy, row) => {
   if (row.merged) { const part = enemy.parts.flatMap(item => [item, ...(item.next ? [item.next] : [])]).find(item => item.id === row.merged); return L(`횟수 계산에서는 ‘${siteName(part)}’와 같은 값으로 합쳐 씀`, `Counted together with ${T(part.name).replace(/ → .*$/, '')} (same values)`); }
-  if (row.omitted) return L('횟수 계산에는 쓰지 않는 줄', 'Not used in the shot counts');
+  // Why the calculator leaves the row out (anatomyOmitted reasons in the combat data).
+  if (row.omitted && row.name === 'Shield') return energyShield(enemy) ? L('횟수 계산은 보호막을 걷어 낸 뒤 기준', 'Shot counts start once the shield is down') : L('횟수 계산은 방패를 피해서 맞히는 기준', 'Shot counts assume hits that get past the shield');
+  if (row.omitted && row.name === 'Pilot') return L('횟수 계산은 아래 조종사 부위별로 함', 'Shot counts use the pilot parts below');
+  if (row.omitted && row.name === 'Rockets') return L('위키에 기폭 즉사 버그가 있다고 적혀 있어 횟수 계산에서 뺌', 'Left out of the shot counts: the wiki notes a bug in the detonation kill');
+  if (row.omitted) return L('횟수 계산에서 뺀 부위', 'Left out of the shot counts');
   return '';
 };
 function anatomyPhoto(enemy, row, index) {
