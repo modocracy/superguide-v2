@@ -555,7 +555,7 @@ export function stratagemDetail(item, { demolition = false, force = null, header
   const inCompare = state.compare.has(item.id);
   const variantStats = variants?.map(mode => ({ mode, stats: withVariant(item, mode) }));
   const effectsByMode = variants?.some(v => v.record);
-  const modeTitle = item.variantLabel || L('모드별 수치', 'Stats by mode');
+  const modeTitle = item.variantLabel || L('발사 모드', 'Firing mode');
   const modeStats = ({ mode, stats }) => html`${statsWithEffects(stats, specialCells(item, force, effectsByMode ? mode : null), expanded)}${blastFigure(stats)}${mode.note ? html`<p class="variant-note">${mode.note}</p>` : ''}`;
   let base;
   if (variantStats) {

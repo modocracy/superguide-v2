@@ -51,8 +51,9 @@ export function detailDisclosure(title, content, { className, expanded, meta = '
     : html`<details class="block ${className} disclosure"><summary>${heading}</summary>${content}</details>`;
 }
 
+// A mode tab's stats, titled like the key stats of a weapon without modes (user request 2026-11-25).
 export function itemVariantPanel(id, selected, content) {
-  return html`<div class="variant-panel" data-variant-panel="${id}" ${id === selected ? '' : raw('hidden')}>${content}</div>`;
+  return html`<div class="variant-panel" data-variant-panel="${id}" ${id === selected ? '' : raw('hidden')}><h3 class="variant-panel-title">${L('기본 수치', 'Key stats')}</h3>${content}</div>`;
 }
 
 export function openItemPanel(ctx, id) {
