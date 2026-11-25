@@ -115,6 +115,7 @@ ok(modeHtml.includes('data-variant="flame" aria-pressed="true"'), 'embedded stra
 ok(modeHtml.includes('href="#/arsenal/lumberer?m=flame"'), 'full-page link preserves mode');
 const epochHtml = String(await itemDetailContent('control-group', 'arsenal/epoch'));
 ok(!epochHtml.includes('data-variant=') && epochHtml.includes('400~800') && epochHtml.includes('AP 4~5'), 'epoch: no mode tabs, charge shown as ranges');
+ok((epochHtml.match(/class="ballistic"/g) ?? []).length === 1 && epochHtml.includes('AP 4~5 / 4~5 / 4~5 / 4~5'), 'epoch: one set of detailed stats with the charge as ranges');
 // Weapons with selectable firing modes get the same mode tabs as stratagems. Expected numbers are
 // read from the data, so a routine wiki refresh that changes a value or adds a weapon does not fail
 // these checks; they only confirm that whatever the data holds is shown in the right panel.

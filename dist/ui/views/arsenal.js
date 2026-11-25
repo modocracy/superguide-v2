@@ -607,7 +607,12 @@ export function stratagemDetail(item, { demolition = false, force = null, header
   const defense = defenseBlock(item);
   const changes = changesBlock(item, expanded);
   const firing = firingModesBlock(item, expanded);
-  const ballistics = ballisticsBlock(Object.entries(supportProjectileRecords[item.id] || {}).map(([modeId, record]) => ({ label: T(item.variants?.find(v => v.id === modeId)?.name) ?? MODE_LABELS[modeId] ?? item.name, record, propelled: propelledModes[item.id]?.includes(modeId) })), expanded, recoilStats(`arsenal/${item.id}`));
+  // A charge weapon's rounds differ only by charge (the Epoch's by AP): one set of detailed stats, its numbers as
+  // 'low~high' like the key stats (user request 2026-11-25).
+  const chargeRecords = charge ? Object.values(supportProjectileRecords[item.id] || {}) : [];
+  const ballistics = chargeRecords.length > 1
+    ? raw(rangeGrid(...[chargeRecords[0], chargeRecords.at(-1)].map(record => String(ballisticsBlock([{ label: '', record }], expanded, recoilStats(`arsenal/${item.id}`))))))
+    : ballisticsBlock(Object.entries(supportProjectileRecords[item.id] || {}).map(([modeId, record]) => ({ label: T(item.variants?.find(v => v.id === modeId)?.name) ?? MODE_LABELS[modeId] ?? item.name, record, propelled: propelledModes[item.id]?.includes(modeId) })), expanded, recoilStats(`arsenal/${item.id}`));
   const recoilSim = recoilSimBlock(`arsenal/${item.id}`, expanded);
   const statsLayout = expanded
     ? html`${variantStats || !blasts ? base : detailColumns(base, blasts)}
