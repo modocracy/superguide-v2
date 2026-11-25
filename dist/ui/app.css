@@ -671,6 +671,7 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .recoil-sim { display: grid; gap: 10px; grid-template-areas: 'side' 'view' 'notes'; }
 .recoil-sim-side { grid-area: side; display: grid; gap: 10px; align-content: start; }
 .recoil-sim-notes { grid-area: notes; display: grid; gap: 10px; align-content: start; }
+.recoil-sim .recoil-stats { grid-template-columns: minmax(0, 1fr); margin: 0 0 4px; }
 .recoil-sim-option { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
 .recoil-sim-option > span { min-width: 64px; font-size: 13px; font-weight: 650; color: var(--text-2); }
 .recoil-sim-view { grid-area: view; width: 100%; max-width: 320px; aspect-ratio: 1; background: var(--field); border: 1px solid var(--line-strong); }

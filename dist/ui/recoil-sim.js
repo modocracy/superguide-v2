@@ -119,6 +119,7 @@ class RecoilSim extends Base {
     if (!this.sim || this.built) return;
     this.built = true;
     const sim = this.sim;
+    const stats = this.querySelector('.recoil-stats'); // the recoil cells rendered inside the element
     this.stance = 0;
     this.choice = { mode: sim.modes?.[0] ?? 'auto', rpm: sim.rpm, muzzle: sim.muzzle ?? 0, passive: false };
     const MODE_NAMES = { auto: L('자동', 'Auto'), semi: L('단발', 'Semi'), burst: L(`점사(${sim.burst}발)`, `Burst (${sim.burst})`) };
@@ -151,6 +152,7 @@ class RecoilSim extends Base {
         'Cross = aim point (fixed)<br>Dots = hit group<br>Line = muzzle path<br>Circle = muzzle direction<br>The scale changes so the whole burst fits.')}</p>
       <p class="caption">${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 자체 연구 값이고, 한 발이 몇 도인지, 반동이 화면에 들어가는 속도와 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다(게임 데이터에서 찾지 못함). 화면을 직접 내리지 않는다고 보고 그렸습니다. 총구 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
         'The recoil values and spread are game data, the stance multipliers come from our own research, and the degrees per shot, how fast a kick moves the view and recovers, and how hits fall inside the spread are our estimate (not found in the game data). Drawn as if you do not pull the view down. The muzzle recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}</p></div>`;
+    if (stats) this.querySelector('.recoil-sim-side').prepend(stats);
     this.grid = this.querySelector('.grid');
     this.trail = this.querySelector('.trail');
     this.hitLayer = this.querySelector('.hits');
@@ -265,5 +267,6 @@ class RecoilSim extends Base {
 
 if (globalThis.customElements && !customElements.get('recoil-sim')) customElements.define('recoil-sim', RecoilSim);
 
-// The simulation block for a weapon key ('gear/<id>' or 'arsenal/<id>'), or '' when the weapon has no inputs.
-export const recoilSimHtml = key => (weaponRecoil[key]?.sim ? `<recoil-sim class="recoil-sim" data-key="${key}"></recoil-sim>` : '');
+// The simulation block for a weapon key ('gear/<id>' or 'arsenal/<id>'), or '' when the weapon has no inputs; stats =
+// the recoil cells (HTML) the element keeps at the top of its choices.
+export const recoilSimHtml = (key, stats = '') => (weaponRecoil[key]?.sim ? `<recoil-sim class="recoil-sim" data-key="${key}">${stats}</recoil-sim>` : '');
