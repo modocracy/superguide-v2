@@ -7,7 +7,7 @@ import { detailDisclosure } from './item-detail.js';
 import { L } from '../core/i18n.js';
 import { num } from '../core/explain.js';
 import { projectileBallistics } from '../data/ballistics.js';
-import { dragOf, falloffAt, distanceAt, trajectory } from '../core/ballistics.js';
+import { dragOf, falloffAt, trajectory } from '../core/ballistics.js';
 
 const MAX = 200;
 const MARKS = [25, 50, 100, 150, 200];
@@ -67,8 +67,6 @@ function recordBlock(label, recordId, propelled, extra = '') {
   const { record, b, drag, at, endX, damage, drop, dropTop, markFalloff } = computeFlight(recordId, propelled);
   const cell = (name, value, unit, caption) => html`<div><dt>${name}</dt><dd>${value}${unit ? html`<small>${unit}</small>` : ''}</dd>${caption ? html`<div class="caption">${caption}</div>` : ''}</div>`;
   const ap = b.ap?.some(v => v != null) ? `AP ${b.ap.map(v => num(v)).join(' / ')}` : '—';
-  const d75 = distanceAt(b, 0.75), d50 = distanceAt(b, 0.5);
-  const fmtDistance = x => (x == null ? '—' : x >= 1000 ? `${num(round(x / 1000, 0.1))}km` : `${num(round(x, 1))}m`);
   const dropText = y => (dropTop < 2 ? `${num(Math.round(y * 100))}cm` : `${num(round(y, 0.1))}m`);
   return html`<div class="ballistic">
     ${label ? html`<h4>${label}</h4>` : ''}
@@ -80,7 +78,6 @@ function recordBlock(label, recordId, propelled, extra = '') {
       ${cell(L('중력 배율', 'Gravity multiplier'), num(b.gravity), '×', b.gravity ? L('클수록 많이 떨어짐', 'Higher drops more') : L('떨어지지 않고 곧게 날아감', 'Flies straight, no drop'))}
       ${cell(L('탄 수명', 'Lifetime'), b.lifetime ? num(b.lifetime) : L('제한 없음', 'No limit'), b.lifetime ? L('초', 's') : '', endX != null ? L(`약 ${num(Math.round(endX))}m에서 사라짐`, `Gone at about ${num(Math.round(endX))} m`) : '')}
       ${cell(L('각도별 관통', 'Penetration by angle'), ap, '', L('25° 미만 · 26~60° · 61~80° · 81~90°', 'Under 25° · 26-60° · 61-80° · 81-90°'))}
-      ${cell(L('피해 75% · 50% 거리', 'Damage at 75% · 50%'), drag ? `${fmtDistance(d75)} · ${fmtDistance(d50)}` : L('줄지 않음', 'No falloff'), '', drag ? L('위키 공식(중력 무시)', 'Wiki formula (no gravity)') : propelled ? L('로켓 추진이라 거리로 줄지 않음', 'Rocket-propelled, so no falloff') : L('항력이 없어 거리로 줄지 않음', 'No drag, so no falloff'))}
       ${extra}
     </dl>
     <div class="ballistic-charts">

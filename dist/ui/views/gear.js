@@ -21,7 +21,7 @@ import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
 import { detailColumns, detailDisclosure, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { warbondChip } from '../warbond-chip.js';
-import { GROUPS, groupOf, typeName, weaponById, displayName, orderTypes, recoilStats, gameErgonomics, GAME_SCREEN } from '../gear-shared.js';
+import { GROUPS, groupOf, typeName, weaponById, displayName, orderTypes, recoilStats, gameErgonomics } from '../gear-shared.js';
 import { L, T, lang } from '../../core/i18n.js';
 
 const DOT_ICON = { gas: 'gas', fire: 'fire', arc: 'arc', electric: 'arc' };
@@ -273,7 +273,7 @@ function detailRows(w) {
   // The game armory screen's value replaces the wiki value where the game data sheet has one.
   const customizable = w.category === 'primary' && weaponAttachments[w.id]?.length;
   const ergonomics = gameErgonomics(`gear/${w.id}`) ?? w.ergonomics;
-  if (ergonomics != null) add(L('인체공학형', 'Ergonomics'), num(ergonomics), '', [gameErgonomics(`gear/${w.id}`) != null && GAME_SCREEN(), customizable && L('기본 부착물 기준', 'With the default attachments'), L('높을수록 조준이 빠름', 'Higher = faster aim')].filter(Boolean).join(' · '));
+  if (ergonomics != null) add(L('인체공학형', 'Ergonomics'), num(ergonomics), '', customizable ? L('기본 부착물 기준 · 높을수록 조준이 빠름', 'With the default attachments · higher = faster aim') : L('높을수록 조준이 빠름', 'Higher = faster aim'));
   // Sway only where it differs from the standard 100% (user decision 2026-11-19).
   if (w.sway != null && w.sway !== 1) add(L('흔들림', 'Sway'), num(Math.round(w.sway * 100)), '%', L('표준 100% · 낮을수록 덜 흔들림', 'Standard 100% · lower sways less'));
   if (w.throwableCapacity != null) add(L('소지 수', 'Carried'), num(w.throwableCapacity), L('개', ''), w.throwableStart != null ? L(`출격 시 ${w.throwableStart}개`, `${w.throwableStart} at deployment`) : '');

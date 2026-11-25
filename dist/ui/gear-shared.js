@@ -35,7 +35,6 @@ const SELF_PROPELLED = new Set(['arsenal/commando', 'arsenal/expendable-at', 'ar
 // Ergonomics as the game's armory screen shows it (default attachments included, game data sheet), else null
 // and the view keeps the wiki value (user decision 2026-11-25).
 export const gameErgonomics = key => weaponRecoil[key]?.ergonomics ?? null;
-export const GAME_SCREEN = () => L('게임 무기고 화면 값', 'As on the game armory screen');
 
 export function recoilStats(key) {
   const recoil = weaponRecoil[key];
@@ -45,7 +44,7 @@ export function recoilStats(key) {
   const limit = recoil.limit ? L(` · 위로 ${recoil.limit[0]}도부터 수직 반동 줄어듦`, ` · vertical kick eases off from ${recoil.limit[0]} degrees up`) : '';
   return [
     // The game armory screen's recoil: (weapon kick + view climb) / 2 with the default attachments (game data sheet).
-    ...(recoil.screen ? [{ label: L('반동', 'Recoil'), text: pair(recoil.screen), caption: L('게임 무기고 화면 값 · 수평 / 수직 · 기본 부착물 기준', 'As on the game armory screen · horizontal / vertical · default attachments') }] : []),
+    ...(recoil.screen ? [{ label: L('반동', 'Recoil'), text: pair(recoil.screen), caption: L('수평 / 수직 · 기본 부착물 기준', 'Horizontal / vertical · default attachments') }] : []),
     { label: L('무기 반동', 'Weapon kick'), text: pair(recoil.drift), caption: L('수평 / 수직', 'Horizontal / vertical') + rocket },
     { label: L('화면 반동', 'View climb'), text: pair(recoil.climb), caption: L('수평 / 수직', 'Horizontal / vertical') + limit },
   ];
