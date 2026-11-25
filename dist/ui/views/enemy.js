@@ -259,8 +259,10 @@ const anatomyCells = (enemy, row) => {
   const hp = row.official ? html`${num(row.official.hp)}<small>${L(`공식 패치 ${row.official.source.match(/^Patch ([\d.]+)/)?.[1] ?? ''} 값 · 위키 표 ${num(row.hp)}`, `official patch ${row.official.source.match(/^Patch ([\d.]+)/)?.[1] ?? ''} · wiki table ${num(row.hp)}`)}</small>`
     : row.hp != null ? html`${num(row.hp)}${row.hpDefault != null ? html`<small>${L(`난이도 ${row.hpFrom}부터 · 기본 ${num(row.hpDefault)}`, `from difficulty ${row.hpFrom} · default ${num(row.hpDefault)}`)}</small>` : ''}`
     : row.hpText === 'main' ? L('본체', 'Main') : row.hpText === 'main-hull' ? L('본체(차체)', 'Main (Hull)') : row.hpText === 'main-turret' ? L('본체(포탑)', 'Main (Turret)') : row.hpText === 'infinite' ? L('무한', 'Infinite') : row.hpText;
+  // A value taken from the game data sheet instead of the wiki table (user decision 2026-11-25).
+  const game = (key, text, format = num) => row.game?.[key] == null ? text : html`${text}<small>${L(`게임 데이터 값 · 위키 표 ${format(row.game[key])}`, `game data · wiki table ${format(row.game[key])}`)}</small>`;
   return {
-    hp, armor: dash(row.armor), durability: dash(row.durability, pct), exdr: dash(row.exdr, pct), toMain: dash(row.toMain, pct),
+    hp: game('hp', hp), armor: game('armor', dash(row.armor)), durability: game('durability', dash(row.durability, pct), pct), exdr: game('exdr', dash(row.exdr, pct), pct), toMain: game('toMain', dash(row.toMain, pct), pct),
     cap: row.cap == null ? '-' : row.cap ? L('예', 'Yes') : L('아니오', 'No'),
     // Fatal and constitution in one cell (user decision 2026-11-25): the flag, then how long it bleeds out.
     fatal: html`${row.fatal === 'yes' ? badge(L('예', 'Yes'), 'kill') : row.fatal === 'both' ? badge(L('둘 다 부수면', 'When both are destroyed'), 'kill') : html`<span class="faint">${L('아니오', 'No')}</span>`}${row.downs ? html`<small>${L('쓰러뜨림', 'Downs')}</small>` : ''}${row.bleed

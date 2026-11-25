@@ -41,6 +41,8 @@ function fatal(row) {
   return { fatal: /^Yes/.test(downs ?? clean(row.fatal)) ? 'yes' : 'no', ...(downs && { downs: true }) };
 }
 
+const wikiKey = row => (row.count ? `${row.name} (${row.count})` : row.name).replace(/\s*\((\d+)\)$/, ' ($1)');
+
 export async function buildEnemyAnatomy() {
   const snapshot = await anatomySnapshot();
   const out = {};
@@ -81,6 +83,16 @@ export async function buildEnemyAnatomy() {
         bleed: bleed(row), ...(!bleed(row) && !['None', 'No', '-', ''].includes(clean(row.bleed)) && !/Downs/.test(clean(row.bleed)) && { bleedText: clean(row.bleed) }), ...fatal(row),
         images: IMAGE_FIELDS.map(field => row[field]).filter(file => file && !/^Anatomy Placeholder/i.test(file)).map(file => file.replaceAll('_', ' ')),
       });
+    }
+    // anatomyGame (user decision 2026-11-25): the site follows the game data sheet for these values; the
+    // row shows that value and keeps the wiki table's in `game` (scripts/test-anatomy.mjs checks it).
+    for (const [key, { wiki }] of Object.entries(enemy.anatomyGame || {})) {
+      const [layerId, field] = key.split('.');
+      const layer = layerId === 'main' ? enemy.main : parts.find(item => item.layer.id === layerId)?.layer;
+      const row = layerId === 'main' ? rows.find(item => item.role === 'main') : rows.find(item => wikiKey(item) === wikiKey({ name: layer?.sourcePart ?? '' }));
+      if (!row || !layer) throw new Error(`${enemy.id}: anatomyGame ${key} has no row`);
+      row[field] = layer[field];
+      row.game = { ...row.game, [field]: wiki };
     }
     out[enemy.id] = { page: titleOf(enemy), revision: page.revision, rows };
   }

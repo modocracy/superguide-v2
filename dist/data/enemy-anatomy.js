@@ -1078,7 +1078,7 @@ export const enemyAnatomy = {
     "armor": 2,
     "durability": 60,
     "exdr": 100,
-    "toMain": 50,
+    "toMain": 100,
     "cap": false,
     "bleed": {
      "hp": 300,
@@ -1088,7 +1088,10 @@ export const enemyAnatomy = {
     "images": [
      "Brood Commander Head Front.png",
      "Brood Commander Head Side.png"
-    ]
+    ],
+    "game": {
+     "toMain": 50
+    }
    },
    {
     "name": "Claws",
@@ -1098,14 +1101,17 @@ export const enemyAnatomy = {
     "armor": 2,
     "durability": 50,
     "exdr": 100,
-    "toMain": 50,
+    "toMain": 40,
     "cap": false,
     "bleed": null,
     "fatal": "both",
     "images": [
      "Brood Commander Claws Front.png",
      "Brood Commander Claws Side.png"
-    ]
+    ],
+    "game": {
+     "toMain": 50
+    }
    },
    {
     "name": "Legs",
@@ -1173,14 +1179,17 @@ export const enemyAnatomy = {
     "armor": 2,
     "durability": 50,
     "exdr": 100,
-    "toMain": 50,
+    "toMain": 40,
     "cap": false,
     "bleed": null,
     "fatal": "both",
     "images": [
      "Alpha Commander Claws Front.png",
      "Alpha Commander Claws Side.png"
-    ]
+    ],
+    "game": {
+     "toMain": 50
+    }
    },
    {
     "name": "Legs",
@@ -2981,7 +2990,7 @@ export const enemyAnatomy = {
    {
     "name": "Head",
     "part": "head",
-    "hp": 30,
+    "hp": 20,
     "armor": 0,
     "durability": 0,
     "exdr": 100,
@@ -2992,7 +3001,10 @@ export const enemyAnatomy = {
     "images": [
      "Shrieker Head Front.png",
      "Shrieker Head Side.png"
-    ]
+    ],
+    "game": {
+     "hp": 30
+    }
    },
    {
     "name": "Limbs",
@@ -9210,13 +9222,16 @@ export const enemyAnatomy = {
     "role": "main",
     "hp": 450,
     "armor": 1,
-    "durability": 0,
+    "durability": 70,
     "exdr": 0,
     "toMain": null,
     "cap": null,
     "bleed": null,
     "fatal": "yes",
-    "images": []
+    "images": [],
+    "game": {
+     "durability": 0
+    }
    },
    {
     "name": "Head",

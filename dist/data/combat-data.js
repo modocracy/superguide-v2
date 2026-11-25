@@ -289,10 +289,14 @@ const originalEnemies = [
     note: '기본 브루드 커맨더 기준이며 알파 커맨더와 다릅니다. 머리를 잃어도 출혈이 끝나기 전까지 돌진할 수 있습니다.',
     // Every part matches Wiki Anatomy revision 141213 (checked 2026-11-03).
     anatomyRevision: 141213, anatomyCheckedAt: '2026-11-03',
+    // The game data sheet (db/source/game_sheets/enemies.json) gives the head 100% and the claws 40% to main;
+    // the site follows the game there (user decision 2026-11-25).
+    anatomyGame: { 'head.toMain': { wiki: 50, source: 'Game data sheet, game build 26568081' }, 'claw.toMain': { wiki: 50, source: 'Game data sheet, game build 26568081' }, 'claw-both.toMain': { wiki: 50, source: 'Game data sheet, game build 26568081' } },
+    anatomyLegacy: { 'head.toMain': 50, 'claw.toMain': 50, 'claw-both.toMain': 50 },
     parts: [
-      part('head', '머리', 200, 2, 60, 100, 50, false, 'bleed', '머리가 떨어져도 즉시 멈추지 않습니다. 출혈이 끝날 때까지 접근을 피하세요.', { constitution: 300, sourcePart: 'Head' }),
-      part('claw', '앞발 한쪽', 200, 2, 50, 100, 50, false, 'break', '몸 앞의 큰 앞발 하나에 집중하는 계산입니다.', { sourcePart: 'Claws (2)' }),
-      part('claw-both', '앞발 양쪽', 200, 2, 50, 100, 50, false, 'kill', '양쪽 앞발을 모두 부수면 처치됩니다(위키 2026-11-02 기준). 한쪽을 부순 뒤 다른 쪽을 새로 조준하는 횟수입니다.', { sourcePart: 'Claws (2)', copies: 2 }),
+      part('head', '머리', 200, 2, 60, 100, 100, false, 'bleed', '머리가 떨어져도 즉시 멈추지 않습니다. 출혈이 끝날 때까지 접근을 피하세요.', { constitution: 300, sourcePart: 'Head' }),
+      part('claw', '앞발 한쪽', 200, 2, 50, 100, 40, false, 'break', '몸 앞의 큰 앞발 하나에 집중하는 계산입니다.', { sourcePart: 'Claws (2)' }),
+      part('claw-both', '앞발 양쪽', 200, 2, 50, 100, 40, false, 'kill', '양쪽 앞발을 모두 부수면 처치됩니다(위키 2026-11-02 기준). 한쪽을 부순 뒤 다른 쪽을 새로 조준하는 횟수입니다.', { sourcePart: 'Claws (2)', copies: 2 }),
       part('leg', '다리 한쪽', 170, 1, 40, 100, 60, false, 'break', '장갑이 얇은 옆 다리를 노려 이동과 돌진 속도를 낮추세요.', { sourcePart: 'Legs (4)' }),
     ],
   },
@@ -348,10 +352,13 @@ const originalEnemies = [
     // Every part matches Wiki Anatomy revision 136531 (checked 2026-09-28).
     // The limbs were added then.
     anatomyRevision: 136531, anatomyCheckedAt: '2026-09-28',
+    // The game data sheet gives the head 20 health (user decision 2026-11-25: follow the game).
+    anatomyGame: { 'head.hp': { wiki: 30, source: 'Game data sheet, game build 26568081' } },
+    anatomyLegacy: { 'head.hp': 30 },
     main: main(80, 0, 0, 0),
     note: '머리 또는 날개 한쪽을 파괴하면 추락합니다. 날개는 체력은 낮지만 내구도가 100%입니다. 떨어지는 사체도 피하세요.',
     parts: [
-      part('head', '머리', 30, 0, 0, 100, 100, true, 'kill', '날개 사이의 작은 머리를 노리세요.', { sourcePart: 'Head' }),
+      part('head', '머리', 20, 0, 0, 100, 100, true, 'kill', '날개 사이의 작은 머리를 노리세요.', { sourcePart: 'Head' }),
       part('wing', '날개 한쪽', 20, 0, 100, 100, 30, true, 'kill', '좌우 중 한쪽 날개에 직접 맞히세요. 날개의 내구 피해 기준으로 계산합니다.', { sourcePart: 'Wings (2)' }),
       part('limbs', '다리', 30, 0, 0, 100, 40, false, 'break', '몸 아래의 다리입니다. 부숴도 추락하지 않습니다.', { sourcePart: 'Limbs' }),
     ],

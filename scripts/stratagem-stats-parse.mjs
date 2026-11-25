@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 // Reads cooldown facts out of the wikitext saved by fetch-stratagem-stats.mjs.
 // Shared by build-stratagem-stats.mjs and test-stratagem-stats.mjs.
 export const field = (text, key) => {
@@ -10,6 +11,18 @@ export const value = text => {
   const match = /^(\d+(?:\.\d+)?)\s*s?$/i.exec(text);
   return match ? Number(match[1]) : null;
 };
+
+// Cooldowns from the game data sheet (db/source/game_sheets/stratagems.json, game build 26568081) for the
+// stratagems whose wiki page differs or gives none (user decision 2026-11-25), matched by English name and call code.
+export const GAME_COOLDOWNS = ['reinforce', 'sos', 'eagle-rearm', 'seaf-artillery', 'cargo-container', 'hive-breaker', 'super-earth-flag', 'upload-data', 'aquifer-drill'];
+const ARROWS = { up: '↑', down: '↓', left: '←', right: '→' };
+const gameStratagems = JSON.parse(readFileSync(new URL('../db/source/game_sheets/stratagems.json', import.meta.url), 'utf8')).스트라타젬;
+export function gameCooldown(item) {
+  const found = gameStratagems.find(g => g.en.toLowerCase() === item.en.toLowerCase() && g.코드_en.map(a => ARROWS[a]).join('') === item.input);
+  if (!found) throw new Error(`${item.id}: no game data sheet stratagem with this English name and code`);
+  return found.재사용_대기_초;
+}
+export const withGameCooldown = (item, stats) => (GAME_COOLDOWNS.includes(item.id) ? { ...stats, cooldown: gameCooldown(item), cooldownSource: 'game' } : stats);
 
 const PERMITS = { supply: 'supply', offensive: 'offensive', offense: 'offensive', defensive: 'defensive' };
 // Type (permit) the user set over the wiki's Supply: these are mission tools (user decision 2026-11-19).

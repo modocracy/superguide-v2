@@ -7,7 +7,7 @@ import { stratagems } from '../dist/core/catalog.js';
 import { stratagemStats } from '../dist/data/stratagem-stats.js';
 import { shipModules, shipModulesSource } from '../dist/data/ship-modules.js';
 import { timingOf, setModulesOn, modulesOn } from '../dist/core/modules.js';
-import { statsOf, field, value, datamineEntry, forcesOf, wreckForces, ergonomicsOf, swayOf, heatOf, reloadOf, timesOf, bodyOf, sentryOf, PERMIT_OVERRIDES, unlockOf } from './stratagem-stats-parse.mjs';
+import { statsOf, field, value, datamineEntry, forcesOf, wreckForces, ergonomicsOf, swayOf, heatOf, reloadOf, timesOf, bodyOf, sentryOf, PERMIT_OVERRIDES, unlockOf, withGameCooldown, GAME_COOLDOWNS, gameCooldown } from './stratagem-stats-parse.mjs';
 
 const source = JSON.parse(await readFile(new URL('../db/source/wiki_stratagem_stats.json', import.meta.url), 'utf8'));
 const strat = JSON.parse(await readFile(new URL('../db/source/stratagems_data.json', import.meta.url), 'utf8')).data;
@@ -26,7 +26,7 @@ for (const item of stratagems) {
   ok(entry && !entry.missing, `${item.id}: no wiki page in db/source/wiki_stratagem_stats.json (run fetch-stratagem-stats)`);
   const found = datamineEntry(item.id, entry.title, strat, weaponData);
   const forces = [...forcesOf(found, strat, weaponData), ...wreckForces(item.id, wrecks)];
-  ok(JSON.stringify(stratagemStats[item.id]) === JSON.stringify({ ...statsOf(entry), ...(PERMIT_OVERRIDES[item.id] && { permit: PERMIT_OVERRIDES[item.id] }), ergonomics: ergonomicsOf(found), sway: swayOf(found), ...(heatOf(found, entry.title, strat) && { heat: heatOf(found, entry.title, strat) }), ...(reloadOf(entry) && { reload: reloadOf(entry) }), ...(timesOf(item.id, entry.title, strat) && { times: timesOf(item.id, entry.title, strat) }), ...(bodyOf(item.id, entry.title, statsOf(entry).type, strat, weaponData) && { body: bodyOf(item.id, entry.title, statsOf(entry).type, strat, weaponData) }), ...(sentryOf(item.id, entry.title, statsOf(entry).type, entry.statsTable, strat) && { sentry: sentryOf(item.id, entry.title, statsOf(entry).type, entry.statsTable, strat) }), forces }), `${item.id}: dist/data/stratagem-stats.js is stale (run build-stratagem-stats)`);
+  ok(JSON.stringify(stratagemStats[item.id]) === JSON.stringify(withGameCooldown(item, { ...statsOf(entry), ...(PERMIT_OVERRIDES[item.id] && { permit: PERMIT_OVERRIDES[item.id] }), ergonomics: ergonomicsOf(found), sway: swayOf(found), ...(heatOf(found, entry.title, strat) && { heat: heatOf(found, entry.title, strat) }), ...(reloadOf(entry) && { reload: reloadOf(entry) }), ...(timesOf(item.id, entry.title, strat) && { times: timesOf(item.id, entry.title, strat) }), ...(bodyOf(item.id, entry.title, statsOf(entry).type, strat, weaponData) && { body: bodyOf(item.id, entry.title, statsOf(entry).type, strat, weaponData) }), ...(sentryOf(item.id, entry.title, statsOf(entry).type, entry.statsTable, strat) && { sentry: sentryOf(item.id, entry.title, statsOf(entry).type, entry.statsTable, strat) }), forces })), `${item.id}: dist/data/stratagem-stats.js is stale (run build-stratagem-stats)`);
   // Every weapon-type stratagem has stagger and push from the datamine.
   if (['support', 'orbital', 'eagle'].includes(item.category) && !['orbital-railcannon'].includes(item.id)) ok(forces.length, `${item.id}: no stagger or push in the attack datamine`);
 }
@@ -65,9 +65,15 @@ for (const item of stratagems) {
   for (const [key, calc] of [['cooldown_upgraded', on.cooldown], ['rearm_time_upgraded', on.rearm], ['uses_upgraded', on.uses]]) {
     const wiki = value(field(entry.statsTable, key));
     if (typeof wiki !== 'number' || REVIEWED.has(`${item.id}:${key}`)) continue;
+    if (key === 'cooldown_upgraded' && stratagemStats[item.id].cooldownSource === 'game') continue;
     // Most pages leave out Morale Augmentation (5% for all stratagems); that is the only gap allowed.
     ok(near(wiki, calc) || (key === 'cooldown_upgraded' && near(wiki, calc / 0.95)), `${item.id}: wiki ${key} ${wiki}, computed ${calc}`);
   }
+}
+// Game data sheet cooldowns (user decision 2026-11-25) are the sheet's value.
+for (const id of GAME_COOLDOWNS) {
+  const item = stratagems.find(entry => entry.id === id);
+  ok(item && stratagemStats[id].cooldownSource === 'game' && stratagemStats[id].cooldown === gameCooldown(item), `${id}: cooldown from the game data sheet`);
 }
 for (const id of REVIEWED) {
   const [item, key] = id.split(':');
