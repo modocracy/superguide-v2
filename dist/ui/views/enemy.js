@@ -207,7 +207,7 @@ function enemyDetails(enemy) {
 // a row's photo opens every value with those notes (openAnatomy). Folded by default; stays open across
 // enemies once opened (state.partsOpen).
 const ANATOMY_COLUMNS = [
-  ['name', L('부위', 'Part'), L('개수(×2 등)가 붙은 부위는 하나하나가 따로 체력을 가집니다. 개수가 없는 부위들은 체력을 함께 씁니다(위키 표 안내).', 'Each part with a count has its own health. Parts without a count share health pools (wiki table note).')],
+  ['name', L('부위', 'Part'), L('개수(×2 등)가 붙은 부위는 하나하나 체력이 따로 있습니다. 개수가 없는 부위들은 체력을 함께 씁니다(위키 표 안내).', 'Each part with a count has its own health. Parts without a count share health pools (wiki table note).')],
   ['hp', L('체력', 'Health'), L('부위의 체력입니다. ‘본체’로 적힌 부위는 체력이 따로 없고, 받은 피해가 모두 본체 체력으로 갑니다. 난이도에 따라 달라지면 가장 높은 난이도의 값입니다.', 'The part\'s health. Parts listed as "Main" have no health of their own: all damage dealt to them goes to the Main health pool. Where it changes with difficulty, the highest difficulty\'s value.')],
   ['armor', L('장갑', 'Armor'), L('공격의 관통(AP)이 장갑보다 낮으면 피해가 들어가지 않고, 같으면 65%, 높으면 100%가 들어갑니다.', 'An attack with armor penetration (AP) below the armor deals no damage; equal AP deals 65%, higher AP 100%.')],
   ['durability', L('내구도', 'Durability'), L('무기의 일반 피해와 내구 피해가 섞이는 비율입니다. 내구도 X%인 부위에는 일반 피해 × (100 − X)% + 내구 피해 × X%가 들어갑니다. 높을수록 내구 피해가 큰 무기가 유리합니다.', 'How a weapon\'s normal and durable damage blend. A part with X% durability takes normal damage × (100 − X)% + durable damage × X%. The higher it is, the more weapons with high durable damage pay off.')],

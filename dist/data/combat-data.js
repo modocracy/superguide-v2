@@ -630,7 +630,7 @@ export const weaponProfiles = {
       delivery: 'explosive', directKind: 'none', explosionDurable: 190, innerRadius: 2, radius: 7,
       hitCondition: { kind: 'shrapnel', min: 0, max: 30, default: 6, defaultPct: 20 },
       bomblet: { standard: 110, durable: 35, ap: 3, explosion: 0, explosionAp: 0 },
-      note: '공중에서 터진 주폭발과 파편 피해를 계산하며, 주탄의 직격은 빼습니다. 기본은 파편 30개 중 6개가 이 부위에 맞는다고 보며, 명중 수를 바꾸거나 0개로 해서 파편을 뺄 수 있습니다. 폭발 중심이 이 부위에 닿는다고 보며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다.',
+      note: '공중에서 터진 주폭발과 파편 피해를 계산하며, 주탄의 직격은 뺍니다. 기본은 파편 30개 중 6개가 이 부위에 맞는다고 보며, 명중 수를 바꾸거나 0개로 해서 파편을 뺄 수 있습니다. 폭발 중심이 이 부위에 닿는다고 보며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다.',
     }),
   ]),
   'wasp': {

@@ -1015,7 +1015,7 @@ export const expandedEnemies = [
         "toMain": 100,
         "overflowCap": false,
         "effect": "kill",
-        "tip": "장갑이 제거된 적 기준 왼앞다리에 집중하세요. 체력2,000과 자연 감소하지 않는 추가 체력 1,500을 모두 소진해야 합니다.",
+        "tip": "장갑이 제거된 적 기준 왼앞다리에 집중하세요. 체력 2,000과 자연 감소하지 않는 추가 체력 1,500을 모두 소진해야 합니다.",
         "staticConstitution": 1500,
         "prerequisite": "왼앞다리 장갑 제거 후",
         "isolated": true,
@@ -1031,7 +1031,7 @@ export const expandedEnemies = [
         "toMain": 100,
         "overflowCap": false,
         "effect": "kill",
-        "tip": "장갑이 제거된 나머지 세 다리 중 하나입니다. 체력2,000과 자연 감소하지 않는 추가 체력2,000을 모두 소진해야 합니다.",
+        "tip": "장갑이 제거된 나머지 세 다리 중 하나입니다. 체력 2,000과 자연 감소하지 않는 추가 체력 2,000을 모두 소진해야 합니다.",
         "staticConstitution": 2000,
         "prerequisite": "해당 다리 장갑 제거 후",
         "isolated": true,
@@ -1113,7 +1113,7 @@ export const expandedEnemies = [
     "faction": "테르미니드",
     "source": "https://helldivers.wiki.gg/wiki/Dragonroach",
     "sourceRevision": 135097,
-    "note": "머리가 주요 치명 부위입니다. 날개 한쪽은 체력 1,500에 자연 감소하지 않는 추가 체력2,500이 있어 총4,000을 깎아야 합니다. 여러 부위 동시 폭발 피해는 합산하지 않습니다.",
+    "note": "머리가 주요 치명 부위입니다. 날개 한쪽은 체력 1,500에 자연 감소하지 않는 추가 체력 2,500이 있어 총 4,000을 깎아야 합니다. 여러 부위 동시 폭발 피해는 합산하지 않습니다.",
     "checkedAt": "2026-09-16",
     "anatomyRevision": 141512,
     "anatomyCheckedAt": "2026-11-08",
@@ -1148,7 +1148,7 @@ export const expandedEnemies = [
         "toMain": 30,
         "overflowCap": false,
         "effect": "kill",
-        "tip": "네 날개 중 같은 날개 한쪽을 계속 맞히세요. 총4,000을 소진하면 즉사하며 1,500만 깎고 기다리는 출혈 경로가 아닙니다.",
+        "tip": "네 날개 중 같은 날개 한쪽을 계속 맞히세요. 총 4,000을 소진하면 즉사하며 1,500만 깎고 기다리는 출혈 경로가 아닙니다.",
         "staticConstitution": 2500,
         "sourcePart": "Wings (4)"
       },
@@ -1188,7 +1188,7 @@ export const expandedEnemies = [
         "toMain": 60,
         "overflowCap": false,
         "effect": "kill",
-        "tip": "외부 조직이 제거되어 드러난 흉부 내부입니다. 실제 위키 기록상 장갑4·폭발저항100%를 적용하며 의도된 장갑2로 대체하지 않습니다.",
+        "tip": "외부 조직이 제거되어 드러난 흉부 내부입니다. 실제 위키 기록상 장갑 4·폭발 저항 100%를 적용하며 의도된 장갑 2로 대체하지 않습니다.",
         "prerequisite": "흉부 내부 노출 후",
         "isolated": true,
         "sourcePart": "Thorax Innards"
@@ -1269,7 +1269,7 @@ export const expandedEnemies = [
     "faction": "테르미니드",
     "source": "https://helldivers.wiki.gg/wiki/Hive_Lord",
     "sourceRevision": 134950,
-    "note": "본체 체력150,000이며 모든 부위 내구도는0%입니다. 입이 열렸을 때 입 안쪽을 맞히거나, 장갑의 자연 감소하지 않는 추가 체력까지 깎아 살점을 드러내야 합니다.",
+    "note": "본체 체력 150,000이며 모든 부위 내구도는 0%입니다. 입이 열렸을 때 입 안쪽을 맞히거나, 장갑의 자연 감소하지 않는 추가 체력까지 깎아 살점을 드러내야 합니다.",
     "checkedAt": "2026-09-16",
     "anatomyRevision": 139241,
     "anatomyCheckedAt": "2026-10-22",
@@ -1308,7 +1308,7 @@ export const expandedEnemies = [
         "toMain": 50,
         "overflowCap": true,
         "effect": "break",
-        "tip": "머리 양옆의 턱 장갑입니다. 장갑6·본체전달50%이며 턱 파괴 자체는 즉사로 명시되지 않았습니다.",
+        "tip": "머리 양옆의 턱 장갑입니다. 장갑 6·본체 전달 50%이며 턱 파괴 자체는 즉사로 명시되지 않았습니다.",
         "sourcePart": "Jaws"
       },
       {
@@ -1334,7 +1334,7 @@ export const expandedEnemies = [
         "toMain": 10,
         "overflowCap": true,
         "effect": "armor",
-        "tip": "등의 같은 장갑판에 집중하세요. 체력15,000과 추가 체력35,000을 모두 소진한 뒤 살점을 공격합니다.",
+        "tip": "등의 같은 장갑판에 집중하세요. 체력 15,000과 추가 체력 35,000을 모두 소진한 뒤 살점을 공격합니다.",
         "staticConstitution": 35000,
         "next": {
           "id": "inner-flesh",
@@ -1346,7 +1346,7 @@ export const expandedEnemies = [
           "toMain": 100,
           "overflowCap": true,
           "effect": "break",
-          "tip": "벗겨진 장갑 아래 살점을 맞히세요. 장갑 2·내구 0%·본체 전달 100%이며, 위키에서 폭발 피해를 받지 않는 조직으로 설명합니다.",
+          "tip": "벗겨진 장갑 아래 살점을 맞히세요. 장갑 2·내구 0%·본체 전달 100%이며, 위키는 폭발 피해를 받지 않는 조직으로 설명합니다.",
           "sourcePart": "Inner Flesh (6)"
         },
         "sourcePart": "Dorsal Plate Armor (6)"
@@ -1361,7 +1361,7 @@ export const expandedEnemies = [
         "toMain": 10,
         "overflowCap": true,
         "effect": "armor",
-        "tip": "몸통의 같은 흉판을 노리세요. 체력15,000과 추가 체력35,000을 모두 깎아야 장갑이 제거됩니다.",
+        "tip": "몸통의 같은 흉판을 노리세요. 체력 15,000과 추가 체력 35,000을 모두 깎아야 장갑이 제거됩니다.",
         "staticConstitution": 35000,
         "next": {
           "id": "inner-flesh",
@@ -1373,7 +1373,7 @@ export const expandedEnemies = [
           "toMain": 100,
           "overflowCap": true,
           "effect": "break",
-          "tip": "벗겨진 장갑 아래 살점을 맞히세요. 장갑 2·내구 0%·본체 전달 100%이며, 위키에서 폭발 피해를 받지 않는 조직으로 설명합니다.",
+          "tip": "벗겨진 장갑 아래 살점을 맞히세요. 장갑 2·내구 0%·본체 전달 100%이며, 위키는 폭발 피해를 받지 않는 조직으로 설명합니다.",
           "sourcePart": "Inner Flesh (6)"
         },
         "sourcePart": "Sterna Plate Armor (6)"
@@ -1388,7 +1388,7 @@ export const expandedEnemies = [
         "toMain": 10,
         "overflowCap": true,
         "effect": "armor",
-        "tip": "가장 아래 흉판은 체력20,000과 추가 체력35,000으로 합계55,000입니다. 다른50,000짜리 판과 구분하세요.",
+        "tip": "가장 아래 흉판은 체력 20,000과 추가 체력 35,000으로 합계 55,000입니다. 다른 50,000짜리 판과 구분하세요.",
         "staticConstitution": 35000,
         "next": {
           "id": "inner-flesh",
@@ -1400,7 +1400,7 @@ export const expandedEnemies = [
           "toMain": 100,
           "overflowCap": true,
           "effect": "break",
-          "tip": "벗겨진 장갑 아래 살점을 맞히세요. 장갑 2·내구 0%·본체 전달 100%이며, 위키에서 폭발 피해를 받지 않는 조직으로 설명합니다.",
+          "tip": "벗겨진 장갑 아래 살점을 맞히세요. 장갑 2·내구 0%·본체 전달 100%이며, 위키는 폭발 피해를 받지 않는 조직으로 설명합니다.",
           "sourcePart": "Inner Flesh (6)"
         },
         "sourcePart": "Lower Sterna Plate Armor"
@@ -1415,7 +1415,7 @@ export const expandedEnemies = [
         "toMain": 25,
         "overflowCap": true,
         "effect": "break",
-        "tip": "머리 최상단의 매우 단단한 왕관입니다. 장갑10·폭발저항100%로 대부분의 직격 무기가 관통하지 못합니다.",
+        "tip": "머리 최상단의 매우 단단한 왕관입니다. 장갑 10·폭발 저항 100%로 대부분의 직격 무기가 관통하지 못합니다.",
         "sourcePart": "Crown"
       },
       {
@@ -2294,7 +2294,7 @@ export const expandedEnemies = [
     "faction": "오토마톤",
     "source": "https://helldivers.wiki.gg/wiki/War_Strider",
     "sourceRevision": 135195,
-    "note": "눈·후방 방열판·고관절이 치명 부위입니다. 눈과 고관절은 폭발 피해를 받지 않으며, 다리 뒤 정강이 장갑은 별도 장갑5 부위입니다.",
+    "note": "눈·후방 방열판·고관절이 치명 부위입니다. 눈과 고관절은 폭발 피해를 받지 않으며, 다리 뒤 정강이 장갑은 별도 장갑 5 부위입니다.",
     "checkedAt": "2026-09-16",
     "anatomyRevision": 139410,
     "anatomyCheckedAt": "2026-10-22",
@@ -2333,7 +2333,7 @@ export const expandedEnemies = [
         "toMain": 50,
         "overflowCap": true,
         "effect": "kill",
-        "tip": "몸통과 다리가 연결되는 관절을 직접 노리세요. 장갑3이지만 폭발 피해에는 면역입니다.",
+        "tip": "몸통과 다리가 연결되는 관절을 직접 노리세요. 장갑 3이지만 폭발 피해에는 면역입니다.",
         "constitution": 0,
         "sourcePart": "Hip Joints (2)"
       },
@@ -2389,7 +2389,7 @@ export const expandedEnemies = [
         "toMain": 80,
         "overflowCap": true,
         "effect": "kill",
-        "tip": "다리 본체를 노리세요. 뒤쪽의 장갑5 정강이 덮개는 다른 부위입니다.",
+        "tip": "다리 본체를 노리세요. 뒤쪽의 장갑 5 정강이 덮개는 다른 부위입니다.",
         "constitution": 0,
         "sourcePart": "Legs (2)"
       },
@@ -2495,7 +2495,7 @@ export const expandedEnemies = [
     "faction": "오토마톤",
     "source": "https://helldivers.wiki.gg/wiki/Shredder_Tank",
     "sourceRevision": 135130,
-    "note": "포탑 체력2,100과 차체 체력4,000은 독립된 본체 풀입니다. 후방 엔진과 포탑 약점도 서로 다른 부위입니다.",
+    "note": "포탑 체력 2,100과 차체 체력 4,000은 독립된 본체 풀입니다. 후방 엔진과 포탑 약점도 서로 다른 부위입니다.",
     "checkedAt": "2026-09-16",
     "anatomyRevision": 139871,
     "anatomyCheckedAt": "2026-10-22",
@@ -2658,7 +2658,7 @@ export const expandedEnemies = [
     "faction": "오토마톤",
     "source": "https://helldivers.wiki.gg/wiki/Barrager_Tank",
     "sourceRevision": 135332,
-    "note": "포탑 체력2,100과 차체 체력4,000은 독립된 본체 풀입니다. 후방 엔진과 포탑 약점도 서로 다른 부위입니다.",
+    "note": "포탑 체력 2,100과 차체 체력 4,000은 독립된 본체 풀입니다. 후방 엔진과 포탑 약점도 서로 다른 부위입니다.",
     "checkedAt": "2026-09-16",
     "anatomyRevision": 139879,
     "anatomyCheckedAt": "2026-10-22",
@@ -2821,7 +2821,7 @@ export const expandedEnemies = [
     "faction": "오토마톤",
     "source": "https://helldivers.wiki.gg/wiki/Factory_Strider",
     "sourceRevision": 135134,
-    "note": "눈과 머리 살점은 장갑4 치명 부위입니다. 복부 문·노출된 회로·다리 연결부의 0/s 추가 체력은 자연 감소하지 않으므로 끝까지 깎아야 합니다.",
+    "note": "눈과 머리 살점은 장갑 4 치명 부위입니다. 복부 문·노출된 회로·다리 연결부의 0/s 추가 체력은 자연 감소하지 않으므로 끝까지 깎아야 합니다.",
     "checkedAt": "2026-09-16",
     "anatomyRevision": 139888,
     "anatomyCheckedAt": "2026-10-31",
@@ -3257,7 +3257,7 @@ export const expandedEnemies = [
         "toMain": 75,
         "overflowCap": false,
         "effect": "kill",
-        "tip": "오른다리는 본체 전달율75%로 왼다리와 다릅니다.",
+        "tip": "오른다리는 본체 전달률 75%로 왼다리와 다릅니다.",
         "constitution": 0,
         "sourcePart": "Right Leg"
       },
@@ -3388,7 +3388,7 @@ export const expandedEnemies = [
         "toMain": 100,
         "overflowCap": false,
         "effect": "kill",
-        "tip": "골반과 왼다리 공유 부위로 전달율100%입니다.",
+        "tip": "골반과 왼다리 공유 부위로 전달률 100%입니다.",
         "constitution": 0,
         "sourcePart": "Pelvis and Left Leg"
       },
@@ -3402,7 +3402,7 @@ export const expandedEnemies = [
         "toMain": 75,
         "overflowCap": false,
         "effect": "kill",
-        "tip": "오른다리의 전달율은75%로 반대쪽과 다릅니다.",
+        "tip": "오른다리의 전달률은 75%로 반대쪽과 다릅니다.",
         "constitution": 0,
         "sourcePart": "Right Leg"
       },
@@ -3711,7 +3711,7 @@ export const expandedEnemies = [
         "toMain": 100,
         "overflowCap": true,
         "effect": "break",
-        "tip": "장갑3 몸통 덮개 하나를 노립니다. 전달 상한이 있어 부위 체력 이상의 공격을 그대로 본체에 더하지 않습니다.",
+        "tip": "장갑 3 몸통 덮개 하나를 노립니다. 전달 상한이 있어 부위 체력 이상의 공격을 그대로 본체에 더하지 않습니다.",
         "constitution": 0,
         "sourcePart": "Torso Flaps (2)"
       },
@@ -3725,7 +3725,7 @@ export const expandedEnemies = [
         "toMain": 50,
         "overflowCap": true,
         "effect": "break",
-        "tip": "궤도 위쪽 고정부 한 곳을 노리세요. 본체 전달율50%입니다.",
+        "tip": "궤도 위쪽 고정부 한 곳을 노리세요. 본체 전달률 50%입니다.",
         "constitution": 0,
         "sourcePart": "Trackpod Latches (4)"
       },

@@ -143,7 +143,7 @@ export const armorPassives = [
     "icon": "Peak Physique Armor Passive Icon.svg",
     "effects": [
       {"name":"근접 공격 대미지가 40% 증가합니다.","en":"Increases melee damage by 40%."},
-      {"name":"무기 취급 능력이 향상되어 무기 움직임에 휘둘리지 않습니다.","en":"Improves weapons handling with less drag on weapon movement.","exact":"인체공학 +30","exactEn":"Ergonomics +30"}
+      {"name":"무기의 인체공학 설계를 개선하여 무기 이동 시 항력을 줄입니다.","en":"Improves weapons handling with less drag on weapon movement.","exact":"인체공학 +30","exactEn":"Ergonomics +30"}
     ],
     "source": "https://helldivers.wiki.gg/wiki/Peak_Physique",
     "revision": 140551,

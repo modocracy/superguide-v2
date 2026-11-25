@@ -2795,7 +2795,7 @@
   ],
   "tactics": [
    {
-    "ko": "빠르고 물어서 독을 거니 거리를 유지하세요. 독에 걸리면 느려지고 질주할 수 없어 다른 녹셔스 적이 따라붙어 독을 더 겁니다.",
+    "ko": "빠르고 물면 독에 걸리니 거리를 유지하세요. 독에 걸리면 느려지고 질주할 수 없어, 다른 녹셔스 적이 따라붙으면 독이 더 쌓입니다.",
     "en": "It is fast and its bite poisons you, so keep your distance. Poison slows you and stops you sprinting, letting other Noxious Terminids catch up and stack more poison."
    },
    {
@@ -3288,7 +3288,7 @@
     "en": "Appears from Difficulty 1 as the target of the Eliminate Devastators mission."
    },
    {
-    "ko": "난이도 4부터 거대 데버스테이터와 함께 데버스테이터을 대신해 나올 확률이 생기고, 난이도가 높을수록 확률이 오릅니다. 봇 투하·순찰대로 나오고, 오토마톤 전초기지·임무 목표·소규모 관심 지점을 지킵니다.",
+    "ko": "난이도 4부터 거대 데버스테이터와 함께 데버스테이터를 대신해 나올 확률이 생기고, 난이도가 높을수록 확률이 오릅니다. 봇 투하·순찰대로 나오고, 오토마톤 전초기지·임무 목표·소규모 관심 지점을 지킵니다.",
     "en": "Starting at Difficulty 4, it and the Heavy Devastator can replace regular Devastators, more often at higher difficulties. Comes from Bot Drops and patrols, and guards Automaton Outposts, Objectives and Minor Places of Interest."
    }
   ],
