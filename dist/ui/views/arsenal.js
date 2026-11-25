@@ -292,9 +292,10 @@ function firingModesBlock(item, expanded = false) {
   const modeRows = mode => html`<dl class="detail-grid">${mode.rows.map(row => html`<div><dt>${row.label}</dt><dd class="${/\d/.test(row.value) ? '' : 'dim'}">${row.value}${row.unit ? html`<small>${unit(row.unit)}</small>` : ''}</dd>${row.caption ? html`<div class="caption">${row.caption}</div>` : ''}</div>`)}</dl>
     ${mode.note ? html`<p class="variant-note">${mode.note}</p>` : ''}`;
   const note = item.firingModesNote ? html`<p class="variant-note">${item.firingModesNote}</p>` : '';
-  if (expanded) return html`${detailModeList(L('사격 모드', 'Firing modes'), modes.map(mode => ({ name: mode.name, content: modeRows(mode) })))}${note}`;
+  // Called the firing mode, like the mode tabs, with the weapon wheel's icons (user request 2026-11-25).
+  if (expanded) return html`${detailModeList(L('발사 모드', 'Firing mode'), modes.map(mode => ({ name: html`${modeIcon(`arsenal/${item.id}`, mode.id)}${mode.name}`, content: modeRows(mode) })))}${note}`;
   return html`<div class="firing-modes" data-fire-modes>
-    <div class="variant-tabs"><h3>${L('모드', 'Mode')}</h3><div class="segmented" role="group" aria-label="${L('모드 선택', 'Mode')}">${modes.map((m, i) => html`<button type="button" data-fire-mode="${m.id}" aria-pressed="${String(!i)}">${m.name}</button>`)}</div></div>
+    <div class="variant-tabs"><h3>${L('발사 모드', 'Firing mode')}</h3><div class="segmented" role="group" aria-label="${L('모드 선택', 'Mode')}">${modes.map((m, i) => html`<button type="button" data-fire-mode="${m.id}" aria-pressed="${String(!i)}">${modeIcon(`arsenal/${item.id}`, m.id)}${m.name}</button>`)}</div></div>
     ${modes.map((m, i) => html`<div class="variant-panel" data-fire-mode-panel="${m.id}" ${i ? raw('hidden') : ''}>${modeRows(m)}</div>`)}
     ${note}
   </div>`;

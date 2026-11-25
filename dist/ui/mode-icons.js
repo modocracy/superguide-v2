@@ -1,8 +1,8 @@
 // Small icons for the firing mode tabs, redrawn after the in-game weapon wheel (the wiki's weapon wheel screenshots,
 // e.g. File:AC-8_Autocannon_WW.png, File:AR-11_Arbitrator_WW.png; user request 2026-11-25). One colour
 // (currentColor), so they follow the button's text in both themes and when picked. No icon where the wiki has no
-// screenshot (exosuits, SEAF Artillery), where the wheel shows none (Epoch), or where its modes are not the site's
-// tabs (Airburst Rocket Launcher: Cluster / Flak in game, rocket / bomblet on the site).
+// screenshot (exosuits, SEAF Artillery) or where the wheel shows none (Epoch). The Airburst Rocket Launcher's and the
+// W.A.S.P.'s wheel modes (Cluster / Flak, Burst / Artillery) mark their firing mode block, not their stat tabs.
 import { raw } from './dom.js';
 
 // A round pointing right: body from x, w long, h tall, with a half-ellipse nose of length n.
@@ -49,6 +49,12 @@ const ICONS = {
   // three standing rounds for the machine guns, each over a base line.
   shellUp: fill('M9.5 7.5L12 3l2.5 4.5V19h-5zM8.5 20.5h7V22h-7z'),
   roundsUp: fill(['M4.5 9L6.5 5l2 4v10h-4z', 'M10 9l2-4 2 4v10h-4z', 'M15.5 9l2-4 2 4v10h-4z'].join('') + 'M4 20.5h16V22H4z'),
+  // CLUSTER: a broken ring with a centre and two crossing lines.
+  cluster: '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="7" stroke-dasharray="6.5 4.5"/><path d="M5 3l13 17M19 3L7.5 18"/></g><circle cx="12" cy="12.5" r="2.6"/>',
+  // Burst (W.A.S.P.): three rockets on a rail.
+  rockets: fill(`M2.5 3h1.6v18H2.5z${[4, 10.25, 16.5].map(y => `M4.1 ${y + 0.6}h2.4v2.3H4.1z${round(6.5, y, 15.5, 3.5, 4)}`).join('')}`),
+  // Artillery (W.A.S.P.): a shot coming down onto a burst on the ground.
+  artillery: fill(`M11.2 1h1.6v10.5h-1.6z${star(12, 16, 6.5, 2.6, 10)}M2.5 21h19v1.6h-19z`),
   // Unsafe: a round with speed lines behind it.
   unsafe: fill(`M1.5 8.5h1.4v7H1.5zM4.2 8.5h1.4v7H4.2zM6.9 8.5h1.4v7H6.9z${round(9.5, 9, 13, 6, 6)}`),
 };
@@ -68,6 +74,9 @@ const MODES = {
   'arsenal/recoilless': { heat: 'heat', he: 'burst' },
   'arsenal/railgun': { safe: 'round', 'unsafe-max': 'unsafe' },
   'arsenal/bastion': { main: 'shellUp', coax: 'roundsUp' },
+  // Firing mode blocks (item.firingModes).
+  'arsenal/airburst-launcher': { cluster: 'cluster', flak: 'jet' },
+  'arsenal/wasp': { burst: 'rockets', artillery: 'artillery' },
   'arsenal/maelstrom': { missile: 'shellUp', gatling: 'roundsUp' },
 };
 

@@ -225,7 +225,7 @@ ok(embeddedWeapon.includes('href="#/gear/arbitrator?m=underbarrel"'), 'full-page
   eq((oneTwo.match(/class="item-detail-mode"/g) || []).length, personalProfiles['one-two'].modes.length, 'weapon shows every mode');
   eq((recoilless.match(/class="item-detail-mode"/g) || []).length, stratagemById.get('recoilless').variants.length, 'stratagem shows every mode');
   const airburstItem = stratagemById.get('airburst-launcher');
-  eq([...airburst.matchAll(/class="item-detail-mode"><h4>([^<]+)<\/h4>/g)].map(match => match[1]),
+  eq([...airburst.matchAll(/class="item-detail-mode"><h4>(?:<svg class="mode-icon"[\s\S]*?<\/svg>)?([^<]+)<\/h4>/g)].map(match => match[1]),
     [...airburstItem.variants.map(mode => mode.tab || mode.name), ...airburstItem.firingModes.map(mode => mode.name)],
     'stratagem shows every damage component and firing mode');
   ok(recoilless.includes('<h3>행성 조건과 함선 모듈에 따른 변화</h3>'), 'planet and ship changes are already visible');
@@ -270,7 +270,7 @@ if (caltrops) {
   ok(withModes.length > 0, 'some stratagems have firing modes');
   for (const item of withModes) {
     const content = String(stratagemDetail(item));
-    eq([...content.matchAll(/data-fire-mode="([^"]+)" aria-pressed="(\w+)">([^<]+)/g)].map(m => [m[1], m[2], m[3]]),
+    eq([...content.matchAll(/data-fire-mode="([^"]+)" aria-pressed="(\w+)">(?:<svg class="mode-icon"[\s\S]*?<\/svg>)?([^<]+)/g)].map(m => [m[1], m[2], m[3]]),
       item.firingModes.map((m, i) => [m.id, String(!i), m.name]), `${item.id}: one button per firing mode, first selected`);
     for (const [i, m] of item.firingModes.entries()) {
       const panel = content.split(`data-fire-mode-panel="${m.id}"`)[1]?.split('data-fire-mode-panel=')[0] ?? '';
@@ -441,7 +441,9 @@ try {
   const { personalWeapons } = await import('../dist/data/personal-weapons.js');
   for (const [key, modes] of Object.entries(modeIconKeys)) {
     const [kind, id] = key.split('/');
-    const known = kind === 'gear' ? personalProfiles[id]?.modes.map(m => m.id) : stratagems.find(s => s.id === id)?.variants?.map(v => v.id);
+    const strat = stratagems.find(s => s.id === id);
+    // A stratagem's icons mark its stat tabs (variants) or its firing mode block (firingModes).
+    const known = kind === 'gear' ? personalProfiles[id]?.modes.map(m => m.id) : (Object.keys(modes).every(m => strat?.firingModes?.some(f => f.id === m)) ? strat.firingModes : strat?.variants)?.map(v => v.id);
     ok(known?.length > 1, `${key}: has firing modes`);
     for (const mode of Object.keys(modes)) ok(known.includes(mode), `${key}: mode ${mode} exists`);
     const item = kind === 'gear' ? personalWeapons.find(w => w.id === id) : stratagems.find(s => s.id === id);
