@@ -504,6 +504,10 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .sheet-body:has(> .wb-workspace) { overflow: hidden; }
 .sheet-top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; background: color-mix(in srgb, var(--bg-raise) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .sheet-top span { font: 700 13px/1 var(--cond); letter-spacing: .14em; color: var(--accent-text); text-transform: uppercase; }
+/* The mode tabs' copy in the top bar (item-detail.js stickyModes): compact, next to the close button. */
+.sheet-top .sheet-top-modes { margin-left: auto; padding: 2px; }
+.sheet-top .sheet-top-modes button { padding: 4px 9px; font-size: 12.5px; }
+@media (max-width: 560px) { .sheet-top.has-modes > span { display: none; } }
 .sheet-content { padding: 20px 20px 40px; display: grid; gap: 20px; }
 .detail-id { display: flex; gap: 14px; align-items: center; }
 .detail-id h2 { font-size: 24px; font-weight: 800; }

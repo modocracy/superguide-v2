@@ -114,6 +114,33 @@ export function openItemSheet(ctx, state, content, { label, keepScroll = false }
   });
   if (previousPanel) restorePanel(body, previousPanel);
   if (toggleFocused) $('[data-item-detail-toggle]', body)?.focus({ preventScroll: true });
+  stickyModes(body);
+}
+
+// Once the mode tabs (Main barrel / Underbarrel ...) scroll out of sight, a copy of them shows in the sheet's top bar,
+// left of the close button (user request 2026-11-25). The copy's buttons carry the same data-variant, so a click on
+// either picks the mode and selectItemVariant keeps both pressed alike.
+let unwireModes = null;
+function stickyModes(body) {
+  unwireModes?.();
+  unwireModes = null;
+  const tabs = $('.variant-tabs .segmented', body), top = $('.sheet-top', body);
+  if (!tabs || !top) return;
+  const copy = tabs.cloneNode(true);
+  copy.classList.add('sheet-top-modes');
+  copy.hidden = true;
+  (top.querySelector('[data-close]') ?? top.lastElementChild).before(copy);
+  // Shown once the tabs have gone up under the top bar, checked on scroll (one check per frame).
+  let frame = 0;
+  const check = () => {
+    frame = 0;
+    const hide = tabs.getBoundingClientRect().bottom > top.getBoundingClientRect().bottom;
+    if (hide !== copy.hidden) { copy.hidden = hide; top.classList.toggle('has-modes', !hide); }
+  };
+  const onScroll = () => { frame ||= requestAnimationFrame(check); };
+  body.addEventListener('scroll', onScroll, { passive: true });
+  unwireModes = () => { body.removeEventListener('scroll', onScroll); cancelAnimationFrame(frame); };
+  check();
 }
 
 export function selectItemVariant(state, variant) {
