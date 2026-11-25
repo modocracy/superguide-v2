@@ -668,11 +668,12 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 /* Recoil simulation (recoil-sim.js). */
 .recoil-group .recoil-sim { margin-top: 6px; }
 .recoil-sim h5 { font-size: 13px; font-weight: 750; color: var(--text-2); margin: 0; }
-.recoil-sim { display: grid; gap: 10px; }
-.recoil-sim-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.recoil-sim { display: grid; gap: 10px; grid-template-areas: 'side' 'view' 'notes'; }
+.recoil-sim-side { grid-area: side; display: grid; gap: 10px; align-content: start; }
+.recoil-sim-notes { grid-area: notes; display: grid; gap: 10px; align-content: start; }
 .recoil-sim-option { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
 .recoil-sim-option > span { min-width: 64px; font-size: 13px; font-weight: 650; color: var(--text-2); }
-.recoil-sim-view { width: 100%; max-width: 320px; aspect-ratio: 1; background: var(--field); border: 1px solid var(--line-strong); }
+.recoil-sim-view { grid-area: view; width: 100%; max-width: 320px; aspect-ratio: 1; background: var(--field); border: 1px solid var(--line-strong); }
 .recoil-sim-view .grid path { stroke: var(--line); stroke-width: 1; }
 .recoil-sim-view .hits circle { fill: var(--bleed); }
 .recoil-sim-view .trail { fill: none; stroke: var(--break); stroke-width: 1.2; stroke-linejoin: round; opacity: .45; }
@@ -695,6 +696,8 @@ section.ballistic-block .ballistic > .detail-grid {
 section.ballistic-block .ballistic > .detail-grid > div:nth-child(2n) { border-right: 0; }
 section.ballistic-block .ballistic > .ballistic-charts { padding: 18px; }
 section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
+section.ballistic-block .recoil-group > .detail-grid { border-bottom: 1px solid var(--line); }
+section.ballistic-block .recoil-group > .recoil-sim { margin: 0; padding: 18px; }
 @media (min-width: 900px) {
   section.ballistic-block .ballistic { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: stretch; }
   section.ballistic-block .ballistic > h4 { grid-column: 1 / -1; margin-bottom: -18px; }
@@ -704,6 +707,10 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
   section.ballistic-block .ballistic > .detail-grid > div:nth-child(4n) { border-right: 0; }
   section.ballistic-block .ballistic > .ballistic-charts { grid-column: 1; padding: 0 0 18px 18px; align-content: stretch; }
   section.ballistic-block .ballistic > .compare-scroll { grid-column: 2; margin: 0 18px 18px 0; align-self: start; }
+  /* The recoil card keeps one column (its own layout is inside the simulation). */
+  section.ballistic-block .ballistic.recoil-group { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  section.ballistic-block .ballistic.recoil-group > h4 { margin-bottom: 0; }
+  section.ballistic-block .recoil-sim { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); grid-template-areas: 'view side' 'view notes'; column-gap: 28px; align-items: start; }
 }
 .ballistic-chart { margin: 0; padding: 12px 12px 6px; border-radius: var(--radius); background: var(--bg-raise); border: 1px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; }
 .ballistic-chart figcaption { font-size: 12.5px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; }
