@@ -1259,7 +1259,7 @@
     "en": "Its 4 thrusters are the weak points. Destroying any one brings it down, often onto its own cargo, where it explodes."
    },
    {
-    "ko": "아래에 매달린 오토마톤은 내리기 전과 내리는 동안에도 공격할 수 있습니다. 드롭십이 떠나기 전에 추진기 하나에 여러 발을 맞히기보다, 유탄 발사기처럼 폭발 피해가 큰 무기로 매달린 오토마톤을 노리는 편이 나을 수 있습니다.",
+    "ko": "아래에 매달린 오토마톤은 내리기 전과 내리는 동안에도 공격할 수 있습니다. 드롭십이 떠나기 전에 추진기 하나에 여러 발을 맞히려 하기보다, 유탄 발사기처럼 폭발 범위가 넓은 무기를 쓰는 편이 나을 수 있습니다.",
     "en": "The Automatons hanging under it can be damaged before and while they are dropped. High splash weapons like the Grenade Launcher can work better than trying to land several shots on one thruster before it leaves."
    },
    {
@@ -1538,7 +1538,7 @@
     "en": "The thrusters are its weakest parts. The Autocannon and Anti-Materiel Rifle bring it down with 2 shots to one thruster."
    },
    {
-    "ko": "레일건은 언세이프 모드로 완전히 충전하면 추진기에 1발, 동체에 2발로 격추합니다.",
+    "ko": "레일건은 안전 해제 모드로 완전히 충전하면 추진기에 1발, 동체에 2발로 격추합니다.",
     "en": "The Railgun brings it down with 1 fully charged unsafe-mode shot to a thruster, or 2 to the fuselage."
    },
    {
@@ -1552,7 +1552,7 @@
     "en": "The Missile Pistol locks on and downs it in one shot, and the W.A.S.P. Launcher chases it by itself. The Laser Cannon needs about 2 seconds on an engine."
    },
    {
-    "ko": "레일건은 언세이프 모드로 70%쯤 충전해도 엔진에 한 발입니다. 세이프 모드는 2발이 필요합니다.",
+    "ko": "레일건은 안전 해제 모드로 70%쯤 충전해도 엔진에 한 발입니다. 안전 모드는 2발이 필요합니다.",
     "en": "The Railgun downs it with one shot to an engine even at about 70% charge in unsafe mode. Safe mode needs 2 shots."
    }
   ]
@@ -2260,7 +2260,7 @@
   ],
   "tactics": [
    {
-    "ko": "주변에 사격해 제압하면 명중률이 떨어집니다. 재장전과 사격이 느려서 분대가 함께 싸우면 위험이 크게 줄어듭니다.",
+    "ko": "주변에 사격해 제압하면 명중률이 떨어집니다. 재장전과 사격이 느려서, 큰 교전에서는 이렇게 제압하면 위협이 크게 줄어듭니다.",
     "en": "Suppressing it with fire lowers its accuracy. Because it reloads and fires slowly, this greatly cuts its threat in group firefights."
    },
    {
@@ -3218,7 +3218,7 @@
     "en": "The Arc Thrower and K-9 stagger and hit several enemies at once, which makes them excellent against charging Radicals."
    },
    {
-    "ko": "본체 체력이 많지만, 폭발은 여러 부위에 함께 맞아 잘 통합니다.",
+    "ko": "본체 체력이 많지만, 폭발은 여러 부위에 한꺼번에 맞을 수 있습니다.",
     "en": "Its main body has a lot of health, but explosions can hit several of its parts at once."
    },
    {
@@ -3365,7 +3365,7 @@
   ],
   "tactics": [
    {
-    "ko": "주변에 사격해 제압하면 명중률이 떨어집니다. 재장전과 연사가 느려서 분대가 함께 싸우면 위험이 크게 줄어듭니다.",
+    "ko": "주변에 사격해 제압하면 명중률이 떨어집니다. 재장전과 연사가 느려서, 큰 교전에서는 이렇게 제압하면 위협이 크게 줄어듭니다.",
     "en": "Suppressing it with fire lowers its accuracy. Because it reloads and fires slowly, this greatly cuts its threat in group firefights."
    },
    {
@@ -4256,7 +4256,7 @@
   ],
   "tactics": [
    {
-    "ko": "눈과 후방 방열판은 치명 부위 가운데 체력이 가장 낮은 약점입니다. 언세이프 모드 레일건 1발이나 대물소총 3발로 눈 하나를 부술 수 있습니다.",
+    "ko": "눈과 후방 방열판은 치명 부위 가운데 체력이 가장 낮은 약점입니다. 안전 해제 모드 레일건 1발이나 대물소총 3발로 눈 하나를 부술 수 있습니다.",
     "en": "The eyes and the rear vent are its fatal parts with the least health. One unsafe-mode Railgun shot or 3 Anti-Materiel Rifle shots destroy an eye."
    },
    {

@@ -74,7 +74,7 @@ const voteless = (id, name, hp, headHp, forearmHp, upperArmHp, table, caps = { f
   parts: [
     part('head', '머리', headHp, 1, 0, 100, 100, true, 'kill', '몸통보다 체력이 낮은 머리를 직접 맞히세요.', { sourcePart: 'Head' }),
     part('forearm', '아래팔 한쪽', forearmHp, 0, 0, 100, 30, caps.forearm, 'break', '팔꿈치 아래의 팔 한쪽을 노리는 계산입니다. 팔 하나가 떨어져도 살아 있을 수 있습니다.', { sourcePart: 'Forearms (2)' }),
-    part('leg', '다리', 80, 0, 0, 100, 30, true, 'break', '다리를 끊어 쓰러뜨려도 기어와 공격할 수 있습니다. 확실히 끝내려면 머리를 노리세요.', { sourcePart: 'Legs' }),
+    part('leg', '다리', 80, 0, 0, 100, 30, true, 'break', '다리를 끊어 쓰러뜨려도 기어 와서 공격할 수 있습니다. 확실히 끝내려면 머리를 노리세요.', { sourcePart: 'Legs' }),
     part('upper-arm', '위팔 한쪽', upperArmHp, 0, 0, 100, 40, caps.upperArm, 'break', '팔꿈치 위의 팔 한쪽입니다. 떨어져도 바로 죽지 않지만 피해의 40%가 본체로 들어갑니다.', { constitution: 1000, sourcePart: 'Upper Arms (2)' }),
   ],
 });
@@ -303,7 +303,7 @@ const originalEnemies = [
   spewer('nursing-spewer', '너싱 스퓨어', 'Nursing_Spewer', 2, '노란 복부의 너싱 스퓨어 기준입니다.', 135086, 'nursing-spewer', { anatomyRevision: 141638 }),
   // Noxious Strain (patch 1.007.202). The wiki page is a work in progress and
   // states its anatomy is identical to the Caustic Spewer (revision 142006).
-  spewer('noxious-spewer', '녹셔스 스퓨어', 'Noxious_Spewer', 2, '녹셔스 변종의 스퓨어입니다. 빠르게 다가와 물어서 독을 걸고, 중거리에서는 거미줄을 뱉어 질주를 막습니다. 장갑이 없는 복부가 터지면 주변 헬다이버와 적을 모두 묶는 거미줄 폭발이 일어납니다. 위키 부위 표는 커스틱 스퓨어와 같다고 적혀 있고 위키 문서는 아직 작성 중입니다.', 142006, 'noxious-spewer', { anatomyRevision: 142006, anatomyCheckedAt: '2026-11-08' }),
+  spewer('noxious-spewer', '녹셔스 스퓨어', 'Noxious_Spewer', 2, '녹셔스 변종의 스퓨어입니다. 빠르게 다가와 물어 독에 걸리게 하고, 중거리에서는 거미줄을 뱉어 질주를 막습니다. 장갑이 없는 복부가 터지면 주변 헬다이버와 적을 모두 묶는 거미줄 폭발이 일어납니다. 위키 부위 표는 커스틱 스퓨어와 같다고 적혀 있고 위키 문서는 아직 작성 중입니다.', 142006, 'noxious-spewer', { anatomyRevision: 142006, anatomyCheckedAt: '2026-11-08' }),
   {
     id: 'stalker', name: '스토커', faction: '테르미니드', source: wiki('Stalker'), sourceRevision: 135091,
     main: main(800, 1, 50, 0),
@@ -665,7 +665,7 @@ export const weaponProfiles = {
   ]),
   'railgun': profile('Railgun', [
     shot('safe', '안전 모드 · 기본 충전', 600, 225, 5, 0, 0, { falloff: true }),
-    shot('unsafe-max', '불안전 모드 · 최대 피해 충전', 1500, 562, 5, 0, 0, { falloff: true }),
+    shot('unsafe-max', '안전 해제 모드 · 최대 피해 충전', 1500, 562, 5, 0, 0, { falloff: true }),
   ], '모드마다 충전 정도가 다릅니다. 덜 충전하면 피해가 줄고, 과충전으로 터지는 자폭은 빼고 계산합니다.'),
 };
 

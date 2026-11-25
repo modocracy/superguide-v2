@@ -538,7 +538,7 @@ export const expandedEnemies = [
     "faction": "테르미니드",
     "source": "https://helldivers.wiki.gg/wiki/Caustic_Charger",
     "sourceRevision": 135093,
-    "note": "머리는 즉사 부위이며 후방 복부 파괴는 출혈을 유발합니다. 포자 혹은 본체에 20%만 전달하며 폭발 피해를 받지 않습니다. 뒤쪽 복부 내구도는 100%로 일반 차저와 다릅니다.",
+    "note": "머리는 즉사 부위이며 후방 복부 파괴는 출혈을 유발합니다. 포자 혹 부위는 본체에 20%만 전달하며 폭발 피해를 받지 않습니다. 뒤쪽 복부 내구도는 100%로 일반 차저와 다릅니다.",
     "checkedAt": "2026-09-16",
     "anatomyRevision": 141980,
     "anatomyCheckedAt": "2026-11-08",
@@ -2240,7 +2240,7 @@ export const expandedEnemies = [
         "toMain": null,
         "overflowCap": null,
         "effect": "break",
-        "tip": "등의 제트팩을 부숴 점프를 막을 수 있습니다. 파괴 시 일어나는 후속 폭발·화염의 자해량과 주변 피해는 이 계산에서 제외합니다.",
+        "tip": "등의 제트팩을 부숴 점프를 막을 수 있습니다. 파괴 시 일어나는 후속 폭발·화염이 자신과 주변에 주는 피해는 이 계산에서 제외합니다.",
         "constitution": 0,
         "partOnly": true,
         "partOnlyNote": "독립 장치 자체의 파괴 기준입니다. 본체로 전달되는 피해와 후속 폭발에 의한 처치 횟수는 합산하지 않습니다.",
@@ -2347,7 +2347,7 @@ export const expandedEnemies = [
         "toMain": 70,
         "overflowCap": true,
         "effect": "kill",
-        "tip": "등 뒤 방열판을 직접 맞히세요. 일반 헐크와 달리 이 부위 장갑은4이고 폭발 면역입니다.",
+        "tip": "등 뒤 방열판을 직접 맞히세요. 일반 헐크와 달리 이 부위 장갑은 4이고 폭발 면역입니다.",
         "constitution": 0,
         "sourcePart": "Heatsink"
       },
@@ -2885,7 +2885,7 @@ export const expandedEnemies = [
         "toMain": 100,
         "overflowCap": false,
         "effect": "kill",
-        "tip": "배 아래 두 문 중 한쪽에 집중하세요. 서로 다른 문 피해를 합치지 않습니다. 체력 1,200과 자연감소 없는 추가 체력 1,200을 모두 깎는 조건입니다.",
+        "tip": "배 아래 두 문 중 한쪽에 집중하세요. 서로 다른 문 피해를 합치지 않습니다. 체력 1,200과 자연 감소하지 않는 추가 체력 1,200을 모두 깎는 조건입니다.",
         "constitution": 0,
         "staticConstitution": 1200,
         "sourcePart": "Belly Panels (2)"
@@ -2900,7 +2900,7 @@ export const expandedEnemies = [
         "toMain": 40,
         "overflowCap": true,
         "effect": "kill",
-        "tip": "장갑판 사이 노출된 연결부나 발목을 노리세요. 자연감소 없는 추가 체력 2,000을 포함해 실질 3,500 피해가 필요합니다.",
+        "tip": "장갑판 사이 노출된 연결부나 발목을 노리세요. 자연 감소하지 않는 추가 체력 2,000을 포함해 실제로는 3,500의 피해가 필요합니다.",
         "constitution": 0,
         "staticConstitution": 2000,
         "sourcePart": "Leg Assembly (4)"
@@ -2927,7 +2927,7 @@ export const expandedEnemies = [
           "toMain": 40,
           "overflowCap": true,
           "effect": "kill",
-          "tip": "장갑판 사이 노출된 연결부나 발목을 노리세요. 자연감소 없는 추가 체력 2,000을 포함해 실질 3,500 피해가 필요합니다.",
+          "tip": "장갑판 사이 노출된 연결부나 발목을 노리세요. 자연 감소하지 않는 추가 체력 2,000을 포함해 실제로는 3,500의 피해가 필요합니다.",
           "constitution": 0,
           "staticConstitution": 2000,
           "sourcePart": "Armor Broken: Leg Assembly (4) (Broken Leg Armor)"
@@ -2956,7 +2956,7 @@ export const expandedEnemies = [
           "toMain": 100,
           "overflowCap": false,
           "effect": "kill",
-          "tip": "같은 측면 장갑을 벗겨 노출된 내부를 계속 맞히세요. 추가 체력 1,200은 자연감소하지 않습니다.",
+          "tip": "같은 측면 장갑을 벗겨 노출된 내부를 계속 맞히세요. 추가 체력 1,200은 자연 감소하지 않습니다.",
           "constitution": 0,
           "staticConstitution": 1200,
           "sourcePart": "Armor Broken: Side Circuits (2) (Broken Side Armor)"
@@ -3215,7 +3215,7 @@ export const expandedEnemies = [
         "toMain": 100,
         "overflowCap": false,
         "effect": "kill",
-        "tip": "가슴 회로를 직접 노리세요. 개별 부위HP1,200보다 본체HP750이 전달 피해로 먼저 소진될 수 있습니다.",
+        "tip": "가슴 회로를 직접 노리세요. 부위 체력 1,200보다 본체 체력 750이 전달 피해로 먼저 소진될 수 있습니다.",
         "constitution": 0,
         "sourcePart": "Torso Circuits"
       },
@@ -3486,7 +3486,7 @@ export const expandedEnemies = [
           "total": 11240,
           "notes": [
             "몸통 덮개의 전달 상한은 폭발마다 초기화되지 않습니다. 한쪽당 총 500, 양쪽 총 1,000만 포함하므로 12,240이 아니라 11,240입니다.",
-            "가정이 모두 성립하면 부위 전달 피해만으로 본체 체력 9,000을 넘습니다. 모든 부위가 두 폭발에 동시에 맞는다는 뜻이나 실제 한 발 피해량을 보장하는 값은 아닙니다.",
+            "가정이 모두 성립하면 부위 전달 피해만으로 본체 체력 9,000을 넘습니다. 모든 부위가 두 폭발에 동시에 맞는다고 가정한 값이며, 실제 한 발 피해량을 보장하지 않습니다.",
             "폭발 면역 부위를 통한 본체 피해는 폭발마다 최대 한 번이며, 같은 폭발이 이미 본체에 피해를 줬다면 중복 적용하지 않습니다. 추가 2,500·1,500의 동시 성립 여부는 미확인이라 위 합계에 더하지 않았습니다.",
             "최대 피해 반경 밖의 부위, 피격되지 않은 부위, 이미 파괴된 덮개는 이 예시와 결과가 달라집니다. 이 계산만으로 평탄화기보다 한 발 처치가 더 안정적이라고 단정할 수 없습니다.",
             "본체 체력 소진과 즉시 파괴는 구분합니다. 위의 1발 처치 안내는 위키 전술 설명 기준이며, 이 합계는 출혈·폭발 시점까지 재현한 결과가 아닙니다."
@@ -3647,7 +3647,7 @@ export const expandedEnemies = [
         "toMain": 100,
         "overflowCap": false,
         "effect": "break",
-        "tip": "상부 뒤쪽3개 또는 하부 뒤쪽·바닥3개 중 하나를 직접 맞히세요. 해당 방열판 파괴 시 본체에 추가700피해가 들어갑니다.",
+        "tip": "상부 뒤쪽 3개 또는 하부 뒤쪽·바닥 3개 중 하나를 직접 맞히세요. 해당 방열판을 파괴하면 본체에 700 피해가 더 들어갑니다.",
         "constitution": 0,
         "destroyMainDamage": 700,
         "sourcePart": "Vents (6)"
@@ -3753,7 +3753,7 @@ export const expandedEnemies = [
         "toMain": null,
         "overflowCap": null,
         "effect": "kill",
-        "tip": "상부 또는 하부 방열판 3개를 모두 부수면 대응하는 해치가 열립니다. 열린 해치에 투척 수류탄을 넣으면 파괴되며, 오토캐넌·유탄발사기 같은 폭발탄은 이 조건에 해당하지 않습니다.",
+        "tip": "상부 또는 하부 방열판 3개를 모두 부수면 대응하는 해치가 열립니다. 열린 해치에 투척 수류탄을 넣으면 파괴되며, 오토캐넌·유탄 발사기 같은 폭발탄은 이 조건에 해당하지 않습니다.",
         "constitution": null,
         "unknownReason": "체력·내구도·폭발저항 수치가 없고 투척물만 적용되는 특수 처치 기믹입니다. 일반 지원무기 횟수 계산에서는 제외합니다.",
         "sourcePart": "Hatches (2)"
