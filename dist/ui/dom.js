@@ -66,7 +66,8 @@ const ICONS = {
   gloom: '<path d="M7 18.5h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.5-1A4.5 4.5 0 0 0 7 18.5z"/>',
   // Planet sub-tab buttons: a space station, weather, a mine, a warning sign, a landscape, a pulse line and a clock.
   'tab-conditions': '<path d="M7 15.5h10a3.5 3.5 0 0 0 .4-7 5.5 5.5 0 0 0-10.6-1A4 4 0 0 0 7 15.5z"/><path d="m9 18-1 2.5M13 18l-1 2.5M17 18l-1 2.5"/>',
-  'tab-modifiers': '<path d="M12 3.5 2.5 20h19z"/><path d="M12 10v4.5M12 17v.5"/>',
+  // Two arrows crossing upward, after the wiki's Generic Effect Icon (the one behind is faint).
+  'tab-modifiers': '<path opacity=".45" d="M8 21v-3.5c0-3.2 8-4.8 8-9.5V4M13 7l3-3 3 3"/><path d="M16 21v-3.5c0-3.2-8-4.8-8-9.5V4M5 7l3-3 3 3"/>',
   'tab-biomes': '<path d="m2.5 19.5 6-9 4 6 3-4 6 7z"/><circle cx="17" cy="6" r="2"/>',
   'tab-status': '<path d="M2.5 12h4l2-5 4 10 2.5-6 1.5 1h5"/>',
   'tab-time': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
