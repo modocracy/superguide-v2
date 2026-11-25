@@ -37,7 +37,7 @@ export function recoilStats(key) {
   if (!recoil) return [];
   const rocket = SELF_PROPELLED.has(key) ? L(' · 로켓이 스스로 날아가 반동이 거의 없는 것으로 보임', ' · the rocket flies on its own motor, so there is little kick (our reading)') : '';
   const pair = ([h, v]) => `${h} / ${v}`;
-  const limit = recoil.limit ? L(` · 위로 ${recoil.limit[0]}도부터 세로 반동 줄어듦`, ` · vertical kick eases off from ${recoil.limit[0]} degrees up`) : '';
+  const limit = recoil.limit ? L(` · 위로 ${recoil.limit[0]}도부터 수직 반동 줄어듦`, ` · vertical kick eases off from ${recoil.limit[0]} degrees up`) : '';
   return [
     { label: L('무기 반동', 'Weapon kick'), text: pair(recoil.drift), caption: L('수평 / 수직', 'Horizontal / vertical') + rocket },
     { label: L('화면 반동', 'View climb'), text: pair(recoil.climb), caption: L('수평 / 수직', 'Horizontal / vertical') + limit },
