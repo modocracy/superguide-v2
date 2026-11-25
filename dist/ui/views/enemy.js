@@ -225,7 +225,8 @@ const siteName = layer => layer.name.replace(/ → .*$/, '').replace(/ 한 ?(쪽
 function anatomyName(enemy, row) {
   if (lang === 'en') return row.name;
   if (row.role === 'main') return ANATOMY_NAMES[row.name] || '본체';
-  if (row.name === 'Shield') return enemy.shield?.kind === 'energy' ? '보호막' : '방패';
+  // An energy shield (also the Harvester's, whose shield data has no kind) is 보호막; an arm shield is 방패.
+  if (row.name === 'Shield') return enemy.shield?.kind === 'energy' || /energy|cockpit/i.test(enemy.anatomyOmitted?.Shield ?? '') ? '보호막' : '방패';
   const layer = anatomyLayer(enemy, row);
   return layer ? siteName(layer) : ANATOMY_NAMES[row.name] || row.name;
 }
