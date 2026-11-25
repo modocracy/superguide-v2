@@ -61,7 +61,7 @@ export function simulate(sim, scale) {
 
 const fmt = n => (Math.round(n * 10) / 10).toLocaleString();
 const SVG = 'http://www.w3.org/2000/svg';
-const C = SIZE / 2;
+const C = SIZE / 2, PIN_MARGIN = 17; // room for the + and its arrow inside the box
 // World point (degrees, up = positive) in the world group's own coordinates; the group moves with the view.
 const wx = x => C + x * PX, wy = y => C - y * PX;
 
@@ -84,19 +84,23 @@ class RecoilSim extends Base {
         <g class="world">
           <path class="trail" d=""/>
           <g class="hits"></g>
-          <path class="start" d="M${C - 6} ${C}h12M${C} ${C - 6}v12"/>
         </g>
+        <g class="start-pin" transform="translate(${C} ${C})"><path class="start" d="M-6 0h12M0 -6v12"/><path class="start-arrow" d="M15 0L9 -4L9 4Z" hidden/></g>
+        <text class="start-label" hidden></text>
         <path class="centre" d="M${C - 7} ${C}h14M${C} ${C - 7}v14"/>
         <circle class="reticle" cx="${C}" cy="${C}" r="6"/>
       </svg>
       <p class="recoil-sim-readout" aria-live="polite"></p>
       <p class="caption">${L(`최대 연사 속도(분당 ${fmt(this.sim.rpm)}발)로 ${shots}발 · 조준하고 멈춰 선 기준 · 칸 하나는 약 1°`, `${shots} rounds at the top fire rate (${fmt(this.sim.rpm)} RPM) · aimed, standing still · one square is about 1°`)}</p>
-      <p class="caption">${L('점 = 탄착, 선 = 총이 지나간 길, 원 = 총이 가리키는 곳, 십자 = 화면 가운데, 회색 + = 처음 조준한 곳. 반동 값과 자세 배율은 게임 자료이고, 한 발이 몇 도인지와 돌아오는 속도는 사이트 추정입니다. 화면을 직접 내리지 않는다고 보고 그렸습니다.',
-        'Dot = hit, line = the path the weapon took, circle = where the weapon points, cross = screen centre, grey + = where you first aimed. The recoil values and stance multipliers are game data; the degrees per shot and the recovery speed are our estimate. Drawn as if you do not pull the view down.')}</p>`;
+      <p class="caption">${L('점 = 탄착, 선 = 총이 지나간 길, 원 = 총이 가리키는 곳, 십자 = 화면 가운데, 회색 + = 처음 조준한 곳(화면 밖으로 나가면 가장자리에 붙고 화살표가 실제 방향을 가리킴). 반동 값과 자세 배율은 게임 자료이고, 한 발이 몇 도인지와 돌아오는 속도는 사이트 추정입니다. 화면을 직접 내리지 않는다고 보고 그렸습니다.',
+        'Dot = hit, line = the path the weapon took, circle = where the weapon points, cross = screen centre, grey + = where you first aimed (once off screen it stays on the edge, its arrow pointing the real way). The recoil values and stance multipliers are game data; the degrees per shot and the recovery speed are our estimate. Drawn as if you do not pull the view down.')}</p>`;
     this.world = this.querySelector('.world');
     this.trail = this.querySelector('.trail');
     this.hitLayer = this.querySelector('.hits');
     this.reticle = this.querySelector('.reticle');
+    this.pin = this.querySelector('.start-pin');
+    this.arrow = this.querySelector('.start-arrow');
+    this.label = this.querySelector('.start-label');
     this.out = this.querySelector('.recoil-sim-readout');
     this.querySelectorAll('[data-stance]').forEach(b => b.addEventListener('click', () => {
       this.stance = Number(b.dataset.stance);
@@ -113,6 +117,25 @@ class RecoilSim extends Base {
     this.world.setAttribute('transform', `translate(${(-vx * PX).toFixed(2)} ${(vy * PX).toFixed(2)})`);
     this.reticle.setAttribute('cx', (C + dx * PX).toFixed(2));
     this.reticle.setAttribute('cy', (C - dy * PX).toFixed(2));
+    this.placeStart(C - vx * PX, C + vy * PX, Math.hypot(vx, vy));
+  }
+
+  // The grey + (where you first aimed) stays in the box: once the view has moved it out, it sits on the edge with an
+  // arrow towards where it really is and how far that is from the screen centre (user request 2026-11-25).
+  placeStart(sx, sy, away) {
+    const x = clamp(sx, PIN_MARGIN, SIZE - PIN_MARGIN), y = clamp(sy, PIN_MARGIN, SIZE - PIN_MARGIN);
+    const off = x !== sx || y !== sy;
+    this.pin.setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)})`);
+    if (off !== this.off) { this.off = off; this.arrow.toggleAttribute('hidden', !off); this.label.toggleAttribute('hidden', !off); }
+    if (!off) return;
+    this.arrow.setAttribute('transform', `rotate(${(Math.atan2(sy - y, sx - x) * 180 / Math.PI).toFixed(1)})`);
+    // The label sits beside the pin, towards the middle, so it stays off the trail climbing above it.
+    const left = x > C;
+    this.label.setAttribute('text-anchor', left ? 'end' : 'start');
+    this.label.setAttribute('x', (left ? x - 12 : x + 12).toFixed(1));
+    this.label.setAttribute('y', (y + 4).toFixed(1));
+    const text = L(`처음 조준 ${fmt(away)}°`, `First aim ${fmt(away)}°`);
+    if (text !== this.label.textContent) this.label.textContent = text;
   }
 
   addHit(h) {
@@ -135,6 +158,7 @@ class RecoilSim extends Base {
     run.frames.forEach((f, i) => buf.set([f.view[0], f.view[1], f.drift[0], f.drift[1]], i * 4));
     const aim = i => [wx(buf[i * 4] + buf[i * 4 + 2]), wy(buf[i * 4 + 1] + buf[i * 4 + 3])];
     this.hitLayer.replaceChildren();
+    this.trail.setAttribute('d', '');
     this.out.textContent = '';
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       run.hits.forEach(h => this.addHit(h));
