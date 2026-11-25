@@ -260,7 +260,8 @@ function reloadCell(item) {
   const on = modulesOn();
   const v = key => on ? r[`${key}Upgraded`] ?? r[key] : r[key];
   const main = r.time != null ? 'time' : 'tactical';
-  // The base time and the module's cut are a sentence under the key stats (reloadModuleNote), not in the caption.
+  // The base time and the module's cut are a tooltip on the cell's label (reloadModuleNote, user request 2026-11-25),
+  // not in the caption.
   const parts = [
     !on ? L('함선 모듈 미적용', 'Without ship modules') : '',
     // Emptying first is faster on a heat weapon: an overheated heat sink pops out by itself (Laser Cannon).
@@ -271,7 +272,8 @@ function reloadCell(item) {
     r.assisted != null ? L(`동료가 장전하면 ${num(r.assisted)}초`, `${num(r.assisted)}s when a teammate loads it`) : r.assistedPerClip != null ? L(`동료가 장전하면 클립당 ${num(r.assistedPerClip)}초`, `${num(r.assistedPerClip)}s a clip when a teammate loads it`) : '',
     r.stationary ? L('정지 재장전', 'Stationary reload') : '',
   ].filter(Boolean).join(' · ');
-  return html`<div><dt>${L('재장전', 'Reload')}</dt><dd>${num(v(main))}<small>${s}</small></dd><div class="caption">${parts}</div></div>`;
+  const note = reloadModuleNote(item);
+  return html`<div><dt>${note ? tipLabel(L('재장전', 'Reload'), note) : L('재장전', 'Reload')}</dt><dd>${num(v(main))}<small>${s}</small></dd><div class="caption">${parts}</div></div>`;
 }
 
 // Fire rate from the wiki infobox, or the rates the player picks between.
@@ -458,11 +460,8 @@ function reloadModuleNote(item) {
   const cut = RELOAD_CUT;
   return L(`함선 모듈 업그레이드 시 재장전 시간이 ${num(r[main])}초에서 ${cut}% 감소합니다.`, `The ship module upgrade cuts the reload from ${num(r[main])}s by ${cut}%.`);
 }
-const statsWithEffects = (shown, cells, expanded = false) => {
-  // The force note is a tooltip on each effect cell's label (user request 2026-11-25).
-  const notes = [reloadModuleNote(shown)].filter(Boolean);
-  return html`${statGrid(shown, cells, expanded)}${notes.map(note => html`<p class="faint" style="font-size:12.5px;margin-top:8px">${note}</p>`)}`;
-};
+// The force note and the reload module note are tooltips on their cells' labels (user request 2026-11-25).
+const statsWithEffects = (shown, cells, expanded = false) => statGrid(shown, cells, expanded);
 
 // The detail grid: the card stats plus durable damage, ammo and fire rate (data-support.js), a support
 // weapon's ergonomics and sway (datamine) and the ship unlock (level and Requisition Slips, wiki infobox).
