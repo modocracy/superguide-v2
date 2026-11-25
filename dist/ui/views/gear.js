@@ -597,7 +597,7 @@ let modulesUi = null;
 async function renderModules() {
   const panel = $('#gear-modules', root);
   if (!modulesUi) {
-    render(panel, html`<p class="faint" style="padding:24px 0">${L('함선 모듈 목록을 불러오는 중...', 'Loading the ship modules...')}</p>`);
+    render(panel, html`<p class="faint" style="padding:24px 0">${L('함선 모듈 목록을 불러오는 중…', 'Loading the ship modules...')}</p>`);
     modulesUi = import('./gear-modules.js');
   }
   const module = await modulesUi;
