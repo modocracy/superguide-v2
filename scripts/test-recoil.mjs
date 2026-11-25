@@ -64,12 +64,14 @@ ok(detail.includes(`<dt>반동</dt><dd>${h} / ${v}</dd>`), `${sample.id}: gear d
 ok(!detail.includes('무기 반동') && !detail.includes('화면 반동'), `${sample.id}: only the armory screen recoil is shown`);
 ok(detail.indexOf('<dt>반동</dt>') > detail.indexOf('세부 수치'), `${sample.id}: recoil sits in the detailed stats, not the key stats`);
 ok(detail.includes(`<recoil-sim class="recoil-sim" data-key="gear/${sample.id}">`), `${sample.id}: gear detail has the recoil simulation`);
-// The recoil cell sits with the numbers of the first round; the simulation is its own card titled 'Recoil simulation'
-// after the rounds, also for a weapon with several rounds.
+ok(/<details class="block recoil-sim-block disclosure"><summary><h3>반동 시뮬레이션<\/h3><\/summary><recoil-sim/.test(detail), `${sample.id}: the simulation is a closed disclosure of its own`);
+// The recoil cell sits with the numbers of the first round; the simulation is its own disclosure after the detailed
+// stats, outside them, also for a weapon with several rounds.
 const { stratagemDetail } = await import('../dist/ui/views/arsenal.js');
 const groupOk = html => {
-  const cell = html.indexOf('<dt>반동</dt>'), card = html.indexOf('<div class="ballistic recoil-group"><h4>반동 시뮬레이션</h4><recoil-sim');
-  return cell >= 0 && card > cell && html.indexOf('<dt>반동</dt>', card) < 0 && html.lastIndexOf('<dt>각도별 관통</dt>', cell) >= 0;
+  const cell = html.indexOf('<dt>반동</dt>'), stats = html.indexOf('ballistic-block'), card = html.indexOf('<details class="block recoil-sim-block');
+  const statsEnd = html.lastIndexOf('</details>', card);
+  return cell > stats && card > cell && statsEnd > cell && html.indexOf('<dt>반동</dt>', card) < 0 && html.lastIndexOf('<dt>각도별 관통</dt>', cell) >= 0;
 };
 ok(groupOk(detail), `${sample.id}: the recoil cell is with the numbers and the simulation is its own card`);
 const autocannon = String(stratagemDetail(stratagems.find(s => s.id === 'autocannon')));
