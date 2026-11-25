@@ -40,6 +40,6 @@ export function recoilStats(key) {
   const limit = recoil.limit ? L(` · 위로 ${recoil.limit[0]}도부터 세로 반동 줄어듦`, ` · vertical kick eases off from ${recoil.limit[0]} degrees up`) : '';
   return [
     { label: L('무기 반동', 'Weapon kick'), text: pair(recoil.drift), caption: L('수평 / 수직', 'Horizontal / vertical') + rocket },
-    { label: L('화면 반동', 'View climb'), text: pair(recoil.climb), caption: L('가로 / 세로 · 화면이 올라가는 정도', 'Horizontal / vertical · how far the view climbs') + limit },
+    { label: L('화면 반동', 'View climb'), text: pair(recoil.climb), caption: L('수평 / 수직', 'Horizontal / vertical') + limit },
   ];
 }

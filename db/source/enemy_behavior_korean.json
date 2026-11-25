@@ -204,7 +204,7 @@
     "en": "From the front, even a hull penetration does not kill it in one shot because the hull has 4,000 health. Aim for the turret from the front."
    },
    {
-    "ko": "포탑이 나를 향하면 뒤 방열판이 반대쪽으로 돌아가 사실상 맞히기 어렵습니다.",
+    "ko": "포탑이 이쪽을 향하면 뒤 방열판이 반대쪽으로 돌아가 사실상 맞히기 어렵습니다.",
     "en": "Once the turret faces you, the rear vent turns away and is practically impossible to hit."
    }
   ]
@@ -237,7 +237,7 @@
     "en": "Most of it is armor 4, with only the rear heatsink at armor 3. Armor penetration 4 weapons such as the Autocannon and Laser Cannon destroy it from any angle, and anti-tank weapons need one shot."
    },
    {
-    "ko": "관통 3 무기는 뒤쪽 방열판만 상처를 내므로 뒤로 돌아가야 합니다. 관통 4 무기도 방열판을 쏘면 훨씬 빨리 부서집니다.",
+    "ko": "관통 3 무기는 뒤쪽 방열판에만 피해를 주므로 뒤로 돌아가야 합니다. 관통 4 무기도 방열판을 쏘면 훨씬 빨리 부서집니다.",
     "en": "Armor penetration 3 weapons can only damage the rear heatsink, so you have to get behind it. Armor penetration 4 weapons also destroy it much faster through the heatsink."
    },
    {
@@ -284,7 +284,7 @@
     "en": "Its jump pack can explode when damaged, killing the Assault Raider instantly and heavily damaging and burning nearby Automatons and Helldivers."
    },
    {
-    "ko": "엄폐한 적에게 수류탄을 던지며, 헬다이버를 발견하면 신호탄을 쏘아 봇 투하를 부를 수 있습니다.",
+    "ko": "엄폐한 적에게 수류탄을 던지며, 헬다이버를 발견하면 조명탄을 쏘아 봇 투하를 부를 수 있습니다.",
     "en": "Throws grenades at targets in cover, and can fire a flare to call a Bot Drop when it spots a Helldiver."
    }
   ],
@@ -508,7 +508,7 @@
     "en": "It has no ranged attack of its own, but like other Troopers it can man machine gun emplacements and throw grenades behind cover."
    },
    {
-    "ko": "헬다이버를 발견하면 신호탄을 쏘아 봇 투하를 부를 수 있습니다.",
+    "ko": "헬다이버를 발견하면 조명탄을 쏘아 봇 투하를 부를 수 있습니다.",
     "en": "Can fire a flare to call a Bot Drop when it spots a Helldiver."
    }
   ],
@@ -657,7 +657,7 @@
     "en": "Can burst in a spore explosion on death that damages anything nearby, but not every time."
    },
    {
-    "ko": "포자 살덩이는 어떤 무기로도 피해를 줄 수 있고 장갑도 차저·차저 베히모스보다 적지만, 여기에 준 피해는 20%만 본체 체력에 들어갑니다.",
+    "ko": "포자 살덩이는 어떤 무기로도 피해를 줄 수 있고 장갑도 차저·차저 베히모스보다 얇지만, 여기에 준 피해는 20%만 본체 체력에 들어갑니다.",
     "en": "Its spore flesh can be damaged by any weapon and it has less armor than Chargers and Charger Behemoths, but only 20% of damage there carries over to its main health."
    }
   ],
@@ -955,7 +955,7 @@
     "en": "Keeps its distance and backs off as you approach, swings its Heat Blade if you get too close, and throws grenades behind cover."
    },
    {
-    "ko": "헬다이버를 발견하면 신호탄을 쏘아 봇 투하를 부를 수 있습니다.",
+    "ko": "헬다이버를 발견하면 조명탄을 쏘아 봇 투하를 부를 수 있습니다.",
     "en": "Can fire a flare to call a Bot Drop when it spots a Helldiver."
    },
    {
@@ -1100,7 +1100,7 @@
   ],
   "tactics": [
    {
-    "ko": "체력이 매우 높고 피해를 받고 0.5초 뒤부터 헬멧과 머리를 뺀 모든 부위와 본체가 초당 30씩 회복하니 빨리 처리하세요. 무반동포나 멜타건 직격도 버티므로 한 발짜리 대전차 무기는 권하지 않습니다.",
+    "ko": "체력이 매우 높고, 피해를 받은 뒤 0.5초부터 헬멧과 머리를 뺀 모든 부위와 본체가 초당 30씩 회복하니 빨리 처리하세요. 무반동포나 멜타건 직격도 버티므로 한 발짜리 대전차 무기는 권하지 않습니다.",
     "en": "It has very high health, and 0.5s after taking damage every limb and its main health except the helmet and head regenerate 30 per second, so kill it quickly. It survives a direct hit from the Recoilless Rifle or Meltagun, so single-shot anti-tank weapons are a poor choice."
    },
    {
@@ -1108,7 +1108,7 @@
     "en": "Its low health armor 4 helmet breaks in 1 to 2 shots from armor penetration 4 or higher ballistic weapons like the Autocannon, Bolt Pistol and Railgun, then headshots kill it fast. The Railgun breaks the helmet with 1 Safe Mode shot."
    },
    {
-    "ko": "팔다리의 폭발 저항에도 폭발 무기에 약해서 테르밋 한 개나 C4 팩 한 개로 처치할 수 있습니다. 유탄 발사기, 공중폭발 로켓 발사기, W.A.S.P. 발사기도 매우 효과적입니다.",
+    "ko": "팔다리에 폭발 저항이 있어도 폭발 무기에 약해서 테르밋 한 개나 C4 팩 한 개로 처치할 수 있습니다. 유탄 발사기, 공중폭발 로켓 발사기, W.A.S.P. 발사기도 매우 효과적입니다.",
     "en": "Despite the explosive resistance on its limbs, it is weak to explosives; a single Thermite grenade or C4 Pack brick can kill it. The Grenade Launcher, Airburst Rocket Launcher and W.A.S.P. Launcher are also very effective."
    },
    {
@@ -1157,7 +1157,7 @@
     "en": "The stomach takes more damage but is a more consistent target, and putting enough fire into it kills the Devastator instantly."
    },
    {
-    "ko": "빨리 처치하기 어렵다면 퍼니셔 계열로 계속 쏴서 비틀거리게 하세요. 제대로 조준하지 못합니다. 오른팔의 포를 쏴서 떼어 내면 사실상 무력해집니다.",
+    "ko": "빨리 처치하기 어렵다면 퍼니셔 계열로 계속 쏴서 비틀거리게 하세요. 비틀거리는 동안은 제대로 조준하지 못합니다. 오른팔의 포를 쏴서 떼어 내면 사실상 무력해집니다.",
     "en": "If you can't kill it quickly, keep it staggered with Punisher variants so it can't aim properly. Shooting off its right arm cannon leaves it nearly helpless."
    },
    {
@@ -1174,7 +1174,7 @@
   "revision": 142362,
   "spawning": [
    {
-    "ko": "멀리서도 보이는 단독 순찰로만 나옵니다. 임무 목표나 관심 지점에 고정으로 배치되지 않고, 버그 출몰으로도 나오지 않습니다.",
+    "ko": "멀리서도 보이는 단독 순찰로만 나옵니다. 임무 목표나 관심 지점에 고정으로 배치되지 않고, 버그 출몰로도 나오지 않습니다.",
     "en": "Spawns only as a lone patrol visible from long range. It has no fixed spawns at Objectives or POIs and does not come from Bug Breaches."
    },
    {
@@ -1214,7 +1214,7 @@
     "en": "The head is armor 4 with 1,500 health. The Expendable Anti-Tank, Quasar Cannon and Recoilless Rifle kill it with one headshot, the Epoch and Commando need two, and the Railgun needs 3 shots charged past 85%."
    },
    {
-    "ko": "몸통(본체 체력 6,500)은 스피어 두 발이면 처치되지만, 일회성 대전차도 4발이 필요할 만큼 더 가벼운 무기로는 오래 걸립니다. 날개 쪽에서 쏘면 날개에 맞아 피해가 크게 줄어듭니다.",
+    "ko": "몸통(본체 체력 6,500)은 스피어 두 발이면 처치되지만, 일회성 대전차로도 4발이 필요해 그보다 약한 무기로는 오래 걸립니다. 날개 쪽에서 쏘면 날개에 맞아 피해가 크게 줄어듭니다.",
     "en": "Its body (6,500 main health) falls to two Spear hits, but lighter weapons take long: even the Expendable Anti-Tank needs 4 body hits. Shooting from the wing side tends to hit the wings for much less damage."
    },
    {
@@ -1259,7 +1259,7 @@
     "en": "Its 4 thrusters are the weak points. Destroying any one brings it down, often onto its own cargo, where it explodes."
    },
    {
-    "ko": "아래에 매달린 오토마톤은 내리기 전과 내리는 동안에도 공격할 수 있습니다. 유탄 발사기처럼 폭발 피해가 큰 무기가, 떠나기 전에 한 추진기에 여러 발을 맞히는 것보다 나을 수 있습니다.",
+    "ko": "아래에 매달린 오토마톤은 내리기 전과 내리는 동안에도 공격할 수 있습니다. 드롭십이 떠나기 전에 추진기 하나에 여러 발을 맞히기보다, 유탄 발사기처럼 폭발 피해가 큰 무기로 매달린 오토마톤을 노리는 편이 나을 수 있습니다.",
     "en": "The Automatons hanging under it can be damaged before and while they are dropped. High splash weapons like the Grenade Launcher can work better than trying to land several shots on one thruster before it leaves."
    },
    {
@@ -1410,7 +1410,7 @@
   ],
   "behavior": [
    {
-    "ko": "무권자, 오버시어과 함께 돌아다니거나 특정 구역을 지킵니다. SEAF 자산이나 헬다이버를 발견하면 거리에 따라 행동이 달라집니다.",
+    "ko": "무권자, 오버시어와 함께 돌아다니거나 특정 구역을 지킵니다. SEAF 자산이나 헬다이버를 발견하면 거리에 따라 행동이 달라집니다.",
     "en": "Wanders with Voteless and Overseers or guards certain areas. When it detects a SEAF asset or Helldiver, its behavior depends on distance."
    },
    {
@@ -1453,7 +1453,7 @@
   "revision": 140067,
   "spawning": [
    {
-    "ko": "일루미닛의 적임자 세력에 속해 적임자가 있는 행성에서만 나오며, 난이도 4 이상부터 나옵니다.",
+    "ko": "일루미닛의 적임자 세력에 속해 적임자가 있는 행성에서만 나오며, 난이도 4부터 나옵니다.",
     "en": "Part of the Illuminate Appropriators subfaction; spawns only on Appropriators planets, at Difficulty 4 and above."
    }
   ],
@@ -1477,7 +1477,7 @@
   ],
   "tactics": [
    {
-    "ko": "멀리 머물며 넓은 범위에 큰 피해를 주고 사람을 날려 보내는 충전 플라스마 포격과, 예고 뒤 천천히 따라오는 연속 사격을 씁니다.",
+    "ko": "멀리 머물며 넓은 범위에 큰 피해를 주고 헬다이버를 날려 보내는 충전 플라스마 포격과, 예고 뒤 천천히 따라오는 연속 사격을 씁니다.",
     "en": "It prefers to stay far away and uses a charged plasma blast with a large area and huge damage that can send you flying, plus a telegraphed rapid volley that slowly tracks you."
    },
    {
@@ -1865,11 +1865,11 @@
     "en": "At longer range the Anti-Materiel Rifle needs 2 shots on the eye instead of one."
    },
    {
-    "ko": "등 방열판은 헐크가 나를 보기 시작하면 노리기 어렵고, 부숴도 꽤 오래 살아 있어 효율이 낮습니다.",
+    "ko": "등 방열판은 헐크가 이쪽을 보기 시작하면 노리기 어렵고, 부숴도 꽤 오래 살아 있어 효율이 낮습니다.",
     "en": "The back heat sink is hard to reach once the Hulk is facing you, and it stays alive for quite a while after it breaks, so it is not efficient."
    },
    {
-    "ko": "오토캐넌으로 몸통을 쏘면 한 탄창 가까이 들어 효율이 낮지만, 경직으로 공격을 끊어 한 턴을 벌 수 있습니다.",
+    "ko": "오토캐넌으로 몸통을 쏘면 한 탄창 가까이 들어 효율이 낮지만, 경직으로 공격을 끊어 시간을 벌 수 있습니다.",
     "en": "Autocannon fire to the torso takes about a magazine and is inefficient, but its stagger interrupts attacks and buys you a moment."
    }
   ]
@@ -1932,11 +1932,11 @@
     "en": "At longer range the Anti-Materiel Rifle needs 2 shots on the eye instead of one."
    },
    {
-    "ko": "등 방열판은 헐크가 나를 보기 시작하면 노리기 어렵고, 부숴도 꽤 오래 살아 있어 효율이 낮습니다.",
+    "ko": "등 방열판은 헐크가 이쪽을 보기 시작하면 노리기 어렵고, 부숴도 꽤 오래 살아 있어 효율이 낮습니다.",
     "en": "The back heat sink is hard to reach once the Hulk is facing you, and it stays alive for quite a while after it breaks, so it is not efficient."
    },
    {
-    "ko": "오토캐넌으로 몸통을 쏘면 한 탄창 가까이 들어 효율이 낮지만, 경직으로 공격을 끊어 한 턴을 벌 수 있습니다.",
+    "ko": "오토캐넌으로 몸통을 쏘면 한 탄창 가까이 들어 효율이 낮지만, 경직으로 공격을 끊어 시간을 벌 수 있습니다.",
     "en": "Autocannon fire to the torso takes about a magazine and is inefficient, but its stagger interrupts attacks and buys you a moment."
    }
   ]
@@ -1991,11 +1991,11 @@
     "en": "At longer range the Anti-Materiel Rifle needs 2 shots on the eye instead of one."
    },
    {
-    "ko": "등 방열판은 헐크가 나를 보기 시작하면 노리기 어렵고, 부숴도 꽤 오래 살아 있어 효율이 낮습니다.",
+    "ko": "등 방열판은 헐크가 이쪽을 보기 시작하면 노리기 어렵고, 부숴도 꽤 오래 살아 있어 효율이 낮습니다.",
     "en": "The back heat sink is hard to reach once the Hulk is facing you, and it stays alive for quite a while after it breaks, so it is not efficient."
    },
    {
-    "ko": "오토캐넌으로 몸통을 쏘면 한 탄창 가까이 들어 효율이 낮지만, 경직으로 공격을 끊어 한 턴을 벌 수 있습니다.",
+    "ko": "오토캐넌으로 몸통을 쏘면 한 탄창 가까이 들어 효율이 낮지만, 경직으로 공격을 끊어 시간을 벌 수 있습니다.",
     "en": "Autocannon fire to the torso takes about a magazine and is inefficient, but its stagger interrupts attacks and buys you a moment."
    }
   ]
@@ -2054,11 +2054,11 @@
     "en": "At longer range the Anti-Materiel Rifle needs 2 shots on the eye instead of one."
    },
    {
-    "ko": "등 방열판은 헐크가 나를 보기 시작하면 노리기 어렵고, 부숴도 꽤 오래 살아 있어 효율이 낮습니다.",
+    "ko": "등 방열판은 헐크가 이쪽을 보기 시작하면 노리기 어렵고, 부숴도 꽤 오래 살아 있어 효율이 낮습니다.",
     "en": "The back heat sink is hard to reach once the Hulk is facing you, and it stays alive for quite a while after it breaks, so it is not efficient."
    },
    {
-    "ko": "오토캐넌으로 몸통을 쏘면 한 탄창 가까이 들어 효율이 낮지만, 경직으로 공격을 끊어 한 턴을 벌 수 있습니다.",
+    "ko": "오토캐넌으로 몸통을 쏘면 한 탄창 가까이 들어 효율이 낮지만, 경직으로 공격을 끊어 시간을 벌 수 있습니다.",
     "en": "Autocannon fire to the torso takes about a magazine and is inefficient, but its stagger interrupts attacks and buys you a moment."
    }
   ]
@@ -2067,7 +2067,7 @@
   "revision": 136565,
   "spawning": [
    {
-    "ko": "난이도 2부터 나옵니다. 버그 출몰, 순찰대, 버그 둥지·임무 목표 경비, 특정 버그 구멍에서 나옵니다.",
+    "ko": "난이도 2부터 나옵니다. 버그 출몰·순찰대·특정 버그 구멍으로 나오고, 버그 둥지와 임무 목표를 지킵니다.",
     "en": "Appears from Difficulty 2, from Bug Breaches, in patrols, guarding Bug Nests and Objectives, and from certain Bug Holes."
    },
    {
@@ -2138,7 +2138,7 @@
     "en": "Outside Bug Breaches it usually stays still and turns toward Helldiver movement or sounds; on patrol it also stops to face nearby movement or sounds."
    },
    {
-    "ko": "전투 중이거나 버그 출몰으로 나오면 곧바로 '머리'를 땅에 박고, 촉수 3개로 시야 안의 헬다이버를 공격합니다.",
+    "ko": "전투 중이거나 버그 출몰로 나오면 곧바로 '머리'를 땅에 박고, 촉수 3개로 시야 안의 헬다이버를 공격합니다.",
     "en": "In combat or when it comes from a Bug Breach, it quickly burrows its \"head\" and attacks Helldivers in sight with its three tentacles."
    },
    {
@@ -2260,7 +2260,7 @@
   ],
   "tactics": [
    {
-    "ko": "주변에 사격해 제압하면 명중률이 떨어집니다. 재장전과 사격이 느려 여럿이 싸울 때 위험이 크게 줄어듭니다.",
+    "ko": "주변에 사격해 제압하면 명중률이 떨어집니다. 재장전과 사격이 느려서 분대가 함께 싸우면 위험이 크게 줄어듭니다.",
     "en": "Suppressing it with fire lowers its accuracy. Because it reloads and fires slowly, this greatly cuts its threat in group firefights."
    },
    {
@@ -2317,7 +2317,7 @@
     "en": "It crosses large areas quickly with its jetpack and tries hard to get up close, so it is hard to kill at long range."
    },
    {
-    "ko": "제트팩은 본체보다 약하고, 부서지면 터지며 불을 붙여 주변 적과 자신, 그리고 나까지 다칠 수 있습니다. 가슴이나 배에 들어간 피해로도 죽은 뒤 터질 수 있습니다.",
+    "ko": "제트팩은 본체보다 약하고, 부서지면 터지며 불을 붙여 주변 적과 그 자신, 그리고 헬다이버까지 다칠 수 있습니다. 가슴이나 배에 들어간 피해로도 죽은 뒤 터질 수 있습니다.",
     "en": "The jetpack is weaker than the body and explodes in flames when destroyed, hurting nearby enemies, itself and possibly you. Enough damage through its chest or stomach can also make it blow up after death."
    },
    {
@@ -2509,7 +2509,7 @@
     "en": "It crosses large areas quickly with its jetpack and tries hard to get up close, so it is hard to kill at long range."
    },
    {
-    "ko": "제트팩은 본체보다 약하고, 부서지면 터지며 불을 붙여 주변 적과 자신, 그리고 나까지 다칠 수 있습니다. 퓨리파이어, 퍼니셔 플라스마, 이럽터로 멀리서 터뜨리면 대개 그 적도 처치합니다.",
+    "ko": "제트팩은 본체보다 약하고, 부서지면 터지며 불을 붙여 주변 적과 그 자신, 그리고 헬다이버까지 다칠 수 있습니다. 퓨리파이어, 퍼니셔 플라스마, 이럽터로 멀리서 터뜨리면 대개 그 적도 처치합니다.",
     "en": "The jetpack is weaker than the body and explodes in flames when destroyed, hurting nearby enemies, itself and possibly you. Detonating it from afar with the Purifier, Punisher Plasma or Eruptor often kills it too."
    },
    {
@@ -2562,7 +2562,7 @@
     "en": "It crosses large areas quickly with its jetpack and tries hard to get up close, so it is hard to kill at long range."
    },
    {
-    "ko": "제트팩은 본체보다 약하고, 부서지면 터지며 불을 붙여 주변 적과 자신, 그리고 나까지 다칠 수 있습니다. 가슴이나 배에 들어간 피해로도 죽은 뒤 터질 수 있습니다.",
+    "ko": "제트팩은 본체보다 약하고, 부서지면 터지며 불을 붙여 주변 적과 그 자신, 그리고 헬다이버까지 다칠 수 있습니다. 가슴이나 배에 들어간 피해로도 죽은 뒤 터질 수 있습니다.",
     "en": "The jetpack is weaker than the body and explodes in flames when destroyed, hurting nearby enemies, itself and possibly you. Enough damage through its chest or stomach can also make it blow up after death."
    },
    {
@@ -2654,7 +2654,7 @@
     "en": "It backs away when approached, punches at close range, and throws grenades at Helldivers in cover."
    },
    {
-    "ko": "등의 동력 팩이 피해를 받으면 터질 수 있습니다. 이때 MG 레이더는 즉사하고, 주변 오토마톤과 헬다이버도 큰 피해를 입고 불이 붙습니다.",
+    "ko": "등의 전원 팩이 피해를 받으면 터질 수 있습니다. 이때 MG 레이더는 즉사하고, 주변 오토마톤과 헬다이버도 큰 피해를 입고 불이 붙습니다.",
     "en": "Its power pack can explode when damaged, killing the MG Raider instantly and badly damaging and burning nearby Automatons and Helldivers."
    },
    {
@@ -2754,7 +2754,7 @@
     "en": "Most of it is armor 4, with only the rear heatsinks at armor 3. Armor penetration 4 weapons such as the Autocannon and Laser Cannon destroy it from any angle, and anti-tank weapons need one shot."
    },
    {
-    "ko": "관통 3 무기는 뒤쪽 방열판만 상처를 내므로 뒤로 돌아가야 합니다. 동료를 쏘고 있을 때는 모든 거치포가 같은 쪽을 보고 있어 뒤를 잡기 쉽습니다.",
+    "ko": "관통 3 무기는 뒤쪽 방열판에만 피해를 주므로 뒤로 돌아가야 합니다. 동료를 쏘고 있을 때는 모든 거치포가 같은 쪽을 보고 있어 뒤를 잡기 쉽습니다.",
     "en": "Armor penetration 3 weapons can only damage the rear heatsinks, so you have to get behind it. That is easiest while it fires at a teammate, as every emplacement faces the same way."
    },
    {
@@ -2818,7 +2818,7 @@
   "behavior": [],
   "tactics": [
    {
-    "ko": "뛰어올라 독을 걸고 거미줄을 뱉어 거의 움직이지 못하게 하니 거리를 유지하세요. 점프 팩·워프 팩·호버 팩이나 방어막 생성 팩·탄도 방패 배낭이 도움이 되고, 근육 증진 부스터는 느려짐을 줄여 줍니다.",
+    "ko": "뛰어올라 공격해 독에 걸리게 하고 거미줄을 뱉어 거의 움직이지 못하게 하니 거리를 유지하세요. 점프 팩·워프 팩·호버 팩이나 방어막 생성 팩·탄도 방패 배낭이 도움이 되고, 근육 증진 부스터는 느려짐을 줄여 줍니다.",
     "en": "It leaps to poison you and spits webs that nearly immobilize you, so keep your distance. The Jump Pack, Warp Pack, Hover Pack, Shield Generator Pack and Ballistic Shield Backpack help, and the Muscle Enhancement booster reduces the slow."
    },
    {
@@ -2826,7 +2826,7 @@
     "en": "Shoot its head, the weak spot. Its head armor is a light 2, so weapons with armor penetration 2 or higher work, and support weapons kill it especially fast."
    },
    {
-    "ko": "바로 옆이나 밑에 떨어진 수류탄 하나면 대개 처치하거나 빈사로 만듭니다. 충격 수류탄이 특히 좋고, 잘 던지면 붙어 있는 2마리도 잡습니다.",
+    "ko": "바로 옆이나 밑에 떨어진 수류탄 하나면 대개 처치하거나 거의 죽일 수 있습니다. 충격 수류탄이 특히 좋고, 잘 던지면 붙어 있는 2마리도 잡습니다.",
     "en": "One grenade landing right next to or under it often kills it or nearly does. The Impact grenade is especially good and can kill 2 Spewers standing together."
    },
    {
@@ -2932,11 +2932,11 @@
     "en": "Low damage, slow fire and clear telegraphs make each one weak. Unless you are getting surrounded, deal with more dangerous enemies first."
    },
    {
-    "ko": "연사력이 높고 다루기 쉬운 무기로 이리저리 옮겨 가며 쏘세요. 뭉쳐 다녀서 전격 무기와 폭발 무기도 좋고, 특히 오토캐넌 대공포탄이 효과적입니다. 탄이 느린 폭발 무기는 이리저리 움직여 직격이 어렵습니다.",
+    "ko": "연사력이 높고 다루기 쉬운 무기로 이리저리 옮겨 가며 쏘세요. 뭉쳐 다녀서 전격 무기와 폭발 무기도 좋고, 특히 오토캐넌 대공포탄이 효과적입니다. 다만 이리저리 움직여서 탄이 느린 폭발 무기로는 직격이 어렵습니다.",
     "en": "Use fast-firing weapons with good handling and snap from target to target. They bunch up, so arc and explosive weapons help too, especially the Autocannon in Flak mode. Slow explosive projectiles struggle to hit them as they bob and weave."
    },
    {
-    "ko": "가까이 달려들어서 '가드 독'과 로버가 쉽게 처리하고, K-9는 전격 연쇄로 무리를 묶어 둡니다.",
+    "ko": "가까이 달려들므로 '가드 독'과 로버가 쉽게 처리하고, K-9은 전격 연쇄로 무리를 묶어 둡니다.",
     "en": "Because they rush in close, the Guard Dog and Rover pick them off easily, and the K-9 can lock down groups with arc chains."
    },
    {
@@ -2971,7 +2971,7 @@
     "en": "Under heavy fire it raises a collapsible energy shield that covers its upper and middle body."
    },
    {
-    "ko": "가까운 거리에서는 돌진해 빛의 창을 빠르고 넓게 휘두르며, 맞으면 넘어집니다(쓰러뜨림).",
+    "ko": "가까운 거리에서는 돌진해 빛의 창을 빠르고 넓게 휘두르며, 맞으면 넘어집니다.",
     "en": "At close range it charges in and swings its Lightspear in quick, wide sweeps that ragdoll targets."
    },
    {
@@ -3218,7 +3218,7 @@
     "en": "The Arc Thrower and K-9 stagger and hit several enemies at once, which makes them excellent against charging Radicals."
    },
    {
-    "ko": "본체 체력이 많지만, 폭발에는 여러 부위가 함께 맞습니다.",
+    "ko": "본체 체력이 많지만, 폭발은 여러 부위에 함께 맞아 잘 통합니다.",
     "en": "Its main body has a lot of health, but explosions can hit several of its parts at once."
    },
    {
@@ -3365,7 +3365,7 @@
   ],
   "tactics": [
    {
-    "ko": "주변에 사격해 제압하면 명중률이 떨어집니다. 재장전과 연사가 느려 여럿이 싸울 때 위험이 크게 줄어듭니다.",
+    "ko": "주변에 사격해 제압하면 명중률이 떨어집니다. 재장전과 연사가 느려서 분대가 함께 싸우면 위험이 크게 줄어듭니다.",
     "en": "Suppressing it with fire lowers its accuracy. Because it reloads and fires slowly, this greatly cuts its threat in group firefights."
    },
    {
@@ -3476,7 +3476,7 @@
     "en": "Appears from Difficulty 6 on Rupture Strain planets, fully replacing Warriors."
    },
    {
-    "ko": "버그 출몰, 순찰대, 버그 둥지와 임무 목표 경비, 일부 버그 구멍에서 나옵니다.",
+    "ko": "버그 출몰·순찰대·일부 버그 구멍으로 나오고, 버그 둥지와 임무 목표를 지킵니다.",
     "en": "Spawns from Bug Breaches, in patrols, guarding Bug Nests and Objectives, or from certain Bug Holes."
    }
   ],
@@ -3540,7 +3540,7 @@
   "revision": 142256,
   "spawning": [
    {
-    "ko": "모든 난이도에서 버그 출몰, 순찰대, 버그 둥지와 임무 목표 경비, 버그 구멍에서 나옵니다.",
+    "ko": "모든 난이도에서 버그 출몰·순찰대·버그 구멍으로 나오고, 버그 둥지와 임무 목표를 지킵니다.",
     "en": "Found on all difficulties, spawning from Bug Breaches, in patrols, guarding Bug Nests and Objectives, or from Bug Holes."
    },
    {
@@ -3684,7 +3684,7 @@
     "en": "From the front, even a hull penetration does not kill it in one shot because the hull has 4,000 health. Aim for the turret from the front."
    },
    {
-    "ko": "포탑이 나를 향하면 뒤 방열판이 반대쪽으로 돌아가 사실상 맞히기 어렵습니다.",
+    "ko": "포탑이 이쪽을 향하면 뒤 방열판이 반대쪽으로 돌아가 사실상 맞히기 어렵습니다.",
     "en": "Once the turret faces you, the rear vent turns away and is practically impossible to hit."
    }
   ]
@@ -3766,7 +3766,7 @@
   ],
   "tactics": [
    {
-    "ko": "담즙 분사는 바닥에 포자를 남겨 시야를 가리고 근처 스포어 버스트 적을 빠르게 만듭니다. 분사 피해는 일반 바일 타이탄보다 훨씬 낮아 바스티온 Mk XVI 같은 차량에게는 큰 위협이 아닙니다.",
+    "ko": "담즙 분사는 바닥에 포자를 남겨 시야를 가리고 근처 스포어 버스트 적을 빠르게 만듭니다. 분사 피해는 일반 바일 타이탄보다 훨씬 낮아 바스티온 Mk XVI 같은 차량에는 큰 위협이 아닙니다.",
     "en": "Its bile spew leaves spores on the ground that block vision and speed up nearby Spore Burst Terminids. The spew deals far less damage than a regular Bile Titan's, so vehicles like the Bastion MK XVI handle it well."
    },
    {
@@ -3795,7 +3795,7 @@
     "en": "Appears from Difficulty 2 on Spore Burst Strain planets, replacing all Hunters."
    },
    {
-    "ko": "버그 출몰, 순찰대, 버그 둥지와 임무 목표 경비, 버그 구멍에서 나옵니다.",
+    "ko": "버그 출몰·순찰대·버그 구멍으로 나오고, 버그 둥지와 임무 목표를 지킵니다.",
     "en": "Spawns from Bug Breaches, in patrols, guarding Bug Nests and Objectives, or from Bug Holes."
    }
   ],
@@ -3869,7 +3869,7 @@
     "en": "Appears from Difficulty 2 on Spore Burst Strain planets, replacing Warriors, including those called by Brood Commanders."
    },
    {
-    "ko": "버그 출몰, 순찰대, 버그 둥지와 임무 목표 경비, 버그 구멍에서 나옵니다.",
+    "ko": "버그 출몰·순찰대·버그 구멍으로 나오고, 버그 둥지와 임무 목표를 지킵니다.",
     "en": "Spawns from Bug Breaches, in patrols, guarding Bug Nests and Objectives, or from Bug Holes."
    }
   ],
@@ -4318,7 +4318,7 @@
   "revision": 141593,
   "spawning": [
    {
-    "ko": "모든 난이도에서 버그 출몰, 순찰대, 버그 둥지와 임무 목표 경비, 버그 구멍에서 나오며, 브루드 커맨더가 3마리씩 부르기도 합니다.",
+    "ko": "모든 난이도에서 버그 출몰·순찰대·버그 구멍으로 나오고 버그 둥지와 임무 목표를 지키며, 브루드 커맨더가 3마리씩 부르기도 합니다.",
     "en": "Found on all difficulties from Bug Breaches, in patrols, guarding Bug Nests and Objectives, or from Bug Holes; Brood Commanders also call them in trios."
    },
    {
