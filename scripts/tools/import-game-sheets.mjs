@@ -19,6 +19,7 @@ const FILES = [
   ['적.json', 'enemies.json'],
   ['시스템.json', 'system.json'],
   ['README.md', 'README.md'],
+  ['반동_재현.md', 'recoil_reconstruction.md'],
 ];
 const input = process.argv[2];
 if (!input) throw new Error('Usage: node scripts/tools/import-game-sheets.mjs <path to 소스/자료/게임시트>');

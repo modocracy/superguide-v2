@@ -5,8 +5,10 @@
 // [horizontal, vertical] after the default attachments, each with a horizontal bias and random ratios
 // [vertical, horizontal], the fire rate, the magazine, the spread [horizontal, vertical] in MRAD and the pellets.
 // Rules from helldiversotl.com/research/recoil: stance multipliers (aimed, standing still), drift keeps the larger
-// of the current and the new kick on each axis, a new climb kick replaces the one still being applied, and past
-// about 0.57 degrees of horizontal recoil a kick the other way is cut to 1/16.
+// of the current and the new kick on each axis, a new climb kick replaces the one still being applied, and once the
+// view is more than about 0.57 degrees to one side a kick back towards the middle is cut to 1/16.
+// The build PC's reference (db/source/game_sheets/recoil_reconstruction.md, 2026-11-25) found none of the site
+// estimates below, nor the stance multipliers, in the game data: they stay estimates.
 // Site estimates (the game data does not give them): one unit = 0.01 degrees per shot, drift settles with a
 // 0.12 s time constant, a climb kick plays out with a 0.06 s one, the view stays where it climbed (nobody pulls it
 // down), and each pellet lands evenly inside an ellipse whose half-widths are the spread. So the shape compares
@@ -20,13 +22,14 @@ const STANCES = [['stand', 0.9, () => L('서서', 'Standing')], ['crouch', 0.6, 
 
 const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
 
-// One shot's kick on [horizontal, vertical] for drift or climb (index i into bias and random).
-function kick(sim, i, scale, horizontalNow) {
+// One shot's kick on [horizontal, vertical] for drift or climb (index i into bias and random); viewX = the view's
+// horizontal angle now.
+function kick(sim, i, scale, viewX) {
   const [rv, rh] = sim.random[i];
   const base = i ? sim.climb : sim.drift;
   let h = base[0] * UNIT * scale * clamp(sim.bias[i] + rh * (Math.random() * 2 - 1), -1, 1);
   const v = base[1] * UNIT * scale * (1 - rv * Math.random());
-  if (Math.abs(horizontalNow) > TURN && Math.sign(h) === -Math.sign(horizontalNow)) h /= 16;
+  if (Math.abs(viewX) > TURN && Math.sign(h) === -Math.sign(viewX)) h /= 16;
   return [h, v];
 }
 
@@ -55,7 +58,7 @@ export function simulate(sim, scale) {
     if (fired < shots && t + STEP / 2 >= next) {
       const x = view[0] + drift[0], y = view[1] + drift[1];
       hits.push({ t, x, y, points: scatter(sim, x, y) });
-      const d = kick(sim, 0, scale, x), c = kick(sim, 1, scale, x);
+      const d = kick(sim, 0, scale, view[0]), c = kick(sim, 1, scale, view[0]);
       for (const a of [0, 1]) if (Math.abs(d[a]) > Math.abs(drift[a])) drift[a] = d[a];
       pending = c;
       fired++; next += gap;
@@ -113,8 +116,8 @@ class RecoilSim extends Base {
       </svg>
       <p class="recoil-sim-readout" aria-live="polite"></p>
       <p class="caption">${L(`최대 연사 속도(분당 ${fmt(this.sim.rpm)}발)로 ${shots}발${pellets} · 조준하고 멈춰 선 기준`, `${shots} rounds at the top fire rate (${fmt(this.sim.rpm)} RPM)${pellets} · aimed, standing still`)} · <span class="recoil-sim-scale"></span></p>
-      <p class="caption">${L('십자 = 처음 조준한 곳(고정), 점 = 탄착, 선 = 총이 지나간 길, 원 = 총이 가리키는 곳. 표는 연사 전체가 들어오게 배율이 바뀝니다. 반동 값, 탄퍼짐, 자세 배율은 게임 자료이고, 한 발이 몇 도인지, 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다. 화면을 직접 내리지 않는다고 보고 그렸습니다.',
-        'Cross = where you first aimed (fixed), dot = hit, line = the path the weapon took, circle = where the weapon points. The scale changes so the whole burst fits. The recoil values, spread and stance multipliers are game data; the degrees per shot, the recovery speed and how hits fall inside the spread are our estimate. Drawn as if you do not pull the view down.')}</p>`;
+      <p class="caption">${L('십자 = 처음 조준한 곳(고정), 점 = 탄착, 선 = 총이 지나간 길, 원 = 총이 가리키는 곳. 표는 연사 전체가 들어오게 배율이 바뀝니다. 반동 값과 탄퍼짐은 게임 자료, 자세 배율은 helldiversotl.com 연구 값이고, 한 발이 몇 도인지, 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다(게임 데이터에서 찾지 못함). 화면을 직접 내리지 않는다고 보고 그렸습니다.',
+        'Cross = where you first aimed (fixed), dot = hit, line = the path the weapon took, circle = where the weapon points. The scale changes so the whole burst fits. The recoil values and spread are game data, the stance multipliers come from helldiversotl.com research, and the degrees per shot, the recovery speed and how hits fall inside the spread are our estimate (not found in the game data). Drawn as if you do not pull the view down.')}</p>`;
     this.grid = this.querySelector('.grid');
     this.trail = this.querySelector('.trail');
     this.hitLayer = this.querySelector('.hits');
