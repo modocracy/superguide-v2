@@ -493,7 +493,7 @@ function specialCells(w) {
   ]);
   const top = list => strongest(list.map(row => ({ ...row, demo: row.demolition })));
   const rows = [top(all.filter(row => !row.blast)), top(all.filter(row => row.blast))].filter(Boolean);
-  return rows.map(row => html`<div><dt>${row.blast ? html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}` : tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)}</dt><dd class="force-lines">
+  return rows.map(row => html`<div><dt>${row.blast ? html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}` : html`<span class="ico-ballistic" aria-hidden="true"></span>${tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)}`}</dt><dd class="force-lines">
     <span class="force-line">${forcePair(L('철거력', 'Demolition'), row.demolition ?? '?')}${forcePair(L('저지력', 'Stagger'), row.stun ?? '?')}${forcePair(L('넉백', 'Push'), row.push ?? '?')}</span></dd></div>`);
 }
 // The key stats grid with the special effect cells at its end; their note is a tooltip on each cell's label

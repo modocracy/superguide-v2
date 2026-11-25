@@ -418,14 +418,14 @@ const BLAST_KINDS = ['blast', 'overcharge', 'backblast', 'wreck'];
 const streamOf = item => item.extraStats?.some(cell => cell.icon === 'gas') ? 'gas' : item.tags?.includes('화염') ? 'fire'
   : item.tags?.includes('레이저') || item.id === 'orbital-laser' || stratagemStats[item.id]?.forces?.some(group => group.parts.some(part => part.kind === 'beam')) ? 'laser' : '';
 // Explosions carry the blast icon, arc attacks the arc icon, beams the laser icon and a spray what it sprays.
-const kindIcon = (kind, item) => BLAST_KINDS.includes(kind) ? 'ico-blast' : kind === 'arc' ? 'ico-arc' : kind === 'beam' ? 'ico-laser'
+const kindIcon = (kind, item) => BLAST_KINDS.includes(kind) ? 'ico-blast' : kind === 'direct' ? 'ico-ballistic' : kind === 'arc' ? 'ico-arc' : kind === 'beam' ? 'ico-laser'
   : kind === 'spray' && streamOf(item) ? `ico-${streamOf(item)}` : '';
 // One force in an effect cell: its name small, its number in the stat font (user request 2026-11-25).
 const forcePair = (name, value) => html`<span class="force-pair"><b>${name}</b><span class="force-val">${value}</span></span>`;
 function fallbackRows(profile, value) {
   const top = key => profile.modes.map(mode => mode[key]).filter(force => force != null)
     .reduce((best, force) => best == null || (typeof force === 'number' ? force : force.max) > (typeof best === 'number' ? best : best.max) ? force : best, null);
-  const rows = [['direct', tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)], ['explosion', html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}`]].map(([key, label]) => [label, top(key)]).filter(([, force]) => force != null)
+  const rows = [['direct', html`<span class="ico-ballistic" aria-hidden="true"></span>${tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)}`], ['explosion', html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}`]].map(([key, label]) => [label, top(key)]).filter(([, force]) => force != null)
     .map(([label, force]) => ({ label, text: html`<span class="force-line">${forcePair(L('철거력', 'Demolition'), value(force))}</span>` }));
   return rows.length ? rows : [{ label: tipLabel(L('철거력', 'Demolition'), FORCE_NOTE), text: html`<span class="force-line dim">${L('확인 중', 'Unverified')}</span>` }];
 }
