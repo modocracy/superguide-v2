@@ -74,6 +74,10 @@ const groupOk = html => {
   return cell > stats && card > cell && statsEnd > cell && html.indexOf('<dt>반동</dt>', card) < 0 && html.lastIndexOf('<dt>각도별 관통</dt>', cell) >= 0;
 };
 ok(groupOk(detail), `${sample.id}: the recoil cell is with the numbers and the simulation is its own card`);
+// The simulation hides while the panel shows a mode it does not cover (the Arbitrator's underbarrel shotgun).
+const arbitrator = personalWeapons.find(w => w.id === 'arbitrator');
+ok(/<div data-variant-hide="underbarrel" ><details class="block recoil-sim-block/.test(String(weaponDetail(arbitrator))), 'arbitrator: the simulation shows for the main barrel');
+ok(/<div data-variant-hide="underbarrel" hidden><details class="block recoil-sim-block/.test(String(weaponDetail(arbitrator, { variant: 'underbarrel' }))), 'arbitrator: the simulation hides for the underbarrel');
 const autocannon = String(stratagemDetail(stratagems.find(s => s.id === 'autocannon')));
 ok(groupOk(autocannon), 'autocannon (two rounds): the recoil cell is with the numbers and the simulation is its own card');
 console.log(`PASS recoil: ${checks} checks (${Object.keys(weaponRecoil).length} weapons, wiki datamine revision ${recoilSource.revision}).`);

@@ -338,6 +338,11 @@ function modeStats({ mode, stats }, w) {
     ${stats.modeNotes?.length ? html`<ul class="notes">${stats.modeNotes.map(note => html`<li>${note}</li>`)}</ul>` : ''}`;
 }
 
+// Mode tabs the recoil simulation does not cover: an underbarrel weapon has no recoil data of its own, and firing
+// several barrels at once is not one round per shot (user request 2026-11-25). The panel hides the simulation while
+// one of these is picked.
+const NO_RECOIL_SIM = ['underbarrel', 'all-barrels', 'volley', 'total'];
+
 // Modes the player switches between get tabs in the compact panel.
 function modeTabs(w, modes, current) {
   return html`<div class="variant-tabs"><h3>${L('모드별 수치', 'Stats by mode')}</h3><div class="segmented" role="group" aria-label="${L('모드 선택', 'Mode')}">${modes.map(({ mode }) => html`<button type="button" data-variant="${mode.id}" aria-pressed="${String(mode === current)}">${mode.name}</button>`)}</div></div>
@@ -506,7 +511,7 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
     ${expanded ? html`<div class="item-detail-gear-head" data-group="${w.category}">${art}${identity}</div>` : html`${art}${identity}`}
     ${stats}
     ${ballistics}
-    ${recoilSimBlock(`gear/${w.id}`, expanded)}
+    ${recoilSimBlock(`gear/${w.id}`, expanded, expanded ? {} : { hideFor: modes.filter(m => NO_RECOIL_SIM.includes(m.id)).map(m => m.id), current: current?.id })}
     ${attachmentTable(w, expanded)}
     ${conflicts.length ? html`<div class="callout warn"><h3>${L('위키 페이지 표시값과 다름', 'Differs from the wiki page')}</h3><p>${conflicts.map(c => L(`${c.label || CONFLICT_FIELDS[c.field]?.[0] || c.field}: 데이터 ${Array.isArray(c.db) ? c.db.join('~') : c.db} / 페이지 ${c.raw ?? c.infobox}`, `${T(c.label) || CONFLICT_FIELDS[c.field]?.[1] || c.field}: data ${Array.isArray(c.db) ? c.db.join('~') : c.db} / page ${c.raw ?? c.infobox}`)).join(' · ')}. ${L('더 최신인 게임 데이터 값을 표시합니다.', 'The newer game data value is shown.')}</p></div>` : ''}
     ${w.playerNotes?.length ? html`<section class="block"><h3>${L('알아 둘 점', 'Good to know')}</h3><ul class="notes">${w.playerNotes.map(note => html`<li>${note}</li>`)}</ul></section>` : ''}

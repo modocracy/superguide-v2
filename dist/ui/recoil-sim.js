@@ -21,7 +21,7 @@
 // that cuts recoil by 30% (Engineering Kit, Fortified: 0.7 in the game data; it works in every stance, armor.js).
 import { weaponRecoil } from '../data/weapon-recoil.js';
 import { L } from '../core/i18n.js';
-import { raw } from './dom.js';
+import { html, raw } from './dom.js';
 import { detailDisclosure } from './item-detail.js';
 
 const UNIT = 0.01, DRIFT_TAU = 0.12, CLIMB_TAU = 0.01, TURN = 0.57, MAX_SHOTS = 30, STEP = 1 / 240;
@@ -293,6 +293,10 @@ if (globalThis.customElements && !customElements.get('recoil-sim')) customElemen
 // The simulation for a weapon key ('gear/<id>' or 'arsenal/<id>') as a disclosure of its own after the detailed stats,
 // closed at first on the panel (user request 2026-11-25); on full screen it is an open section like the others, as
 // full screen shows everything without folds. '' when the weapon has no inputs.
-export const recoilSimBlock = (key, expanded = false) => (weaponRecoil[key]?.sim
-  ? detailDisclosure(L('반동 시뮬레이션', 'Recoil simulation'), raw(`<recoil-sim class="recoil-sim" data-key="${key}"></recoil-sim>`), { className: 'recoil-sim-block', expanded })
-  : '');
+// hideFor: the panel's mode tabs the simulation does not cover (it hides while one of them is picked; current = the
+// picked one now).
+export function recoilSimBlock(key, expanded = false, { hideFor = [], current = null } = {}) {
+  if (!weaponRecoil[key]?.sim) return '';
+  const block = detailDisclosure(L('반동 시뮬레이션', 'Recoil simulation'), raw(`<recoil-sim class="recoil-sim" data-key="${key}"></recoil-sim>`), { className: 'recoil-sim-block', expanded });
+  return hideFor.length ? html`<div data-variant-hide="${hideFor.join(' ')}" ${hideFor.includes(current) ? raw('hidden') : ''}>${block}</div>` : block;
+}

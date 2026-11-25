@@ -123,6 +123,8 @@ export function selectItemVariant(state, variant) {
   const selected = variant || buttons[0]?.dataset.variant;
   for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.variant === selected));
   for (const panel of $$('[data-variant-panel]', sheet)) panel.hidden = panel.dataset.variantPanel !== selected;
+  // Parts that do not apply to some modes (data-variant-hide lists them), e.g. the recoil simulation.
+  for (const part of $$('[data-variant-hide]', sheet)) part.hidden = part.dataset.variantHide.split(' ').includes(selected);
 }
 
 export function updateItemDetail(ctx, state, route, id, variants, openDetail, { refresh = false } = {}) {
