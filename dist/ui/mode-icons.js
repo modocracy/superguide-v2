@@ -1,7 +1,8 @@
 // Small icons for the firing mode tabs, redrawn after the in-game weapon wheel (the wiki's weapon wheel screenshots,
 // e.g. File:AC-8_Autocannon_WW.png, File:AR-11_Arbitrator_WW.png; user request 2026-11-25). One colour
-// (currentColor), so they follow the button's text in both themes and when picked. Weapons whose wiki page has no
-// weapon wheel screenshot get no icon.
+// (currentColor), so they follow the button's text in both themes and when picked. No icon where the wiki has no
+// screenshot (exosuits, SEAF Artillery), where the wheel shows none (Epoch), or where its modes are not the site's
+// tabs (Airburst Rocket Launcher: Cluster / Flak in game, rocket / bomblet on the site).
 import { raw } from './dom.js';
 
 // A round pointing right: body from x, w long, h tall, with a half-ellipse nose of length n.
@@ -44,6 +45,10 @@ const ICONS = {
   burst: fill(star(12, 12, 11, 5, 12)),
   // HEAT: a burst and a tank.
   heat: fill(`${star(9, 9, 8, 3.6, 11)}M11 18h12v3.2H11zM13.5 15.6h5.5v2.4h-5.5zM19 16.3h4.5v1H19z`),
+  // Vehicle HUD (TD-220 Bastion Main WW, TD-110 Maelstrom Gunner WW): a standing shell for the main gun or missile,
+  // three standing rounds for the machine guns, each over a base line.
+  shellUp: fill('M9.5 7.5L12 3l2.5 4.5V19h-5zM8.5 20.5h7V22h-7z'),
+  roundsUp: fill(['M4.5 9L6.5 5l2 4v10h-4z', 'M10 9l2-4 2 4v10h-4z', 'M15.5 9l2-4 2 4v10h-4z'].join('') + 'M4 20.5h16V22H4z'),
   // Unsafe: a round with speed lines behind it.
   unsafe: fill(`M1.5 8.5h1.4v7H1.5zM4.2 8.5h1.4v7H4.2zM6.9 8.5h1.4v7H6.9z${round(9.5, 9, 13, 6, 6)}`),
 };
@@ -62,6 +67,8 @@ const MODES = {
   'arsenal/autocannon': { aphet: 'aphet', flak: 'jet' },
   'arsenal/recoilless': { heat: 'heat', he: 'burst' },
   'arsenal/railgun': { safe: 'round', 'unsafe-max': 'unsafe' },
+  'arsenal/bastion': { main: 'shellUp', coax: 'roundsUp' },
+  'arsenal/maelstrom': { missile: 'shellUp', gatling: 'roundsUp' },
 };
 
 export const modeIconKeys = MODES;
