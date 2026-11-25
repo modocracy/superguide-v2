@@ -21,6 +21,7 @@ import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
 import { detailColumns, detailDisclosure, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { warbondChip } from '../warbond-chip.js';
+import { bindTips, tipLabel } from '../tips.js';
 import { GROUPS, groupOf, typeName, weaponById, displayName, orderTypes, recoilStats, gameErgonomics } from '../gear-shared.js';
 import { L, T, lang } from '../../core/i18n.js';
 
@@ -465,14 +466,12 @@ function specialCells(w) {
   ]);
   const top = list => strongest(list.map(row => ({ ...row, demo: row.demolition })));
   const rows = [top(all.filter(row => !row.blast)), top(all.filter(row => row.blast))].filter(Boolean);
-  return rows.map(row => html`<div><dt>${row.blast ? html`<span class="ico-blast" aria-hidden="true"></span>${L('폭발 효과', 'Blast effects')}` : L('직격 효과', 'Direct effects')}</dt><dd class="force-lines">
+  return rows.map(row => html`<div><dt>${row.blast ? html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}` : tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)}</dt><dd class="force-lines">
     <span class="force-line"><b>${L('철거력', 'Demolition')}</b> ${row.demolition ?? '?'} · <b>${L('저지력', 'Stagger')}</b> ${row.stun ?? '?'} · <b>${L('넉백', 'Push')}</b> ${row.push ?? '?'}</span></dd></div>`);
 }
-// The key stats grid with the special effect cells at its end, and their note under it.
-const statsWithEffects = (v, w) => {
-  const cells = specialCells(w);
-  return html`${detailGrid(v, cells)}${cells.length ? html`<p class="faint" style="font-size:12.5px;margin-top:8px">${FORCE_NOTE}</p>` : ''}`;
-};
+// The key stats grid with the special effect cells at its end; their note is a tooltip on each cell's label
+// (user request 2026-11-25).
+const statsWithEffects = (v, w) => detailGrid(v, specialCells(w));
 
 export function weaponDetail(w, { header = null, titleId = 'sheet-title', variant = state.variant, expandable = false, expanded = false } = {}) {
   const group = groupOf(w.category);
@@ -632,6 +631,7 @@ function showTab() {
 
 export function mount(container, context) {
   root = container; ctx = context;
+  bindTips();
   // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
   Object.assign(state, { detail: null, variant: '', expanded: false, panelSnapshot: null });
   const count = id => personalWeapons.filter(w => w.category === id).length;

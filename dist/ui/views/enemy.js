@@ -2,6 +2,7 @@
 // primary, secondary, throwable) ranked by its quickest verified route, then open
 // any weapon for part-by-part detail.
 import { enemies, weaponProfiles, unsupportedWeapons, combatCheckedAt, damageSource } from '../../data/combat-data.js';
+import { bindTips, tipLabel } from '../tips.js';
 import { personalProfiles, personalUnsupported } from '../../core/personal-combat.js';
 import { personalWeapons } from '../../data/personal-weapons.js';
 import { weaponImages } from '../../data/weapon-images.js';
@@ -303,7 +304,7 @@ function anatomyPhoto(enemy, row, index) {
   const tw = photo.thumbnailWidth || 320, th = photo.thumbnailHeight || 213;
   return html`<button class="part-photo" type="button" data-anatomy="${index}" style="aspect-ratio:${tw}/${th}" aria-label="${label}"><img src="${photo.thumbnail}" alt="" width="${tw}" height="${th}" loading="lazy" decoding="async" style="width:100%;height:100%;left:0;top:0"><span class="zoom">${icon('expand', 14)}</span></button>`;
 }
-const tipHead = (label, tip) => html`<span class="col-tip" tabindex="0" data-tip="${tip}">${label}</span>`;
+const tipHead = tipLabel;
 export function partInfo(enemy) {
   const table = enemyAnatomy[enemy.id];
   if (!table?.rows.length) return '';
@@ -776,28 +777,6 @@ function openAnatomy(index) {
     `${T(enemy.name)} ${row.name} ${L('부위 정보', 'part info')}`);
 }
 
-// Column-head notes: one floating box under the hovered or focused head, kept inside the window.
-function showTip(event) {
-  const head = event.target.closest?.('[data-tip]');
-  if (!head) return;
-  let pop = document.getElementById('tip-pop');
-  if (!pop) { pop = document.createElement('div'); pop.id = 'tip-pop'; pop.className = 'tip-pop'; pop.setAttribute('role', 'tooltip'); document.body.append(pop); }
-  pop.textContent = head.dataset.tip;
-  pop.hidden = false;
-  head.setAttribute('aria-describedby', 'tip-pop');
-  const rect = head.getBoundingClientRect();
-  const left = Math.min(Math.max(8, rect.left), window.innerWidth - pop.offsetWidth - 8);
-  const below = rect.bottom + 6 + pop.offsetHeight <= window.innerHeight;
-  pop.style.left = `${left}px`;
-  pop.style.top = `${below ? rect.bottom + 6 : rect.top - pop.offsetHeight - 6}px`;
-}
-function hideTip(event) {
-  const head = event.target.closest?.('[data-tip]');
-  if (!head || head.contains(event.relatedTarget) || (event.type === 'mouseout' && document.activeElement === head)) return;
-  const pop = document.getElementById('tip-pop');
-  if (pop) pop.hidden = true;
-}
-
 // --- Lifecycle ----------------------------------------------------------------------------------
 export function mount(container, context) {
   root = container; ctx = context;
@@ -834,10 +813,7 @@ export function mount(container, context) {
   root.addEventListener('change', onChange);
   root.addEventListener('input', onInput);
   root.addEventListener('click', onClick);
-  root.addEventListener('mouseover', showTip);
-  root.addEventListener('focusin', showTip);
-  root.addEventListener('mouseout', hideTip);
-  root.addEventListener('focusout', hideTip);
+  bindTips();
 }
 
 // Shared by the page and the part-by-part sheet (listenToSheet); `scope` is where the event came from.

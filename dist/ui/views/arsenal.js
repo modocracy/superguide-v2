@@ -11,6 +11,7 @@ import { ballisticsBlock } from '../ballistics-view.js';
 import { detailColumns, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { supportProjectileRecords, propelledModes } from '../../data/support-records.js';
 import { warbondChip } from '../warbond-chip.js';
+import { bindTips, tipLabel } from '../tips.js';
 import { recoilStats, gameErgonomics } from '../gear-shared.js';
 import { L, T, lang } from '../../core/i18n.js';
 import { timingOf, modulesOn, setModulesOn, sentryLoadOf } from '../../core/modules.js';
@@ -408,9 +409,9 @@ const kindIcon = (kind, item) => BLAST_KINDS.includes(kind) ? 'ico-blast' : kind
 function fallbackRows(profile, value) {
   const top = key => profile.modes.map(mode => mode[key]).filter(force => force != null)
     .reduce((best, force) => best == null || (typeof force === 'number' ? force : force.max) > (typeof best === 'number' ? best : best.max) ? force : best, null);
-  const rows = [['direct', L('직격 효과', 'Direct effects')], ['explosion', html`<span class="ico-blast" aria-hidden="true"></span>${L('폭발 효과', 'Blast effects')}`]].map(([key, label]) => [label, top(key)]).filter(([, force]) => force != null)
+  const rows = [['direct', tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)], ['explosion', html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}`]].map(([key, label]) => [label, top(key)]).filter(([, force]) => force != null)
     .map(([label, force]) => ({ label, text: html`<span class="force-line"><b>${L('철거력', 'Demolition')}</b> ${value(force)}</span>` }));
-  return rows.length ? rows : [{ label: L('철거력', 'Demolition'), text: html`<span class="force-line dim">${L('확인 중', 'Unverified')}</span>` }];
+  return rows.length ? rows : [{ label: tipLabel(L('철거력', 'Demolition'), FORCE_NOTE), text: html`<span class="force-line dim">${L('확인 중', 'Unverified')}</span>` }];
 }
 // Combat modes of the detailed stats block with no matching table variant.
 const MODE_LABELS = { flak: L('대공포탄 모드', 'Flak mode'), cluster: L('집속탄 모드', 'Cluster mode') };
@@ -435,7 +436,7 @@ function specialCells(item, profile, variant = null) {
   const chosen = [strongest(parts.filter(part => DIRECT_KINDS.includes(part.kind))), strongest(parts.filter(part => part.kind === 'blast')), strongest(parts.filter(part => part.kind === 'overcharge')), strongest(parts.filter(part => part.kind === 'backblast')), strongest(parts.filter(part => part.kind === 'wreck'))].filter(Boolean);
   const rows = forces.length
     ? (chosen.length ? chosen : parts.slice(0, 1)).map(part => ({
-      label: html`${kindIcon(part.kind, item) ? html`<span class="${kindIcon(part.kind, item)}" aria-hidden="true"></span>` : ''}${FORCE_KIND[part.kind]}${L(' 효과', ' effects')}`,
+      label: html`${kindIcon(part.kind, item) ? html`<span class="${kindIcon(part.kind, item)}" aria-hidden="true"></span>` : ''}${tipLabel(html`${FORCE_KIND[part.kind]}${L(' 효과', ' effects')}`, FORCE_NOTE)}`,
       text: html`${line(range(part.kind) ? value(range(part.kind)) : value(part.demo), part.stun, part.push)}${part.kind === 'overcharge' ? html`<span class="force-note">${L('탄이 아니라 과충전하면 무기가 터지는 폭발입니다. 사용자도 죽습니다.', 'Not a shot: the weapon blows up when overcharged, killing the user too.')}</span>` : ''}${part.kind === 'backblast' ? html`<span class="force-note">${L('탄이 아니라 쏠 때 무기 뒤쪽으로 나오는 후폭풍입니다. 뒤에 선 아군이 넘어지거나 다칠 수 있습니다.', 'Not a shot: the blast out of the back of the launcher when it fires. Teammates standing behind can be knocked down or hurt.')}</span>` : ''}${part.kind === 'wreck' ? html`<span class="force-note">${L(`차량이 파괴될 때 연료 탱크가 터지는 폭발입니다. 피해 ${num(part.damage)}, 중심 ${num(part.inner)}m에서 ${num(part.outer)}m까지 줄어들고 충격파는 ${num(part.shockwave)}m까지로 이글 500kg 폭탄과 같은 크기이며, 타고 있던 헬다이버는 죽습니다. 화염방사기 연료가 다 떨어진 뒤에는 일반 차량 폭발로 바뀝니다.`, `Not a shot: the fuel tank blows up when the vehicle is destroyed. ${num(part.damage)} damage out to ${num(part.inner)} m, falling off to ${num(part.outer)} m, with a shockwave out to ${num(part.shockwave)} m, the same size as an Eagle 500kg Bomb, and it kills anyone inside. Once the flamethrower's fuel runs out, it becomes an ordinary vehicle explosion.`)}</span>` : ''}${DIRECT_KINDS.includes(part.kind) && item.directCaution ? html`<span class="force-note">${item.directCaution}</span>` : ''}`,
     }))
     // No attack records in the datamine: the highest direct and blast demolition force of the demolition data.
@@ -455,7 +456,8 @@ function reloadModuleNote(item) {
   return L(`함선 모듈 업그레이드 시 재장전 시간이 ${num(r[main])}초에서 ${cut}% 감소합니다.`, `The ship module upgrade cuts the reload from ${num(r[main])}s by ${cut}%.`);
 }
 const statsWithEffects = (shown, cells, expanded = false) => {
-  const notes = [reloadModuleNote(shown), cells.length ? FORCE_NOTE : ''].filter(Boolean);
+  // The force note is a tooltip on each effect cell's label (user request 2026-11-25).
+  const notes = [reloadModuleNote(shown)].filter(Boolean);
   return html`${statGrid(shown, cells, expanded)}${notes.map(note => html`<p class="faint" style="font-size:12.5px;margin-top:8px">${note}</p>`)}`;
 };
 
@@ -703,6 +705,7 @@ function toggleCompare(id) {
 
 // --- View lifecycle -------------------------------------------------------------------
 export function mount(container, context) {
+  bindTips();
   root = container; ctx = context;
   // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
   Object.assign(state, { detail: null, variant: '', expanded: false, panelSnapshot: null });
