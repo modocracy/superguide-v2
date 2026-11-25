@@ -51,7 +51,8 @@ ok(configure(lib, { slots: { muzzle: comp } }).climb[1] < lib.climb[1], 'liberat
 ok(configure(lib, { slots: { underbarrel: grip } }).climb[1] < lib.climb[1], 'liberator: the vertical foregrip cuts vertical climb');
 const sweeper = weaponRecoil['gear/sweeper'].sim, full = slotOf(sweeper, 'muzzle').options.findIndex(o => o.en === 'Full Choke');
 ok(configure(sweeper, { slots: { muzzle: full } }).spread[0] < sweeper.spread[0], 'sweeper: the full choke tightens the spread');
-// The vertical climb spring matches the game recordings (recoil_reconstruction.md section 8): one round alone peaks
+// The vertical climb spring keeps the shape fitted to the game armory view (recoil_reconstruction.md section 8; an
+// estimate, since real firing in a mission climbs steadily): one round alone peaks
 // at its kick (one unit = 0.01 degrees) about 0.25 s later, and the Coyote at 600 RPM peaks around the 8th round and
 // then holds at about 0.8 of the peak. No randomness and no drift here, to see the spring alone.
 const coyote = { ...weaponRecoil['gear/coyote'].sim, random: [[0, 1], [0, 1]], drift: [0, 0] };
