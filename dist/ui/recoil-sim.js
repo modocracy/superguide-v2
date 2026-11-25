@@ -214,6 +214,9 @@ class RecoilSim extends Base {
     this.setFrame({ px: BASE_PX, ox: SIZE / 2, oy: AIM_Y, grid: 1 });
     this.aimAt(0, 0);
     this.describe(configure(sim, this.choice));
+    // Re-fit the choice rows whenever the element's width changes (it is 0 while the disclosure is closed).
+    this.resizer = new ResizeObserver(() => this.fitRows());
+    this.resizer.observe(this);
   }
 
   // What the next burst fires: mode, rate, rounds, pellets.
@@ -223,7 +226,19 @@ class RecoilSim extends Base {
     this.setupText.textContent = L(`${this.modeName(sim.mode)} · 분당 ${fmt(sim.rpm)}발로 ${shots}발${pellets} · 조준하고 멈춘 기준`, `${this.modeName(sim.mode)} · ${shots} rounds at ${fmt(sim.rpm)} RPM${pellets} · aimed, still`);
   }
 
-  disconnectedCallback() { cancelAnimationFrame(this.raf); }
+  disconnectedCallback() { cancelAnimationFrame(this.raf); this.resizer?.disconnect(); }
+
+  // A row whose buttons wrap keeps its box as wide as the space left, so it ends past the buttons; CSS cannot shrink
+  // a wrapped row to its lines, so the box is set to end where its widest line ends (user request 2026-11-25).
+  fitRows() {
+    for (const seg of this.querySelectorAll('.recoil-sim-option .segmented')) {
+      seg.style.width = '';
+      const buttons = [...seg.children], box = seg.getBoundingClientRect();
+      if (!box.width || new Set(buttons.map(b => Math.round(b.getBoundingClientRect().top))).size < 2) continue;
+      const css = getComputedStyle(seg), end = Math.max(...buttons.map(b => b.getBoundingClientRect().right));
+      seg.style.width = `${Math.ceil(end - box.left + parseFloat(css.paddingRight) + parseFloat(css.borderRightWidth))}px`;
+    }
+  }
 
   sx(x) { return this.frame.ox + x * this.frame.px; }
   sy(y) { return this.frame.oy - y * this.frame.px; }
