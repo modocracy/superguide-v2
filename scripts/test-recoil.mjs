@@ -64,10 +64,14 @@ ok(detail.includes(`<dt>반동</dt><dd>${h} / ${v}</dd>`), `${sample.id}: gear d
 ok(!detail.includes('무기 반동') && !detail.includes('화면 반동'), `${sample.id}: only the armory screen recoil is shown`);
 ok(detail.indexOf('<dt>반동</dt>') > detail.indexOf('세부 수치'), `${sample.id}: recoil sits in the detailed stats, not the key stats`);
 ok(detail.includes(`<recoil-sim class="recoil-sim" data-key="gear/${sample.id}">`), `${sample.id}: gear detail has the recoil simulation`);
-// A weapon with several rounds keeps its recoil in one titled group with the simulation, not after the last round.
+// The recoil cell sits with the numbers of the first round; the simulation is its own card titled 'Recoil simulation'
+// after the rounds, also for a weapon with several rounds.
 const { stratagemDetail } = await import('../dist/ui/views/arsenal.js');
-const groupOk = html => { const at = html.indexOf('<div class="ballistic recoil-group"><h4>반동</h4>'); return at >= 0 && html.indexOf('<dt>반동</dt>', at) > at && html.indexOf('<recoil-sim', at) > at; };
-ok(groupOk(detail), `${sample.id}: recoil and its simulation sit in one group`);
+const groupOk = html => {
+  const cell = html.indexOf('<dt>반동</dt>'), card = html.indexOf('<div class="ballistic recoil-group"><h4>반동 시뮬레이션</h4><recoil-sim');
+  return cell >= 0 && card > cell && html.indexOf('<dt>반동</dt>', card) < 0 && html.lastIndexOf('<dt>각도별 관통</dt>', cell) >= 0;
+};
+ok(groupOk(detail), `${sample.id}: the recoil cell is with the numbers and the simulation is its own card`);
 const autocannon = String(stratagemDetail(stratagems.find(s => s.id === 'autocannon')));
-ok(groupOk(autocannon), 'autocannon (two rounds): recoil and its simulation sit in one group');
+ok(groupOk(autocannon), 'autocannon (two rounds): the recoil cell is with the numbers and the simulation is its own card');
 console.log(`PASS recoil: ${checks} checks (${Object.keys(weaponRecoil).length} weapons, wiki datamine revision ${recoilSource.revision}).`);

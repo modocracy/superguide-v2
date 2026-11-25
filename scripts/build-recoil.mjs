@@ -14,7 +14,7 @@
 //   sim: what the recoil simulation on the detail page uses (user request 2026-11-25), from the same sheet entry:
 //     drift and climb [horizontal, vertical] after the default attachments (`조작.실효`), the horizontal bias and
 //     random ratios [vertical, horizontal] of each (`수평_치우침`, `무작위_비율`), the first fire rate (`분당_발사`)
-//     and the magazine (`탄창`; for a heat weapon the rounds before it overheats, `열.과열까지_발사`), the reload time shown after the magazine (`재장전_시간`, null when 0 = the animation's own); the spread [horizontal, vertical] in MRAD after the default attachments and the pellets
+//     and the magazine (`탄창`; for a heat weapon the rounds before it overheats, `열.과열까지_발사`); the spread [horizontal, vertical] in MRAD after the default attachments and the pellets
 //     per shot (the sheet's projectile `탄_수`, else the site's `pellets`). Left out for spray weapons, which have no fire rate.
 //     Choices on the page (user request 2026-11-25): modes = the fire modes ('auto', 'semi', 'burst' from `조작.발사_방식`)
 //     with burst = rounds per burst (`조작.점사_발수`), rpms = the fire rates when there are several, and muzzles = the
@@ -59,7 +59,7 @@ export async function buildRecoil() {
     const o = g.조작, e = o.실효, rpm = g.분당_발사?.[0];
     return rpm ? { drift: [e.총반동_수평, e.총반동_수직], climb: [e.카메라반동_수평, e.카메라반동_수직], bias: [o.총반동.수평_치우침, o.카메라반동.수평_치우침],
       random: [o.총반동.무작위_비율, o.카메라반동.무작위_비율], rpm, magazine: g.탄창 ?? (g.열?.과열까지_발사 ? Math.floor(g.열.과열까지_발사) : null),
-      spread: [e.탄퍼짐_수평_MRAD, e.탄퍼짐_수직_MRAD], pellets: g.투사체?.탄_수 ?? null, reload: g.재장전_시간 || null, ...firing(g), defaults: g.기본_부착물 } : null;
+      spread: [e.탄퍼짐_수평_MRAD, e.탄퍼짐_수직_MRAD], pellets: g.투사체?.탄_수 ?? null, ...firing(g), defaults: g.기본_부착물 } : null;
   };
   const firing = g => {
     const modes = [...new Set((g.조작.발사_방식 ?? []).map(m => MODES[m]).filter(Boolean))];

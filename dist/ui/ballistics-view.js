@@ -63,7 +63,8 @@ function chart(title, points, { top, bottom, ticks, label }) {
 
 // A rocket-propelled shot keeps its speed: no drag in the damage and drop math (its datamine drag
 // is still listed).
-function recordBlock(label, recordId, propelled) {
+// extra: cells appended at the end of the record's grid (the weapon's recoil, with the other numbers).
+function recordBlock(label, recordId, propelled, extra = '') {
   const { record, b, drag, at, endX, damage, drop, dropTop, markFalloff } = computeFlight(recordId, propelled);
   const cell = (name, value, unit, caption) => html`<div><dt>${name}</dt><dd>${value}${unit ? html`<small>${unit}</small>` : ''}</dd>${caption ? html`<div class="caption">${caption}</div>` : ''}</div>`;
   const ap = b.ap?.some(v => v != null) ? `AP ${b.ap.map(v => num(v)).join(' / ')}` : '—';
@@ -78,6 +79,7 @@ function recordBlock(label, recordId, propelled) {
       ${cell(L('중력 배율', 'Gravity multiplier'), num(b.gravity), '×', b.gravity ? L('클수록 많이 떨어짐', 'Higher drops more') : L('떨어지지 않고 곧게 날아감', 'Flies straight, no drop'))}
       ${cell(L('탄 수명', 'Lifetime'), b.lifetime ? num(b.lifetime) : L('제한 없음', 'No limit'), b.lifetime ? L('초', 's') : '', endX != null ? L(`약 ${num(Math.round(endX))}m에서 사라짐`, `Gone at about ${num(Math.round(endX))} m`) : '')}
       ${cell(L('각도별 관통', 'Penetration by angle'), ap, '', L('25° 미만 · 26~60° · 61~80° · 81~90°', 'Under 25° · 26-60° · 61-80° · 81-90°'))}
+      ${extra}
     </dl>
     <div class="ballistic-charts">
       ${chart(L('거리별 탄 피해', 'Shot damage by distance'), damage, { top: 100, bottom: 25, label: '%', ticks: [100, 75, 50, 25].map(v => ({ value: v, text: `${v}%` })) })}
@@ -99,19 +101,20 @@ function recordBlock(label, recordId, propelled) {
 // not in the key stats). No sub-headings (user request 2026-11-24): with one projectile its recoil cells end the same
 // grid; with several, each keeps its name and the recoil cells follow in a grid of their own; they alone are
 // enough to show the block.
-// recoil and simKey: the weapon's recoil cells and its key in weapon-recoil.js, one 'Recoil' group after the rounds:
-// recoil belongs to the weapon, not to a round. When the weapon has a simulation the cells go inside it, above its
-// choices, so the group reads as one piece instead of a lone cell over a separate simulation (user request 2026-11-25).
+// recoil and simKey: the weapon's recoil cells and its key in weapon-recoil.js. The recoil cells are numbers, so they
+// join the numbers of the first round (or stand alone when there is none); the simulation is its own titled card
+// after the rounds (user request 2026-11-25).
 export function ballisticsBlock(entries, expanded = false, recoil = [], simKey = '') {
   const seen = new Set();
   const list = entries.filter(e => e.record && projectileBallistics[e.record]?.velocity > 0 && !seen.has(e.record) && seen.add(e.record));
   if (list.length) wireBallisticCharts();
   const recoilCell = c => html`<div><dt>${c.label}</dt><dd>${c.text}${c.unit ? html`<small>${c.unit}</small>` : ''}</dd>${c.caption ? html`<div class="caption">${c.caption}</div>` : ''}</div>`;
-  const sim = simKey ? recoilSimHtml(simKey, recoil.length ? String(html`<dl class="detail-grid recoil-stats">${recoil.map(c => recoilCell(c))}</dl>`) : '') : '';
+  const sim = simKey ? recoilSimHtml(simKey) : '';
   if (!list.length && !recoil.length && !sim) return '';
-  const content = html`${list.map(e => recordBlock(list.length > 1 ? e.label : '', e.record, e.propelled))}
+  const content = html`${list.map((e, i) => recordBlock(list.length > 1 ? e.label : '', e.record, e.propelled, i === 0 ? recoil.map(recoilCell) : ''))}
+    ${recoil.length && !list.length ? html`<div class="ballistic"><dl class="detail-grid">${recoil.map(recoilCell)}</dl></div>` : ''}
     ${list.length ? html`<p class="faint" style="font-size:12.5px;margin-bottom:16px">${L('탄 피해 계산에는 중력과 궤적을 반영하지 않습니다. 낙차는 중력 9.82m/s²에 중력 배율을 곱하고, 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage leaves out gravity and the flight path. Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
-    ${recoil.length || sim ? html`<div class="ballistic recoil-group"><h4>${L('반동', 'Recoil')}</h4>${sim ? raw(sim) : html`<dl class="detail-grid">${recoil.map(recoilCell)}</dl>`}</div>` : ''}
+    ${sim ? html`<div class="ballistic recoil-group"><h4>${L('반동 시뮬레이션', 'Recoil simulation')}</h4>${raw(sim)}</div>` : ''}
   `;
   return detailDisclosure(L('세부 수치', 'Detailed stats'), content, { className: 'ballistic-block', expanded });
 }
