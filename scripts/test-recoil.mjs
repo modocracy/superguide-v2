@@ -22,8 +22,7 @@ for (const [key, value] of Object.entries(weaponRecoil)) {
   if (value.sim) ok(value.sim.rpm > 0 && [value.sim.drift, value.sim.climb, value.sim.bias].every(pair => pair.length === 2 && pair.every(Number.isFinite)), `${key}: simulation inputs are numbers`);
 }
 // The simulation runs a burst that climbs and stops.
-// Every round's dot (one per shot, like the game's view) and the whole aim path fit in the box (240 px) with the
-// crosshair fixed at the first aim.
+// Every pellet's dot and the whole aim path fit in the box (240 px) with the crosshair fixed at the first aim.
 const { simulate, frameFor, configure } = await import('../dist/ui/recoil-sim.js');
 for (const [key, value] of Object.entries(weaponRecoil).filter(([, value]) => value.sim)) {
   for (const scale of [0.9, 0.4]) {
@@ -31,7 +30,7 @@ for (const [key, value] of Object.entries(weaponRecoil).filter(([, value]) => va
     ok(run.hits.length === run.shots && run.hits.every(h => h.points.length === (value.sim.pellets ?? 1)) && run.frames.every(f => [...f.view, ...f.drift].every(Number.isFinite)), `${key}: simulation fires every round and pellet with finite positions`);
     const { px, ox, oy } = frameFor(run);
     const inBox = ([x, y]) => ox + x * px >= -0.01 && ox + x * px <= 240.01 && oy - y * px >= -0.01 && oy - y * px <= 240.01;
-    ok(run.hits.every(h => inBox(h.points[0])) && run.frames.every(f => inBox([f.view[0] + f.drift[0], f.view[1] + f.drift[1]])) && inBox([0, 0]), `${key}: the burst fits in the box`);
+    ok(run.hits.every(h => h.points.every(inBox)) && run.frames.every(f => inBox([f.view[0] + f.drift[0], f.view[1] + f.drift[1]])) && inBox([0, 0]), `${key}: the burst fits in the box`);
   }
 }
 // Every fire mode, fire rate and attachment choice runs; the fitted parts leave the inputs as they are, and a part

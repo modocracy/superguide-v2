@@ -107,14 +107,13 @@ export function configure(sim, { mode, rpm, slots = {} } = {}) {
 }
 
 // The box: SIZE px square, the crosshair low in it (like the game), and a scale that fits the whole burst. Like the
-// game's armory view, one dot marks each round (a shotgun shot too: the dot falls inside the spread).
+// game's armory view, a dot marks each round; a shotgun shot shows a smaller dot per pellet (user request 2026-11-25).
 const SIZE = 240, BASE_PX = 24, AIM_Y = SIZE * 0.72; // 24 px per degree when it all fits
 const PAD_X = 16, PAD_TOP = 18, PAD_BOTTOM = 30; // room for the frame and the cross's arms
 const STEPS = [0.25, 0.5, 1, 2, 5, 10, 20]; // grid square sizes in degrees
-const dotOf = h => h.points[0];
 export function frameFor(run) {
   const xs = [0], ys = [0];
-  for (const h of run.hits) { const [x, y] = dotOf(h); xs.push(x); ys.push(y); }
+  for (const h of run.hits) for (const [x, y] of h.points) { xs.push(x); ys.push(y); }
   for (const f of run.frames) { xs.push(f.view[0] + f.drift[0]); ys.push(f.view[1] + f.drift[1]); }
   const top = Math.max(...ys), bottom = Math.min(...ys), side = Math.max(...xs.map(Math.abs));
   const px = Math.min(BASE_PX, (SIZE - PAD_TOP - PAD_BOTTOM) / Math.max(top - bottom, 1e-6), (SIZE - 2 * PAD_X) / 2 / Math.max(side, 1e-6));
@@ -182,8 +181,8 @@ class RecoilSim extends Base {
       </svg>
       <div class="recoil-sim-notes"><p class="recoil-sim-readout" aria-live="polite"></p>
       <p class="caption"><span class="recoil-sim-setup"></span> · <span class="recoil-sim-scale"></span></p>
-      <p class="caption">${L('십자 = 조준점(고정)<br>점 = 탄착군(노란색 = 방금 쏜 탄, 산탄총도 한 발에 점 하나)<br>선 = 총구 궤적<br>원 = 총구 방향<br>표는 연사 전체가 들어오게 배율이 바뀝니다.',
-        'Cross = aim point (fixed)<br>Dots = hit group (yellow = just fired; a shotgun shot is one dot too)<br>Line = muzzle path<br>Circle = muzzle direction<br>The scale changes so the whole burst fits.')}</p>
+      <p class="caption">${L('십자 = 조준점(고정)<br>점 = 탄착군(노란색 = 방금 쏜 탄, 산탄총은 펠릿마다 작은 점)<br>선 = 총구 궤적<br>원 = 총구 방향<br>표는 연사 전체가 들어오게 배율이 바뀝니다.',
+        'Cross = aim point (fixed)<br>Dots = hit group (yellow = just fired; a shotgun shows a small dot per pellet)<br>Line = muzzle path<br>Circle = muzzle direction<br>The scale changes so the whole burst fits.')}</p>
       <p class="caption">${L('반동·탄퍼짐·부착물·패시브 배율은 게임 자료이고, 수직 회복은 게임 화면 녹화에 맞췄으며, 각도는 추정입니다.', 'Recoil, spread, attachment and passive multipliers are game data, the vertical recovery is fitted to recordings of the game screen, and the angles are estimates.')}
         <span class="col-tip" tabindex="0" data-tip="${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 자체 연구 값이고, 수직으로 오르고 돌아오는 움직임은 게임 무기고의 반동 시뮬레이션 녹화에 맞춘 값입니다. 한 발이 몇 도인지, 수평으로 움직이고 돌아오는 속도, 탄퍼짐 안에서 퍼지는 모양은 사이트 추정입니다(게임 데이터에서 찾지 못함). 총구·총열 하부 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
         'The recoil values and spread are game data, the stance multipliers come from our own research, the vertical climb and recovery are fitted to recordings of the recoil simulation in the game armory, and the degrees per shot, the horizontal movement and recovery, and how hits fall inside the spread are our estimate (not found in the game data). The muzzle and underbarrel recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}">${L('자세히', 'Details')}</span></p></div>`;
@@ -245,17 +244,22 @@ class RecoilSim extends Base {
     this.reticle.setAttribute('cy', this.sy(y).toFixed(2));
   }
 
+  // One round: a group with a dot per pellet (smaller when there are several), yellow while fresh.
   addHit(h, fresh = true) {
-    const [x, y] = dotOf(h), dot = document.createElementNS(SVG, 'circle');
-    dot.setAttribute('cx', this.sx(x).toFixed(2)); dot.setAttribute('cy', this.sy(y).toFixed(2)); dot.setAttribute('r', '2');
-    if (fresh) dot.classList.add('fresh');
-    this.hitLayer.append(dot);
-    return dot;
+    const shot = document.createElementNS(SVG, 'g'), r = h.points.length > 1 ? '1.4' : '2';
+    for (const [x, y] of h.points) {
+      const dot = document.createElementNS(SVG, 'circle');
+      dot.setAttribute('cx', this.sx(x).toFixed(2)); dot.setAttribute('cy', this.sy(y).toFixed(2)); dot.setAttribute('r', r);
+      shot.append(dot);
+    }
+    if (fresh) shot.classList.add('fresh');
+    this.hitLayer.append(shot);
+    return shot;
   }
 
   // The view recovers once firing stops, so the readout gives the highest hit rather than where the aim ends.
   readout(run) {
-    const dots = run.hits.map(dotOf), xs = dots.map(d => d[0]);
+    const dots = run.hits.flatMap(h => h.points), xs = dots.map(d => d[0]);
     const climb = Math.max(...dots.map(d => d[1])), spread = Math.max(...xs) - Math.min(...xs);
     this.out.textContent = L(`탄착이 처음 조준보다 최대 약 ${fmt(climb)}° 위 · 좌우 폭 약 ${fmt(spread)}°`, `Hits up to about ${fmt(climb)}° above the first aim · about ${fmt(spread)}° wide`);
   }

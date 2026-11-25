@@ -691,7 +691,7 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .recoil-sim-view .grid path { stroke: rgba(255, 255, 255, .17); stroke-width: .8; }
 .recoil-sim-view .frame { fill: none; stroke: rgba(255, 255, 255, .38); stroke-width: 1; }
 .recoil-sim-view .hits circle { fill: #8a8c8a; }
-.recoil-sim-view .hits circle.fresh { fill: #ffd60a; }
+.recoil-sim-view .hits .fresh circle { fill: #ffd60a; }
 .recoil-sim-view .trail { fill: none; stroke: #7fb2ff; stroke-width: 1; stroke-linejoin: round; opacity: .35; }
 .recoil-sim-view .reticle { fill: none; stroke: #7fb2ff; stroke-width: 1.4; opacity: .8; }
 .recoil-sim-readout { min-height: 1.4em; font-weight: 650; }
