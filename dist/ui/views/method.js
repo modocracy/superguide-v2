@@ -34,8 +34,6 @@ function workedExample() {
 const RATING_ROWS = [50, 70, 79, 100, 125, 150, 200];
 const ratingList = () => RATING_ROWS.filter(rating => helldiverArmor.factors[rating] != null).map(rating => `${rating}: x${helldiverArmor.factors[rating]}`).join(', ');
 const COMBAT_PAGE = 'https://helldivers.wiki.gg/wiki/Combat';
-// helldiversotl.com research pages (read 2026-11-24): rules it found in the game code (7.1.0) that the wiki lacks or states differently.
-const OTL = page => `https://helldiversotl.com/research/${page}`;
 
 // Wiki Damage page (revision 142577) and Combat page (revision 142474): rules the counts here leave out.
 const moreKorean = () => html`
@@ -57,7 +55,7 @@ const korean = () => html`
     <section><h3>1. 관통(AP)과 장갑</h3><p>공격의 관통이 맞은 부위의 장갑보다 낮으면 피해가 없고, 같으면 65%, 높으면 100%가 들어갑니다. 폭발은 폭발 자체의 관통으로 따로 판정합니다. 배율을 곱한 뒤 소수점 아래는 버립니다(예: 2 x 65% = 1.3, 3 x 65% = 1.95 모두 1).</p></section>
     <section><h3>2. 내구도</h3><p>부위마다 ‘내구도’ 비율이 있습니다. 내구도가 높을수록 무기의 일반 피해 대신 ‘내구 피해’가 적용됩니다. 기관총처럼 내구 피해가 낮은 무기가 큰 적에게 약한 이유입니다.</p></section>
     <section><h3>3. 본체로 넘어가는 피해</h3><p>부위를 맞히면 그 피해의 일정 비율이 본체 체력으로도 넘어갑니다. 머리처럼 부서지면 즉사하는 부위도 있고, 다리처럼 부서져도 살아 있는 부위도 있어서, 부위를 부수거나 본체 체력을 모두 깎은 순간을 각각 계산합니다.</p></section>
-    <section><h3>4. 폭발</h3><p>폭발은 중심 반경 안에서 최대 피해이고, 바깥으로 갈수록 줄어듭니다. 부위의 ‘폭발 저항’만큼 깎이고, 깎인 몫은 본체의 장갑을 통과하면 본체 체력으로 들어갑니다(위키에는 없는 hd2armorinspector.com의 방식을 따름). 폭발에 면역인 부위는 그 폭발을 본체 기준으로 판정합니다.</p></section>
+    <section><h3>4. 폭발</h3><p>폭발은 중심 반경 안에서 최대 피해이고, 바깥으로 갈수록 줄어듭니다. 부위의 ‘폭발 저항’만큼 깎이고, 깎인 몫은 본체의 장갑을 통과하면 본체 체력으로 들어갑니다. 폭발에 면역인 부위는 그 폭발을 본체 기준으로 판정합니다.</p></section>
     ${workedExample()}
     <section><h3>표시 횟수가 뜻하는 것</h3><ul>
       <li>최대 피해로 <b>같은 부위</b>를 계속 맞혔을 때의 <b>최소 횟수(이론값)</b>입니다. 거리 감쇠·빗맞음·각도 때문에 실전에서는 더 필요할 수 있습니다.</li>
@@ -69,7 +67,7 @@ const korean = () => html`
     <section><h3>철거력</h3><p>시설마다 필요한 철거력이 있고, <b>한 번의</b> 명중이나 폭발이 그 값 이상이어야 무너집니다. 약한 공격 여러 번을 합쳐도 넘지 못합니다. 일부 시설은 이와 별개로 체력을 깎아서 부술 수 있습니다.</p></section>
     <section><h3>자료 출처</h3><p>모든 수치는 Helldivers Wiki의 부위·무기 표에서 2026년 9월 16일에 처음 확인하고 11월 8일에 다시 대조했습니다. 함선 강화, 행성 효과, 방어구 효과는 제외한 기본값이며 게임 패치와 실시간으로 연동되지 않습니다.</p>
       <p>아이콘과 부위 이미지는 Helldivers Wiki 기여자들의 작업으로, <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ko" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0<span aria-hidden="true"> ↗</span></a> 조건에 따라 webp로 변환하고 크기를 줄여 사용합니다. 각 부위 사진 아래 링크에서 원본 파일과 원작자를 확인할 수 있습니다.</p>
-      <p class="sources" style="margin-top:8px">${external(damageSource, '피해 계산 규칙')}${external(COMBAT_PAGE, '전투 규칙')}${external(helldiverArmor.source.page, '방어구 배율표')}${external('https://helldivers.wiki.gg/wiki/Demolition', '철거력')}${external('https://helldivers.wiki.gg/wiki/Stratagems', '스트라타젬 목록')}${external(OTL('explosion-falloff'), '폭발 감쇠(helldiversotl)')}${external(OTL('damage-resolution'), '피해 판정(helldiversotl)')}${external(OTL('recoil'), '반동(helldiversotl)')}</p></section>`;
+      <p class="sources" style="margin-top:8px">${external(damageSource, '피해 계산 규칙')}${external(COMBAT_PAGE, '전투 규칙')}${external(helldiverArmor.source.page, '방어구 배율표')}${external('https://helldivers.wiki.gg/wiki/Demolition', '철거력')}${external('https://helldivers.wiki.gg/wiki/Stratagems', '스트라타젬 목록')}</p></section>`;
 
 const moreEnglish = () => html`
     <section><h3>5. Bleeding out</h3><p>When main health runs out the enemy is downed, and its remaining bleed-out health drains every second until it dies. A Charger, for example, has 750 bleed-out health draining at 100 per second. Parts that never drain, like a Factory Strider's legs, simply have that much more health (1,500 leg + 2,000).</p></section>
@@ -90,7 +88,7 @@ const english = () => html`
     <section><h3>1. Armor penetration (AP) and armor</h3><p>If an attack's AP is below the armor of the part it hits, it does no damage; equal AP deals 65%, higher AP deals 100%. Explosions are checked separately against their own AP. Fractions are dropped after the factor is applied (2 x 65% = 1.3 and 3 x 65% = 1.95 both become 1).</p></section>
     <section><h3>2. Durability</h3><p>Every part has a durability percentage. The higher it is, the more the weapon's durable damage applies instead of its standard damage. That is why weapons with low durable damage, like the Machine Gun, struggle against big enemies.</p></section>
     <section><h3>3. Damage passed to main health</h3><p>Hitting a part also passes a share of the damage to the enemy's main health. Some parts, like the head, kill when destroyed; others, like legs, do not. So the calculator tracks both the moment a part breaks and the moment main health runs out.</p></section>
-    <section><h3>4. Explosions</h3><p>Explosions deal full damage inside the inner radius and less further out. Each part's explosive resistance reduces them, and the share it blocks goes to the main body's health if it gets through the main body's armor (following hd2armorinspector.com; the wiki does not cover this). For parts immune to explosions the blast is checked against the main body instead.</p></section>
+    <section><h3>4. Explosions</h3><p>Explosions deal full damage inside the inner radius and less further out. Each part's explosive resistance reduces them, and the share it blocks goes to the main body's health if it gets through the main body's armor. For parts immune to explosions the blast is checked against the main body instead.</p></section>
     ${workedExample()}
     <section><h3>What the counts mean</h3><ul>
       <li>The <b>minimum (theoretical) count</b> when every shot hits <b>the same part</b> at full damage. Falloff, misses and angles mean you may need more in a real fight.</li>
@@ -102,7 +100,7 @@ const english = () => html`
     <section><h3>Demolition force</h3><p>Every structure needs a certain demolition force, and <b>a single</b> hit or explosion has to meet it. Several weaker hits do not add up. Some structures can also be destroyed separately by wearing down their health.</p></section>
     <section><h3>Sources</h3><p>All numbers were first checked against the part and weapon tables on the Helldivers Wiki on September 16, 2026, and re-checked on November 8. They are base values without ship modules, planetary effects or armor passives, and are not linked to live game patches.</p>
       <p>Icons and part images are the work of Helldivers Wiki contributors, used under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0<span aria-hidden="true"> ↗</span></a> and converted to WebP and resized. The link under each part photo leads to the original file and its author.</p>
-      <p class="sources" style="margin-top:8px">${external(damageSource, 'Damage rules')}${external(COMBAT_PAGE, 'Combat rules')}${external(helldiverArmor.source.page, 'Armor rating table')}${external('https://helldivers.wiki.gg/wiki/Demolition', 'Demolition force')}${external('https://helldivers.wiki.gg/wiki/Stratagems', 'Stratagem list')}${external(OTL('explosion-falloff'), 'Explosion falloff (helldiversotl)')}${external(OTL('damage-resolution'), 'Damage resolution (helldiversotl)')}${external(OTL('recoil'), 'Recoil (helldiversotl)')}</p></section>`;
+      <p class="sources" style="margin-top:8px">${external(damageSource, 'Damage rules')}${external(COMBAT_PAGE, 'Combat rules')}${external(helldiverArmor.source.page, 'Armor rating table')}${external('https://helldivers.wiki.gg/wiki/Demolition', 'Demolition force')}${external('https://helldivers.wiki.gg/wiki/Stratagems', 'Stratagem list')}</p></section>`;
 
 export function openMethod(ctx) {
   ctx.openSheet(html`<div class="sheet-top"><span>${L('계산 방식', 'How the numbers work')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
