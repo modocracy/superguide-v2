@@ -265,7 +265,7 @@ function detailRows(w) {
     ? L(`비웠을 때 한 번에 장전(더 빠름) · 남았을 때는 한 발씩: 첫 발 ${num(rr.first)}초, 이후 발당 ${num(rr.rest)}초`, `From empty, all at once (faster) · with rounds left, one at a time: ${num(rr.first)}s, then ${num(rr.rest)}s each`)
     : L(`비운 탄창을 다 채울 때 · 하나씩 장전: 첫 장전 ${num(rr.first)}초${rr.firstPartial != null ? `(남았을 때 ${num(rr.firstPartial)}초)` : ''}, 이후 한 번 넣을 때마다 ${num(rr.rest)}초`, `Filling it from empty · loaded one at a time: ${num(rr.first)}s for the first${rr.firstPartial != null ? ` (${num(rr.firstPartial)}s with rounds left)` : ''}, then ${num(rr.rest)}s each`));
   if (w.reload != null) add(L('재장전', 'Reload'), num(w.reload), s, roundsText ? roundsText : w.reloadTactical == null ? L('탄창을 비웠을 때', 'From empty')
-    : w.reload < w.reloadTactical ? (w.heatCapacity?.raw ? L(`과열됐을 때 · 과열 전에 갈면 ${num(w.reloadTactical)}초(방열판이 저절로 빠져 과열됐을 때가 더 빠름)`, `When overheated · ${num(w.reloadTactical)}s before that (the heat sink pops out by itself, so overheated is faster)`)
+    : w.reload < w.reloadTactical ? (w.heatCapacity?.raw ? L(`과열됐을 때 · 과열 전에 교체하면 ${num(w.reloadTactical)}초(방열판이 저절로 빠져 과열됐을 때가 더 빠름)`, `When overheated · ${num(w.reloadTactical)}s before that (the heat sink pops out by itself, so overheated is faster)`)
       : L(`탄창을 비웠을 때 · 전술 재장전 ${num(w.reloadTactical)}초(비우고 장전하는 쪽이 더 빠름)`, `From empty · tactical reload ${num(w.reloadTactical)}s (emptying first is faster)`))
     // The same time with rounds left: there is no faster tactical reload (user request 2026-11-24).
     : w.reloadTactical === w.reload ? L('전술 재장전 없음', 'No tactical reload') : L(`전술 재장전 ${num(w.reloadTactical)}초`, `Tactical reload ${num(w.reloadTactical)}s`));

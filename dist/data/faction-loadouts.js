@@ -3,7 +3,7 @@ const pick = (weapon, target, label, note) => ({ weapon, targets: [target], labe
 const sporeFire = (weapon, label, note, extra = '') => ({
   ...pick(weapon, null, label, note), adviceOnly: true,
   source: 'https://helldivers.wiki.gg/wiki/Spore_Burst_Warrior#Tactical_Information',
-  limitation: `포자 억제 조건은 사망 시 불타는 상태인 것입니다. 점화되지 않았거나 불이 꺼진 뒤 죽으면 이 조건이 성립하지 않습니다. 화염 노출·표적 선택에 따라 달라 고정 처치 탄수나 시간을 표시하지 않습니다.${extra}`,
+  limitation: `포자를 막으려면 죽을 때 불타는 상태여야 합니다. 점화되지 않았거나 불이 꺼진 뒤 죽으면 이 조건이 성립하지 않습니다. 화염 노출·표적 선택에 따라 달라 고정 처치 탄수나 시간을 표시하지 않습니다.${extra}`,
 });
 const tank = [
   pick('recoilless', 'head', '대전차 화력 · 정지 재장전', '머리를 한 번씩 확실히 노립니다. 충전 없이 발사하지만 탄약 배낭이 필요하고 재장전할 때 멈춰야 합니다.'),
@@ -11,7 +11,7 @@ const tank = [
   pick('commando', 'head', '연속 발사 · 유도 조준', '여러 발로 보완할 수 있습니다. 미사일 유도와 남은 탄 수를 관리하고, 소진하면 새 무기를 호출하세요.'),
 ];
 const jetHulk = [
-  pick('grenade-launcher', 'jetpack', '정면 폭발 · 눈 정밀 조준 불필요', '정면 상부에서 폭발시켜 제트팩을 범위에 넣습니다. 유탄의 낙차와 근접 폭발에 주의하세요.'),
+  pick('grenade-launcher', 'jetpack', '정면 폭발 · 눈 정밀 조준 불필요', '정면 상부에 터뜨려 제트팩을 범위에 넣습니다. 유탄의 낙차와 근접 폭발에 주의하세요.'),
   pick('epoch:charged', 'jetpack', '정면 폭발 · 완전 충전 필요', '제트팩에 충전탄의 폭발을 닿게 합니다. 충전 완료 후 놓는 타이밍이 필요하며 지나치게 충전하면 자폭합니다.'),
   pick('autocannon', 'jetpack', '직격 대안 · 제트팩이 보일 때', '옆·뒤에서 제트팩이 보일 때 직접 맞힙니다. 위 두 무기의 정면 폭발 계산과 다르며 탄약 배낭·정지 재장전 부담이 있습니다.'),
 ];
@@ -21,17 +21,17 @@ const shieldDev = [
   pick('machine-gun', 'stomach', '연사 보정 · 방패 밖 허리', '노출된 허리에 연사하며 조준을 보정합니다. 방패를 우회해야 하며 재장전 중에는 멈춥니다.'),
 ];
 const harvester = [
-  pick('heavy-machine-gun', 'joint', '관절 연사 · 반동 관리', '보호막을 걷어낸 뒤 가로 다리 연결부에 연사합니다. 탄착을 보며 수정할 수 있지만 반동과 정지 재장전을 관리하세요.'),
+  pick('heavy-machine-gun', 'joint', '관절 연사 · 반동 관리', '보호막을 걷어 낸 뒤 가로 다리 연결부에 연사합니다. 탄착을 보며 수정할 수 있지만 반동과 정지 재장전을 관리하세요.'),
   pick('recoilless', 'joint', '관절 한 발 화력 · 정지 재장전', '보호막 제거 후 가로 연결부에 집중합니다. 눈을 노리는 방식이 아니며 빗맞히면 재장전 부담이 큽니다.'),
   pick('autocannon', 'joint', '관절 반복 사격 · 배낭 필요', '보호막 제거 뒤 같은 가로 관절을 계속 맞힙니다. 여러 다리에 피해를 나누지 말고 재장전할 엄폐를 확보하세요.'),
 ];
 const lightBot = [
-  pick('stalwart', 'torso', '몸통 연사 · 이동 재장전', '작은 머리보다 넓은 몸통에 연사하세요. 점프·화염 보병과 거리를 벌리며 재장전할 수 있고, 파괴된 팩의 폭발에는 접근하지 마세요.'),
+  pick('stalwart', 'torso', '몸통 연사 · 이동 재장전', '작은 머리보다 넓은 몸통에 연사하세요. 제트팩·화염 보병과 거리를 벌리며 재장전할 수 있고, 파괴된 팩의 폭발에는 접근하지 마세요.'),
   pick('machine-gun', 'torso', '몸통 연사 · 정지 재장전', '가슴 중앙을 직접 맞히세요. 다른 적도 함께 상대하기 좋지만 재장전할 때 멈추므로 엄폐를 확보하세요.'),
 ];
 const smallSpore = page => [
   { ...sporeFire('flamethrower', '우선 추천 · 포자 방출 억제', '접근하는 적을 직접 점화하고 불타는 상태로 죽여 포자 방출을 막으세요. 화염 사거리와 아군 위치를 확인하세요.'), source: `https://helldivers.wiki.gg/wiki/${page}#Tactical_Information` },
-  { ...sporeFire('cremator', '직접 점화 · 연료 배낭 필요', '화염으로 무리를 태워 사망 시 포자 방출 억제를 노립니다. 연료 배낭이 필요하며 지면 화염과 아군 오사를 피하세요.'), source: `https://helldivers.wiki.gg/wiki/${page}#Tactical_Information` },
+  { ...sporeFire('cremator', '직접 점화 · 연료 배낭 필요', '화염으로 무리를 태워 사망 시 포자 방출 억제를 노립니다. 연료 배낭이 필요하며 바닥에 남는 불과 아군 오인 사격을 조심하세요.'), source: `https://helldivers.wiki.gg/wiki/${page}#Tactical_Information` },
   pick('stalwart', 'body', '비화염 대안 · 이동 재장전', '몸통을 따라가며 연사하고 포자 폭발 범위 밖을 유지하세요. 이 무기의 비화염 처치만으로는 포자 방출을 막지 못합니다.'),
 ];
 export const factionLoadouts = {
@@ -70,11 +70,11 @@ export const factionLoadouts = {
   'rupture-spewer': [
     pick('grenade-launcher', 'butt', '큰 복부 폭발 · 드러날 때 공격', '작은 입 대신 부푼 복부를 폭발 범위에 넣습니다. 잠복 중 탄수가 아니라 지상에 드러난 복부 기준입니다.'),
     pick('autocannon', 'butt', '큰 복부 직격 · 정지 재장전', '보이는 큰 복부에 직격과 폭발을 넣습니다. 머리 최소 탄수보다 넓은 표적을 택한 대응입니다.'),
-    pick('epoch:charged', 'butt', '복부 폭발 · 충전 타이밍 필요', '드러난 복부에 완전 충전탄을 맞힙니다. 충전 중 재잠복할 수 있고 과충전 자폭에 주의해야 합니다.'),
+    pick('epoch:charged', 'butt', '복부 폭발 · 충전 타이밍 필요', '드러난 복부에 완전 충전탄을 맞힙니다. 충전하는 사이 다시 땅속으로 숨을 수 있고 과충전 자폭에 주의해야 합니다.'),
   ],
   'rupture-charger': tank,
   'jet-brigade-devastator': [
-    pick('grenade-launcher', 'torso', '몸통 폭발 · 도약 착지 후', '작은 얼굴보다 몸통 주변을 폭발시킵니다. 도약 중에는 빗맞히기 쉬우므로 착지할 때 노리세요.'),
+    pick('grenade-launcher', 'torso', '몸통 폭발 · 도약 착지 후', '작은 얼굴보다 몸통 주변에 폭발을 넣습니다. 도약 중에는 빗맞히기 쉬우므로 착지할 때 노리세요.'),
     pick('autocannon', 'torso', '몸통 직접 타격 · 배낭 필요', '정면 가슴에 직접 맞힙니다. 제트팩 파괴만으로 처치된다고 가정하지 않습니다.'),
     pick('machine-gun', 'stomach', '허리 연사 · 탄착 보정', '머리보다 넓은 노출 허리를 따라가며 쏩니다. 정지 재장전할 공간이 필요합니다.'),
   ],
@@ -89,7 +89,7 @@ export const factionLoadouts = {
   ],
   'radical': [
     pick('machine-gun', 'torso', '몸통 연사 · 정지 재장전', '빠르게 접근하는 적의 가슴에 연사합니다. 머리 최소 탄수보다 탄착 보정이 쉬운 넓은 부위를 택했습니다.'),
-    pick('grenade-launcher', 'torso', '몸통 주변 폭발 · 거리 확보', '몸통 주변에서 폭발시키되 가까이 접근한 적에게는 근접 폭발을 피하세요.'),
+    pick('grenade-launcher', 'torso', '몸통 주변 폭발 · 거리 확보', '몸통 주변에 터뜨리되 가까이 접근한 적에게는 근접 폭발을 피하세요.'),
     pick('autocannon', 'torso', '몸통 직접 타격 · 배낭 필요', '넓은 가슴에 맞히고 후속 사격합니다. 재장전 중 접근당하지 않도록 거리를 확보하세요.'),
   ],
   'agitator': [
@@ -99,11 +99,11 @@ export const factionLoadouts = {
   ],
   'wretch': [
     pick('machine-gun', 'leg', '다리 연사 · 머리 조준 불필요', '같은 다리에 집중해 본체 피해를 누적합니다. 머리·팔 하나 파괴를 처치로 혼동하지 마세요.'),
-    pick('autocannon', 'leg', '다리 직격 · 근접 폭발 주의', '드러난 다리를 직접 맞힙니다. 빠르게 접근하므로 폭발을 사용할 거리를 남겨두세요.'),
+    pick('autocannon', 'leg', '다리 직격 · 근접 폭발 주의', '드러난 다리를 직접 맞힙니다. 빠르게 접근하므로 폭발을 사용할 거리를 남겨 두세요.'),
     pick('heavy-machine-gun', 'leg', '다리 연사 · 반동·재장전 부담', '다리에 연사하며 보정할 수 있지만 기관총보다 반동과 재장전 부담이 큰 선택입니다.'),
   ],
   'crusher': [
-    pick('autocannon', 'helmet', '헬멧 제거 후 머리 · 배낭 필요', '재생하는 몸통 대신 헬멧을 벗기고 노출 머리를 맞힙니다. 아무 곳이나 폭발시키는 방식은 아닙니다.'),
+    pick('autocannon', 'helmet', '헬멧 제거 후 머리 · 배낭 필요', '재생하는 몸통 대신 헬멧을 벗기고 노출 머리를 맞힙니다. 아무 곳에나 터뜨리는 방식은 아닙니다.'),
     pick('heavy-machine-gun', 'helmet', '헬멧 집중 연사 · 반동 관리', '헬멧부터 노출 머리까지 같은 위치에 연사합니다. 반동을 제어하고 몸통으로 빗나가지 않게 하세요.'),
     pick('epoch:charged', 'helmet', '헬멧 직격 · 충전 연습 필요', '완전 충전탄으로 헬멧을 제거하고 후속 공격합니다. 폭발만 믿고 몸통을 쏘지 말고 과충전을 피하세요.'),
   ],
@@ -144,7 +144,7 @@ export const factionLoadouts = {
     // count is shown from the numbers instead: a 10,000 AP 7 direct hit (data-offense.js) beats the sarcophagus's
     // 7,000 health at armor 5 (combat-data.js), and destroying the sarcophagus kills it.
     { ...pick('orbital-railcannon', null, '자동 조준 · 석관 한 발', '신호기 주변에서 가장 큰 적을 자동으로 골라 쏩니다. 복스 엔진 가까이 던지면 한 발로 처치합니다. 근처에 다른 대형 적이 있으면 그쪽을 맞힐 수 있습니다.'), adviceOnly: true, shownHits: 1,
-      source: 'https://helldivers.wiki.gg/wiki/Vox_Engine', limitation: '스트라타젬은 사이트의 전투 계산 대상이 아닙니다. 직격 피해 10,000(관통 7)이 석관 체력 7,000(장갑 5)보다 커서 한 발로 처치되며, 실전 경험과도 같습니다. 다만 스피커에 맞으면 그 부위의 피해 상한 때문에 한 번에 처치되지 않을 수 있습니다.' },
+      source: 'https://helldivers.wiki.gg/wiki/Vox_Engine', limitation: '스트라타젬은 사이트의 전투 계산 대상이 아닙니다. 직격 피해 10,000(관통 7)이 석관 체력 7,000(장갑 5)보다 커서 한 발로 처치되며, 실전 경험과도 맞습니다. 다만 스피커에 맞으면 그 부위의 피해 상한 때문에 한 번에 처치되지 않을 수 있습니다.' },
   ],
   // Caustic Strain (wiki Caustic_Strain rev 142183, Tactical Information): they burst in bile when they die, so the
   // picks keep distance; the wiki suggests long-range options for the Caustic Spewer and guided ones in the Charger's fog.
@@ -158,7 +158,7 @@ export const factionLoadouts = {
     pick('machine-gun', 'head', '머리 연사 · 거리 유지', '머리에 연사해 처치합니다. 죽을 때 터지는 담즙에 대비해 거리를 유지하세요.'),
   ],
   'bile-spewer-armored': [
-    pick('anti-materiel', 'head', '원거리 머리 · 박격 공격 대응', '멀리서 담즙을 박격포처럼 쏘는 커스틱 스퓨어에는 위키가 대물 저격총 같은 원거리 무기를 권합니다. 먼 거리에서 머리를 맞히세요.'),
+    pick('anti-materiel', 'head', '원거리 머리 · 박격 공격 대응', '멀리서 담즙을 박격포처럼 쏘는 커스틱 스퓨어에는 위키가 대물소총 같은 원거리 무기를 권합니다. 먼 거리에서 머리를 맞히세요.'),
     pick('autocannon', 'butt', '큰 복부 직격 · 정지 재장전', '크게 드러난 복부를 직접 맞힙니다. 탄약 배낭이 필요하고 재장전할 때 멈춥니다.'),
     pick('grenade-launcher', 'butt', '복부 폭발 · 낙차 주의', '복부에 유탄을 터뜨립니다. 먼 거리에서는 낙차를 보정해야 합니다.'),
   ],
@@ -298,7 +298,7 @@ export const factionLoadouts = {
     // count is shown from the numbers: a 10,000 AP 7 direct hit (data-offense.js) matches its 10,000 main health and
     // is more than the 2,500 of its head (combat-data.js); a hit on an armor plate passes only part of it on.
     { ...pick('orbital-railcannon', null, '자동 조준 · 한 발', '신호기 주변에서 가장 큰 적을 자동으로 골라 쏩니다. 팩토리 스트라이더 가까이 던지면 한 발로 처치합니다. 근처에 다른 대형 적이 있으면 그쪽을 맞힐 수 있습니다.'), adviceOnly: true, shownHits: 1,
-      source: 'https://helldivers.wiki.gg/wiki/Factory_Strider', limitation: '스트라타젬은 사이트의 전투 계산 대상이 아닙니다. 직격 피해 10,000(관통 7)이 본체 체력 10,000과 같고 머리 체력 2,500보다 커서 한 발로 처치되며, 실전 경험과도 같습니다. 다만 본체에 피해를 일부만 넘기는 장갑판에 맞으면 한 번에 처치되지 않을 수 있습니다.' },
+      source: 'https://helldivers.wiki.gg/wiki/Factory_Strider', limitation: '스트라타젬은 사이트의 전투 계산 대상이 아닙니다. 직격 피해 10,000(관통 7)이 본체 체력 10,000과 같고 머리 체력 2,500보다 커서 한 발로 처치되며, 실전 경험과도 맞습니다. 다만 본체에 피해를 일부만 넘기는 장갑판에 맞으면 한 번에 처치되지 않을 수 있습니다.' },
     pick('quasar', 'belly-panel', '배 밑 복부 문 · 충전 대기', '탄약 보급이 필요 없습니다. 충전하는 동안 표적을 따라가야 하고 다음 발까지 냉각을 기다려야 합니다.'),
   ],
   'war-strider': [

@@ -911,7 +911,7 @@ export const hazards = [
   "name": "버그 지뢰",
   "en": "Bug Mine",
   "detail": [
-   "테르미니드에게 점령된 지역에만 있습니다. 밟거나 공격을 받으면 터지며 산성을 뿌려 피해를 주고 느리게 합니다. 여러 개의 산성은 겹치지 않습니다."
+   "테르미니드에게 점령된 지역에만 있습니다. 밟거나 공격을 받으면 터지며 산성을 뿌려 피해를 주고 느리게 합니다. 산성은 여러 번 묻어도 겹치지 않습니다."
   ],
   "detailEn": [
    "Only in Terminid-infested areas. It explodes when stepped on or damaged, splashing acid that damages and slows. Acid from several of them does not stack."
@@ -1198,7 +1198,7 @@ export const statusEffects = [
   "name": "출혈",
   "en": "Bleed",
   "detail": [
-   "가슴 부상, 가시 식물, 철조망에 닿으면 걸리며 지속 피해를 받습니다. 셋은 따로 겹칩니다."
+   "가슴 부상, 가시 식물, 철조망에 닿으면 걸리며 지속 피해를 받습니다. 세 가지는 각각 따로 쌓입니다."
   ],
   "detailEn": [
    "A chest injury, spike plants and barbed wire each cause it, as separate effects, dealing damage over time."
@@ -1211,7 +1211,7 @@ export const statusEffects = [
   "en": "Fire",
   "detail": [
    "불은 AP 4 장갑까지 뚫고 기본 3초 동안 탑니다. 큰 적은 불 피해 배율이 높을 수 있습니다(임페일러 1.7배).",
-   "화염방사기처럼 직접 뿜는 불은 적을 혼란에 빠뜨리고 느리게 합니다(대형 이상 버그가 아닌 적 제외).",
+   "화염방사기처럼 직접 뿜는 불은 적을 혼란에 빠뜨리고 느리게 합니다(테르미니드가 아닌 대형 이상의 적은 제외).",
    "네이팜 이글·네이팜 포격·일회성 네이팜은 1초 동안 훨씬 강한 화상을 더합니다."
   ],
   "detailEn": [
@@ -1258,7 +1258,7 @@ export const statusEffects = [
   "detail": [
    "녹셔스 변종만 사용합니다. 6초 동안 초당 2(내구 5) 산성 피해를 주고, 강한 독은 화면도 흐리게 만듭니다.",
    "독 취약이 쌓일수록 독 피해가 1.4·1.8·2.8·4.2배가 되며 최대 4중첩입니다. 각성제는 중첩을 2 줄이지만 독 피해는 막지 못합니다.",
-   "3중첩부터는 독이 걸린 동안 질주할 수 없으니 2중첩을 넘기지 마세요."
+   "3중첩부터는 독에 걸린 동안 질주할 수 없으니 2중첩을 넘기지 마세요."
   ],
   "detailEn": [
    "Only the Noxious Strain applies it: 2 per second (5 durable) acid damage for 6 seconds; Heavy Poison also blurs your screen.",
