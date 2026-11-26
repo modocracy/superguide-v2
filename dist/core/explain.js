@@ -136,10 +136,11 @@ export function attackStats(mode, { distance = 0 } = {}) {
   const stats = [];
   if (mode.directKind !== 'none' && !(mode.standard === 0 && mode.durable === 0)) {
     const arc = mode.delivery === 'arc';
-    stats.push({ label: arc ? L('아크 피해', 'Arc damage') : deliveryOf(mode).hit, icon: arc ? 'arc' : mode.delivery === 'beam' ? 'laser' : mode.delivery === 'spray' ? 'fire' : ['melee', 'flag'].includes(mode.delivery) ? '' : 'ballistic', value: num(left(mode.standard)), note: `${durable(num(left(mode.durable)))} · AP ${mode.ap}${range < 1 ? L(` · ${distance}m에서 ${Math.round(range * 100)}%`, ` · ${Math.round(range * 100)}% at ${distance} m`) : ''}` });
+    const hit = deliveryOf(mode).hit;
+    stats.push({ label: arc ? L('아크 피해', 'Arc damage') : hit === L('직격', 'Direct hit') ? L('직격 피해', 'Direct damage') : hit, icon: arc ? 'arc' : mode.delivery === 'beam' ? 'laser' : mode.delivery === 'spray' ? 'fire' : ['melee', 'flag'].includes(mode.delivery) ? '' : 'ballistic', value: num(left(mode.standard)), note: `${durable(num(left(mode.durable)))} · AP ${mode.ap}${range < 1 ? L(` · ${distance}m에서 ${Math.round(range * 100)}%`, ` · ${Math.round(range * 100)}% at ${distance} m`) : ''}` });
   }
   for (const blast of explosionsOf(mode)) {
-    stats.push({ label: blast.name || L('폭발', 'Explosion'), icon: 'blast', value: num(blast.durable ?? blast.standard), note: `AP ${num(blast.ap)}${Number.isFinite(blast.innerRadius) ? ` · ${radii(blast.innerRadius, blast.radius)}` : ''}` });
+    stats.push({ label: !blast.name || blast.name === L('폭발', 'Explosion') ? L('폭발 피해', 'Blast damage') : blast.name, icon: 'blast', value: num(blast.durable ?? blast.standard), note: `AP ${num(blast.ap)}${Number.isFinite(blast.innerRadius) ? ` · ${radii(blast.innerRadius, blast.radius)}` : ''}` });
   }
   if (mode.bomblet) {
     const b = mode.bomblet;

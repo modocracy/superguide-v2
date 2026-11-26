@@ -62,14 +62,14 @@ function stats(item) {
     : { text: item.rangeLabel || L('미확인', 'Unverified'), dim: !item.rangeLabel || item.rangeLabel === '미확인', label: L('범위', 'Area'), caption: item.rangeNoteShort };
   const kind = hitKind(item);
   const hitName = dps ? (kind === 'beam' ? L('광선 피해', 'Beam damage') : kind === 'spray' && streamOf(item) === 'fire' ? L('화염 피해', 'Fire damage') : L('지속 피해', 'Damage/s'))
-    : { arc: L('아크 피해', 'Arc damage'), spray: L('입자 피해', 'Particle damage'), beam: L('광선 피해', 'Beam damage') }[kind] ?? L('직격', 'Direct');
+    : { arc: L('아크 피해', 'Arc damage'), spray: L('입자 피해', 'Particle damage'), beam: L('광선 피해', 'Beam damage') }[kind] ?? L('직격 피해', 'Direct damage');
   // Arc and beam hits carry their damage icon, as the continuous ones do (user request 2026-11-26).
-  const hitIcon = dps ? streamOf(item) : { arc: 'arc', beam: 'laser' }[kind] ?? '';
+  const hitIcon = dps ? streamOf(item) : { arc: 'arc', beam: 'laser', spray: '' }[kind] ?? (item.direct > 0 ? 'ballistic' : '');
   // A grenade whose burst is a ring of arcs (De-Escalator) names its second cell for them.
-  const splashName = item.splashKind === 'arc' ? L('아크 피해', 'Arc damage') : L('폭발', 'Blast');
+  const splashName = item.splashKind === 'arc' ? L('아크 피해', 'Arc damage') : L('폭발 피해', 'Blast damage');
   return [
     { label: hitName, icon: hitIcon, caption: item.directNoteShort || (none ? L('지원 장비', 'Utility gear') : dps ? L('초당', 'Per second') : item.unit), ...value(item.direct, item.directText) },
-    { label: splashName, icon: item.splashKind === 'arc' ? 'arc' : '', caption: item.splashNoteShort || (item.splash > 0 ? L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
+    { label: splashName, icon: item.splashKind === 'arc' ? 'arc' : item.splash > 0 ? 'blast' : '', caption: item.splashNoteShort || (item.splash > 0 ? L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
     { label: L('관통', 'Penetration'), caption: item.apNoteShort || (item.ap != null ? apBandOf(item).name + (item.splashAp != null && item.splashAp !== item.ap ? ` · ${splashName} AP ${item.splashAp}` : '') : ''),
       ...(item.ap != null ? { text: `AP ${item.ap}${item.splashAp != null && item.splashAp !== item.ap ? `/${item.splashAp}` : ''}` } : { text: none ? '—' : L('미확인', 'Unverified'), dim: true }) },
     { caption: reach.caption, ...reach },
@@ -84,9 +84,9 @@ const statRow = item => html`<dl class="stat-row">${stats(item).filter((stat, in
 // One-line numbers for a mode, used on cards and in the comparison table.
 function variantBrief(item, variant) {
   const v = withVariant(item, variant);
-  const parts = [`${L('직격', 'Direct')} ${T(v.directText) || num(v.direct)}`];
+  const parts = [`${L('직격 피해', 'Direct damage')} ${T(v.directText) || num(v.direct)}`];
   if (v.splashText) parts.push(T(v.splashText));
-  else if (v.splash > 0) parts.push(`${L('폭발', 'Blast')} ${num(v.splash)}`);
+  else if (v.splash > 0) parts.push(`${L('폭발 피해', 'Blast damage')} ${num(v.splash)}`);
   parts.push(`AP ${v.ap}${v.splashAp != null && v.splashAp !== v.ap ? `/${v.splashAp}` : ''}`);
   if (v.radius != null && v.innerRadius != null) parts.push(`${L('반경', 'radius')} ${num(v.innerRadius)}m`);
   else if (v.radius != null) parts.push(`${L('외곽', 'outer')} ${num(v.radius)}m`);
@@ -773,8 +773,8 @@ function openCompare() {
     <div class="compare-scroll" role="region" aria-label="${L('비교표', 'Comparison table')}" tabindex="0"><table class="compare-table">
       <thead><tr><th></th>${items.map(item => html`<th scope="col"><div style="display:flex;gap:10px;align-items:center">${iconOf(item)}<div>${item.name}<small class="faint" style="display:block;font-weight:500;font-size:12px">${categoryOf(item.category).name}</small></div></div></th>`)}</tr></thead>
       <tbody>
-        ${numericRow(items[0].damageKind === 'dps' ? L('직격 / 지속', 'Direct / per second') : L('직격', 'Direct'), 0, item => item.direct)}
-        ${numericRow(L('폭발', 'Blast'), 1, item => item.splash)}
+        ${numericRow(items[0].damageKind === 'dps' ? L('직격 / 지속 피해', 'Direct / per-second damage') : L('직격 피해', 'Direct damage'), 0, item => item.direct)}
+        ${numericRow(L('폭발 피해', 'Blast damage'), 1, item => item.splash)}
         ${numericRow(L('관통', 'Penetration'), 2, item => item.ap)}
         ${numericRow(L('사거리·반경', 'Range / radius'), 3, item => item.range ?? item.innerRadius ?? item.radius)}
         ${items.some(item => item.variants) ? textRow(L('모드별', 'Modes'), item => item.variants ? html`<ul class="compare-modes">${item.variants.map(v => html`<li><b>${v.name}</b> ${variantBrief(item, v)}</li>`)}</ul>` : '') : ''}

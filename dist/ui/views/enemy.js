@@ -358,7 +358,7 @@ function attacks(enemy) {
   const damageCell = attack => {
     const parts = [];
     if (attack.damage != null) parts.push(html`${num(attack.damage)}<small>${DAMAGE_TYPES[attack.damageType] ?? ''}${attack.ap != null ? L(`, 관통 ${attack.ap}`, `, AP ${attack.ap}`) : ''}</small>`);
-    if (attack.explosion != null) parts.push(html`${L('폭발', 'Blast')} ${num(attack.explosion)}<small>${attack.explosionAp != null ? L(`폭발 관통 ${attack.explosionAp}`, `blast AP ${attack.explosionAp}`) : ''}</small>`);
+    if (attack.explosion != null) parts.push(html`${L('폭발 피해', 'Blast damage')} ${num(attack.explosion)}<small>${attack.explosionAp != null ? L(`폭발 관통 ${attack.explosionAp}`, `blast AP ${attack.explosionAp}`) : ''}</small>`);
     return parts.length ? parts : html`<span class="faint">${L('위키 참조', 'See the wiki')}</span>`;
   };
   const wiki = `https://helldivers.wiki.gg/wiki/${encodeURIComponent(info.page.replaceAll(' ', '_'))}#Weapons_Loadout`;
@@ -412,8 +412,8 @@ const conditionalText = (row, mode) => L(`${row.target.prerequisite}: ${row.targ
 // How many heat sinks or fuel canisters a held stream's time takes, stream held throughout.
 function capacityText({ kind, seconds }, time) {
   const count = Math.max(1, Math.ceil(time / seconds - 1e-9));
-  if (kind === 'heat') return count === 1 ? L('방열판 1개 안', 'Within one heat sink') : L(`방열판 ${count}개`, `${count} heat sinks`);
-  return count === 1 ? L('연료 1통 안', 'Within one fuel canister') : L(`연료 ${count}통`, `${count} fuel canisters`);
+  if (kind === 'heat') return count === 1 ? L('방열판 1개 이내', 'Within one heat sink') : L(`방열판 ${count}개`, `${count} heat sinks`);
+  return count === 1 ? L('연료 1통 이내', 'Within one fuel canister') : L(`연료 ${count}통`, `${count} fuel canisters`);
 }
 function rankRow(entry, selected, large = false, noFatal = false) {
   const { weapon, status } = entry;

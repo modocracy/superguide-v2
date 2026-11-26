@@ -120,7 +120,7 @@ export function gearStats(w) {
     ? { label: L('지속 피해', 'Damage/s'), text: num(w.direct), unit: '/s', caption: L('광선 초당', 'Beam per second') }
     : w.direct != null
     ? { label: L('피해', 'Damage'), text: w.pellets > 1 ? `${num(w.direct)}×${w.pellets}` : num(w.direct), caption: w.pellets > 1 ? L(`펠릿 ${w.pellets}개`, `${w.pellets} pellets`) : w.splash ? L(`+ 폭발 ${num(w.splash)}`, `+ ${num(w.splash)} blast`) : hitKind(w) === 'arc' ? L('아크 1개', 'Per arc') : L('한 발', 'Per shot') }
-    : w.splash != null ? { label: L('폭발', 'Blast'), text: num(w.splash), caption: w.shrapnelCount ? L(`+ 파편 ${w.shrapnelCount}개`, `+ ${w.shrapnelCount} fragments`) : L('중심부 최대', 'Max at center') }
+    : w.splash != null ? { label: L('폭발 피해', 'Blast damage'), text: num(w.splash), caption: w.shrapnelCount ? L(`+ 파편 ${w.shrapnelCount}개`, `+ ${w.shrapnelCount} fragments`) : L('중심부 최대', 'Max at center') }
     : w.dot?.perSecond != null ? { label: L('지속 피해', 'Damage/s'), text: num(w.dot.perSecond), unit: '/s', caption: ELEMENTS[w.dot.element] || '' }
     : { label: L('피해', 'Damage'), ...dim(isUtility(w) ? L('없음', 'None') : L('미확인', 'Unverified')), caption: isUtility(w) ? L('지원용', 'Utility') : '' };
   const ap = apText(w);
@@ -259,14 +259,15 @@ function detailRows(w) {
   if (w.direct != null && w.damageKind === 'dps') add(L('광선 피해', 'Beam damage'), num(w.direct), perSecond, L('비추고 있는 동안', 'While the beam is on target'));
   if (w.direct != null && w.damageKind === 'dps') rows.at(-1).icon = 'laser';
   else if (w.direct != null && kind === 'spray') add(L('입자 피해', 'Particle damage'), num(w.direct), '', L('분사 입자 1개', 'One spray particle'));
-  else if (w.direct != null) add(w.pellets > 1 ? L('펠릿당 피해', 'Damage per pellet') : kind === 'arc' ? L('아크 피해', 'Arc damage') : kind === 'beam' ? L('광선 피해', 'Beam damage') : L('직격', 'Direct'), num(w.direct), '', w.pellets > 1 ? L(`${w.pellets}발 모두 맞으면 ${num(w.direct * w.pellets)}`, `${num(w.direct * w.pellets)} if all ${w.pellets} hit`) : L('장갑에 막히지 않을 때', 'When armor does not stop it'));
+  else if (w.direct != null) add(w.pellets > 1 ? L('펠릿당 피해', 'Damage per pellet') : kind === 'arc' ? L('아크 피해', 'Arc damage') : kind === 'beam' ? L('광선 피해', 'Beam damage') : L('직격 피해', 'Direct damage'), num(w.direct), '', w.pellets > 1 ? L(`${w.pellets}발 모두 맞으면 ${num(w.direct * w.pellets)}`, `${num(w.direct * w.pellets)} if all ${w.pellets} hit`) : L('장갑에 막히지 않을 때', 'When armor does not stop it'));
   // Arc and beam hits carry their damage icon (user request 2026-11-26).
-  if (w.direct != null && w.damageKind !== 'dps' && kind !== 'spray' && !(w.pellets > 1) && { arc: 1, beam: 1 }[kind]) rows.at(-1).icon = kind === 'arc' ? 'arc' : 'laser';
+  if (w.direct != null && w.damageKind !== 'dps' && kind !== 'spray' && !(w.pellets > 1)) rows.at(-1).icon = kind === 'arc' ? 'arc' : kind === 'beam' ? 'laser' : 'ballistic';
   // Only firing modes carry ammoPerShot (all barrels at once, a volley).
   if (w.ammoPerShot > 1 && w.direct != null) add(L('한 번에 발사', 'Fired at once'), num(w.ammoPerShot), L('발', ''), L(`모두 맞으면 ${num(w.direct * (w.pellets || 1) * w.ammoPerShot)}`, `${num(w.direct * (w.pellets || 1) * w.ammoPerShot)} if all hit`));
   // Fires whatever is left in the magazine (Variable "Total"), so the full magazine is the most.
   if (w.ammoAll && w.direct != null && w.magazine != null) add(L('한 번에 발사', 'Fired at once'), num(w.magazine), L('발', ''), L(`남은 탄 전부 · 가득 차 있으면 모두 맞을 때 ${num(w.direct * w.magazine)}`, `Every round left · ${num(w.direct * w.magazine)} if a full magazine all hits`));
-  if (w.splash != null) add(L('폭발', 'Blast'), num(w.splash), '', w.splashAp != null ? L(`폭발 AP ${w.splashAp}`, `Blast AP ${w.splashAp}`) : '');
+  if (w.splash != null) add(L('폭발 피해', 'Blast damage'), num(w.splash), '', w.splashAp != null ? L(`폭발 AP ${w.splashAp}`, `Blast AP ${w.splashAp}`) : '');
+  if (w.splash != null) rows.at(-1).icon = 'blast';
   // Extra cells (EXTRA_STATS in personal-display.mjs), each with its group of rows.
   const UNIT_EN = { '초': 's', '개': '' };
   // The wiki's recoil cell goes to the detailed stats with the other recoil numbers (recoilCells).
@@ -379,7 +380,7 @@ function variantTable(w) {
   if (variants.length < 2 || NO_COMPONENT_TABLE.has(w.id)) return '';
   return html`<section class="block gear-block"><h3>${L('모드·구성 요소별 수치', 'Stats by mode and component')}</h3>
     <div class="compare-scroll" role="region" aria-label="${L('모드별 수치', 'Stats by mode')}" tabindex="0"><table class="compare-table gear-modes">
-      <thead><tr><th scope="col">${L('구분', 'Part')}</th><th scope="col">${L('직격', 'Direct')}</th><th scope="col">${L('관통', 'Penetration')}</th><th scope="col">${L('폭발', 'Blast')}</th><th scope="col">${L('반경', 'Radius')}</th></tr></thead>
+      <thead><tr><th scope="col">${L('구분', 'Part')}</th><th scope="col">${L('직격 피해', 'Direct damage')}</th><th scope="col">${L('관통', 'Penetration')}</th><th scope="col">${L('폭발 피해', 'Blast damage')}</th><th scope="col">${L('반경', 'Radius')}</th></tr></thead>
       <tbody>${variants.map(v => html`<tr><th scope="row">${variantLabel(v)}</th>
         <td>${v.direct != null ? html`${num(v.direct)}${v.pellets > 1 ? html`<small>×${v.pellets}</small>` : ''}` : html`<span class="faint">—</span>`}</td>
         <td>${v.ap != null ? `AP ${v.ap}` : v.splashAp != null ? `AP ${v.splashAp}` : html`<span class="faint">—</span>`}</td>

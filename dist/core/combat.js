@@ -334,7 +334,7 @@ const tenths = value => Math.round(value * 10) / 10;
 function ignitionNote(ignition, ignite, after) {
   // A flame stream lights within a tenth of a second; say so rather than 'about 0 s'.
   const soon = after < 0.1;
-  const when = soon ? L('불이 0.1초 안에 붙습니다', 'Burning starts within 0.1 s') : L(`불이 붙기까지 약 ${tenths(after)}초입니다`, `Burning starts after about ${tenths(after)} s`);
+  const when = soon ? L('불이 0.1초 이내에 붙습니다', 'Burning starts within 0.1 s') : L(`불이 붙기까지 약 ${tenths(after)}초입니다`, `Burning starts after about ${tenths(after)} s`);
   return ignition.estimated
     ? L(`${when}. 이 적의 점화 기준치는 알려지지 않아 ${ignition.value}로 추정했고, 무기는 초당 ${ignite}씩 쌓습니다.`,
       `${when}. This enemy's ignition threshold is unknown, estimated at ${ignition.value}; the weapon builds up ${ignite} per second.`)
