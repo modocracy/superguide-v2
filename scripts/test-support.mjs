@@ -213,6 +213,8 @@ for (const id of Object.keys(unsupportedWeapons)) ok(support.some(item => item.i
 // base rate that no longer matches (one of the selectable rates, or the single rate) is printed as
 // a warning, so a refresh that moves a rate does not fail the check.
 const rateWarnings = [];
+// Shots in a minute of charging and firing back to back (user request 2026-11-26), not the datamine's base rate.
+const CYCLE_RATES = new Set(['quasar', 'nova']);
 for (const item of support.filter(item => item.rpmModes || item.rpm != null)) {
   const base = weapons[item.en.toUpperCase()]?.rpm ?? null;
   if (item.rpmModes) {
@@ -221,7 +223,7 @@ for (const item of support.filter(item => item.rpmModes || item.rpm != null)) {
     if (base != null && !item.rpmModes.includes(base)) rateWarnings.push(`${item.id}: datamine base rate ${base} is not one of ${item.rpmModes.join('/')}`);
   } else {
     ok(Number.isFinite(item.rpm) && item.rpm > 0, `${item.id}: fire rate is a positive number`);
-    if (base != null && base !== item.rpm) rateWarnings.push(`${item.id}: datamine base rate ${base}, data says ${item.rpm}`);
+    if (base != null && base !== item.rpm && !CYCLE_RATES.has(item.id)) rateWarnings.push(`${item.id}: datamine base rate ${base}, data says ${item.rpm}`);
   }
 }
 for (const message of rateWarnings) console.warn(`warning: support fire rate: ${message}`);

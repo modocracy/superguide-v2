@@ -256,8 +256,9 @@ if (caltrops) {
   const { num } = await import('../dist/core/explain.js');
   const shows = (content, label, text) => content.includes(`<dt>${label}</dt><dd>${text}`);
   for (const item of stratagems.filter(s => s.category === 'support')) {
-    // The stat grid, not a firing-mode panel's grid above it.
-    const statsHtml = String(stratagemDetail(item)).replace(/<div class="variant-panel" data-fire-mode-panel[\s\S]*?<\/dl>/g, '');
+    // The stat grid, not a firing-mode panel's grid or the cooldown block above it.
+    const statsHtml = String(stratagemDetail(item)).replace(/<div class="variant-panel" data-fire-mode-panel[\s\S]*?<\/dl>/g, '')
+      .replace(/<section class="block"><h3>재사용 대기시간과 호출<\/h3>[\s\S]*?<\/section>/, '');
     const grid = statsHtml.match(/<dl class="detail-grid">[\s\S]*?<\/dl>/)?.[0] ?? '';
     if (item.rpmModes?.length > 1) ok(shows(grid, '연사 모드', item.rpmModes.map(num).join(' / ')), `${item.id}: selectable fire rates shown`);
     else if (item.rpm != null) ok(shows(grid, '연사', num(item.rpm)), `${item.id}: fire rate shown`);

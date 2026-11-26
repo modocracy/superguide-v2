@@ -69,7 +69,7 @@ function stats(item) {
   const splashName = item.splashKind === 'arc' ? L('아크 피해', 'Arc damage') : L('폭발 피해', 'Blast damage');
   return [
     { label: hitName, icon: hitIcon, caption: item.directNoteShort || (none ? L('지원 장비', 'Utility gear') : dps ? L('초당', 'Per second') : item.unit), ...value(item.direct, item.directText) },
-    { label: splashName, icon: item.splashKind === 'arc' ? 'arc' : item.splash > 0 ? 'blast' : '', caption: item.splashNoteShort || (item.splash > 0 ? L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
+    { label: splashName, icon: item.splashKind === 'arc' ? 'arc' : item.splash > 0 ? 'blast' : '', caption: item.splashNoteShort || (item.splash > 0 ? item.innerRadius != null ? L(`반경 ${num(item.innerRadius)}m`, `${num(item.innerRadius)} m radius`) : L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
     { label: L('관통', 'Penetration'), caption: item.apNoteShort || (item.ap != null ? apBandOf(item).name + (item.splashAp != null && item.splashAp !== item.ap ? ` · ${splashName} AP ${item.splashAp}` : '') : ''),
       ...(item.ap != null ? { text: `AP ${item.ap}${item.splashAp != null && item.splashAp !== item.ap ? `/${item.splashAp}` : ''}` } : { text: none ? '—' : L('미확인', 'Unverified'), dim: true }) },
     { caption: reach.caption, ...reach },
@@ -609,7 +609,9 @@ const statGrid = (item, effects = [], expanded = false) => {
   // Extra cells from the data (numbers the stats above have no slot for), placed with their group.
   const UNIT_EN = { '발': '', '회': '', '개': '', '초': 's' };
   const extra = after => (item.extraStats ?? []).filter(cell => (cell.after ?? 'damage') === after)
-    .map(cell => statCell({ label: cell.label, icon: cell.icon, text: typeof cell.value === 'number' ? num(cell.value) : cell.value, unit: lang === 'en' ? UNIT_EN[cell.unit] ?? cell.unit : cell.unit, caption: cell.caption }));
+    .map(cell => statCell({ label: cell.label, icon: cell.icon, text: typeof cell.value === 'number' ? num(cell.value) : cell.value, unit: lang === 'en' ? UNIT_EN[cell.unit] ?? cell.unit : cell.unit,
+      // A warning part (the overcharge) shows in the overcharge blast note's colour (user request 2026-11-26).
+      caption: cell.warn ? html`${cell.caption ? html`${cell.caption} · ` : ''}<span class="force-note">${cell.warn}</span>` : cell.caption }));
   // A direct hit that practically never happens (a carrier shell bursting in the air) is flagged in orange.
   if (item.directWarn) direct.warn = item.directWarn;
   // Direct, durable, then blast damage (user request 2026-11-26).
@@ -662,9 +664,9 @@ export function stratagemDetail(item, { demolition = false, force = null, header
     : ballisticsBlock(Object.entries(supportProjectileRecords[item.id] ?? DETAIL_RECORDS[item.id] ?? {}).map(([modeId, record]) => ({ label: T(item.variants?.find(v => v.id === modeId)?.name) ?? MODE_LABELS[modeId] ?? item.name, record, propelled: propelledModes[item.id]?.includes(modeId) })), expanded, recoilStats(`arsenal/${item.id}`));
   const recoilSim = recoilSimBlock(`arsenal/${item.id}`, expanded);
   const statsLayout = expanded
-    ? html`${variantStats || !blasts ? base : detailColumns(base, blasts)}
-      ${firing}${ballistics}${recoilSim}${detailColumns(timing, changes)}${detailColumns(spread, defense)}${durability}`
-    : html`${firing}${base}${blasts}${spread}${timing}${durability}${defense}${ballistics}${recoilSim}${changes}`;
+    ? html`${timing}${variantStats || !blasts ? base : detailColumns(base, blasts)}
+      ${firing}${ballistics}${recoilSim}${changes}${detailColumns(spread, defense)}${durability}`
+    : html`${timing}${firing}${base}${blasts}${spread}${durability}${defense}${ballistics}${recoilSim}${changes}`;
   const heroHead = html`<div class="detail-id${expandable && !item.input ? ' item-detail-actions' : ''}"><img class="strat-icon large" src="${wikiIcons[item.id]?.src}" alt="" width="64" height="64">
       <div><h2 id="${titleId}">${item.name}</h2><p>${subtitle(item)}</p>
       <div class="chips" style="margin-top:6px">${badge(cat.name, 'outline')}${warbondChip('arsenal', item.id)}${charge ? badge(`AP ${charge[0].ap}~${charge[1].ap} · ${apBandOf(charge[0]).name}~${apBandOf(charge[1]).name}`, 'accent') : item.ap != null ? badge(`AP ${item.ap} · ${apBandOf(item).name}`, 'accent') : ''}${item.tags.map(tag => badge(tag))}${stratagemStats[item.id]?.oneHanded ? badge(L('한손', 'One-handed')) : ''}${holeTag(item)}${reloadTags(item)}</div>${holeNote(item)}</div>

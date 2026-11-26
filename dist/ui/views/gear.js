@@ -120,7 +120,7 @@ export function gearStats(w) {
     ? { label: L('지속 피해', 'Damage/s'), text: num(w.direct), unit: '/s', caption: L('광선 초당', 'Beam per second') }
     : w.direct != null
     ? { label: L('피해', 'Damage'), text: w.pellets > 1 ? `${num(w.direct)}×${w.pellets}` : num(w.direct), caption: w.pellets > 1 ? L(`펠릿 ${w.pellets}개`, `${w.pellets} pellets`) : w.splash ? L(`+ 폭발 ${num(w.splash)}`, `+ ${num(w.splash)} blast`) : hitKind(w) === 'arc' ? L('아크 1개', 'Per arc') : L('한 발', 'Per shot') }
-    : w.splash != null ? { label: L('폭발 피해', 'Blast damage'), text: num(w.splash), caption: w.shrapnelCount ? L(`+ 파편 ${w.shrapnelCount}개`, `+ ${w.shrapnelCount} fragments`) : L('중심부 최대', 'Max at center') }
+    : w.splash != null ? { label: L('폭발 피해', 'Blast damage'), text: num(w.splash), caption: w.shrapnelCount ? L(`+ 파편 ${w.shrapnelCount}개`, `+ ${w.shrapnelCount} fragments`) : w.innerRadius != null ? L(`반경 ${num(w.innerRadius)}m`, `${num(w.innerRadius)} m radius`) : L('중심부 최대', 'Max at center') }
     : w.dot?.perSecond != null ? { label: L('지속 피해', 'Damage/s'), text: num(w.dot.perSecond), unit: '/s', caption: ELEMENTS[w.dot.element] || '' }
     : { label: L('피해', 'Damage'), ...dim(isUtility(w) ? L('없음', 'None') : L('미확인', 'Unverified')), caption: isUtility(w) ? L('지원용', 'Utility') : '' };
   const ap = apText(w);

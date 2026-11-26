@@ -2,8 +2,8 @@ import { L } from '../core/i18n.js';
 import { $, $$, html, icon, raw } from './dom.js';
 
 export const FORCE_NOTE = L(
-  '저지력은 적의 동작을 끊는 힘(적마다 기준값이 다름), 넉백은 밀어내는 힘입니다. 철거력은 한 번의 명중이나 폭발이 시설의 필요 철거력 이상이어야 하며, 여러 번 맞혀도 합산되지 않습니다.',
-  'Stagger force interrupts an enemy (each enemy has its own threshold); push force knocks it back. Demolition force must reach a structure\'s threshold in a single hit or blast; hits do not add up.',
+  '철거력은 시설을 파괴하는 데 필요한 힘이며, 저지력은 적의 동작을 끊는 힘(적마다 기준값이 다름), 넉백은 밀어내는 힘입니다.',
+  'Demolition force is what it takes to destroy a structure, stagger force interrupts an enemy (each enemy has its own threshold), and push force knocks it back.',
 );
 
 export const detailStatCell = (stat, keepClass = false) => html`<div><dt>${stat.icon ? html`<span class="ico-${stat.icon}" aria-hidden="true"></span>` : ''}${stat.label}</dt><dd${stat.dim || keepClass ? raw(` class="${stat.dim ? 'dim' : ''}"`) : ''}>${stat.text}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd>${stat.caption ? html`<div class="caption">${stat.caption}</div>` : ''}${stat.warn ? html`<div class="caption force-note">${stat.warn}</div>` : ''}</div>`;
