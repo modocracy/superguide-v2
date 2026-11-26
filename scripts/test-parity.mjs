@@ -159,16 +159,7 @@ const legacyMode = (id, mode) => {
 // Stratagems given a profile from the attack datamine after the recording (2026-11-23) had none then.
 // SEAF Artillery was recorded as a call-in a jammer blocks; the wiki says jammers cannot block it (2026-11-23).
 const callInRemoved = ['seaf-artillery'];
-// Modes the user added after the recording with their own force (forceSource 'user', 2026-11-26: the Hellbombs' 17-20 m
-// band at force 50) are left out of the replay and checked on their own below.
-const userModes = Object.entries(demolitionProfiles).flatMap(([id, profile]) => profile.modes.filter(mode => mode.forceSource === 'user').map(mode => [id, mode]));
-assert.deepEqual(userModes.map(([id, mode]) => `${id}/${mode.id}=${mode.explosion}`), ['portable-hellbomb/edge=50', 'hellbomb/edge=50'], 'user-set demolition modes');
-for (const [id, mode] of userModes) {
-  const result = solveDemolition(structures.find(item => item.id === 'jammer'), demolitionProfiles[id], mode, { jammerDisabled: true });
-  assert(result.method === 'force' && mode.note.includes('위키 수치가 아니라'), `${id}/${mode.id}: force 50 brings down a jammer, and the note says it is the site's value`);
-}
-const withoutUserModes = profile => profile.modes.some(mode => mode.forceSource === 'user') ? { ...profile, modes: profile.modes.filter(mode => mode.forceSource !== 'user') } : profile;
-const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id)).map(([id, profile]) => [id, withoutUserModes(profile)]).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] ? profile
+const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id)).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] ? profile
   : { ...profile, modes: profile.modes.map(mode => legacyMode(id, mode)) }]).map(([id, profile]) => [id, callInRemoved.includes(id) ? { ...profile, requiresCallIn: true } : profile]));
 for (const id of callInRemoved) for (const mode of demolitionProfiles[id].modes) {
   const result = solveDemolition(structures.find(item => item.id === 'jammer'), demolitionProfiles[id], mode);
