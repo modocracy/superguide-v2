@@ -538,6 +538,39 @@ export const personalProfiles = {
       },
     ],
   },
+  trident: {
+    source: 'https://helldivers.wiki.gg/wiki/LAS-13_Trident',
+    checkedAt: '2026-11-08',
+    sourceRevision: 141913,
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    modes: [
+      {
+        id: 'standard',
+        name: '기본 사격',
+        standard: 60,
+        durable: 6,
+        ap: 2,
+        explosion: 0,
+        explosionDurable: 0,
+        explosionAp: 0,
+        innerRadius: null,
+        radius: null,
+        delivery: 'beam',
+        unit: '발',
+        magazine: null,
+        ammoPerShot: 1,
+        hitCondition: {
+          kind: 'pellets',
+          min: 1,
+          max: 6,
+          projectileName: '광선',
+          defaultPct: 100,
+          default: 6,
+        },
+        note: '광선이 옆으로 넓게 퍼져 작은 부위에 모두 맞히기 어렵습니다. 거리에 따라 피해가 줄지 않습니다. 기본은 광선이 모두 맞는다고 계산합니다. 명중률을 낮춰 다시 계산할 수 있습니다.',
+      },
+    ],
+  },
   sickle: {
     source: 'https://helldivers.wiki.gg/wiki/LAS-16_Sickle',
     checkedAt: '2026-11-08',
@@ -2603,7 +2636,6 @@ export const personalProfiles = {
   },
 };
 export const personalUnsupported = {
-  trident: '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.',
   'double-edge-sickle': '총이 뜨거워지면 피해가 달라집니다. 피해가 바뀌는 정확한 조건을 확인하지 못해 계산하지 않습니다.',
   purifier: '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.',
   'accelerator-rifle': '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.',

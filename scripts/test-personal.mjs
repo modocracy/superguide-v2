@@ -166,7 +166,8 @@ for (const profile of Object.values(personalProfiles)) {
 }
 for (const text of playerCopy) ok(!/ap1|원본|레코드|탄체|\blevel\b|damage(?:_id)?|durable|splash|beam_fire_rate|charge_time|tac_reload_time/i.test(text), 'personal combat copy has no internal terminology');
 eq(personalUnsupported.purifier, '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.');
-eq(personalUnsupported.trident, '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.');
+// Trident: six beams per shot, counted like pellets (wiki: 360 per shot, 6 beams).
+eq([personalProfiles.trident.modes[0].standard, personalProfiles.trident.modes[0].hitCondition], [60, { kind: 'pellets', min: 1, max: 6, projectileName: '광선', defaultPct: 100, default: 6 }]);
 // Held beams and flame streams are counted in seconds (user request 2026-11-26).
 const streamOf = id => personalProfiles[id]?.modes[0];
 eq([streamOf('scythe').standard, streamOf('scythe').durable, streamOf('scythe').ap, streamOf('scythe').unit, streamOf('scythe').stream.capacity], [350, 70, 2, '초', { kind: 'heat', seconds: 8 }]);
@@ -444,7 +445,7 @@ eq(resolveAttack('liberator').kind, 'personal');
 eq(resolveAttack('autocannon').profile, weaponProfiles.autocannon);
 ok(resolveAttack('__proto__').unsupported && !resolveAttack('__proto__').profile, 'untrusted IDs cannot resolve prototypes');
 eq(compare('hunter-hardened', 'liberator', { partId: 'head' }).magazinesNeeded, 1);
-eq(compare('hunter-hardened', 'trident').status, 'unsupported');
+eq(compare('hunter-hardened', 'purifier').status, 'unsupported');
 // A flame stream needs the enemy's fire multiplier; with it, the answer is in seconds and never a one-shot.
 eq(compare('hunter-hardened', 'torcher').status, 'none', 'no fire multiplier, no flame count');
 const torched = compare('hunter-hardened', 'torcher', { fireMult: 1, ignition: { value: 5, estimated: true } });
@@ -457,7 +458,7 @@ eq(compare('hunter-hardened', 'liberator').oneShot, true, 'one bullet fatal answ
 eq(compare('hunter-hardened', 'frag').oneShot, true, 'one grenade fatal answer');
 eq(compare('hunter-hardened', 'saber').oneShot, true, 'one melee hit fatal answer');
 eq(compare('hunter-hardened', 'senator', { partId: 'claw' }).oneShot, false, 'one-hit nonfatal break is not oneShot');
-eq(compare('hunter-hardened', 'trident').oneShot, false, 'unsupported is not oneShot');
+eq(compare('hunter-hardened', 'purifier').oneShot, false, 'unsupported is not oneShot');
 eq(compare('harvester', 'recoilless').oneShot, false, 'blocked shield is not oneShot');
 eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: 2 } }).oneShot, false, 'nonaccepted assumption is not oneShot even if hits is 1');
 eq([defaultBreaker.status, defaultBreaker.hits, defaultBreaker.verified, defaultBreaker.defaulted, defaultBreaker.allPelletsAssumed, defaultBreaker.assumption.count], ['route', 1, true, true, true, 11]);

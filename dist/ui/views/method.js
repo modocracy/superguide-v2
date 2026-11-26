@@ -46,7 +46,7 @@ const moreKorean = () => html`
       <li><b>충격파</b>: 피해 없이 경직만 줍니다.</li>
       <li>엎드려 있거나 날아가는 중이면 바깥 반경의 폭발 피해를 90% 덜 받습니다.</li>
     </ul></section>
-    <section><h3>9. 지속 피해와 화염 배율</h3><p>화염, 가스, 산성 같은 지속 피해는 본체 체력에만 들어가고, 관통이 본체 장갑과 같으면 65%만 들어갑니다. 적마다 화염 배율이 있어(워리어 0.8배, 차저 1.5배, 바일 타이탄 1.7배) 적 화면의 '화염 저항'으로 표시합니다. 예: 화염 초당 100 x 차저 1.5 x 65% = 초당 97. 한 번에 들어가는 지속 피해의 소수점은 버리지 않고 모았다가 1이 되면 더합니다(6.25씩이면 6, 6, 6, 7).</p></section>
+    <section><h3>9. 지속 피해와 화염 배율</h3><p>화염, 가스, 산성 같은 지속 피해는 본체 체력에만 들어가고, 관통이 본체 장갑과 같으면 65%만 들어갑니다. 적마다 화염 배율이 있어(워리어 0.8배, 차저 1.5배, 바일 타이탄 1.7배) 적 화면의 '화염 저항'으로 표시합니다. 예: 화염 초당 100 x 차저 1.5 x 65% = 초당 97. 한 번에 들어가는 지속 피해의 소수점은 버리지 않고 모았다가 1이 되면 더합니다(6.25씩이면 6, 6, 6, 7).</p><p>불은 맞는 동안 쌓이는 점화 수치가 적의 점화 기준치에 이르면 붙습니다. 무기가 쌓는 값은 datamine에서(사이스·대거 광선 초당 1, 레이저 캐넌 1.5, 화염 무기는 초당 150 이상이라 거의 바로 붙습니다), 적의 기준치는 위키 적 문서의 패치 기록에서 가져옵니다(워리어 3.3, 데버스테이터 8, 차저 8.5, 헐크 9). 기준치가 범위로 적힌 적은 최대값을 쓰고, 기준치가 알려지지 않은 적은 5로 추정합니다. 예: 레이저 캐넌으로 차저를 비추면 8.5 ÷ 1.5 = 약 5.7초 뒤에 불이 붙습니다.</p></section>
     <section><h3>10. 헬다이버가 받는 피해</h3><p>헬다이버 체력은 ${helldiverArmor.health}입니다. 머리는 ${helldiverArmor.head}배, 몸통은 ${helldiverArmor.chest}배, 팔다리는 ${Math.round(helldiverArmor.arm * 100) / 100}배로 맞습니다. 방어구 장갑 등급에 따라 받는 피해가 달라집니다(${ratingList()}). 장갑 등급 50~150에서는 1.5 - 장갑 등급 / 200배입니다. 장갑 등급 100 미만의 추가 피해 배율은 머리에는 붙지 않습니다(머리는 100 이하에서 1배). 강화 패시브는 폭발 피해를 ${helldiverArmor.fortified}배로, 생명력 증진 부스터는 받는 피해를 ${helldiverArmor.vitality}배로 줄입니다. 적 화면의 '공격 패턴' 표는 이 배율로 몸통 기준 횟수를 어림합니다.</p></section>
     <section><h3>11. 반동과 흔들림</h3><p>자세에 따라 반동(무기 반동과 화면 반동)에 배율이 붙습니다. 조준경으로 볼 때 서서 0.9배(움직이면 1.1배), 앉아서 0.6배(0.9배), 엎드려 0.4배이고, 3인칭은 서서 1배(1.5배), 앉아서 0.6배(1배), 엎드려 0.4배입니다. 조준 중 흔들림은 조준경 기준 서서 0.75배(움직이면 3배), 앉아서 0.5배(2배), 엎드려 0.1배이고, 엎드리면 움직여도 늘지 않습니다. 이미 한쪽으로 약 0.57도 넘게 튄 상태에서는 반대쪽 반동이 1/16로 줄고, 충전·과열하는 무기는 반동이 최대 2배까지 커집니다. 장비 상세의 '흔들림'은 여기에 곱하는 무기별 배율입니다.</p></section>`;
 
@@ -59,6 +59,7 @@ const korean = () => html`
     ${workedExample()}
     <section><h3>표시 횟수가 뜻하는 것</h3><ul>
       <li>최대 피해로 <b>같은 부위</b>를 계속 맞혔을 때의 <b>최소 횟수(이론값)</b>입니다. 거리 감쇠·빗맞음·각도 때문에 실전에서는 더 필요할 수 있습니다.</li>
+      <li>광선·화염 무기(레이저 캐넌, 화염방사기, 사이스 등)는 같은 부위에 계속 맞힐 때 걸리는 <b>시간(초)</b>입니다. 불이 붙은 뒤의 화상 피해까지 더하며, 예열·점화·재장전 시간은 넣지 않습니다. ‘발’과 비교할 수 없어 순위표에서 따로 묶습니다.</li>
       <li>‘출혈 유발’은 본체 체력이 바닥나 곧 쓰러지지만, 잠시 더 움직이거나 공격할 수 있다는 뜻입니다.</li>
       <li>‘계산 보류’와 ‘미확인’은 자료가 없다는 뜻이지, 처치할 수 없다는 뜻이 아닙니다. 모르는 값을 0으로 채우지 않습니다.</li>
       <li>재생하는 적은 재생을 뺀 값이라 ‘이상’으로 표시합니다.</li>
@@ -79,7 +80,7 @@ const moreEnglish = () => html`
       <li><b>Shockwave</b>: stagger only, no damage.</li>
       <li>Lying prone or ragdolling cuts outer-radius blast damage by 90%.</li>
     </ul></section>
-    <section><h3>9. Damage over time and fire multipliers</h3><p>Fire, gas, acid and other damage over time hits main health only, and deals 65% when its AP equals the main armor. Each enemy has a fire multiplier (Warrior x0.8, Charger x1.5, Bile Titan x1.7), shown as fire resistance on the enemy view. Example: fire at 100 per second x 1.5 for a Charger x 65% = 97 per second. The fractions of each damage-over-time tick are kept and added once they reach 1 (6.25 a tick lands as 6, 6, 6, 7).</p></section>
+    <section><h3>9. Damage over time and fire multipliers</h3><p>Fire, gas, acid and other damage over time hits main health only, and deals 65% when its AP equals the main armor. Each enemy has a fire multiplier (Warrior x0.8, Charger x1.5, Bile Titan x1.7), shown as fire resistance on the enemy view. Example: fire at 100 per second x 1.5 for a Charger x 65% = 97 per second. The fractions of each damage-over-time tick are kept and added once they reach 1 (6.25 a tick lands as 6, 6, 6, 7).</p><p>A target catches fire once the fire build-up from the hits reaches its ignition threshold. What a weapon builds up comes from the datamine (Scythe and Dagger beams 1 per second, Laser Cannon 1.5; flame weapons build 150 or more per second, so they light almost at once); the thresholds come from the change history on the wiki enemy pages (Warrior 3.3, Devastator 8, Charger 8.5, Hulk 9). A range uses its maximum, and an enemy with no known threshold is estimated at 5. Example: a Laser Cannon held on a Charger lights it after 8.5 / 1.5 = about 5.7 seconds.</p></section>
     <section><h3>10. Damage Helldivers take</h3><p>A Helldiver has ${helldiverArmor.health} health. Head hits take x${helldiverArmor.head}, torso x${helldiverArmor.chest}, limbs x${Math.round(helldiverArmor.arm * 100) / 100}. The armor rating changes the damage taken (${ratingList()}; from 50 to 150 it is 1.5 - rating / 200); the extra damage of ratings under 100 does not apply to the head (x1 at 100 or less). The Fortified passive cuts blast damage to x${helldiverArmor.fortified}, and the Vitality Enhancement booster cuts damage taken to x${helldiverArmor.vitality}. The enemy view's Attacks table uses these factors for its rough torso-hit counts.</p></section>
     <section><h3>11. Recoil and sway</h3><p>Your stance scales recoil (how far the weapon kicks and the view climbs). Through the scope it is x0.9 standing (x1.1 moving), x0.6 crouched (x0.9) and x0.4 prone; in third person x1 standing (x1.5), x0.6 crouched (x1) and x0.4 prone. Aiming sway through the scope is x0.75 standing (x3 moving), x0.5 crouched (x2) and x0.1 prone, where moving adds nothing. Once the weapon has kicked more than about 0.57 degrees to one side, a kick the other way is cut to 1/16, and charging or heating weapons can recoil up to twice as hard. The Sway figure in gear details is the weapon's own multiplier on top of this.</p></section>`;
 
@@ -92,6 +93,7 @@ const english = () => html`
     ${workedExample()}
     <section><h3>What the counts mean</h3><ul>
       <li>The <b>minimum (theoretical) count</b> when every shot hits <b>the same part</b> at full damage. Falloff, misses and angles mean you may need more in a real fight.</li>
+      <li>Beams and flames (Laser Cannon, Flamethrower, Scythe and others) show the <b>time in seconds</b> held on the same part. Burning after the target catches fire is added; warm-up, ignition and reloads are not. Seconds cannot be compared with shots, so they are ranked in their own block.</li>
       <li>“Bleeds out” means main health is gone and it is about to drop, but it can still move or attack for a moment.</li>
       <li>“Not calculated” and “Unverified” mean the data is missing — not that the enemy cannot be killed. Unknown values are never filled in as 0.</li>
       <li>For enemies that regenerate, counts leave regeneration out and are shown as a minimum (“+”).</li>

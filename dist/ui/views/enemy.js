@@ -82,6 +82,16 @@ const HIT_KINDS = {
   bomblets: { noun: L('자탄', 'bomblets'), unit: L('개', ''), per: L('한 발에', 'per shot'), pct: 20, why: L('자탄은 넓게 흩어져 한 부위에 다 맞는 일이 드물어 기본은 20%로 계산합니다. 0%는 주탄만 계산합니다.', 'Bomblets scatter widely and rarely all hit one part, so the default is 20%. 0% counts the main projectile only.') },
   shrapnel: { noun: L('파편', 'fragments'), unit: L('개', ''), per: L('폭발 1회에', 'per explosion'), pct: 20, why: L('파편은 사방으로 흩어져 기본은 20%로 계산합니다. 0%로 두면 파편을 빼고 직격·폭발만 계산합니다.', 'Fragments fly in every direction, so the default is 20%. At 0% only the impact and explosion are counted.') },
 };
+// Pellets a mode names itself (the Variable's bullets, the Trident's beams) keep that name in these labels.
+const PELLET_EN = { 탄환: 'bullets', 광선: 'beams' };
+const hitKind = c => {
+  const kind = HIT_KINDS[c?.kind];
+  const name = c?.kind === 'pellets' && c.projectileName;
+  if (!kind || !name) return kind;
+  return { ...kind, noun: L(name, PELLET_EN[name] || 'pellets'),
+    why: L(`기본은 ${josa(name, ['이', '가'])} 모두 맞는다고 계산합니다. 거리가 멀거나 조준이 어긋나면 일부만 맞으니, 명중률을 낮춰 다시 볼 수 있습니다.`,
+      `By default every one of the ${PELLET_EN[name] || 'pellets'} hits. At range or off-aim only some land, so you can lower the hit rate to check again.`) };
+};
 const hitCount = (c, pct) => pct <= 0 && c.min === 0 ? 0 : Math.max(c.min, Math.round(c.max * pct / 100));
 // The slider shows the 10 % step that yields this count, preferring the data's
 // default percentage (7 sub-missiles at 20 % is 1, which is also what 10 % gives).
@@ -100,7 +110,7 @@ const defaultCount = mode => {
 const effectiveAssume = mode => state.assume.hitCount === '' && defaultCount(mode) != null
   ? { ...state.assume, hitCount: String(defaultCount(mode)) } : state.assume;
 const defaultLabel = mode => {
-  const c = mode?.hitCondition, kind = HIT_KINDS[c?.kind];
+  const c = mode?.hitCondition, kind = hitKind(c);
   if (!kind) return L('기본 명중 수 가정', 'Default hit assumption');
   const pct = hitPct(c, defaultCount(mode));
   return pct === 100 ? L(`${kind.noun} 전부 명중 가정`, `All ${kind.noun} hit (assumed)`) : pct === 0 ? L(`${kind.noun} 제외`, `No ${kind.noun}`) : L(`${kind.noun} ${pct}% 명중 가정`, `${pct}% of ${kind.noun} hit (assumed)`);
@@ -109,12 +119,12 @@ const defaultLabel = mode => {
 const assumedText = answer => {
   if (answer.fragmentsExcluded) return L(' · 파편 제외', ' · no shrapnel');
   if (answer.defaultAssumed) {
-    const noun = HIT_KINDS[answer.defaultAssumed.kind]?.noun, pct = answer.defaultAssumed.pct ?? Math.round(answer.defaultAssumed.count / answer.defaultAssumed.max * 100);
+    const noun = hitKind(answer.mode?.hitCondition?.kind === answer.defaultAssumed.kind ? answer.mode.hitCondition : answer.defaultAssumed)?.noun, pct = answer.defaultAssumed.pct ?? Math.round(answer.defaultAssumed.count / answer.defaultAssumed.max * 100);
     return L(` · ${noun || '명중'} ${pct}% 가정`, ` · ${pct}% ${noun || 'hits'} assumed`);
   }
-  return answer.allPelletsAssumed ? L(' · 펠릿 전부 명중', ' · all pellets hit') : answer.assumption ? L(' · 명중 수 가정', ' · assumed hits') : '';
+  return answer.allPelletsAssumed ? L(` · ${hitKind(answer.mode?.hitCondition)?.noun ?? '펠릿'} 전부 명중`, ` · all ${hitKind(answer.mode?.hitCondition)?.noun ?? 'pellets'} hit`) : answer.assumption ? L(' · 명중 수 가정', ' · assumed hits') : '';
 };
-const countLine = (c, count) => { const kind = HIT_KINDS[c.kind]; return L(`${kind.per} ${kind.noun} ${c.max}${kind.unit} 중 ${count}${kind.unit}가 이 부위에 명중`, `${count} of ${c.max} ${kind.noun} ${kind.per} hit this part`); };
+const countLine = (c, count) => { const kind = hitKind(c); return L(`${kind.per} ${kind.noun} ${c.max}${kind.unit} 중 ${count}${kind.unit}가 이 부위에 명중`, `${count} of ${c.max} ${kind.noun} ${kind.per} hit this part`); };
 
 
 const PRIMARY_HITS = [['blast', L('주탄 폭발만', 'Main projectile explosion only')], ['direct', L('주탄 직격 + 폭발', 'Main projectile impact + explosion')], ['none', L('주탄 피해 없음', 'No main projectile damage')]];
@@ -539,7 +549,7 @@ function wikiReferenceBlock(reference, unit) {
 }
 
 function hitRateControls(mode, c) {
-  const kind = HIT_KINDS[c.kind];
+  const kind = hitKind(c);
   const count = Number(effectiveAssume(mode).hitCount);
   // Keep the percentage the player picked; several steps can round to one count.
   const pct = state.assume.pct != null && hitCount(c, state.assume.pct) === count ? state.assume.pct : hitPct(c, count);

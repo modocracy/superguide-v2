@@ -64,7 +64,7 @@ export default {
   "맞은 부위에 붙은 탄이 잠시 뒤 그 자리에서 터지는 지연 폭발까지 계산합니다. 붙은 뒤 적이 움직여도 같은 부위에서 터진다고 가정하며, 계속 타는 피해는 뺍니다.": "Includes the delayed explosion: the round sticks to the part it hits and detonates there a moment later. Assumes it still explodes on that part if the enemy moves, and leaves out the ongoing burn damage.",
   "처음 터지는 폭발만 계산합니다. 남은 불길에 계속 닿아서 받는 피해는 더하지 않습니다.": "Only the initial explosion is calculated. Damage from staying in the lingering fire is not added.",
   "기본은 파편의 20%를 반올림한 개수가 같은 부위에 맞는다고 가정하며, 폭발 피해도 반영합니다. 명중률을 바꿔 다시 계산할 수 있으며, 파편 0개를 고르면 파편 피해는 제외합니다.": "By default, 20% of the shrapnel (rounded) is assumed to hit the same part, and explosion damage is also included. Change the hit rate to recalculate; choosing 0 fragments leaves out shrapnel damage.",
-  "광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.": "Not calculated per shot because damage depends on how long the beam stays on target.",
+  "광선이 옆으로 넓게 퍼져 작은 부위에 모두 맞히기 어렵습니다. 거리에 따라 피해가 줄지 않습니다. 기본은 광선이 모두 맞는다고 계산합니다. 명중률을 낮춰 다시 계산할 수 있습니다.": "The beams spread wide sideways, so landing them all on a small part is hard. Damage does not fall off with range. By default all the beams hit; you can lower the hit rate to recalculate.",
   "총이 뜨거워지면 피해가 달라집니다. 피해가 바뀌는 정확한 조건을 확인하지 못해 계산하지 않습니다.": "Damage changes as the gun heats up. Not calculated because the exact conditions for the damage change are unverified.",
   "충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.": "Not calculated because the exact charged damage is unverified.",
   "치료용 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.": "A healing tool. Shots to kill are not calculated because its damage to enemies is unverified.",

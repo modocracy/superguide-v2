@@ -83,10 +83,16 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     }
     let reason = specialReasons[weapon.id];
     if (weapon.charge) reason = '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.';
-    if (weapon.delivery === 'beam') reason = '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.';
+    // A burst of beams per shot (Trident) is counted like pellets; the wiki infobox damage per shot is beams x one
+    // beam's damage, and the page says it fires 6 beams per shot with no falloff (user request 2026-11-26).
+    const burst = weapon.delivery === 'beam' && weapon.damageKind !== 'dps' && weapon.beams > 1;
+    if (burst && Number(weapon.infoboxRaw?.damage?.match(/\{\{Damage\|Beam\|(\d+)\}\}/)?.[1]) !== weapon.beams * weapon.direct) throw new Error(`${weapon.id}: beam burst damage changed`);
+    if (weapon.delivery === 'beam' && !burst) reason = '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.';
     if (weapon.delivery === 'spray') reason = sprayReason;
     if (reason) { personalUnsupported[weapon.id] = reason; continue; }
     let modes = [makeMode(weapon, weapon, 'standard', weapon.category === 'throwable' ? '폭발 1회' : '기본 사격')];
+    if (burst) Object.assign(modes[0], { hitCondition: { kind: 'pellets', min: 1, max: weapon.beams, projectileName: '광선' },
+      note: '광선이 옆으로 넓게 퍼져 작은 부위에 모두 맞히기 어렵습니다. 거리에 따라 피해가 줄지 않습니다.' });
     if (weapon.id === 'halt') modes = weapon.variants.map((v, i) => makeMode(weapon, v, i ? 'stun' : 'flechette', i ? '기절탄' : '플레셰트탄', 8));
     if (weapon.linkedAttacks.length) {
       modes = [makeMode(weapon, weapon, 'standard', '주 총열')];

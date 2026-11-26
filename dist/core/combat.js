@@ -396,7 +396,7 @@ function solveStream(enemy, target, attack, options) {
     const burned = burn > 0 ? burn * Math.max(0, time + span - Math.max(time, after)) : 0;
     time += span;
     Object.assign(stage, { hits: streamSeconds(span), contactSeconds: span, partTotal: damage.direct * span, mainTotal: transferred, burnTotal: burned });
-    const done = { ...base, stages, notes, hits: streamSeconds(time), seconds: time };
+    const done = { ...base, stages, notes, hits: streamSeconds(time), seconds: time, ignitedAt: burn > 0 ? after : null };
     if (partTime <= mainTime && part.effect === 'kill' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };
     if (partTime <= mainTime && mainLeft - transferred - burned - (part.destroyMainDamage || 0) <= EPSILON) return { ...done, outcome: bleedOrKill, via: 'main' };
     if (mainTime < partTime) return { ...done, outcome: bleedOrKill, via: 'main' };

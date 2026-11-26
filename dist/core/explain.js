@@ -19,7 +19,7 @@ export const stageName = stage => stage.copy ? `${T(stage.part.name)} (${L(`${st
 
 // English words for the counted things (data keeps Korean labels as keys).
 const EN_UNIT_LABEL = { 수류탄: ['grenade', 'grenades'], 지뢰: ['mine', 'mines'], 다이너마이트: ['stick', 'sticks'] };
-const EN_PROJECTILE = { 펠릿: ['pellet', 'pellets'], 탄환: ['bullet', 'bullets'] };
+const EN_PROJECTILE = { 펠릿: ['pellet', 'pellets'], 탄환: ['bullet', 'bullets'], 광선: ['beam', 'beams'] };
 const enWords = mode => {
   if (mode?.unit === '개' && mode.unitLabel) return EN_UNIT_LABEL[mode.unitLabel] || ['item', 'items'];
   if (mode?.unit === '개' && mode.delivery === 'explosive') return ['throw', 'throws'];

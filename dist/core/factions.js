@@ -5,6 +5,8 @@ import { enemies, weaponProfiles } from '../data/combat-data.js';
 import { factionLoadouts } from '../data/faction-loadouts.js';
 import { factionAimTargets, factionTactics, factionApproaches, factionGuideEnemies } from '../data/faction-data.js';
 import { solveMatchup, isFatal, sortRoutes, spearCannotLock } from './combat.js';
+import { enemyPages } from '../data/enemy-pages.js';
+import { ignitionOf } from '../data/enemy-ignition.js';
 
 export const findEnemy = id => enemies.find(item => item.id === id) || factionGuideEnemies[id];
 
@@ -19,7 +21,13 @@ export function wikiReference(enemy, weaponId, mode) {
 export function recommend(unit, choice, enemy = findEnemy(unit.enemy), engineOptions = {}) {
   const [weaponId, modeId] = choice.split(':');
   const pick = factionLoadouts[unit.enemy]?.find(item => item.weapon === choice);
-  if (enemy && pick?.adviceOnly) return { enemy, weaponId, pick, adviceOnly: true };
+  if (enemy && pick?.adviceOnly) {
+    // An advice pick with a held flame stream also gets its quickest time as a reference (user request 2026-11-26):
+    // the spore picks stay advice, since the enemy has to die burning.
+    const streamMode = weaponProfiles[weaponId]?.modes.find(item => item.stream);
+    const streamRoute = streamMode ? solveMatchup(enemy, streamMode, { shieldCleared: true, fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id) }).best : null;
+    return { enemy, weaponId, pick, adviceOnly: true, streamMode: streamRoute ? streamMode : null, streamRoute };
+  }
 
   const profile = weaponProfiles[weaponId];
   const mode = modeId ? profile?.modes.find(item => item.id === modeId) : profile?.modes[0];
