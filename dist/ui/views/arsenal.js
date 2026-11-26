@@ -12,6 +12,9 @@ import { recoilSimBlock } from '../recoil-sim.js';
 import { modeIcon } from '../mode-icons.js';
 import { detailColumns, detailModeList, detailStatCell, rangeGrid, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { supportProjectileRecords, propelledModes } from '../../data/support-records.js';
+// Emplacements' rounds for the detailed stats only (user request 2026-11-26), not for the combat range falloff: the
+// Grenadier Battlement fires the Grenade Launcher's round, the other two their game data sheet round (ballistics.js).
+const DETAIL_RECORDS = { 'hmg-emplacement': { standard: 'E/MG-101_P' }, 'at-emplacement': { standard: 'E/AT-12_P' }, 'grenadier-battlement': { standard: 'GL-21_P' } };
 import { warbondChip } from '../warbond-chip.js';
 import { bindTips, tipLabel } from '../tips.js';
 import { recoilStats, gameErgonomics } from '../gear-shared.js';
@@ -612,7 +615,7 @@ export function stratagemDetail(item, { demolition = false, force = null, header
   const chargeRecords = charge ? Object.values(supportProjectileRecords[item.id] || {}) : [];
   const ballistics = chargeRecords.length > 1
     ? raw(rangeGrid(...[chargeRecords[0], chargeRecords.at(-1)].map(record => String(ballisticsBlock([{ label: '', record }], expanded, recoilStats(`arsenal/${item.id}`))))))
-    : ballisticsBlock(Object.entries(supportProjectileRecords[item.id] || {}).map(([modeId, record]) => ({ label: T(item.variants?.find(v => v.id === modeId)?.name) ?? MODE_LABELS[modeId] ?? item.name, record, propelled: propelledModes[item.id]?.includes(modeId) })), expanded, recoilStats(`arsenal/${item.id}`));
+    : ballisticsBlock(Object.entries(supportProjectileRecords[item.id] ?? DETAIL_RECORDS[item.id] ?? {}).map(([modeId, record]) => ({ label: T(item.variants?.find(v => v.id === modeId)?.name) ?? MODE_LABELS[modeId] ?? item.name, record, propelled: propelledModes[item.id]?.includes(modeId) })), expanded, recoilStats(`arsenal/${item.id}`));
   const recoilSim = recoilSimBlock(`arsenal/${item.id}`, expanded);
   const statsLayout = expanded
     ? html`${variantStats || !blasts ? base : detailColumns(base, blasts)}

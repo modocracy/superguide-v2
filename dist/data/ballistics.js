@@ -2,7 +2,7 @@
 // Projectile records of the wiki attack datamine: muzzle velocity (m/s), caliber (mm), mass (g),
 // drag coefficient, gravity multiplier, lifetime (s, 0 = no limit), pellets, and the penetration
 // at the four impact angles (under 25, 26-60, 61-80 and 81-90 degrees); thrown = a fragment or bomblet an explosion
-// throws out rather than a projectile a weapon fires.
+// throws out rather than a projectile a weapon fires; source 'game' = from the game data sheet (E/MG-101, E/AT-12).
 export const ballisticsSource = {"source":"https://helldivers.wiki.gg/wiki/Module:Decodedata-Attacks/weapons_data.json","revision":142136,"checkedAt":"2026-11-08"};
 export const projectileBallistics = {
   "AC-8_P": {"velocity":820,"caliber":20,"mass":120,"drag":0.3,"gravity":1,"lifetime":0,"pellets":1,"ap":[4,4,4,0]},
@@ -113,4 +113,6 @@ export const projectileBallistics = {
   "StA-X3_P1": {"velocity":500,"caliber":1,"mass":11,"drag":0,"gravity":0,"lifetime":0,"pellets":1,"ap":[0,0,0,0]},
   "P4": {"velocity":385,"caliber":8,"mass":6,"drag":0.5,"gravity":1,"lifetime":0,"pellets":9,"ap":[3,3,3,0]},
   "VG-70_P": {"velocity":320,"caliber":9,"mass":7,"drag":0.6,"gravity":1,"lifetime":0,"pellets":1,"ap":[2,2,2,0]},
+  "E/MG-101_P": {"velocity":880,"caliber":12.5,"mass":52,"drag":0.3,"gravity":1,"lifetime":0,"pellets":1,"ap":[4,4,4,0],"source":"game"},
+  "E/AT-12_P": {"velocity":625,"caliber":75,"mass":6500,"drag":0.75,"gravity":1,"lifetime":0,"pellets":1,"ap":[6,6,6,3],"source":"game"},
 };
