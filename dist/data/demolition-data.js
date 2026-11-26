@@ -235,7 +235,7 @@ for (const [id, entry] of Object.entries(weaponProfiles)) {
 // wide: the wide-blast falloff (1 - x^2) for the explosions the attack datamine flags is_huge, the Eagle 500kg Bomb's
 // main blast (S_P_E, 10 / 25 m) and the SEAF Artillery mini-nuke (S_P10_IE, 17 / 25 m), and the Hellbombs, whose
 // 17 / 25 / 45 m radii are the mini-nuke's; every other blast is standard (1 - sqrt(x)). helldiversotl.com names the
-// 500kg as wide and the Leveller (EAT-411_P_IE, 10 / 25 m, not is_huge) as standard. An estimate: not in the wiki.
+// 500kg as wide and the Leveller (EAT-411_P_IE, 10 / 25 m, not is_huge) as standard. Not in the wiki; the user treats it as settled (2026-11-26).
 export const WIDE_BLASTS = ['eagle-500kg', 'seaf-artillery/mini-nuke', 'hellbomb', 'portable-hellbomb'];
 const stratagemById = new Map(stratagems.map(item => [item.id, item]));
 for (const [id, profile] of Object.entries(demolitionProfiles)) {

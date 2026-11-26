@@ -15,7 +15,7 @@ export const forceRange = value => value == null ? null : typeof value === 'numb
 // helldiversotl.com/research/explosion-falloff (verified in game code there): full force inside the inner radius, then
 // it falls with the blast damage to 0 at the outer radius, by 1 - sqrt(x) for a standard blast and 1 - x^2 for a wide
 // one (attack.blast.wide), x = 0 at the inner radius and 1 at the outer. Uses the lower end of a disputed force.
-// Returns { distance, falloff }: falloff is true when the distance is past the inner radius (from the falloff estimate).
+// Returns { distance, falloff }: falloff is true when the distance is past the inner radius (from the falloff).
 export function blastReach(attack, threshold) {
   const blast = attack?.blast, force = forceRange(attack?.explosion)?.min;
   if (!blast || threshold == null || !(force >= threshold)) return null;
