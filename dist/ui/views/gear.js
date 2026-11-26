@@ -586,7 +586,12 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
       ? html`${blast ? detailColumns(base, blast) : base}${variantTable(v)}`
       : html`${base}${blast}${variantTable(v)}`;
   }
-  const ballistics = ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))], expanded, recoilCells(w));
+  // A weapon shown as a range of states gives one set of detailed stats too, its first to last state's numbers as
+  // 'a~b' (the Loyalist's speed 550~350 m/s, the Sickle's AP 2~4), as the Epoch does (user request 2026-11-26).
+  const stateRecords = stateRange(w) ? [...new Set((w.variants ?? []).filter(v => !v.id.startsWith('charge-stage-') && v.record).map(v => v.record))] : [];
+  const ballistics = stateRecords.length > 1
+    ? raw(rangeGrid(...[stateRecords[0], stateRecords.at(-1)].map(record => String(ballisticsBlock([{ label: '', record }], expanded, recoilCells(w))))))
+    : ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))], expanded, recoilCells(w));
   const art = weaponArt(w, 'gear-art large');
   const identity = html`<div class="detail-id gear-id${expandable ? ' item-detail-actions' : ''}"><div><h2 id="${titleId}">${displayName(w)}</h2><p>${lang === 'en' ? '' : w.en}</p>
       <div class="chips" style="margin-top:6px">${badge(group.name, 'outline')}${badge(typeName(w.type))}${warbondChip('gear', w.id)}${apBadge(w)}${traits(w)}</div>${holeTier(w) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[w.id]}</p>` : ''}</div>

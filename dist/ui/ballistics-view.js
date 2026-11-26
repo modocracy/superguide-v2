@@ -152,8 +152,11 @@ function recordBlock(label, recordId, propelled, extra = '') {
 // recoil: the weapon's recoil cells. They are numbers, so they join the numbers of the first round (or stand alone
 // when there is none); the recoil simulation is a disclosure of its own (recoil-sim.js, user request 2026-11-25).
 export function ballisticsBlock(entries, expanded = false, recoil = []) {
+  // A record whose flight numbers and penetration match one already listed adds nothing (the Missile Pistol's and the
+  // Warrant's second projectile record), so it is shown once (user request 2026-11-26).
   const seen = new Set();
-  const list = entries.filter(e => e.record && projectileBallistics[e.record]?.velocity > 0 && !seen.has(e.record) && seen.add(e.record));
+  const flightKey = e => `${JSON.stringify(projectileBallistics[e.record])}|${e.propelled ? 'p' : ''}`;
+  const list = entries.filter(e => e.record && projectileBallistics[e.record]?.velocity > 0 && !seen.has(flightKey(e)) && seen.add(flightKey(e)));
   if (list.length) wireBallisticCharts();
   const recoilCell = c => html`<div><dt>${c.label}</dt><dd>${c.text}${c.unit ? html`<small>${c.unit}</small>` : ''}</dd>${c.caption ? html`<div class="caption">${c.caption}</div>` : ''}</div>`;
   if (!list.length && !recoil.length) return '';
