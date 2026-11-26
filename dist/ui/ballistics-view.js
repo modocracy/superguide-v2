@@ -5,6 +5,7 @@
 import { html } from './dom.js';
 import { detailDisclosure } from './item-detail.js';
 import { L } from '../core/i18n.js';
+import { tipLabel } from './tips.js';
 import { num } from '../core/explain.js';
 import { projectileBallistics } from '../data/ballistics.js';
 import { dragOf, falloffAt, speedAt, timeAt, trajectory } from '../core/ballistics.js';
@@ -12,13 +13,20 @@ import { dragOf, falloffAt, speedAt, timeAt, trajectory } from '../core/ballisti
 const MAX = 200;
 // A shot that drops a lot (the Ultimatum, grenade fragments) is drawn only out to the farthest of these ranges where
 // its level-fire drop stays within DROP_LIMIT metres (user request 2026-11-26), with table rows to suit the range.
+// A projectile the weapon fires keeps at least MIN_FIRED metres (the Ultimatum: 50 m); fragments and bomblets an
+// explosion throws out (record.thrown) may go shorter.
 const RANGES = [200, 150, 100, 50, 25, 10];
-const DROP_LIMIT = 30;
+const DROP_LIMIT = 30, MIN_FIRED = 50;
 const MARKS = { 200: [25, 50, 100, 150, 200], 150: [25, 50, 75, 100, 150], 100: [10, 25, 50, 75, 100], 50: [10, 20, 30, 40, 50], 25: [5, 10, 15, 20, 25], 10: [2, 4, 6, 8, 10] };
 const W = 320, H = 150, PAD = { l: 52, r: 26, t: 14, b: 30 };
 const PLOT_W = W - PAD.l - PAD.r;
 const PLOT_H = H - PAD.t - PAD.b;
 const round = (value, step) => Math.round(value / step) * step;
+// How the two charts are worked out, as tooltips on their titles (user request 2026-11-26: not a note under the block).
+const DAMAGE_TIP = L('탄 피해는 맞을 때의 탄속으로 정해집니다: 0.25 + 0.75 × (맞을 때 탄속 ÷ 처음 탄속)². 그래서 아무리 멀어도 25% 밑으로는 줄지 않고, 관통력은 거리와 상관없이 그대로입니다. 그래프와 표의 탄 피해, 도달 시간, 탄속은 같은 높이의 표적을 맞힐 때처럼 항력만 넣어 계산한 값입니다. 위로 쏘면 더 줄고 아래로 쏘면 덜 줄며, 달리면서 쏘면 이동 속도가 더해져 100%를 넘을 수도 있습니다. 무언가를 뚫고 나간 탄은 느려져 다음 피해가 줄어듭니다.',
+  'Shot damage is set by the speed at impact: 0.25 + 0.75 × (speed at impact ÷ muzzle velocity)². So it never falls below 25% however far, and armor penetration stays the same at any range. In the chart and the table, shot damage, flight time and speed are calculated with drag only, as for a target at the same height. Shooting upward loses more and downward less, and firing on the move adds your speed, which can take it past 100%. A round that passes through something slows down, so its next hit does less.');
+const DROP_TIP = L('낙차는 중력 9.82m/s²에 중력 배율을 곱하고 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다. 낙차가 30m를 넘는 탄은 그보다 가까운 거리까지만 보여 줍니다(직접 쏘는 탄은 최소 50m).',
+  'Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot. A shot that drops more than 30 m is shown only out to a nearer range (at least 50 m for a fired round).');
 
 // Cache computed projectile curves so switching panel <-> fullscreen never re-integrates trajectories.
 const FLIGHT_CACHE = new Map();
@@ -32,7 +40,8 @@ function computeFlight(recordId, propelled) {
   const { points, endX } = trajectory(b, MAX);
   const at = x => (points[x]?.x === x ? points[x] : points.find(p => p.x === x));
   // A distance the flight never reaches (a short lifetime) is judged by where it ends: the curve just stops there.
-  const max = RANGES.find(x => (at(x) ?? points.at(-1)).drop <= DROP_LIMIT) ?? RANGES.at(-1);
+  const ranges = record.thrown ? RANGES : RANGES.filter(x => x >= MIN_FIRED);
+  const max = ranges.find(x => (at(x) ?? points.at(-1)).drop <= DROP_LIMIT) ?? ranges.at(-1);
   const step = max >= 50 ? 2 : 1;
   const shown = points.filter(p => p.x <= max);
   const damage = [];
@@ -55,12 +64,12 @@ function computeFlight(recordId, propelled) {
 }
 
 // One line over 0-`max` m. `top`/`bottom` are the values at the top and bottom of the plot.
-function chart(title, points, { top, bottom, ticks, label, max = MAX, step = 2 }) {
+function chart(title, points, { top, bottom, ticks, label, max = MAX, step = 2, tip = '' }) {
   const px = x => PAD.l + (x / max) * PLOT_W;
   const py = y => PAD.t + ((top - y) / (top - bottom)) * PLOT_H;
   const path = points.map((p, i) => `${i ? 'L' : 'M'}${px(p.x).toFixed(1)} ${py(p.y).toFixed(1)}`).join('');
   const data = points.map(p => `${p.x},${+p.y.toFixed(3)}`).join(';');
-  return html`<figure class="ballistic-chart"><figcaption>${title}</figcaption>
+  return html`<figure class="ballistic-chart"><figcaption>${tip ? tipLabel(title, tip) : title}</figcaption>
     <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${title}" data-points="${data}" data-label="${label}" data-top="${top}" data-bottom="${bottom}" data-max="${max}" data-step="${step}">
       ${ticks.map(t => html`<line x1="${PAD.l}" x2="${W - PAD.r}" y1="${py(t.value)}" y2="${py(t.value)}" class="grid"/><text x="${PAD.l - 7}" y="${py(t.value) + 5}" text-anchor="end">${t.text}</text>`)}
       ${[0, 0.25, 0.5, 0.75, 1].map(f => html`<text x="${px(f * max)}" y="${H - 5}" text-anchor="middle">${num(f * max)}m</text>`)}
@@ -76,7 +85,8 @@ function recordBlock(label, recordId, propelled, extra = '') {
   const { record, b, drag, at, endX, damage, drop, dropTop, marks, markFalloff, max, step } = computeFlight(recordId, propelled);
   const cell = (name, value, unit, caption) => html`<div><dt>${name}</dt><dd>${value}${unit ? html`<small>${unit}</small>` : ''}</dd>${caption ? html`<div class="caption">${caption}</div>` : ''}</div>`;
   const ap = b.ap?.some(v => v != null) ? `AP ${b.ap.map(v => num(v)).join(' / ')}` : '—';
-  const dropText = y => (dropTop < 2 ? `${num(Math.round(y * 100))}cm` : `${num(round(y, 0.1))}m`);
+  // A drop that rounds to zero shows as 0, not -0 (a shot that rises a hair at first).
+  const dropText = y => (dropTop < 2 ? `${num(Math.round(y * 100) || 0)}cm` : `${num(round(y, 0.1) || 0)}m`);
   return html`<div class="ballistic">
     ${label ? html`<h4>${label}</h4>` : ''}
     <dl class="detail-grid">
@@ -90,8 +100,8 @@ function recordBlock(label, recordId, propelled, extra = '') {
       ${extra}
     </dl>
     <div class="ballistic-charts">
-      ${chart(L('거리별 탄 피해', 'Shot damage by distance'), damage, { top: 100, bottom: 25, label: '%', max, step, ticks: [100, 75, 50, 25].map(v => ({ value: v, text: `${v}%` })) })}
-      ${chart(L('낙차', 'Drop'), drop, { top: 0, bottom: dropTop, label: dropTop < 2 ? 'cm' : 'm', max, step, ticks: [0, dropTop / 2, dropTop].map(v => ({ value: v, text: dropText(v) })) })}
+      ${chart(L('거리별 탄 피해', 'Shot damage by distance'), damage, { top: 100, bottom: 25, label: '%', max, step, tip: DAMAGE_TIP, ticks: [100, 75, 50, 25].map(v => ({ value: v, text: `${v}%` })) })}
+      ${chart(L('낙차', 'Drop'), drop, { top: 0, bottom: dropTop, label: dropTop < 2 ? 'cm' : 'm', max, step, tip: DROP_TIP, ticks: [0, dropTop / 2, dropTop].map(v => ({ value: v, text: dropText(v) })) })}
     </div>
     <div class="compare-scroll" role="region" aria-label="${L('거리별 값', 'Values by distance')}" tabindex="0"><table class="compare-table ballistic-table">
       <thead><tr><th scope="col">${L('거리', 'Distance')}</th><th scope="col">${L('탄 피해', 'Shot damage')}</th><th scope="col">${L('낙차', 'Drop')}</th><th scope="col">${L('도달 시간', 'Flight time')}</th><th scope="col">${L('탄속', 'Speed')}</th></tr></thead>
@@ -119,7 +129,6 @@ export function ballisticsBlock(entries, expanded = false, recoil = []) {
   if (!list.length && !recoil.length) return '';
   const content = html`${list.map((e, i) => recordBlock(list.length > 1 ? e.label : '', e.record, e.propelled, i === 0 ? recoil.map(recoilCell) : ''))}
     ${recoil.length && !list.length ? html`<div class="ballistic"><dl class="detail-grid">${recoil.map(recoilCell)}</dl></div>` : ''}
-    ${list.length ? html`<p class="faint" style="font-size:12.5px;margin:-10px 0 16px">${L('탄 피해는 맞을 때의 탄속으로 정해집니다: 0.25 + 0.75 × (맞을 때 탄속 ÷ 처음 탄속)². 그래서 아무리 멀어도 25% 밑으로는 줄지 않고, 관통력은 거리와 상관없이 그대로입니다. 표의 탄 피해, 도달 시간, 탄속은 같은 높이의 표적을 맞힐 때처럼 항력만 넣어 계산한 값입니다. 위로 쏘면 더 줄고 아래로 쏘면 덜 줄며, 달리면서 쏘면 이동 속도가 더해져 100%를 넘을 수도 있습니다. 무언가를 뚫고 나간 탄은 느려져 다음 피해가 줄어듭니다. 낙차는 중력 9.82m/s²에 중력 배율을 곱하고 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값이며, 낙차가 30m를 넘는 탄은 그보다 가까운 거리까지만 보여 줍니다.', 'Shot damage is set by the speed at impact: 0.25 + 0.75 × (speed at impact ÷ muzzle velocity)². So it never falls below 25% however far, and armor penetration stays the same at any range. In the table, shot damage, flight time and speed are calculated with drag only, as for a target at the same height. Shooting upward loses more and downward less, and firing on the move adds your speed, which can take it past 100%. A round that passes through something slows down, so its next hit does less. Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot; a shot that drops more than 30 m is shown only out to a nearer range.')}</p>` : ''}
   `;
   return detailDisclosure(L('세부 수치', 'Detailed stats'), content, { className: 'ballistic-block', expanded });
 }

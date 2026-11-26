@@ -67,8 +67,8 @@ for (const expanded of [false, true]) {
 
 // A shot that drops more than 30 m is drawn only out to a nearer range, with table rows to suit (user request 2026-11-26).
 const rangeOf = record => Number(String(ballisticsBlock([{ record }], true)).match(/data-max="(\d+)"/)[1]);
-assert.deepEqual(['AR-23_P', 'GP-20_P', 'GL-21_P'].map(rangeOf), [200, 25, 100], 'chart ranges follow the drop');
-assert.deepEqual([...String(ballisticsBlock([{ record: 'GP-20_P' }], true)).matchAll(/<tr><th scope="row">(\d+)m<\/th>/g)].map(m => Number(m[1])), [5, 10, 15, 20, 25], 'Ultimatum table rows to 25 m');
+assert.deepEqual(['AR-23_P', 'GP-20_P', 'GL-21_P', 'G-7_P', 'EAT-700_P1'].map(rangeOf), [200, 50, 100, 25, 10], 'chart ranges follow the drop; a fired round keeps 50 m, fragments and bomblets go shorter');
+assert.deepEqual([...String(ballisticsBlock([{ record: 'GP-20_P' }], true)).matchAll(/<tr><th scope="row">(\d+)m<\/th>/g)].map(m => Number(m[1])), [10, 20, 30, 40, 50], 'Ultimatum table rows to 50 m');
 checks += 2;
 
 // Short-lived projectiles ending on an odd metre keep their final point on chart curves.
