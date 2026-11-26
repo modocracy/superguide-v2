@@ -78,8 +78,10 @@ function stats(item) {
 
 // Card cells are narrow: an unverified value shows as "?" there in English.
 const cellText = stat => lang === 'en' && stat.dim && stat.text === 'Unverified' ? '?' : stat.text;
-// A weapon with no reach to show (the HMG Emplacement, user request 2026-11-26) drops that cell on its card and detail.
-const statRow = item => html`<dl class="stat-row">${stats(item).filter((stat, index) => !(index === 3 && item.noReach)).map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}" title="${stat.dim ? stat.text : ''}">${cellText(stat)}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd></div>`)}</dl>`;
+// A weapon with no reach to show (the HMG Emplacement, a support weapon whose reach is unverified; user requests
+// 2026-11-26) drops that cell on its card and detail.
+const hiddenReach = (item, reach) => item.noReach || item.category === 'support' && reach.dim && reach.text === L('미확인', 'Unverified');
+const statRow = item => html`<dl class="stat-row">${stats(item).filter((stat, index) => !(index === 3 && hiddenReach(item, stat))).map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}" title="${stat.dim ? stat.text : ''}">${cellText(stat)}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd></div>`)}</dl>`;
 
 // One-line numbers for a mode, used on cards and in the comparison table.
 function variantBrief(item, variant) {
@@ -616,7 +618,8 @@ const statGrid = (item, effects = [], expanded = false) => {
 // Weapons whose shot grows with the charge rather than switching modes (user request 2026-11-25): no mode tabs; the
 // key stats and the blast show the uncharged to fully charged values as 'a~b'. The data keeps both modes, which other
 // views pick by name (faction picks use 'epoch:charged').
-const CHARGE_RANGE = new Set(['epoch']);
+// Weapons whose charge states show as one 'low~high' range, with the caption under it (Railgun: user request 2026-11-26).
+const CHARGE_RANGE = new Map([['epoch', L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged')], ['railgun', L('안전 모드~비안전 최대 충전', 'Safe Mode~Unsafe full charge')]]);
 export function stratagemDetail(item, { demolition = false, force = null, header = null, titleId = 'sheet-title', variant = state.variant, compare = true, expandable = false, expanded = false } = {}) {
   const cat = categoryOf(item.category);
   const charge = CHARGE_RANGE.has(item.id) && item.variants?.length > 1 ? [withVariant(item, item.variants[0]), withVariant(item, item.variants.at(-1))] : null;
@@ -641,7 +644,7 @@ export function stratagemDetail(item, { demolition = false, force = null, header
   } else if (charge) {
     const cells = specialCells(item, force);
     base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${raw(rangeGrid(String(statsWithEffects(charge[0], cells, expanded)), String(statsWithEffects(charge[1], cells, expanded))))}
-      <p class="faint" style="font-size:12.5px;margin-top:8px">${L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged')}</p></section>`;
+      <p class="faint" style="font-size:12.5px;margin-top:8px">${CHARGE_RANGE.get(item.id)}</p>${item.variants.at(-1).note ? html`<p class="variant-note">${item.variants.at(-1).note}</p>` : ''}</section>`;
   } else {
     base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${statsWithEffects(item, specialCells(item, force), expanded)}</section>`;
   }

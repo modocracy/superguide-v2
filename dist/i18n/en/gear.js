@@ -1,6 +1,7 @@
 // English for the Korean text of personal-weapons.js and personal-profiles.js (both generated; edit the English here),
 // looked up by the exact Korean string (see core/i18n.js).
 export default {
+  "최대 충전": "Max charge",
   "주 총열": "Main barrel",
   "부착물 없음": "No Attachment",
   "총열 하부 없음": "No Underbarrel",
@@ -178,7 +179,7 @@ export default {
   "터진 뒤 남는 불길": "Lingering fire after the blast",
   "연막 구름 3개 각각": "Each of its 3 smoke clouds",
   "첫 파동부터 약": "About, from the first pulse",
-  "약 · 적을 찾아 날아가는 거리": "About · how far it seeks enemies",
+  "적을 찾아 날아가는 거리": "How far it seeks enemies",
   "체력의 약 90% · 약 4초에 걸쳐": "About 90% of health · over about 4 s",
   "연료통 하나": "One fuel canister",
   "반동이 커서 연사가 어렵습니다. 웅크리거나 조준하면 줄어들고, 강화·공병 키트·충격 방지 패드, 위험물·총잡이 패시브도 반동을 줄여 줍니다.": "Its heavy recoil makes follow-up shots hard. Crouching or aiming down sights reduces it, as do the Fortified, Engineering Kit, Concussive Padding (Hazmat) and Gunslinger passives.",

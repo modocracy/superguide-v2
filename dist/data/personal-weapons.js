@@ -2041,6 +2041,9 @@ export const personalWeapons = [
     fuseOptions: [],
     playerNotes: ['충전별 최종 피해가 모두 확인되지 않았습니다. 아래 피해를 확정된 충전 사격 피해로 보거나 더하지 마세요.', '아주 가까이에서 쏘면 폭발에 사용자도 크게 다치고, 충전 사격은 폭발 저항이 없으면 죽을 수 있습니다.'],
     traitTags: [],
+    extraStats: [
+      { label: '충전 시간', value: 1, unit: '초', caption: '최대 충전', after: 'ammo' },
+    ],
     image: 'PLAS-101 Purifier Primary Render.png',
     sourceRevision: 141921,
     variants: [
@@ -6077,6 +6080,9 @@ export const personalWeapons = [
     fuseOptions: [],
     playerNotes: ['충전별 최종 피해가 모두 확인되지 않았습니다. 아래 피해를 확정된 충전 사격 피해로 보거나 더하지 마세요.'],
     traitTags: ['one-handed'],
+    extraStats: [
+      { label: '충전 시간', value: 0.75, unit: '초', caption: '완전 충전', after: 'ammo' },
+    ],
     image: 'PLAS-15 Loyalist Secondary Render.png',
     sourceRevision: 140488,
     variants: [
@@ -7299,7 +7305,7 @@ export const personalWeapons = [
     playerNotes: [],
     traitTags: ['guided'],
     extraStats: [
-      { label: '탐지 반경', value: 50, unit: 'm', caption: '약 · 적을 찾아 날아가는 거리', after: 'reach' },
+      { label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' },
     ],
     image: 'G-50 Seeker Throwable Render.png',
     sourceRevision: 140505,
@@ -7487,7 +7493,7 @@ export const personalWeapons = [
     playerNotes: ['던지면 드론이 사용자를 따라다니다가 가까운 적을 찾으면 날아가 부딪혀 터집니다. 제조소에 핑을 찍으면 벽을 지나 환풍구 근처에서 터져 보통 하나로 부서집니다.'],
     traitTags: ['guided'],
     extraStats: [
-      { label: '탐지 반경', value: 50, unit: 'm', caption: '약 · 적을 찾아 날아가는 거리', after: 'reach' },
+      { label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' },
     ],
     image: 'G-60 Anti-Tank Seeker Throwable Render.png',
     sourceRevision: 140507,

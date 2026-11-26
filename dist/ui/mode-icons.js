@@ -56,7 +56,6 @@ const ICONS = {
   // Artillery (W.A.S.P.): a shot coming down onto a burst on the ground.
   artillery: fill(`M11.2 1h1.6v10.5h-1.6z${star(12, 16, 6.5, 2.6, 10)}M2.5 21h19v1.6h-19z`),
   // Unsafe: a round with speed lines behind it.
-  unsafe: fill(`M1.5 8.5h1.4v7H1.5zM4.2 8.5h1.4v7H4.2zM6.9 8.5h1.4v7H6.9z${round(9.5, 9, 13, 6, 6)}`),
 };
 
 // The icon of each mode tab, by item key ('gear/<id>' or 'arsenal/<id>') and mode id.
@@ -72,7 +71,6 @@ const MODES = {
   'gear/warrant': { unguided: 'sight', guided: 'guided' },
   'arsenal/autocannon': { aphet: 'aphet', flak: 'jet' },
   'arsenal/recoilless': { heat: 'heat', he: 'burst' },
-  'arsenal/railgun': { safe: 'round', 'unsafe-max': 'unsafe' },
   'arsenal/bastion': { main: 'shellUp', coax: 'roundsUp' },
   // Firing mode blocks (item.firingModes).
   'arsenal/airburst-launcher': { cluster: 'cluster', flak: 'jet' },

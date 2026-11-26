@@ -166,6 +166,10 @@ const CAUTIONS = {
 // rev 140507, P-11 Stim Pistol rev 140476, FLAM-66 Torcher rev 141873, P-72 Crisper rev 140485, SMG/FLAM-34 Stoker
 // rev 141944, P/40-K Bolt Pistol rev 141876, GP-20 Ultimatum rev 140471). `after` places the cell with the damage, reach or ammo rows of the detail sheet.
 const EXTRA_STATS = {
+  // Charge times from the wiki pages (user request 2026-11-26): Purifier 'Maximum charge of 1 sec', Loyalist
+  // 'Shorter charge-up time on full charge up from 1 sec to 0.75 sec'; the Accelerator Rifle page gives none.
+  purifier: [{ label: '충전 시간', value: 1, unit: '초', caption: '최대 충전', after: 'ammo' }],
+  loyalist: [{ label: '충전 시간', value: 0.75, unit: '초', caption: '완전 충전', after: 'ammo' }],
   'bolt-pistol': [{ label: '반동', value: 325, unit: '', caption: '모든 무기 중 가장 큼', after: 'ammo' }],
   ultimatum: [{ label: '사거리', value: 17, unit: 'm', caption: '서서 수평으로 발사 · 45도면 약 40 m', after: 'reach' }],
   incendiary: [{ label: '불 지속 시간', value: 20, unit: '초', caption: '남는 불길 · 소이 충격보다 5초 길다', after: 'reach' }],
@@ -175,8 +179,8 @@ const EXTRA_STATS = {
   smoke: [{ label: '연막 지속 시간', value: 30, unit: '초', caption: '연막 구름 3개 각각', after: 'reach' }],
   smokescreen: [{ label: '연막 지속 시간', value: 30, unit: '초', caption: '연막 구름 3개 각각', after: 'reach' }],
   urchin: [{ label: '기절 시간', value: 13.7, unit: '초', caption: '첫 파동부터 약', after: 'reach' }],
-  seeker: [{ label: '탐지 반경', value: 50, unit: 'm', caption: '약 · 적을 찾아 날아가는 거리', after: 'reach' }],
-  'anti-tank-seeker': [{ label: '탐지 반경', value: 50, unit: 'm', caption: '약 · 적을 찾아 날아가는 거리', after: 'reach' }],
+  seeker: [{ label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' }],
+  'anti-tank-seeker': [{ label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' }],
   'stim-pistol': [{ label: '치유', value: 90, unit: '%', caption: '체력의 약 90% · 약 4초에 걸쳐', after: 'damage' }],
   torcher: [{ label: '연속 분사', value: 12.4, unit: '초', caption: '연료통 하나', after: 'ammo' }],
   crisper: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }],
