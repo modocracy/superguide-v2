@@ -406,9 +406,9 @@ function timingBlock(item, expanded = false) {
   return html`<section class="block"><h3>${L('재사용 대기시간과 호출', 'Cooldown and call-in')}</h3>
     <dl class="detail-grid">
       ${t.cooldown != null ? cell(label('cooldown', L('재사용 대기시간', 'Cooldown')), num(Math.round(t.cooldown)), s, caption('cooldown')) : ''}
-      ${t.rearm != null ? cell(label('rearm', L('재무장 시간', 'Rearm time')), num(t.rearm), s, caption('rearm')) : ''}
       ${t.callIn != null ? cell(label('callIn', L('호출 시간', 'Call-in time')), num(t.callIn), s, caption('callIn')) : ''}
       ${typeof t.uses === 'number' ? cell(label('uses', t.rearm != null ? L('재무장당 사용', 'Uses per rearm') : L('사용 횟수', 'Uses')), num(t.uses), L('회', ''), caption('uses')) : ''}
+      ${t.rearm != null ? cell(label('rearm', L('재무장 시간', 'Rearm time')), num(t.rearm), s, caption('rearm')) : ''}
     </dl>
   </section>`;
 }
@@ -460,11 +460,10 @@ function specialCells(item, profile, variant = null) {
   const forces = (stratagemStats[item.id]?.forces ?? []).filter(group => !variant || recordsOf(variant).includes(group.attack) || !claimed.includes(group.attack));
   if (!profile?.modes?.length && !forces.length) return [];
   const value = force => force == null ? '?' : typeof force === 'number' ? num(force) : `${num(force.min)}~${num(force.max)}`;
-  // Where the demolition data keeps a range (sources disagree), show that range instead of the datamine number.
-  const range = kind => profile?.modes?.map(mode => kind === 'blast' ? mode.explosion : mode.direct).find(force => force && typeof force === 'object');
   const line = (demo, stun, push) => html`<span class="force-line">${forcePair(L('철거력', 'Demolition'), demo)}${forcePair(L('저지력', 'Stagger'), stun ?? '?')}${forcePair(L('넉백', 'Push'), push ?? '?')}</span>`;
-  // Only the strongest direct hit and the strongest blast (user decision 2026-11-19): highest
-  // demolition, then stagger, then push. Fragments are left out.
+  // One row per kind of attack: the strongest direct hit and the strongest blast (user decision 2026-11-19), and
+  // where one attack has several of a kind (the Eagle 500kg's impact blast 40 and main blast 50) each force shows its
+  // range over them (user request 2026-11-26). Fragments are left out.
   // A laser that the datamine stores as a spray (Orbital Laser) is a beam; a blast with no force at all (the
   // De-Escalator's burst, whose force is in its arcs) is left out (user request 2026-11-26).
   const parts = forces.flatMap(group => group.parts).map(part => part.kind === 'spray' && streamOf(item) === 'laser' ? { ...part, kind: 'beam' } : part)
@@ -472,11 +471,15 @@ function specialCells(item, profile, variant = null) {
   // The overcharge blast (Railgun, Epoch) is the weapon blowing up, and the backblast comes out of the back of a
   // launcher when it fires: neither is a shot, so each gets its own row with a warning.
   // Each kind of hit has its own row: the De-Escalator's grenade hit and its arcs (user request 2026-11-26).
+  const spread = (kind, key) => {
+    const values = parts.filter(part => part.kind === kind).map(part => part[key]).filter(v => v != null);
+    return values.length ? value(Math.min(...values) === Math.max(...values) ? values[0] : { min: Math.min(...values), max: Math.max(...values) }) : '?';
+  };
   const chosen = [...DIRECT_KINDS.map(kind => strongest(parts.filter(part => part.kind === kind))), strongest(parts.filter(part => part.kind === 'blast')), strongest(parts.filter(part => part.kind === 'overcharge')), strongest(parts.filter(part => part.kind === 'backblast')), strongest(parts.filter(part => part.kind === 'wreck'))].filter(Boolean);
   const rows = forces.length
     ? (chosen.length ? chosen : parts.slice(0, 1)).map(part => ({
       label: html`${kindIcon(part.kind, item) ? html`<span class="${kindIcon(part.kind, item)}" aria-hidden="true"></span>` : ''}${tipLabel(html`${FORCE_KIND[part.kind]}${L(' 효과', ' effects')}`, FORCE_NOTE)}`,
-      text: html`${line(range(part.kind) ? value(range(part.kind)) : value(part.demo), part.stun, part.push)}${part.kind === 'overcharge' ? html`<span class="force-note">${L('탄이 아니라 과충전하면 무기가 터지는 폭발입니다. 사용자도 죽습니다.', 'Not a shot: the weapon blows up when overcharged, killing the user too.')}</span>` : ''}${part.kind === 'backblast' ? html`<span class="force-note">${L('탄이 아니라 쏠 때 무기 뒤쪽으로 나오는 후폭풍입니다. 뒤에 선 아군이 넘어지거나 다칠 수 있습니다.', 'Not a shot: the blast out of the back of the launcher when it fires. Teammates standing behind can be knocked down or hurt.')}</span>` : ''}${part.kind === 'wreck' ? html`<span class="force-note">${L(`차량이 파괴될 때 연료 탱크가 터지는 폭발입니다. 피해 ${num(part.damage)}, 중심 ${num(part.inner)}m에서 ${num(part.outer)}m까지 줄어들고 충격파는 ${num(part.shockwave)}m까지로 이글 500kg 폭탄과 같은 크기이며, 타고 있던 헬다이버는 죽습니다. 화염방사기 연료가 다 떨어진 뒤에는 일반 차량 폭발로 바뀝니다.`, `Not a shot: the fuel tank blows up when the vehicle is destroyed. ${num(part.damage)} damage out to ${num(part.inner)} m, falling off to ${num(part.outer)} m, with a shockwave out to ${num(part.shockwave)} m, the same size as an Eagle 500kg Bomb, and it kills anyone inside. Once the flamethrower's fuel runs out, it becomes an ordinary vehicle explosion.`)}</span>` : ''}${DIRECT_KINDS.includes(part.kind) && item.directCaution ? html`<span class="force-note">${item.directCaution}</span>` : ''}`,
+      text: html`${line(spread(part.kind, 'demo'), spread(part.kind, 'stun'), spread(part.kind, 'push'))}${part.kind === 'overcharge' ? html`<span class="force-note">${L('탄이 아니라 과충전하면 무기가 터지는 폭발입니다. 사용자도 죽습니다.', 'Not a shot: the weapon blows up when overcharged, killing the user too.')}</span>` : ''}${part.kind === 'backblast' ? html`<span class="force-note">${L('탄이 아니라 쏠 때 무기 뒤쪽으로 나오는 후폭풍입니다. 뒤에 선 아군이 넘어지거나 다칠 수 있습니다.', 'Not a shot: the blast out of the back of the launcher when it fires. Teammates standing behind can be knocked down or hurt.')}</span>` : ''}${part.kind === 'wreck' ? html`<span class="force-note">${L(`차량이 파괴될 때 연료 탱크가 터지는 폭발입니다. 피해 ${num(part.damage)}, 중심 ${num(part.inner)}m에서 ${num(part.outer)}m까지 줄어들고 충격파는 ${num(part.shockwave)}m까지로 이글 500kg 폭탄과 같은 크기이며, 타고 있던 헬다이버는 죽습니다. 화염방사기 연료가 다 떨어진 뒤에는 일반 차량 폭발로 바뀝니다.`, `Not a shot: the fuel tank blows up when the vehicle is destroyed. ${num(part.damage)} damage out to ${num(part.inner)} m, falling off to ${num(part.outer)} m, with a shockwave out to ${num(part.shockwave)} m, the same size as an Eagle 500kg Bomb, and it kills anyone inside. Once the flamethrower's fuel runs out, it becomes an ordinary vehicle explosion.`)}</span>` : ''}${DIRECT_KINDS.includes(part.kind) && item.directCaution ? html`<span class="force-note">${item.directCaution}</span>` : ''}`,
     }))
     // No attack records in the datamine: the highest direct and blast demolition force of the demolition data.
     : fallbackRows(profile, value, item);
