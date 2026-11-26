@@ -360,13 +360,14 @@ const variantLabel = v => v.displayName || (v.id === 'shrapnel' ? L('파편 (1�
 // table is left out. The charge stage records with no numbers of their own stay out; the wiki infobox's charge pair
 // counts for the numbers it gives (the Purifier's direct 100 uncharged, 200 charged, where the datamine has 200 for
 // both: user decision 2026-11-26).
-const STATE_RANGE = { loyalist: L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged'), purifier: L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged'),
+// Charge ranges have no caption (user request 2026-11-26); the heat states keep theirs.
+const STATE_RANGE = { loyalist: '', purifier: '',
   'double-edge-sickle': L('열 상태에 따라 가장 낮을 때~가장 높을 때', 'Lowest~highest across the heat states') };
 // The Accelerator Rifle's charge stages have no numbers yet: no range and no table, only its known shot.
 const NO_COMPONENT_TABLE = new Set(['accelerator-rifle', ...Object.keys(STATE_RANGE)]);
 const STATE_FIELDS = ['direct', 'durable', 'ap', 'splash', 'splashAp', 'radius', 'innerRadius'];
 function stateRange(w) {
-  if (!STATE_RANGE[w.id]) return null;
+  if (!Object.hasOwn(STATE_RANGE, w.id)) return null;
   const states = (w.variants ?? []).filter(v => !v.id.startsWith('charge-stage-') && v.direct != null);
   if (states.length < 2) return null;
   const pick = how => ({ ...w, ...Object.fromEntries(STATE_FIELDS.map(key => {
@@ -591,7 +592,7 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
     const v = shownAs(w), range = stateRange(w);
     const base = range
       ? html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${raw(rangeGrid(String(statsWithEffects(range[0], w)), String(statsWithEffects(range[1], w))))}
-        <p class="faint" style="font-size:12.5px;margin-top:8px">${STATE_RANGE[w.id]}</p></section>`
+        ${STATE_RANGE[w.id] ? html`<p class="faint" style="font-size:12.5px;margin-top:8px">${STATE_RANGE[w.id]}</p>` : ''}</section>`
       : html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${statsWithEffects(v, v)}</section>`;
     const blast = range ? blastFigure(range[1], range[0]) : blastFigure(v);
     stats = expanded

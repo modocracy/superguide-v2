@@ -261,7 +261,6 @@ export default {
   "아크 1개 · 내구 피해 70": "Per arc · Durable damage 70",
   "적 대응 계산은 유탄 직격 1번과 고른 개수만큼의 아크 피해를 더합니다.": "Shots to kill adds one grenade hit to the arcs you pick.",
   "대용량": "High capacity",
-  "위키 운용 거리": "Wiki effective range",
   "플라즈마": "Plasma",
   "완전 충전": "Full charge",
   "별도 충돌 폭발": "Separate impact explosion",

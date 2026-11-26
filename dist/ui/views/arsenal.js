@@ -643,8 +643,7 @@ export function stratagemDetail(item, { demolition = false, force = null, header
         ${variantStats.map(entry => itemVariantPanel(entry.mode.id, current.id, modeStats(entry)))}`;
   } else if (charge) {
     const cells = specialCells(item, force);
-    base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${raw(rangeGrid(String(statsWithEffects(charge[0], cells, expanded)), String(statsWithEffects(charge[1], cells, expanded))))}
-      <p class="faint" style="font-size:12.5px;margin-top:8px">${L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged')}</p></section>`;
+    base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${raw(rangeGrid(String(statsWithEffects(charge[0], cells, expanded)), String(statsWithEffects(charge[1], cells, expanded))))}</section>`;
   } else {
     base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${statsWithEffects(item, specialCells(item, force), expanded)}</section>`;
   }
