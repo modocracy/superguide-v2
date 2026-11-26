@@ -98,7 +98,10 @@ const hitKind = w => ({ arc: 'arc', beam: 'beam', spray: 'spray' })[w.delivery] 
 // Burning after a flame spray sets a target alight: the Fire status, as on the stratagem flamethrowers
 // (data-support.js flamethrower, data-equipment.js hot-dog and flame-sentry: 100/s, AP 4, 3 s).
 const BURN = { perSecond: 100, ap: 4, duration: 3 };
-const burns = w => hitKind(w) === 'spray' && (w.statuses ?? []).includes('Fire');
+// It also shows on a weapon whose attack sets targets on fire (the datamine Fire status) where the wiki infobox gives
+// no fire damage (Coyote, Cookout, Immolation; user request 2026-11-26: Hyena shows its wiki 100/s, they showed none).
+// The Cookout page's change history gives the same 100 ('Burn damage increased from 50 to 100').
+const burns = w => (hitKind(w) === 'spray' || w.dot?.perSecond == null) && (w.statuses ?? []).includes('Fire');
 // The Arc grenade's main record is a burst with no damage; its damage is the arcs it lets out (wiki: 100 per arc),
 // so the sheet shows the arc as its hit, its radius as the arc reach and no component table (user request 2026-11-26).
 function shownAs(w) {
@@ -276,7 +279,8 @@ function detailRows(w) {
   // Gas and arc damage rows carry the wiki damage icon.
   if (w.dot?.perSecond != null && kind !== 'spray' && DOT_ICON[w.dot.element]) rows.at(-1).icon = DOT_ICON[w.dot.element];
   if (burns(w)) {
-    add(L('화상 피해', 'Burn damage'), num(BURN.perSecond), perSecond, L(`AP ${BURN.ap} · 지속 ${BURN.duration}초 · 분사 피해와 별도`, `AP ${BURN.ap} · ${BURN.duration} s · on top of the spray`));
+    const after = kind === 'spray' ? L('분사 피해와 별도', 'on top of the spray') : w.delivery === 'explosion' ? L('폭발 피해와 별도', 'on top of the blast') : L('탄 피해와 별도', 'on top of the hit');
+    add(L('화상 피해', 'Burn damage'), num(BURN.perSecond), perSecond, L(`AP ${BURN.ap} · 지속 ${BURN.duration}초 · `, `AP ${BURN.ap} · ${BURN.duration} s · `) + after);
     rows.at(-1).icon = 'fire';
   }
   if (w.radius != null && w.innerRadius != null) add(L('폭발 반경', 'Blast radius'), num(w.innerRadius), 'm', blastCaption(w));
