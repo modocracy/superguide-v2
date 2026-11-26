@@ -57,7 +57,7 @@ export default {
   "기본은 아크가 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있습니다.": "By default, all arcs are assumed to hit the same part. Lower the hit rate to recalculate.",
   "기본은 파편의 20%를 반올림한 개수가 같은 부위에 맞는다고 가정하며, 직접 맞혔을 때의 피해와 폭발 피해도 반영합니다. 명중률을 바꿔 다시 계산할 수 있으며, 파편 0개를 고르면 파편 피해는 제외합니다.": "By default, 20% of the shrapnel (rounded) is assumed to hit the same part, and direct-hit damage and explosion damage are also included. Change the hit rate to recalculate; choosing 0 fragments leaves out shrapnel damage.",
   "불꽃이 몇 번 닿는지 확인되지 않아 발 단위로 계산하지 않습니다.": "Not calculated per shot because how many times the flames hit is unverified.",
-  "기본은 탄환의 절반(반올림)이 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.": "By default, half the rounds (rounded) are assumed to hit. Change the hit rate to recalculate.",
+  "기본은 탄환이 모두 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.": "By default, all rounds are assumed to hit. Change the hit rate to recalculate.",
   "총에 남아 있는 탄약 수를 알 수 없어 한꺼번에 쐈을 때의 피해를 계산하지 않습니다.": "Damage from firing everything at once is not calculated because the number of rounds left in the gun is unknown.",
   "한 번 휘둘러 맞혔을 때의 피해입니다. 실제로 그 부위에 닿을 수 있는지, 방어구로 늘어나는 피해와 기절 같은 효과는 반영하지 않습니다.": "Damage from one swing that connects. Whether you can actually reach that part, damage bonuses from your armor, and effects such as stun are not accounted for.",
   "어떤 적을 겨냥할 수 있고 어느 부위에 맞는지 확인되지 않아 유도 사격은 계산하지 않습니다.": "Guided fire is not calculated because which enemies it can target and which part it hits are unverified.",

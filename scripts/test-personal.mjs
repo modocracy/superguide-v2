@@ -228,7 +228,8 @@ for (const weapon of personalWeapons) {
     ok(Number.isInteger(attack.ammoPerShot) && attack.ammoPerShot > 0, 'ammo use');
     if (attack.hitCondition) {
       const { min, max } = attack.hitCondition;
-      const pct = attack.hitCondition.kind === 'arcs' ? 100 : attack.hitCondition.kind === 'pellets' ? 50 : 20;
+      // Pellets default to half, the Variable's volley of bullets to all (user decisions 2026-11-26).
+      const pct = attack.hitCondition.kind === 'arcs' || weapon.id === 'variable' && attack.id === 'volley' ? 100 : attack.hitCondition.kind === 'pellets' ? 50 : 20;
       eq(attack.hitCondition.defaultPct, pct);
       eq(attack.hitCondition.default, Math.max(min, Math.round(max * pct / 100)), `${weapon.id}/${attack.id}: rounded default count`);
       ok(Number.isInteger(min) && Number.isInteger(max) && min >= 0 && max >= min, 'assumption bounds');
@@ -474,7 +475,7 @@ eq(compare('hunter-hardened', 'breaker').hits, 1, 'default cache remains separat
 for (const [weaponId, profile] of Object.entries(personalProfiles)) for (const attack of profile.modes) {
   if (attack.hitCondition?.kind !== 'pellets') continue;
   const result = compare('hunter-hardened', weaponId, {}, attack.id);
-  ok(result.defaulted && result.assumption.count === Math.max(1, Math.round(attack.hitCondition.max / 2)), `${weaponId}/${attack.id}: comparison applies the half pellet default`);
+  ok(result.defaulted && result.assumption.count === Math.max(1, Math.round(attack.hitCondition.max * attack.hitCondition.defaultPct / 100)), `${weaponId}/${attack.id}: comparison applies the pellet default`);
 }
 const assumed = compare('hunter-hardened', 'breaker', { assume: { hitCount: 2 } });
 eq([assumed.status, assumed.hits, assumed.assumption.count, assumed.verified], ['assume', 1, 2, false]);

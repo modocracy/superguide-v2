@@ -87,6 +87,9 @@ const hitKind = c => {
   const kind = HIT_KINDS[c?.kind];
   const name = c?.kind === 'pellets' && c.projectileName;
   if (!kind || !name) return kind;
+  if (c.defaultPct === 100) return { ...kind, noun: L(name, PELLET_EN[name] || 'pellets'),
+    why: L(`기본은 ${josa(name, ['이', '가'])} 모두 맞는다고 계산합니다. 일부만 맞으면 명중률을 낮춰 다시 볼 수 있습니다.`,
+      `By default all the ${PELLET_EN[name] || 'pellets'} hit. If only some land, lower the hit rate to check again.`) };
   return { ...kind, noun: L(name, PELLET_EN[name] || 'pellets'),
     why: L(`${josa(name, ['은', '는'])} 퍼지므로 기본은 절반(반올림)이 맞는다고 계산합니다. 가까이서 큰 부위를 쏘면 더 맞고, 멀거나 작은 부위면 덜 맞으니 명중률을 바꿔 다시 볼 수 있습니다.`,
       `The ${PELLET_EN[name] || 'pellets'} spread, so by default half of them (rounded) hit. Close up on a big part more land, at range or on a small part fewer, so you can change the hit rate to check again.`) };

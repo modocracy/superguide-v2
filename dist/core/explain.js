@@ -154,6 +154,8 @@ export function attackStats(mode, { distance = 0 } = {}) {
 /** One-line statement of what the count assumes for this kind of attack. */
 export function assumptionText(mode) {
   const c = mode?.hitCondition;
+  if (c?.kind === 'pellets' && c.defaultPct === 100) return L(`기본은 ${projectile(mode)}이 모두 같은 부위에 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.`,
+    `By default all ${projectile(mode)} hit the same part. You can change the hit rate to recalculate.`);
   if (c?.kind === 'pellets') return L(`기본은 ${projectile(mode)}의 절반(반올림)이 같은 부위에 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.`,
     `By default half the ${projectile(mode)} (rounded) hit the same part. You can change the hit rate to recalculate.`);
   if (c?.kind === 'shrapnel') return L(`기본은 파편의 ${c.defaultPct}%를 반올림한 개수가 같은 부위에 ${mode.delivery === 'explosive' ? '주폭발' : '주탄 직격·폭발'}과 함께 맞는 가정입니다. 명중률을 바꿀 수 있으며, 파편 0개를 고르면 파편 피해는 제외합니다.`,

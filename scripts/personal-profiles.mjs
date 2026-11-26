@@ -109,7 +109,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     }
     if (['bushwhacker', 'double-freedom'].includes(weapon.id)) modes.push({ ...makeMode(weapon, weapon, 'all-barrels', '일제 사격'), ammoPerShot: weapon.barrels, hitCondition: { kind: 'pellets', min: 1, max: weapon.pellets * weapon.barrels } });
     if (weapon.id === 'variable') modes.push(
-      { ...makeMode(weapon, weapon, 'volley', '일제 사격'), ammoPerShot: 7, hitCondition: { kind: 'pellets', min: 1, max: 7, projectileName: '탄환' } },
+      { ...makeMode(weapon, weapon, 'volley', '일제 사격'), ammoPerShot: 7, hitCondition: { kind: 'pellets', min: 1, max: 7, projectileName: '탄환', defaultPct: 100 } },
       { id: 'total', name: '전탄 발사', unsupported: '총에 남아 있는 탄약 수를 알 수 없어 한꺼번에 쐈을 때의 피해를 계산하지 않습니다.' },
     );
     // Shrapnel is part of this shot, never a selectable standalone mode.
@@ -143,11 +143,13 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
       if (mode.hitCondition) {
         const condition = mode.hitCondition;
         // Pellets spread, so half of them is the default (user request 2026-11-26); arcs all reach the target.
-        condition.defaultPct = condition.kind === 'arcs' ? 100 : condition.kind === 'pellets' ? 50 : 20;
+        condition.defaultPct ??= condition.kind === 'arcs' ? 100 : condition.kind === 'pellets' ? 50 : 20;
         condition.default = Math.max(condition.min, Math.round(condition.max * condition.defaultPct / 100));
       }
       if (mode.hitCondition?.kind === 'pellets') {
-        mode.note = [mode.note, `기본은 ${mode.hitCondition.projectileName || '펠릿'}의 절반(반올림)이 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.`].filter(Boolean).join(' ');
+        const name = mode.hitCondition.projectileName || '펠릿';
+        const share = mode.hitCondition.defaultPct === 100 ? `${name}이 모두` : `${name}의 절반(반올림)이`;
+        mode.note = [mode.note, `기본은 ${share} 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.`].filter(Boolean).join(' ');
       }
       if (mode.hitCondition?.kind === 'arcs') mode.note = [mode.note, '기본은 아크가 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있습니다.'].filter(Boolean).join(' ');
       if (![mode.standard, mode.durable, mode.ap, mode.explosion, mode.explosionDurable, mode.explosionAp].every(finite)) mode.unsupported = '피해량이나 장갑을 뚫는 능력이 정확히 확인되지 않아 계산하지 않습니다.';
