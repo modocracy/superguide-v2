@@ -609,7 +609,8 @@ const statGrid = (item, effects = [], expanded = false) => {
     .map(cell => statCell({ label: cell.label, icon: cell.icon, text: typeof cell.value === 'number' ? num(cell.value) : cell.value, unit: lang === 'en' ? UNIT_EN[cell.unit] ?? cell.unit : cell.unit, caption: cell.caption }));
   // A direct hit that practically never happens (a carrier shell bursting in the air) is flagged in orange.
   if (item.directWarn) direct.warn = item.directWarn;
-  return html`<dl class="detail-grid">${[direct, blast].filter(stat => !absent(stat)).map(statCell)}${durable}${absent(ap) ? '' : statCell(ap)}${extra('damage')}${unverifiedArea || item.noReach ? '' : statCell(reach)}${extra('reach')}${ammo}${extra('ammo')}${rateCell(item)}${reloadCell(item)}${sentryCells.map(statCell)}${timeCells.map(statCell)}${bodyCells.map(statCell)}${handling.map(statCell)}${effects}</dl>`;
+  // Direct, durable, then blast damage (user request 2026-11-26).
+  return html`<dl class="detail-grid">${absent(direct) ? '' : statCell(direct)}${durable}${absent(blast) ? '' : statCell(blast)}${absent(ap) ? '' : statCell(ap)}${extra('damage')}${unverifiedArea || item.noReach ? '' : statCell(reach)}${extra('reach')}${ammo}${extra('ammo')}${rateCell(item)}${reloadCell(item)}${sentryCells.map(statCell)}${timeCells.map(statCell)}${bodyCells.map(statCell)}${handling.map(statCell)}${effects}</dl>`;
 };
 
 // Weapons whose shot grows with the charge rather than switching modes (user request 2026-11-25): no mode tabs; the

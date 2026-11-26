@@ -262,18 +262,19 @@ function detailRows(w) {
   else if (w.direct != null) add(w.pellets > 1 ? L('펠릿당 피해', 'Damage per pellet') : kind === 'arc' ? L('아크 피해', 'Arc damage') : kind === 'beam' ? L('광선 피해', 'Beam damage') : L('직격 피해', 'Direct damage'), num(w.direct), '', w.pellets > 1 ? L(`${w.pellets}발 모두 맞으면 ${num(w.direct * w.pellets)}`, `${num(w.direct * w.pellets)} if all ${w.pellets} hit`) : L('장갑에 막히지 않을 때', 'When armor does not stop it'));
   // Arc and beam hits carry their damage icon (user request 2026-11-26).
   if (w.direct != null && w.damageKind !== 'dps' && kind !== 'spray' && !(w.pellets > 1)) rows.at(-1).icon = kind === 'arc' ? 'arc' : kind === 'beam' ? 'laser' : 'ballistic';
+  // Direct, durable, then blast damage (user request 2026-11-26); the volley counts follow them.
+  if (w.durable != null) add(L('내구 피해', 'Durable damage'), num(w.durable), '', L('단단한 부위에 들어가는 피해', 'Damage against durable parts'));
+  if (w.splash != null) add(L('폭발 피해', 'Blast damage'), num(w.splash), '', w.splashAp != null ? L(`폭발 AP ${w.splashAp}`, `Blast AP ${w.splashAp}`) : '');
+  if (w.splash != null) rows.at(-1).icon = 'blast';
   // Only firing modes carry ammoPerShot (all barrels at once, a volley).
   if (w.ammoPerShot > 1 && w.direct != null) add(L('한 번에 발사', 'Fired at once'), num(w.ammoPerShot), L('발', ''), L(`모두 맞으면 ${num(w.direct * (w.pellets || 1) * w.ammoPerShot)}`, `${num(w.direct * (w.pellets || 1) * w.ammoPerShot)} if all hit`));
   // Fires whatever is left in the magazine (Variable "Total"), so the full magazine is the most.
   if (w.ammoAll && w.direct != null && w.magazine != null) add(L('한 번에 발사', 'Fired at once'), num(w.magazine), L('발', ''), L(`남은 탄 전부 · 가득 차 있으면 모두 맞을 때 ${num(w.direct * w.magazine)}`, `Every round left · ${num(w.direct * w.magazine)} if a full magazine all hits`));
-  if (w.splash != null) add(L('폭발 피해', 'Blast damage'), num(w.splash), '', w.splashAp != null ? L(`폭발 AP ${w.splashAp}`, `Blast AP ${w.splashAp}`) : '');
-  if (w.splash != null) rows.at(-1).icon = 'blast';
   // Extra cells (EXTRA_STATS in personal-display.mjs), each with its group of rows.
   const UNIT_EN = { '초': 's', '개': '' };
   // The wiki's recoil cell goes to the detailed stats with the other recoil numbers (recoilCells).
   const extra = after => (w.extraStats ?? []).filter(cell => cell.after === after && cell.label !== '반동')
     .forEach(cell => add(cell.label, num(cell.value), lang === 'en' ? UNIT_EN[cell.unit] ?? cell.unit : cell.unit, cell.caption));
-  if (w.durable != null) add(L('내구 피해', 'Durable damage'), num(w.durable), '', L('단단한 부위에 들어가는 피해', 'Damage against durable parts'));
   if (apOf(w) != null) add(L('관통', 'Penetration'), apText(w), '', apBandOf({ ap: apOf(w) })?.name);
   if (w.shrapnelCount) add(L('파편', 'Fragments'), num(w.shrapnelCount), L('개', ''), L('폭발 1회당 · 다 맞지는 않음', 'Per explosion · not all of them hit'));
   extra('damage');
