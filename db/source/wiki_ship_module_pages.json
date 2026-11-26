@@ -1,0 +1,442 @@
+{
+ "source": "https://helldivers.wiki.gg/api.php",
+ "retrievedAt": "2026-11-26",
+ "pages": {
+  "Donation Access License": {
+   "title": "Donation Access License",
+   "revision": 134469,
+   "affected": [
+    "MG-43 Machine Gun",
+    "M-105 Stalwart",
+    "APW-1 Anti-Materiel Rifle",
+    "FLAM-40 Flamethrower",
+    "MG-206 Heavy Machine Gun",
+    "RS-422 Railgun",
+    "GL-21 Grenade Launcher",
+    "LAS-98 Laser Cannon",
+    "TX-41 Sterilizer",
+    "GL-52 De-Escalator",
+    "PLAS-45 Epoch",
+    "S-11 Speargun",
+    "CQC-20 Breaching Hammer"
+   ]
+  },
+  "Streamlined Request Process": {
+   "title": "Streamlined Request Process",
+   "revision": 134463,
+   "affected": [
+    "MLS-4X Commando",
+    "M-105 Stalwart",
+    "B/MD C4 Pack",
+    "EAT-411 Leveller",
+    "AC-8 Autocannon",
+    "MG-206 Heavy Machine Gun",
+    "EAT-700 Expendable Napalm",
+    "PLAS-45 Epoch",
+    "CQC-9 Defoliation Tool",
+    "RL-77 Airburst Rocket Launcher",
+    "RS-422 Railgun",
+    "TX-41 Sterilizer",
+    "LAS-98 Laser Cannon",
+    "ARC-3 Arc Thrower",
+    "FAF-14 Spear",
+    "GL-21 Grenade Launcher",
+    "B/FLAM-80 Cremator",
+    "MG-43 Machine Gun",
+    "StA-X3 W.A.S.P. Launcher",
+    "CQC-20 Breaching Hammer",
+    "M-1000 Maxigun",
+    "FLAM-40 Flamethrower",
+    "S-11 Speargun",
+    "CQC-1 One True Flag",
+    "GL-28 Belt-Fed Grenade Launcher",
+    "GR-8 Recoilless Rifle",
+    "GL-52 De-Escalator",
+    "APW-1 Anti-Materiel Rifle",
+    "EAT-17 Expendable Anti-Tank",
+    "LAS-99 Quasar Cannon"
+   ]
+  },
+  "Hand Carts": {
+   "title": "Hand Carts",
+   "revision": 134478,
+   "affected": [
+    "SH-32 Shield Generator Pack",
+    "AX/AR-23 Guard Dog",
+    "SH-20 Ballistic Shield Backpack",
+    "B-1 Supply Pack",
+    "AX/LAS-5 Rover",
+    "LIFT-850 Jump Pack",
+    "AX/TX-13 Dog Breath",
+    "SH-51 Directional Shield",
+    "B-100 Portable Hellbomb",
+    "LIFT-860 Hover Pack",
+    "LIFT-182 Warp Pack",
+    "AX/FLAM-75 Hot Dog"
+   ]
+  },
+  "Superior Packing Methodology": {
+   "title": "Superior Packing Methodology",
+   "revision": 134464,
+   "affected": [
+    "Resupply"
+   ]
+  },
+  "Payroll Management System": {
+   "title": "Payroll Management System",
+   "revision": 134491,
+   "affected": [
+    "S-11 Speargun",
+    "M-105 Stalwart",
+    "AC-8 Autocannon",
+    "MG-206 Heavy Machine Gun",
+    "RL-77 Airburst Rocket Launcher",
+    "RS-422 Railgun",
+    "TX-41 Sterilizer",
+    "LAS-98 Laser Cannon",
+    "FAF-14 Spear",
+    "GL-21 Grenade Launcher",
+    "MG-43 Machine Gun",
+    "FLAM-40 Flamethrower",
+    "GR-8 Recoilless Rifle",
+    "APW-1 Anti-Materiel Rifle",
+    "PLAS-45 Epoch",
+    "B/MD C4 Pack",
+    "CQC-20 Breaching Hammer",
+    "StA-X3 W.A.S.P. Launcher",
+    "GL-52 De-Escalator"
+   ]
+  },
+  "Exploding Shrapnel": {
+   "title": "Exploding Shrapnel",
+   "revision": 134477,
+   "affected": [
+    "Orbital Walking Barrage",
+    "Orbital Railcannon Strike",
+    "Orbital Airburst Strike",
+    "Orbital Napalm Barrage",
+    "Orbital Precision Strike",
+    "Orbital 380mm HE Barrage",
+    "Orbital 120mm HE Barrage"
+   ]
+  },
+  "More Guns": {
+   "title": "More Guns",
+   "revision": 134488,
+   "affected": [
+    "Orbital Gatling Barrage",
+    "Orbital Walking Barrage",
+    "Orbital Napalm Barrage",
+    "Orbital 380mm HE Barrage",
+    "Orbital 120mm HE Barrage"
+   ]
+  },
+  "Zero-G Breech Loading": {
+   "title": "Zero-G Breech Loading",
+   "revision": 134468,
+   "affected": [
+    "Orbital Gatling Barrage",
+    "Orbital Walking Barrage",
+    "Orbital EMS Strike",
+    "Orbital Gas Strike",
+    "Orbital Railcannon Strike",
+    "Orbital Smoke Strike",
+    "Orbital Airburst Strike",
+    "Orbital Napalm Barrage",
+    "Orbital Laser",
+    "Orbital Precision Strike",
+    "Orbital 380mm HE Barrage",
+    "Orbital 120mm HE Barrage"
+   ]
+  },
+  "Atmospheric Monitoring": {
+   "title": "Atmospheric Monitoring",
+   "revision": 134437,
+   "affected": [
+    "Orbital 380mm HE Barrage",
+    "Orbital 120mm HE Barrage"
+   ]
+  },
+  "High-Density Explosives": {
+   "title": "High-Density Explosives",
+   "revision": 134480,
+   "affected": [
+    "Orbital Walking Barrage",
+    "Orbital Napalm Barrage",
+    "Orbital Precision Strike",
+    "Orbital 380mm HE Barrage",
+    "Orbital 120mm HE Barrage"
+   ]
+  },
+  "Liquid-Ventilated Cockpit": {
+   "title": "Liquid-Ventilated Cockpit",
+   "revision": 134483,
+   "affected": [
+    "Eagle 500kg Bomb",
+    "Eagle Airstrike",
+    "Eagle Strafing Run",
+    "Eagle Smoke Strike",
+    "Eagle Cluster Bomb",
+    "Eagle Napalm Airstrike",
+    "Eagle 110mm Rocket Pods"
+   ]
+  },
+  "Pit Crew Hazard Pay": {
+   "title": "Pit Crew Hazard Pay",
+   "revision": 134492,
+   "affected": [
+    "Eagle Rearm"
+   ]
+  },
+  "Expanded Weapons Bay": {
+   "title": "Expanded Weapons Bay",
+   "revision": 134476,
+   "affected": [
+    "Eagle 500kg Bomb",
+    "Eagle Airstrike",
+    "Eagle Strafing Run",
+    "Eagle Smoke Strike",
+    "Eagle Cluster Bomb",
+    "Eagle Napalm Airstrike",
+    "Eagle 110mm Rocket Pods"
+   ]
+  },
+  "XXL Weapons Bay": {
+   "title": "XXL Weapons Bay",
+   "revision": 134467,
+   "affected": [
+    "Eagle Airstrike",
+    "Eagle Smoke Strike",
+    "Eagle Cluster Bomb",
+    "Eagle Napalm Airstrike"
+   ]
+  },
+  "Advanced Crew Training": {
+   "title": "Advanced Crew Training",
+   "revision": 134471,
+   "affected": [
+    "Eagle Rearm"
+   ]
+  },
+  "Targeting Software Upgrade": {
+   "title": "Targeting Software Upgrade",
+   "revision": 134466,
+   "affected": [
+    "Orbital Gatling Barrage",
+    "Orbital Walking Barrage",
+    "Orbital EMS Strike",
+    "Orbital Gas Strike",
+    "Orbital Railcannon Strike",
+    "Orbital Smoke Strike",
+    "Orbital Airburst Strike",
+    "Orbital Napalm Barrage",
+    "Orbital Laser",
+    "Orbital Precision Strike",
+    "Orbital 380mm HE Barrage",
+    "Orbital 120mm HE Barrage"
+   ]
+  },
+  "Nuclear Radar": {
+   "title": "Nuclear Radar",
+   "revision": 134490,
+   "affected": []
+  },
+  "Power Steering": {
+   "title": "Power Steering",
+   "revision": 134493,
+   "affected": []
+  },
+  "Enhanced Combustion": {
+   "title": "Enhanced Combustion",
+   "revision": 134475,
+   "affected": [
+    "A/FLAM-40 Flame Sentry",
+    "Orbital Napalm Barrage",
+    "FLAM-40 Flamethrower",
+    "Eagle Napalm Airstrike",
+    "MD-I4 Incendiary Mines",
+    "AX/FLAM-75 Hot Dog",
+    "B/FLAM-80 Cremator",
+    "EAT-700 Expendable Napalm",
+    "EXO-51 Lumberer Exosuit"
+   ]
+  },
+  "Morale Augmentation": {
+   "title": "Morale Augmentation",
+   "revision": 134486,
+   "affected": []
+  },
+  "Synthetic Supplementation": {
+   "title": "Synthetic Supplementation",
+   "revision": 140870,
+   "affected": [
+    "MD-17 Anti-Tank Mines",
+    "E/AT-12 Anti-Tank Emplacement",
+    "FX-12 Shield Generator Relay",
+    "Resupply",
+    "A/M-23 EMS Mortar Sentry",
+    "A/MLS-4X Rocket Sentry",
+    "A/G-16 Gatling Sentry",
+    "MS-11 Solo Silo",
+    "A/ARC-3 Tesla Tower",
+    "A/M-12 Mortar Sentry",
+    "MD-6 Anti-Personnel Minefield",
+    "A/MG-43 Machine Gun Sentry",
+    "A/AC-8 Autocannon Sentry",
+    "MD-I4 Incendiary Mines",
+    "E/MG-101 HMG Emplacement",
+    "A/FLAM-40 Flame Sentry",
+    "A/LAS-98 Laser Sentry",
+    "E/GL-21 Grenadier Battlement",
+    "A/GM-17 Gas Mortar Sentry",
+    "MD-8 Gas Mines"
+   ]
+  },
+  "Advanced Construction": {
+   "title": "Advanced Construction",
+   "revision": 134470,
+   "affected": [
+    "A/M-23 EMS Mortar Sentry",
+    "A/MLS-4X Rocket Sentry",
+    "A/G-16 Gatling Sentry",
+    "A/ARC-3 Tesla Tower",
+    "A/M-12 Mortar Sentry",
+    "A/MG-43 Machine Gun Sentry",
+    "A/AC-8 Autocannon Sentry",
+    "A/FLAM-40 Flame Sentry",
+    "A/LAS-98 Laser Sentry",
+    "A/GM-17 Gas Mortar Sentry"
+   ]
+  },
+  "Rapid Launch System": {
+   "title": "Rapid Launch System",
+   "revision": 138120,
+   "affected": [
+    "E/AT-12 Anti-Tank Emplacement",
+    "MD-17 Anti-Tank Mines",
+    "FX-12 Shield Generator Relay",
+    "MD-8 Gas Mines",
+    "E/GL-21 Grenadier Battlement",
+    "A/ARC-3 Tesla Tower",
+    "E/AT-12 Anti-Tank Emplacement",
+    "MD-I4 Incendiary Mines",
+    "E/MG-101 HMG Emplacement"
+   ]
+  },
+  "Circuit Expansion": {
+   "title": "Circuit Expansion",
+   "revision": 134473,
+   "affected": [
+    "ARC-3 Arc Thrower",
+    "A/ARC-3 Tesla Tower"
+   ]
+  },
+  "Streamlined Launch Process": {
+   "title": "Streamlined Launch Process",
+   "revision": 134496,
+   "affected": [
+    "MLS-4X Commando",
+    "M-105 Stalwart",
+    "B/MD C4 Pack",
+    "EAT-411 Leveller",
+    "AC-8 Autocannon",
+    "MG-206 Heavy Machine Gun",
+    "EAT-700 Expendable Napalm",
+    "PLAS-45 Epoch",
+    "CQC-9 Defoliation Tool",
+    "RL-77 Airburst Rocket Launcher",
+    "RS-422 Railgun",
+    "TX-41 Sterilizer",
+    "LAS-98 Laser Cannon",
+    "ARC-3 Arc Thrower",
+    "FAF-14 Spear",
+    "GL-21 Grenade Launcher",
+    "B/FLAM-80 Cremator",
+    "MS-11 Solo Silo",
+    "MG-43 Machine Gun",
+    "StA-X3 W.A.S.P. Launcher",
+    "CQC-20 Breaching Hammer",
+    "M-1000 Maxigun",
+    "40-K Meltagun",
+    "FLAM-40 Flamethrower",
+    "S-11 Speargun",
+    "CQC-1 One True Flag",
+    "GL-28 Belt-Fed Grenade Launcher",
+    "GR-8 Recoilless Rifle",
+    "GL-52 De-Escalator",
+    "APW-1 Anti-Materiel Rifle",
+    "EAT-17 Expendable Anti-Tank",
+    "LAS-99 Quasar Cannon"
+   ]
+  },
+  "Dynamic Tracking": {
+   "title": "Dynamic Tracking",
+   "revision": 134499,
+   "affected": [
+    "A/M-23 EMS Mortar Sentry",
+    "A/MLS-4X Rocket Sentry",
+    "A/G-16 Gatling Sentry",
+    "A/M-12 Mortar Sentry",
+    "A/MG-43 Machine Gun Sentry",
+    "A/AC-8 Autocannon Sentry",
+    "A/GM-17 Gas Mortar Sentry",
+    "A/LAS-98 Laser Sentry",
+    "A/FLAM-40 Flame Sentry"
+   ]
+  },
+  "Shock Absorption Gel": {
+   "title": "Shock Absorption Gel",
+   "revision": 134495,
+   "affected": [
+    "A/M-23 EMS Mortar Sentry",
+    "A/MLS-4X Rocket Sentry",
+    "A/G-16 Gatling Sentry",
+    "A/M-12 Mortar Sentry",
+    "A/MG-43 Machine Gun Sentry",
+    "A/AC-8 Autocannon Sentry",
+    "A/GM-17 Gas Mortar Sentry",
+    "A/FLAM-40 Flame Sentry"
+   ]
+  },
+  "High-Quality Lubricant": {
+   "title": "High-Quality Lubricant",
+   "revision": 134481,
+   "affected": [
+    "A/LAS-98 Laser Sentry",
+    "A/FLAM-40 Flame Sentry",
+    "A/M-23 EMS Mortar Sentry",
+    "A/MLS-4X Rocket Sentry",
+    "A/G-16 Gatling Sentry",
+    "A/M-12 Mortar Sentry",
+    "A/MG-43 Machine Gun Sentry",
+    "A/AC-8 Autocannon Sentry",
+    "A/FLAM-40 Flame Sentry"
+   ]
+  },
+  "Blast Absorption": {
+   "title": "Blast Absorption",
+   "revision": 134472,
+   "affected": [
+    "A/M-23 EMS Mortar Sentry",
+    "A/MLS-4X Rocket Sentry",
+    "A/G-16 Gatling Sentry",
+    "A/ARC-3 Tesla Tower",
+    "A/M-12 Mortar Sentry",
+    "A/MG-43 Machine Gun Sentry",
+    "A/AC-8 Autocannon Sentry",
+    "A/GM-17 Gas Mortar Sentry",
+    "A/LAS-98 Laser Sentry",
+    "A/FLAM-40 Flame Sentry"
+   ]
+  },
+  "Cross-Platform Compatibility": {
+   "title": "Cross-Platform Compatibility",
+   "revision": 134474,
+   "affected": [
+    "A/M-23 EMS Mortar Sentry",
+    "A/M-12 Mortar Sentry",
+    "A/GM-17 Gas Mortar Sentry"
+   ]
+  }
+ }
+}

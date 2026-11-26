@@ -27,7 +27,22 @@ export const shipModuleSections = [
      "requisition": 0
     },
     "effect": "지원 무기가 소지 가능한 최대 수량의 탄창과 함께 투입됩니다.",
-    "effectEn": "Support Weapons deploy with the maximum number of carriable magazines."
+    "effectEn": "Support Weapons deploy with the maximum number of carriable magazines.",
+    "affected": [
+     "machine-gun",
+     "stalwart",
+     "anti-materiel",
+     "flamethrower",
+     "heavy-machine-gun",
+     "railgun",
+     "grenade-launcher",
+     "laser-cannon",
+     "sterilizer",
+     "de-escalator",
+     "epoch",
+     "speargun",
+     "breaching-hammer"
+    ]
    },
    {
     "id": "streamlined-request-process",
@@ -42,7 +57,39 @@ export const shipModuleSections = [
     },
     "effect": "지원 무기 스트라타젬의 쿨다운이 10% 감소합니다.",
     "effectEn": "Decreases Support Weapon stratagem cooldown by 10%.",
-    "stratagemModule": "streamlined-request"
+    "stratagemModule": "streamlined-request",
+    "affected": [
+     "commando",
+     "stalwart",
+     "c4-pack",
+     "leveller",
+     "autocannon",
+     "heavy-machine-gun",
+     "expendable-napalm",
+     "epoch",
+     "defoliation-tool",
+     "airburst-launcher",
+     "railgun",
+     "sterilizer",
+     "laser-cannon",
+     "arc-thrower",
+     "spear",
+     "grenade-launcher",
+     "cremator",
+     "machine-gun",
+     "wasp",
+     "breaching-hammer",
+     "maxigun",
+     "flamethrower",
+     "speargun",
+     "one-true-flag",
+     "belt-fed-gl",
+     "recoilless",
+     "de-escalator",
+     "anti-materiel",
+     "expendable-at",
+     "quasar"
+    ]
    },
    {
     "id": "hand-carts",
@@ -57,7 +104,21 @@ export const shipModuleSections = [
     },
     "effect": "모든 배낭 스트라타젬의 쿨다운이 10% 감소합니다.",
     "effectEn": "Decreases cooldown for all Backpack stratagems by 10%.",
-    "stratagemModule": "hand-carts"
+    "stratagemModule": "hand-carts",
+    "affected": [
+     "shield-pack",
+     "guard-dog",
+     "ballistic-shield",
+     "supply-pack",
+     "rover",
+     "jump-pack",
+     "dog-breath",
+     "directional-shield",
+     "portable-hellbomb",
+     "hover-pack",
+     "warp-pack",
+     "hot-dog"
+    ]
    },
    {
     "id": "superior-packing-methodology",
@@ -71,7 +132,10 @@ export const shipModuleSections = [
      "requisition": 20000
     },
     "effect": "재보급 스트라타젬 상자가 소지 가능한 최대 수량의 탄창으로 지원 무기를 보충합니다.",
-    "effectEn": "Resupply Stratagem boxes refill Support Weapons with the maximum number of carriable magazines."
+    "effectEn": "Resupply Stratagem boxes refill Support Weapons with the maximum number of carriable magazines.",
+    "affected": [
+     "resupply"
+    ]
    },
    {
     "id": "payroll-management-system",
@@ -85,7 +149,28 @@ export const shipModuleSections = [
      "requisition": 30000
     },
     "effect": "모든 지원 무기의 재장전 시간이 10% 감소합니다.",
-    "effectEn": "Reduces reload time for all support weapons by 10%."
+    "effectEn": "Reduces reload time for all support weapons by 10%.",
+    "affected": [
+     "speargun",
+     "stalwart",
+     "autocannon",
+     "heavy-machine-gun",
+     "airburst-launcher",
+     "railgun",
+     "sterilizer",
+     "laser-cannon",
+     "spear",
+     "grenade-launcher",
+     "machine-gun",
+     "flamethrower",
+     "recoilless",
+     "anti-materiel",
+     "epoch",
+     "c4-pack",
+     "breaching-hammer",
+     "wasp",
+     "de-escalator"
+    ]
    }
   ]
  },
@@ -111,7 +196,16 @@ export const shipModuleSections = [
      "requisition": 0
     },
     "effect": "궤도 스트라타젬의 폭발 중심부에서부터 손실되는 대미지가 줄어듭니다.",
-    "effectEn": "Reduces damage falloff from center of explosions caused by orbital Stratagems."
+    "effectEn": "Reduces damage falloff from center of explosions caused by orbital Stratagems.",
+    "affected": [
+     "orbital-walking",
+     "orbital-railcannon",
+     "orbital-airburst",
+     "orbital-napalm",
+     "orbital-precision",
+     "orbital-380",
+     "orbital-120"
+    ]
    },
    {
     "id": "more-guns",
@@ -125,7 +219,14 @@ export const shipModuleSections = [
      "requisition": 0
     },
     "effect": "궤도 폭격당 추가 1회의 일제 타격을 제공합니다.",
-    "effectEn": "Barrage orbitals fire 1 additional salvo(s) per barrage."
+    "effectEn": "Barrage orbitals fire 1 additional salvo(s) per barrage.",
+    "affected": [
+     "orbital-gatling",
+     "orbital-walking",
+     "orbital-napalm",
+     "orbital-380",
+     "orbital-120"
+    ]
    },
    {
     "id": "zero-g-breech-loading",
@@ -140,7 +241,21 @@ export const shipModuleSections = [
     },
     "effect": "궤도 스트라타젬의 쿨다운 시간이 10% 감소합니다.",
     "effectEn": "Orbital stratagem cooldown time reduced by 10%.",
-    "stratagemModule": "zero-g-breech"
+    "stratagemModule": "zero-g-breech",
+    "affected": [
+     "orbital-gatling",
+     "orbital-walking",
+     "orbital-ems",
+     "orbital-gas",
+     "orbital-railcannon",
+     "orbital-smoke",
+     "orbital-airburst",
+     "orbital-napalm",
+     "orbital-laser",
+     "orbital-precision",
+     "orbital-380",
+     "orbital-120"
+    ]
    },
    {
     "id": "atmospheric-monitoring",
@@ -154,7 +269,11 @@ export const shipModuleSections = [
      "requisition": 25000
     },
     "effect": "궤도 고폭 폭격의 분산 범위가 15% 감소합니다.",
-    "effectEn": "Orbital HE barrage spread reduced by 15%."
+    "effectEn": "Orbital HE barrage spread reduced by 15%.",
+    "affected": [
+     "orbital-380",
+     "orbital-120"
+    ]
    },
    {
     "id": "high-density-explosives",
@@ -168,7 +287,14 @@ export const shipModuleSections = [
      "requisition": 35000
     },
     "effect": "궤도 스트라타젬의 폭발 대미지 반경이 10% 증가합니다.",
-    "effectEn": "Increases the damage radius on explosions caused by orbital Stratagems by 10%."
+    "effectEn": "Increases the damage radius on explosions caused by orbital Stratagems by 10%.",
+    "affected": [
+     "orbital-walking",
+     "orbital-napalm",
+     "orbital-precision",
+     "orbital-380",
+     "orbital-120"
+    ]
    }
   ]
  },
@@ -195,7 +321,16 @@ export const shipModuleSections = [
     },
     "effect": "이글 스트라타젬의 쿨다운 시간이 50% 감소합니다.",
     "effectEn": "Eagle stratagem cooldown time reduced by 50%.",
-    "stratagemModule": "liquid-cockpit"
+    "stratagemModule": "liquid-cockpit",
+    "affected": [
+     "eagle-500kg",
+     "eagle-airstrike",
+     "eagle-strafing",
+     "eagle-smoke",
+     "eagle-cluster",
+     "eagle-napalm",
+     "eagle-rockets"
+    ]
    },
    {
     "id": "pit-crew-hazard-pay",
@@ -210,7 +345,10 @@ export const shipModuleSections = [
     },
     "effect": "이글 재무장 시간이 20% 감소합니다.",
     "effectEn": "Reduces Eagle Rearm time by 20%.",
-    "stratagemModule": "pit-crew"
+    "stratagemModule": "pit-crew",
+    "affected": [
+     "eagle-rearm"
+    ]
    },
    {
     "id": "expanded-weapons-bay",
@@ -225,7 +363,16 @@ export const shipModuleSections = [
     },
     "effect": "재무장당 이글 스트라타젬의 사용 횟수가 1회 증가합니다.",
     "effectEn": "Increases number of Eagle stratagem uses per Rearm by 1.",
-    "stratagemModule": "expanded-weapons-bay"
+    "stratagemModule": "expanded-weapons-bay",
+    "affected": [
+     "eagle-500kg",
+     "eagle-airstrike",
+     "eagle-strafing",
+     "eagle-smoke",
+     "eagle-cluster",
+     "eagle-napalm",
+     "eagle-rockets"
+    ]
    },
    {
     "id": "xxl-weapons-bay",
@@ -239,7 +386,13 @@ export const shipModuleSections = [
      "requisition": 25000
     },
     "effect": "복수의 폭탄을 투하하는 이글 스트라타젬이 폭탄 1개를 추가로 투하합니다.",
-    "effectEn": "Eagle stratagems that drop multiple bombs will drop 1 additional bomb(s)."
+    "effectEn": "Eagle stratagems that drop multiple bombs will drop 1 additional bomb(s).",
+    "affected": [
+     "eagle-airstrike",
+     "eagle-smoke",
+     "eagle-cluster",
+     "eagle-napalm"
+    ]
    },
    {
     "id": "advanced-crew-training",
@@ -253,7 +406,10 @@ export const shipModuleSections = [
      "requisition": 30000
     },
     "effect": "이글 사용 횟수가 남아 있는 채로 호출 시 이글 재무장 쿨다운이 10% 감소합니다.",
-    "effectEn": "Eagle Rearm cooldown further reduced by 10% if called in while Eagle uses still remain."
+    "effectEn": "Eagle Rearm cooldown further reduced by 10% if called in while Eagle uses still remain.",
+    "affected": [
+     "eagle-rearm"
+    ]
    }
   ]
  },
@@ -280,7 +436,21 @@ export const shipModuleSections = [
     },
     "effect": "모든 궤도 스트라타젬의 호출 시간이 1초 감소합니다.",
     "effectEn": "1-second reduction in call-in time for all Orbital stratagems.",
-    "stratagemModule": "targeting-software"
+    "stratagemModule": "targeting-software",
+    "affected": [
+     "orbital-gatling",
+     "orbital-walking",
+     "orbital-ems",
+     "orbital-gas",
+     "orbital-railcannon",
+     "orbital-smoke",
+     "orbital-airburst",
+     "orbital-napalm",
+     "orbital-laser",
+     "orbital-precision",
+     "orbital-380",
+     "orbital-120"
+    ]
    },
    {
     "id": "nuclear-radar",
@@ -322,7 +492,18 @@ export const shipModuleSections = [
      "requisition": 25000
     },
     "effect": "스트라타젬이 가하는 화염 대미지가 25% 증가합니다.",
-    "effectEn": "Fire damage from Stratagems increased by 25%."
+    "effectEn": "Fire damage from Stratagems increased by 25%.",
+    "affected": [
+     "flame-sentry",
+     "orbital-napalm",
+     "flamethrower",
+     "eagle-napalm",
+     "incendiary-mines",
+     "hot-dog",
+     "cremator",
+     "expendable-napalm",
+     "lumberer"
+    ]
    },
    {
     "id": "morale-augmentation",
@@ -364,7 +545,29 @@ export const shipModuleSections = [
     },
     "effect": "센트리, 거치형, 재보급 스트라타젬의 쿨다운 시간이 10% 감소합니다.",
     "effectEn": "Reduces cooldown time for Sentry, Emplacement, and Resupply stratagems by 10%.",
-    "stratagemModule": "synthetic-supplementation"
+    "stratagemModule": "synthetic-supplementation",
+    "affected": [
+     "at-mines",
+     "at-emplacement",
+     "shield-relay",
+     "resupply",
+     "ems-mortar",
+     "rocket-sentry",
+     "gatling-sentry",
+     "solo-silo",
+     "tesla-tower",
+     "mortar-sentry",
+     "personnel-mines",
+     "machine-gun-sentry",
+     "autocannon-sentry",
+     "incendiary-mines",
+     "hmg-emplacement",
+     "flame-sentry",
+     "laser-sentry",
+     "grenadier-battlement",
+     "gas-mortar",
+     "gas-mines"
+    ]
    },
    {
     "id": "advanced-construction",
@@ -379,7 +582,19 @@ export const shipModuleSections = [
     },
     "effect": "센트리 스트라타젬의 체력이 50% 증가합니다.",
     "effectEn": "Increases health of Sentry stratagems by 50%.",
-    "stratagemModule": "advanced-construction"
+    "stratagemModule": "advanced-construction",
+    "affected": [
+     "ems-mortar",
+     "rocket-sentry",
+     "gatling-sentry",
+     "tesla-tower",
+     "mortar-sentry",
+     "machine-gun-sentry",
+     "autocannon-sentry",
+     "flame-sentry",
+     "laser-sentry",
+     "gas-mortar"
+    ]
    },
    {
     "id": "rapid-launch-system",
@@ -394,7 +609,17 @@ export const shipModuleSections = [
     },
     "effect": "모든 거치형 스트라타젬이 호출 즉시 발사되어 전체 투입 시간이 단축됩니다.",
     "effectEn": "All Emplacement stratagems launch immediately once called in, reducing overall deployment time.",
-    "stratagemModule": "rapid-launch"
+    "stratagemModule": "rapid-launch",
+    "affected": [
+     "at-emplacement",
+     "at-mines",
+     "shield-relay",
+     "gas-mines",
+     "grenadier-battlement",
+     "tesla-tower",
+     "incendiary-mines",
+     "hmg-emplacement"
+    ]
    },
    {
     "id": "circuit-expansion",
@@ -408,7 +633,11 @@ export const shipModuleSections = [
      "requisition": 20000
     },
     "effect": "무기와 포탑에서 발사한 번개 아크가 1명의 적에게 추가로 연쇄됩니다.",
-    "effectEn": "Lightning arcs, fired from weapons and turrets, jump to one additional enemy."
+    "effectEn": "Lightning arcs, fired from weapons and turrets, jump to one additional enemy.",
+    "affected": [
+     "arc-thrower",
+     "tesla-tower"
+    ]
    },
    {
     "id": "streamlined-launch-process",
@@ -423,7 +652,41 @@ export const shipModuleSections = [
     },
     "effect": "모든 지원 무기 스트라타젬이 호출 즉시 발사되어 전체 투입 시간이 단축됩니다.",
     "effectEn": "All Support Weapon stratagems launch immediately once called in, reducing overall deployment time.",
-    "stratagemModule": "streamlined-launch"
+    "stratagemModule": "streamlined-launch",
+    "affected": [
+     "commando",
+     "stalwart",
+     "c4-pack",
+     "leveller",
+     "autocannon",
+     "heavy-machine-gun",
+     "expendable-napalm",
+     "epoch",
+     "defoliation-tool",
+     "airburst-launcher",
+     "railgun",
+     "sterilizer",
+     "laser-cannon",
+     "arc-thrower",
+     "spear",
+     "grenade-launcher",
+     "cremator",
+     "solo-silo",
+     "machine-gun",
+     "wasp",
+     "breaching-hammer",
+     "maxigun",
+     "meltagun",
+     "flamethrower",
+     "speargun",
+     "one-true-flag",
+     "belt-fed-gl",
+     "recoilless",
+     "de-escalator",
+     "anti-materiel",
+     "expendable-at",
+     "quasar"
+    ]
    }
   ]
  },
@@ -450,7 +713,18 @@ export const shipModuleSections = [
     },
     "effect": "모든 센트리 스트라타젬이 호출 즉시 발사되어 전체 투입 시간이 단축됩니다.",
     "effectEn": "All Sentry stratagems launch immediately once called in, reducing overall deployment time.",
-    "stratagemModule": "dynamic-tracking"
+    "stratagemModule": "dynamic-tracking",
+    "affected": [
+     "ems-mortar",
+     "rocket-sentry",
+     "gatling-sentry",
+     "mortar-sentry",
+     "machine-gun-sentry",
+     "autocannon-sentry",
+     "gas-mortar",
+     "laser-sentry",
+     "flame-sentry"
+    ]
    },
    {
     "id": "shock-absorption-gel",
@@ -465,7 +739,17 @@ export const shipModuleSections = [
     },
     "effect": "모든 센트리 스트라타젬의 탄약이 50% 증가합니다.",
     "effectEn": "Increases ammo for all Sentry stratagems by 50%.",
-    "stratagemModule": "shock-absorption-gel"
+    "stratagemModule": "shock-absorption-gel",
+    "affected": [
+     "ems-mortar",
+     "rocket-sentry",
+     "gatling-sentry",
+     "mortar-sentry",
+     "machine-gun-sentry",
+     "autocannon-sentry",
+     "gas-mortar",
+     "flame-sentry"
+    ]
    },
    {
     "id": "high-quality-lubricant",
@@ -479,7 +763,17 @@ export const shipModuleSections = [
      "requisition": 0
     },
     "effect": "센트리가 새로운 표적을 향해 더욱 빠른 속도로 회전합니다.",
-    "effectEn": "Sentries rotate towards new targets more quickly."
+    "effectEn": "Sentries rotate towards new targets more quickly.",
+    "affected": [
+     "laser-sentry",
+     "flame-sentry",
+     "ems-mortar",
+     "rocket-sentry",
+     "gatling-sentry",
+     "mortar-sentry",
+     "machine-gun-sentry",
+     "autocannon-sentry"
+    ]
    },
    {
     "id": "blast-absorption",
@@ -493,7 +787,19 @@ export const shipModuleSections = [
      "requisition": 25000
     },
     "effect": "센트리가 입는 폭발 대미지가 50% 감소합니다.",
-    "effectEn": "Sentries take 50% less damage from explosions."
+    "effectEn": "Sentries take 50% less damage from explosions.",
+    "affected": [
+     "ems-mortar",
+     "rocket-sentry",
+     "gatling-sentry",
+     "tesla-tower",
+     "mortar-sentry",
+     "machine-gun-sentry",
+     "autocannon-sentry",
+     "gas-mortar",
+     "laser-sentry",
+     "flame-sentry"
+    ]
    },
    {
     "id": "cross-platform-compatibility",
@@ -507,7 +813,12 @@ export const shipModuleSections = [
      "requisition": 35000
     },
     "effect": "박격포 센트리가 마크된 표적을 우선적으로 포격합니다.",
-    "effectEn": "Mortar Sentries prioritize fire at marked targets."
+    "effectEn": "Mortar Sentries prioritize fire at marked targets.",
+    "affected": [
+     "ems-mortar",
+     "mortar-sentry",
+     "gas-mortar"
+    ]
    }
   ]
  }

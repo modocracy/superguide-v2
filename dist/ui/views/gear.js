@@ -4,7 +4,7 @@
 //   #/gear?tab=loadout&p=<primary>&s=<secondary>&g=<throwable>&st=<a,b,c,d>&f=<faction>
 //   #/gear?tab=armor&w=<light|medium|heavy>&a=<armor>&d=<armor>&q=<text>   (body armor grouped by passive, gear-armor.js; d: open its details; q: search)
 //   #/gear?tab=boosters&b=<booster>   (boosters, gear-boosters.js)
-//   #/gear?tab=modules&u=<module>   (ship module upgrades, gear-modules.js)
+//   #/gear?tab=modules&u=<module>   now opens the stratagem view's ship module tab (#/arsenal?tab=modules, user request 2026-11-26)
 import { personalWeapons, personalWeaponsCheckedAt } from '../../data/personal-weapons.js';
 import { structures } from '../../data/demolition-data.js';
 import { personalProfiles } from '../../data/personal-profiles.js';
@@ -188,7 +188,7 @@ function visibleItems() {
 }
 
 function syncUrl() {
-  const query = state.tab === 'loadout' ? { tab: 'loadout', ...loadoutQuery() } : state.tab === 'armor' ? { tab: 'armor', w: armor.weight, p: armor.passive, a: armor.focus, d: armor.detail, q: armor.q } : state.tab === 'boosters' ? { tab: 'boosters', b: booster.focus } : state.tab === 'modules' ? { tab: 'modules', u: shipModule.focus } : { cat: state.cat === 'primary' ? '' : state.cat, type: state.type, h: state.hand ? '1' : '', bh: state.hole ? '1' : '', q: state.q, sort: state.sort };
+  const query = state.tab === 'loadout' ? { tab: 'loadout', ...loadoutQuery() } : state.tab === 'armor' ? { tab: 'armor', w: armor.weight, p: armor.passive, a: armor.focus, d: armor.detail, q: armor.q } : state.tab === 'boosters' ? { tab: 'boosters', b: booster.focus } : { cat: state.cat === 'primary' ? '' : state.cat, type: state.type, h: state.hand ? '1' : '', bh: state.hole ? '1' : '', q: state.q, sort: state.sort };
   ctx.replace({ view: 'gear', id: state.detail, query: { ...query, m: state.detail ? state.variant : '', full: state.expanded ? '1' : '' } });
 }
 
@@ -699,27 +699,12 @@ async function renderBoosters() {
   module.renderBoosters(panel, { state: booster });
 }
 
-// --- Ship modules -------------------------------------------------------------------
-const shipModule = { focus: '' };
-let modulesUi = null;
-async function renderModules() {
-  const panel = $('#gear-modules', root);
-  if (!modulesUi) {
-    render(panel, html`<p class="faint" style="padding:24px 0">${L('함선 모듈 목록을 불러오는 중…', 'Loading the ship modules...')}</p>`);
-    modulesUi = import('./gear-modules.js');
-  }
-  const module = await modulesUi;
-  if (state.tab !== 'modules') return;
-  module.renderModules(panel, { state: shipModule });
-}
-
 // --- View lifecycle -------------------------------------------------------------------
 const LEDES = {
   browse: '',
   loadout: L('무기와 스트라타젬을 담고 팩션을 고르면, 주요 적마다 무엇으로 몇 번 만에 처치하는지와 대응 공백을 보여 줍니다.', 'Fill in your weapons and stratagems and pick a faction to see what kills each key enemy in how many shots — and where your loadout has gaps.'),
   armor: L('몸통 방어구를 패시브별로 묶었습니다. 장갑 등급이 높을수록 덜 다치는 대신 속도와 스태미나 회복이 낮아집니다.', 'Body armor grouped by passive. A higher armor rating means less damage taken, at the cost of speed and stamina regen.'),
   boosters: L('출격 전에 한 명당 하나씩 고르는 부스터입니다. 효과는 분대 전원에게 적용되고, 같은 부스터는 겹쳐 쓸 수 없습니다.', 'Each Helldiver picks one booster before the drop. Its effect applies to the whole squad, and the same booster does not stack.'),
-  modules: L('슈퍼 구축함의 여섯 부서에 샘플과 요청 신청서를 사용해서 업그레이드하는 영구 강화입니다.', 'Permanent Super Destroyer upgrades in six sections, paid for with samples and Requisition Slips.'),
 };
 function showTab() {
   for (const button of $$('[data-tab-pick]', root)) button.setAttribute('aria-pressed', String(button.dataset.tabPick === state.tab));
@@ -728,11 +713,9 @@ function showTab() {
   $('#gear-loadout', root).hidden = state.tab !== 'loadout';
   $('#gear-armor', root).hidden = state.tab !== 'armor';
   $('#gear-boosters', root).hidden = state.tab !== 'boosters';
-  $('#gear-modules', root).hidden = state.tab !== 'modules';
   if (state.tab === 'browse') renderBrowse();
   else if (state.tab === 'armor') renderArmor().catch(error => { console.error(error); ctx.toast(L('방어구 목록을 불러오지 못했습니다.', 'The armor list could not be loaded.')); });
   else if (state.tab === 'boosters') renderBoosters().catch(error => { console.error(error); ctx.toast(L('부스터 목록을 불러오지 못했습니다.', 'The booster list could not be loaded.')); });
-  else if (state.tab === 'modules') renderModules().catch(error => { console.error(error); ctx.toast(L('함선 모듈 목록을 불러오지 못했습니다.', 'The ship modules could not be loaded.')); });
   else renderLoadout().catch(error => { console.error(error); ctx.toast(L('로드아웃 점검 도구를 불러오지 못했습니다.', 'The loadout check could not be loaded.')); });
 }
 
@@ -745,7 +728,7 @@ export function mount(container, context) {
   LEDES.browse = L(`주무기 ${count('primary')}종 · 보조무기 ${count('secondary')}종 · 투척 ${count('throwable')}종의 수치. 카드를 누르면 자세한 기준이 열립니다.`, `Stats for ${count('primary')} primaries, ${count('secondary')} secondaries and ${count('throwable')} throwables. Open a card for the details behind the numbers.`);
   render(root, html`<div class="page-head gear-head"><div><div class="eyebrow">Armory</div>
     <h1 class="sr-only">${L('장비', 'Gear')}</h1>
-    <div class="gear-tabs" role="group" aria-label="${L('장비 보기', 'Gear views')}"><button type="button" data-tab-pick="browse">${L('장비 둘러보기', 'Browse gear')}</button><button type="button" data-tab-pick="armor">${L('방어구', 'Armor')}</button><button type="button" data-tab-pick="boosters">${L('부스터', 'Boosters')}</button><button type="button" data-tab-pick="modules">${L('함선 모듈', 'Ship modules')}</button><button type="button" data-tab-pick="loadout">${L('로드아웃 점검', 'Loadout check')}</button></div>
+    <div class="gear-tabs" role="group" aria-label="${L('장비 보기', 'Gear views')}"><button type="button" data-tab-pick="browse">${L('장비 둘러보기', 'Browse gear')}</button><button type="button" data-tab-pick="armor">${L('방어구', 'Armor')}</button><button type="button" data-tab-pick="boosters">${L('부스터', 'Boosters')}</button><button type="button" data-tab-pick="loadout">${L('로드아웃 점검', 'Loadout check')}</button></div>
     <p id="gear-lede"></p></div></div>
   <div id="gear-browse">
     <div class="arsenal-tools">
@@ -762,7 +745,7 @@ export function mount(container, context) {
   <div id="gear-loadout" hidden></div>
   <div id="gear-armor" hidden></div>
   <div id="gear-boosters" hidden></div>
-  <div id="gear-modules" hidden></div>`);
+`);
 
   const input = $('#gear-q', root);
   input.addEventListener('input', () => { state.q = input.value; renderBrowse(); syncUrl(); });
@@ -787,10 +770,11 @@ let sheetListener = false;
 
 export function update(route) {
   const q = route.query;
-  state.tab = ['loadout', 'armor', 'boosters', 'modules'].includes(q.tab) ? q.tab : 'browse';
+  // The ship module tab moved to the stratagem view: an old link goes there.
+  if (q.tab === 'modules') { ctx.go({ view: 'arsenal', query: { tab: 'modules', u: q.u || '' } }, { replace: true }); return; }
+  state.tab = ['loadout', 'armor', 'boosters'].includes(q.tab) ? q.tab : 'browse';
   if (state.tab === 'armor') Object.assign(armor, { weight: ARMOR_WEIGHTS.includes(q.w) ? q.w : '', passive: /^[a-z0-9-]+(,[a-z0-9-]+)*$/.test(q.p || '') ? q.p : '', focus: q.a || '', detail: q.d || '', q: q.q || '' });
   else if (state.tab === 'boosters') booster.focus = q.b || '';
-  else if (state.tab === 'modules') shipModule.focus = q.u || '';
   else if (state.tab === 'browse') {
     Object.assign(state, {
       cat: GROUPS.some(group => group.id === q.cat) ? q.cat : 'primary',

@@ -8,6 +8,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { parseShipModules, gameEffect } from './ship-module-parse.mjs';
 import { gameText } from './booster-parse.mjs';
 import { shipModules } from '../dist/data/ship-modules.js';
+import { stratagems } from '../dist/core/catalog.js';
 
 const read = async name => JSON.parse(await readFile(new URL(`../db/source/${name}`, import.meta.url), 'utf8'));
 const slug = text => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -24,6 +25,19 @@ export async function buildShipModuleUpgrades() {
   const ko = (key, fallback) => { if (strings[key]) return strings[key]; toCheck.push(`no game Korean for "${fallback}" (shown in English)`); return fallback; };
   const { sections, total } = parseShipModules(page.text);
   const stratagemModule = new Map(shipModules.map(module => [module.en, module.id]));
+  // affected: the stratagems each upgrade changes, the 'Affected Stratagems' links of its own wiki page
+  // (db/source/wiki_ship_module_pages.json, scripts/fetch-ship-module-pages.mjs; user request 2026-11-26), matched to
+  // the catalogue by English name. An upgrade for every stratagem (Morale Augmentation) has no list there.
+  const pages = (await read('wiki_ship_module_pages.json')).pages;
+  const norm = text => text.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const byName = new Map(stratagems.flatMap(item => [item.en, item.name, ...(item.aliases ?? [])].filter(Boolean).map(name => [norm(name), item.id])));
+  const idOf = title => byName.get(norm(title)) ?? byName.get(norm(title.replace(/^\S+\s+/, '')));
+  const affectedOf = en => {
+    const titles = pages[en]?.affected ?? [];
+    if (!pages[en]) toCheck.push(`${en}: no module page (run scripts/fetch-ship-module-pages.mjs)`);
+    const ids = [...new Set(titles.map(title => idOf(title) ?? (toCheck.push(`${en}: affected "${title}" is no stratagem in the catalogue`), null)).filter(Boolean))];
+    return ids;
+  };
   const out = sections.map(section => {
     const icon = icons[section.en];
     if (!icon) toCheck.push(`${section.en}: no icon (run scripts/fetch-ship-module-icons.mjs)`);
@@ -37,6 +51,7 @@ export async function buildShipModuleUpgrades() {
           id: slug(module.en), tier: module.tier, name: ko(module.en, module.en), en: module.en, cost: module.cost,
           effect: effect ? gameText(strings[effect.key], effect.value) : module.effect, effectEn: effect ? gameText(effect.key, effect.value) : module.effect,
           ...(stratagemModule.has(module.en) && { stratagemModule: stratagemModule.get(module.en) }),
+          ...(ids => ids.length ? { affected: ids } : {})(affectedOf(module.en)),
         };
       }),
     };

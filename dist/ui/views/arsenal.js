@@ -132,7 +132,34 @@ function visibleItems() {
 }
 
 function syncUrl() {
+  if (state.tab === 'modules') { ctx.replace({ view: 'arsenal', query: { tab: 'modules', u: shipModule.focus } }); return; }
   ctx.replace({ view: 'arsenal', id: state.detail, query: { c: state.c, ap: state.ap, p: state.p, q: state.q, sort: state.sort, mod: state.mod ? '' : 'off', m: state.detail ? state.variant : '', full: state.expanded ? '1' : '' } });
+}
+
+// --- Tabs: the catalogue and the ship modules (ship-modules.js, loaded on demand) ----------------
+const LEDES = {
+  browse: '',
+  modules: L('슈퍼 구축함의 여섯 부서에 샘플과 요청 신청서를 사용해서 업그레이드하는 영구 강화입니다. 업그레이드마다 영향받는 스트라타젬을 펼쳐 볼 수 있습니다.', 'Permanent Super Destroyer upgrades in six sections, paid for with samples and Requisition Slips. Open each upgrade to see the stratagems it changes.'),
+};
+const shipModule = { focus: '' };
+let modulesUi = null;
+async function renderModules() {
+  const panel = $('#arsenal-modules', root);
+  if (!modulesUi) {
+    render(panel, html`<p class="faint" style="padding:24px 0">${L('함선 모듈 목록을 불러오는 중…', 'Loading the ship modules...')}</p>`);
+    modulesUi = import('./ship-modules.js');
+  }
+  const module = await modulesUi;
+  if (state.tab !== 'modules') return;
+  module.renderModules(panel, { state: shipModule });
+}
+function showTab() {
+  for (const button of $$('[data-tab-pick]', root)) button.setAttribute('aria-pressed', String(button.dataset.tabPick === state.tab));
+  $('#arsenal-lede', root).textContent = LEDES[state.tab];
+  $('#arsenal-browse', root).hidden = state.tab !== 'browse';
+  $('#arsenal-modules', root).hidden = state.tab !== 'modules';
+  if (state.tab === 'modules') renderModules().catch(error => { console.error(error); ctx.toast(L('함선 모듈 목록을 불러오지 못했습니다.', 'The ship modules could not be loaded.')); });
+  else renderList();
 }
 
 function renderList() {
@@ -767,7 +794,13 @@ export function mount(container, context) {
   // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
   Object.assign(state, { detail: null, variant: '', expanded: false, panelSnapshot: null });
   const count = id => stratagems.filter(item => item.category === id).length;
-  render(root, html`<div class="page-head"><div><div class="eyebrow">Stratagem Arsenal</div><h1>${L('스트라타젬 도감', 'Stratagems')}</h1><p>${L(`${stratagems.length}종의 피해·관통·범위와 사용법. 카드를 누르면 자세한 기준이 열립니다.`, `Damage, penetration, reach and how to use all ${stratagems.length} stratagems. Open a card for the details behind the numbers.`)}</p></div></div>
+  LEDES.browse = L(`${stratagems.length}종의 피해·관통·범위와 사용법. 카드를 누르면 자세한 기준이 열립니다.`, `Damage, penetration, reach and how to use all ${stratagems.length} stratagems. Open a card for the details behind the numbers.`);
+  // Two tabs as on the gear view: the catalogue and the ship modules (moved from the gear view, user request 2026-11-26).
+  render(root, html`<div class="page-head gear-head"><div><div class="eyebrow">Stratagem Arsenal</div>
+    <h1 class="sr-only">${L('스트라타젬 도감', 'Stratagems')}</h1>
+    <div class="gear-tabs" role="group" aria-label="${L('스트라타젬 보기', 'Stratagem views')}"><button type="button" data-tab-pick="browse">${L('스트라타젬 도감', 'Stratagems')}</button><button type="button" data-tab-pick="modules">${L('함선 모듈', 'Ship modules')}</button></div>
+    <p id="arsenal-lede"></p></div></div>
+  <div id="arsenal-browse">
   <div class="arsenal-tools">
     <div class="row">
       <label class="field">${icon('search', 18)}<span class="sr-only">${L('스트라타젬 검색', 'Search stratagems')}</span><input class="input" id="arsenal-q" type="search" placeholder="${L('이름·코드·용도 검색 — 순서를 섞어도 됩니다 (예: 도밀타)', 'Search by name, code or role')}" autocomplete="off"></label>
@@ -784,7 +817,9 @@ export function mount(container, context) {
   </div>
   <div class="arsenal-meta"><span id="arsenal-count" role="status"></span><button class="link" type="button" data-reset data-reset-inline>${L('필터 초기화', 'Reset filters')}</button></div>
   <div id="arsenal-grid" class="grid"></div>
-  <div id="arsenal-tray" class="tray" hidden></div>`);
+  <div id="arsenal-tray" class="tray" hidden></div>
+  </div>
+  <div id="arsenal-modules" hidden></div>`);
 
   const input = $('#arsenal-q', root);
   input.addEventListener('input', () => { state.q = input.value; renderList(); syncUrl(); });
@@ -792,6 +827,7 @@ export function mount(container, context) {
   root.addEventListener('click', event => {
     const target = event.target.closest('button, a');
     if (!target) return;
+    if (target.dataset.tabPick) { state.tab = target.dataset.tabPick; showTab(); syncUrl(); return; }
     if (target.dataset.cat != null) {
       state.c = state.c === target.dataset.cat ? '' : target.dataset.cat;
       // A type that has nothing in the new category is let go.
@@ -821,6 +857,8 @@ let sheetListener = false;
 
 export function update(route) {
   const q = route.query;
+  state.tab = q.tab === 'modules' ? 'modules' : 'browse';
+  if (state.tab === 'modules') { shipModule.focus = q.u || ''; showTab(); return; }
   const prevMod = state.mod;
   Object.assign(state, {
     c: categories.some(cat => cat.id === q.c) ? q.c : '',
@@ -835,7 +873,7 @@ export function update(route) {
   setModulesOn(state.mod);
   $('#arsenal-q', root).value = state.q;
   $('#arsenal-sort', root).value = state.sort;
-  renderList();
+  showTab();
   const id = stratagemById.has(route.id) ? route.id : null;
   updateItemDetail(ctx, state, route, id, stratagemById.get(id)?.variants, openDetail, { refresh: prevMod !== state.mod });
   if (conflict) syncUrl();

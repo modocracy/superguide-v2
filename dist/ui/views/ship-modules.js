@@ -1,10 +1,12 @@
-// Ship module tab of the gear view: the six ship sections and their five upgrades each.
-//   #/gear?tab=modules&u=<module>   (u: scroll to and mark one upgrade)
-// Loaded on demand by gear.js.
+// Ship module tab of the stratagem view (moved from the gear view, user request 2026-11-26): the six ship sections and
+// their five upgrades each, with the stratagems each upgrade changes.
+//   #/arsenal?tab=modules&u=<module>   (u: scroll to and mark one upgrade)
+// Loaded on demand by arsenal.js.
 import { shipModuleSections, shipModuleTotal, shipModuleUpgradesSource } from '../../data/ship-module-upgrades.js';
 import { currencyIcons } from '../../data/currency-icons.js';
+import { stratagemById } from '../../core/catalog.js';
 import { html, render, $, external } from '../dom.js';
-import { L, lang, locale } from '../../core/i18n.js';
+import { L, T, lang, locale } from '../../core/i18n.js';
 
 const count = value => value.toLocaleString(locale());
 // The game's names for the currencies (Common/Rare/Super Sample, Requisition Slips) with the wiki's icons.
@@ -14,6 +16,15 @@ const icon = key => currencyIcons[ICON_IDS[key]] ? html`<img class="cost-icon" s
 const costLine = cost => CURRENCIES.filter(([key]) => cost[key]).map(([key, name]) => html`<span data-currency="${key}">${icon(key)}${name} <b>${count(cost[key])}</b></span>`);
 const sectionCost = section => Object.fromEntries(CURRENCIES.map(([key]) => [key, section.modules.reduce((sum, module) => sum + module.cost[key], 0)]));
 
+// The stratagems the upgrade changes (its wiki page's Affected Stratagems, ship-module-upgrades.js `affected`; user request
+// 2026-11-26), folded, each linking to its card. An upgrade for every stratagem (Morale Augmentation) lists none.
+function affectedList(module) {
+  const items = (module.affected ?? []).map(id => stratagemById.get(id)).filter(Boolean);
+  if (!items.length) return '';
+  return html`<details class="module-affected"><summary>${L(`영향받는 스트라타젬 ${items.length}종`, `${items.length} ${items.length === 1 ? 'stratagem' : 'stratagems'} affected`)}</summary>
+    <p>${items.map((item, i) => html`${i ? ' · ' : ''}<a href="#/arsenal/${item.id}">${T(item.name)}</a>`)}</p></details>`;
+}
+
 function moduleItem(module, focus) {
   return html`<li class="module-item" id="module-${module.id}" ${module.id === focus ? 'data-focus' : ''}>
     <span class="module-tier" aria-label="${L(`${module.tier}단계`, `Tier ${module.tier}`)}">${module.tier}</span>
@@ -22,6 +33,7 @@ function moduleItem(module, focus) {
       <p class="info-desc">${lang === 'en' ? module.effectEn : module.effect}</p>
       <p class="module-cost">${costLine(module.cost)}</p>
       ${module.stratagemModule ? html`<p class="module-applied"><a href="#/arsenal">${L('스트라타젬 도감의 재사용 시간에 반영', 'Applied to cooldowns in the stratagem catalogue')}</a></p>` : ''}
+      ${affectedList(module)}
     </div>
   </li>`;
 }
