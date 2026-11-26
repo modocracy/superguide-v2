@@ -116,8 +116,10 @@ export function withHitAssumption(mode, { hitCount = '',
     && ['none', 'blast', 'direct'].includes(primaryHit) && typeof bombletDirect === 'boolean';
   if (!valid) return { ...mode, events: undefined, assumption: undefined };
   const event = (name, attack, times, directHit) => ({ name, attack, times, directHit });
+  // A grenade that lets out the arcs (mode.carrier, De-Escalator) hits once before them (user request 2026-11-26).
   const events = ['arcs', 'pellets'].includes(kind)
-    ? [event(kind === 'arcs' ? L('전격', 'Arcs') : L('명중 탄체·펠릿', 'Projectiles/pellets hit'), mode, count, true)]
+    ? [...(mode.carrier ? [event(L('유탄 직격', 'Grenade hit'), mode.carrier, 1, true)] : []),
+      event(kind === 'arcs' ? L('아크', 'Arcs') : L('명중 탄체·펠릿', 'Projectiles/pellets hit'), mode, count, true)]
     : kind === 'shrapnel'
       ? [event(L('주탄·폭발', 'Main projectile/explosion'), mode, 1, mode.delivery !== 'explosive'),
         ...(count === 0 ? [] : [event(L('명중 파편', 'Fragments hit'), mode.bomblet, count, true)])]
@@ -183,6 +185,7 @@ function solveReviewed(enemy, target, attack, options) {
   }
   if (target.unknownReason) return { ...base, reason: 'part-unknown', detail: target.unknownReason };
   if (attack.beam) return solveBeam(enemy, target, attack, options);
+  if (attack.stream) return solveStream(enemy, target, attack, options);
   if (attack.hitCondition && !attack.events) return { ...base, reason: 'assumption-needed' };
   return solveImpacts(enemy, target, attack, options);
 }
@@ -307,6 +310,105 @@ function solveBeam(enemy, target, attack, options) {
     copy = 1;
     if (!part.next) return { ...done, outcome: part.effect, via: 'part' };
     mainLeft -= stage.mainTotal + (part.destroyMainDamage || 0);
+    part = part.next;
+  }
+  return base;
+}
+
+// A held laser beam or flame stream (user request 2026-11-26) is counted in seconds on the same spot, not in
+// shots. Its own damage per second works like a beam's: the part first, its share on to main health. Fire
+// damage (a flame stream, and burning) is scaled by the enemy's wiki fire multiplier (options.fireMult).
+// Burning starts once the stream's fire status build-up (`ignite` per second, datamine) reaches the enemy's
+// ignition threshold (options.ignition, data/enemy-ignition.js; user decision 2026-11-26), and then adds its
+// damage per second to main health only (wiki SG-451 Cookout: 'burning damage is inflicted to the main body of
+// the target'), through the main armor at its AP. The build-up is assumed not to fade while the stream is held.
+// A beam on an enemy with no fire multiplier leaves burning out; a flame stream there is not counted.
+const STREAM_STEP = 10; // results in tenths of a second, rounded up
+const streamSeconds = seconds => Math.max(1, Math.ceil(seconds * STREAM_STEP - EPSILON)) / STREAM_STEP;
+const MAX_STREAM_SECONDS = 600;
+export const BURN_LEFT_OUT = L('이 적은 화염 피해 배율이 확인되지 않아 화상 피해는 빼고 계산했습니다.', 'This enemy\'s fire damage multiplier is unverified, so burning is left out.');
+const NO_IGNITION = L('점화 기준치가 주어지지 않아 화상 피해는 빼고 계산했습니다.', 'No ignition threshold was given, so burning is left out.');
+const OVER_BEFORE_BURN = L('그 전에 끝나므로 화상 피해는 들어가지 않습니다.', 'It is over before that, so no burning damage is added.');
+const armorStopsBurn = (armor, ap) => L(`본체 장갑이 ${armor}라 화상(관통 ${ap})은 본체에 들어가지 않습니다.`, `Main armor ${armor} stops burning (AP ${ap}), so it adds no damage.`);
+const tenths = value => Math.round(value * 10) / 10;
+function ignitionNote(ignition, ignite, after) {
+  // A flame stream lights within a tenth of a second; say so rather than 'about 0 s'.
+  const soon = after < 0.1;
+  const when = soon ? L('불이 0.1초 이내에 붙습니다', 'Burning starts within 0.1 s') : L(`불이 붙기까지 약 ${tenths(after)}초입니다`, `Burning starts after about ${tenths(after)} s`);
+  return ignition.estimated
+    ? L(`${when}. 이 적의 점화 기준치는 알려지지 않아 ${ignition.value}로 추정했고, 무기는 초당 ${ignite}씩 쌓습니다.`,
+      `${when}. This enemy's ignition threshold is unknown, estimated at ${ignition.value}; the weapon builds up ${ignite} per second.`)
+    : L(`${when}. 점화 기준치 ${ignition.value}에 무기가 초당 ${ignite}씩 쌓습니다.`,
+      `${when}: an ignition threshold of ${ignition.value}, built up at ${ignite} per second.`);
+}
+
+// Seconds until main health loses `need`: the part passes `rate` per second up to `cap` in all, and burning
+// takes `burn` per second from `burnStart` seconds on.
+function drainSeconds(need, rate, cap, burn, burnStart) {
+  if (need <= EPSILON) return 0;
+  const capAt = rate > 0 ? cap / rate : Infinity;
+  const loss = s => Math.min(rate * s, cap) + burn * Math.max(0, s - burnStart);
+  const points = [0, burnStart, capAt].filter(Number.isFinite).sort((a, b) => a - b);
+  for (let i = 0; i < points.length; i++) {
+    const from = points[i], to = points[i + 1] ?? Infinity;
+    const slope = (from < capAt ? rate : 0) + (from >= burnStart ? burn : 0);
+    const left = need - loss(from);
+    if (left <= EPSILON) return from;
+    if (slope > 0 && from + left / slope <= to + EPSILON) return from + left / slope;
+  }
+  return Infinity;
+}
+
+function solveStream(enemy, target, attack, options) {
+  const base = pending(target);
+  const main = target.main || enemy.main;
+  const { stream } = attack;
+  const fire = options.fireMult;
+  if (stream.fire && !known(fire)) return { ...base, reason: 'fire-mult-missing' };
+  const own = stream.fire ? { ...attack, standard: attack.standard * fire, durable: attack.durable * fire } : attack;
+  const ignition = options.ignition;
+  const after = stream.burn && known(ignition?.value) && stream.ignite > 0 ? ignition.value / stream.ignite : null;
+  const burnKnown = after != null && known(fire) && known(main.armor);
+  const burn = burnKnown && !target.isolated ? stream.burn.perSecond * fire * armorFactor(stream.burn.ap, main.armor) : 0;
+  const armorStops = burnKnown && !target.isolated && burn === 0;
+  const notes = !stream.burn ? [] : !known(fire) ? [BURN_LEFT_OUT] : after == null ? [NO_IGNITION]
+    : armorStops ? [armorStopsBurn(main.armor, stream.burn.ap)] : burn > 0 ? [ignitionNote(ignition, stream.ignite, after)] : [];
+  const bleedOrKill = main.constitution ? 'bleed' : 'kill';
+  const stages = [];
+  let mainLeft = main.hp;
+  let time = 0;
+  let part = target;
+  let copy = 1;
+  while (part) {
+    const damage = hitDamage(own, part, main, options);
+    const stage = { part, hits: 0, damage, events: [{ name: null, attack, times: 1, damage }], ...(part.copies > 1 ? { copy } : {}) };
+    stages.push(stage);
+    if (![damage.direct, part.hp, part.toMain, main.hp].every(known) || part.hp === 0 || main.hp === 0) {
+      return { ...base, stages, notes, reason: 'beam-data-missing' };
+    }
+    if (damage.direct === 0) {
+      return part === target ? { ...base, stages, notes, outcome: 'blocked', reason: 'stream-blocked' }
+        : { ...base, stages, notes, hits: streamSeconds(time), outcome: 'armor', reason: 'no-damage-after-armor' };
+    }
+    const partTime = part.mainOnly ? Infinity : partPool(part) / damage.direct;
+    const transfer = target.isolated ? 0 : damage.direct * part.toMain / 100;
+    const cap = part.overflowCap ? transferCap(part) : Infinity;
+    const mainTime = target.isolated ? Infinity : drainSeconds(mainLeft, transfer, cap, burn, burn > 0 ? Math.max(0, after - time) : Infinity);
+    const span = Math.min(partTime, mainTime);
+    if (!Number.isFinite(span) || time + span > MAX_STREAM_SECONDS) return { ...base, stages, notes, reason: 'too-many-hits' };
+    const transferred = Math.min(transfer * span, cap);
+    const burned = burn > 0 ? burn * Math.max(0, time + span - Math.max(time, after)) : 0;
+    time += span;
+    Object.assign(stage, { hits: streamSeconds(span), contactSeconds: span, partTotal: damage.direct * span, mainTotal: transferred, burnTotal: burned });
+    // Over before the fire catches: say no burning was added.
+    const done = { ...base, stages, notes: burn > 0 && time < after ? [...notes, OVER_BEFORE_BURN] : notes, hits: streamSeconds(time), seconds: time, ignitedAt: burn > 0 ? after : null };
+    if (partTime <= mainTime && part.effect === 'kill' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };
+    if (partTime <= mainTime && mainLeft - transferred - burned - (part.destroyMainDamage || 0) <= EPSILON) return { ...done, outcome: bleedOrKill, via: 'main' };
+    if (mainTime < partTime) return { ...done, outcome: bleedOrKill, via: 'main' };
+    mainLeft -= transferred + burned + (part.destroyMainDamage || 0);
+    if (copy < (part.copies || 1)) { copy++; continue; }
+    copy = 1;
+    if (!part.next) return { ...done, outcome: part.effect, via: 'part' };
     part = part.next;
   }
   return base;

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { matchKoreanNames } from './fetch-weapons-source.mjs';
 import { infoboxExtras, infoboxDisagreements, reviewedConflicts } from './weapon-infobox.mjs';
 import { buildPersonalProfiles } from './personal-profiles.mjs';
-import { playerDetails, variantDisplayName, modeDetails, throwChoices } from './personal-display.mjs';
+import { playerDetails, variantDisplayName, modeDetails, throwChoices, actionDetails } from './personal-display.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = async path => JSON.parse(await readFile(new URL(path, root), 'utf8'));
@@ -171,7 +171,7 @@ function stats(attack, weapon, type) {
     record: attack?.type === 'projectile' ? attack.name : null,
     splashElement: element(splashDamage), splashStatuses: splashDamage?.statuses ?? [],
     damageKind: continuousBeam ? 'dps' : delivery === 'beam' || delivery === 'damage' && type !== 'melee' ? null : attack ? 'per-hit' : null,
-    unit: continuousBeam ? '빔 1초' : ({ projectile: '탄체·펠릿 1개', spray: '분사 입자 1개', arc: '전격 1회', explosion: '폭발 1회', melee: '타격 1회', beam: '빔 원본 피해값', damage: '피해 항목 1회·시간 단위 미확인' }[delivery] ?? null),
+    unit: continuousBeam ? '빔 1초' : ({ projectile: '탄체·펠릿 1개', spray: '분사 입자 1개', arc: '아크 1회', explosion: '폭발 1회', melee: '타격 1회', beam: '빔 원본 피해값', damage: '피해 항목 1회·시간 단위 미확인' }[delivery] ?? null),
   };
 }
 
@@ -221,7 +221,7 @@ const weapons = Object.entries(roster).flatMap(([categoryName, category]) =>
     for (const repair of referenceRepairs.filter(item => item.weapon === dataKey)) notes.push(`원본 참조 보정: 공격 참조 ${repair.reference}에 해당하는 기록이 없어, 띄어쓰기·밑줄만 다른 기록 ${repair.record}에 연결했습니다.`);
     if (korean?.matchedCode) notes.push(`한국어 이름 보정: 위키 제목 ${code}와 데이터 키 ${dataKey}의 제식 번호를 함께 대조하여 나무위키 ${korean.evidence}에 연결했습니다.`);
     if (extras.heatCapacity.raw && extras.heatCapacity.seconds === null) notes.push(`열 용량 단위 미확인: capacity=${extras.heatCapacity.raw}. 초·발수를 추정하지 않고 raw에 보존합니다.`);
-    if (code === 'ARC-12' && /five arcs with damage of 50/.test(page.wikitext)) notes.push('인포박스 전격 피해 250은 본문에 명시된 50 피해 전격 5개의 합계입니다. DB는 전격당 피해를 유지합니다.');
+    if (code === 'ARC-12' && /five arcs with damage of 50/.test(page.wikitext)) notes.push('인포박스 아크 피해 250은 본문에 명시된 50 피해 아크 5개의 합계입니다. DB는 아크당 피해를 유지합니다.');
     if (page.error) notes.push(`위키 페이지 수집 실패: ${page.error}. ${page.wikitext ? '이전 원문을 사용합니다.' : '인포박스 값은 미확인입니다.'}`);
     if (types.length && infoboxType && slug(types[0]) !== type) notes.push(`유형 불일치: 분류=${slug(types[0])}, 인포박스 weapon_type=${infoboxType}. 인포박스 값을 우선합니다.`);
     if (!types.length && infoboxType) notes.push(`하위 분류가 없어 위키 인포박스 weapon_type=${infoboxType}을 사용했습니다.`);
@@ -281,7 +281,7 @@ const weapons = Object.entries(roster).flatMap(([categoryName, category]) =>
     if (attacks.some(attack => attack.type === 'weapons')) notes.push('하부 부착 무기는 variants로 전개하고 원본 연결은 attacks 및 linkedAttacks에 보존했습니다.');
     if (expanded.some(({ attack }) => attack.type === 'spray')) notes.push('분사는 입자당 원본 피해입니다. 초당 입자 명중 수와 화상 지속 피해는 합산하지 않습니다.');
     if (expanded.some(({ attack }) => attack.type === 'beam')) notes.push(weapon.beam_fire_rate === 60 ? '연속 빔 피해를 초당 값으로 해석했습니다. 노출 시간·화상 피해는 합산하지 않습니다.' : '펄스 빔의 원본 피해입니다. beam_fire_rate·beams는 초당 피해로 환산하지 않고 별도 보존했습니다.');
-    if (expanded.some(({ attack }) => attack.type === 'arc')) notes.push('전격 1회 기준입니다. 다중 방출·연쇄 대상의 피해를 합산하지 않습니다.');
+    if (expanded.some(({ attack }) => attack.type === 'arc')) notes.push('아크 1회 기준입니다. 다중 방출·연쇄 대상의 피해를 합산하지 않습니다.');
     if (expanded.some(({ attack }) => attack.type === 'damage') && type !== 'melee') notes.push('damage 직접 참조는 원본 피해만 보존하며 시간 단위·반복 횟수는 미확인입니다.');
     const unresolved = expanded.filter(({ attack }) => attack.type !== 'status' && !data[attack.type]?.[attack.name]);
     if (unresolved.length) notes.push(`공격 참조 미확인: ${unresolved.map(({ attack }) => `${attack.type}/${attack.name}`).join(', ')}.`);
@@ -356,6 +356,7 @@ const personalWeapons = weapons.map(weapon => ({
   ...playerDetails(weapon, parseInfobox(pagesSource.pages[weapon.en].wikitext)),
   ...modeDetails(weapon, data, pagesSource.pages[weapon.en].wikitext),
   ...throwChoices(weapon, pagesSource.pages[weapon.en].wikitext),
+  ...actionDetails(parseInfobox(pagesSource.pages[weapon.en].wikitext), pagesSource.pages[weapon.en].wikitext),
   image: parseInfobox(pagesSource.pages[weapon.en].wikitext).image?.replace(/\{\{\s*PAGENAME\s*\}\}/gi, weapon.en) || null,
   sourceRevision: pagesSource.pages[weapon.en].revision,
   variants: weapon.variants.map((variant, index) => ({ ...pick(variant, ['id', 'name', ...perHitFields]), displayName: variantDisplayName(weapon, variant, index) })),

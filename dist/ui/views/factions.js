@@ -16,7 +16,8 @@ const iconSpan = (id, side, large = false) => subfactionIcons[id] ? html`<span c
 // A guide named after its enemies (Dragonroach · Hive Lord) shows each enemy's icon before its name.
 const guideLabel = (guide, large = false) => guide.parts
   ? guide.parts.map((part, index) => html`${index ? ' · ' : ''}${iconSpan(part.icon, guide.side, large)}${T(part.name)}`)
-  : html`${iconSpan(guide.id, guide.side, large)}${guide.name}`;
+  // English shows the guide's own English name: the shared dictionary gives every '기본' the same 'Standard'.
+  : html`${iconSpan(guide.id, guide.side, large)}${lang === 'en' && guide.en ? guide.en : guide.name}`;
 import { stratagemById } from '../../core/catalog.js';
 import { recommend, findEnemy } from '../../core/factions.js';
 import { num, unitOf, outcomeOf, countText, aimText, routeNotes, josa, stageName } from '../../core/explain.js';
@@ -45,14 +46,21 @@ function routeBlock(pick) {
     ${routeNotes(route, mode).length ? html`<ul class="notes" style="margin-top:6px">${routeNotes(route, mode).map(note => html`<li>${note}</li>`)}</ul>` : ''}</div>`;
 }
 
+// The reference time of a held flame stream on an advice pick, and whether it lights before the kill.
+function streamReference({ streamRoute: route, streamMode: mode, enemy, weaponId }) {
+  const lit = route.ignitedAt != null && route.ignitedAt <= route.seconds;
+  return html`<p>${L(`참고: 같은 부위(${route.target.name})에 불길을 계속 맞히면 약 ${num(route.hits)}초 걸립니다(${outcomeOf(route).label}). ${lit ? '불은 그보다 먼저 붙습니다.' : '불이 붙기 전에 죽을 수 있습니다.'}`,
+    `Reference: flames held on the same part (${T(route.target.name)}) take about ${num(route.hits)} s (${outcomeOf(route).label.toLowerCase()}). ${lit ? 'It catches fire before that.' : 'It may die before it catches fire.'}`)}</p>
+    <div class="links"><a class="button small" href="#/enemy/${enemy.id}?w=${weaponId}&m=${mode.id}">${L('적 대응에서 자세히 →', 'Full details in Enemies →')}</a></div>`;
+}
 function pickRow(unit, choice, index) {
   const pick = recommend(unit, choice);
   const weapon = stratagemById.get(pick.weaponId);
   if (pick.adviceOnly) {
     return html`<details class="pick"><summary><span class="rank-num">${index + 1}</span>${weaponIcon(weapon.id)}
       <span><b>${weapon.name}</b><small>${pick.pick.label}</small></span>
-      <span class="pick-result">${pick.pick.shownHits ? html`<b>${num(pick.pick.shownHits)}<small style="display:inline;font-size:12px;color:var(--text-3)">${L('발', pick.pick.shownHits === 1 ? ' shot' : ' shots')}</small></b><small>${badge(outcomeOf({ outcome: 'kill', target: {} }).label, outcomeOf({ outcome: 'kill', target: {} }).tone)}</small>` : html`${badge(L('전술 안내', 'Tactic'), 'accent')}<small class="faint">${L('횟수 미표시', 'No count shown')}</small>`}</span></summary>
-      <div class="pick-body"><p class="how">${pick.pick.note}</p><p class="note">${pick.pick.limitation}</p>
+      <span class="pick-result">${pick.streamRoute ? html`<b>${num(pick.streamRoute.hits)}<small style="display:inline;font-size:12px;color:var(--text-3)">${unitOf(pick.streamMode, pick.streamRoute.hits).unit}</small></b><small>${badge(L('참고', 'Reference'), 'outline')}</small>` : pick.pick.shownHits ? html`<b>${num(pick.pick.shownHits)}<small style="display:inline;font-size:12px;color:var(--text-3)">${L('발', pick.pick.shownHits === 1 ? ' shot' : ' shots')}</small></b><small>${badge(outcomeOf({ outcome: 'kill', target: {} }).label, outcomeOf({ outcome: 'kill', target: {} }).tone)}</small>` : html`${badge(L('전술 안내', 'Tactic'), 'accent')}<small class="faint">${L('횟수 미표시', 'No count shown')}</small>`}</span></summary>
+      <div class="pick-body"><p class="how">${pick.pick.note}</p><p class="note">${pick.pick.limitation}</p>${pick.streamRoute ? streamReference(pick) : ''}
         <p class="sources">${external(pick.pick.source, L('적 특성·전술', 'Enemy traits and tactics'))}${external(weapon.source, L('장비', 'Weapon'))}<span>${L('확인', 'Checked')} ${guideCheckedAt(state.guide)}</span></p></div></details>`;
   }
   const { route, mode, reference, tactic, enemy, alternatives, profile } = pick;

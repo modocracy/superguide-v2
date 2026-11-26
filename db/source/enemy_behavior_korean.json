@@ -39,7 +39,7 @@
     "en": "Under its command, Heavy Devastators lose their slow movement and Berserkers get even faster. Killing it stuns every Automaton it commands for a few seconds, giving you a chance to finish them or retreat."
    },
    {
-    "ko": "폭발 피해를 받는 부위가 여러 곳이라 퍼니셔 플라스마와 퓨리파이어가 특히 잘 듣습니다.",
+    "ko": "폭발 피해를 받는 부위가 여러 곳이라 퍼니셔 플라스마와 퓨리파이어가 특히 효과적입니다.",
     "en": "Several of its limbs take explosion damage, so the Punisher Plasma and Purifier are exceptional against it."
    },
    {
@@ -241,7 +241,7 @@
     "en": "Armor penetration 3 weapons can only damage the rear heatsink, so you have to get behind it. Armor penetration 4 weapons also destroy it much faster through the heatsink."
    },
    {
-    "ko": "'가드 독' 배낭을 겨누며 돌아서므로, 뒤로 돌아갈 때는 배낭을 접어 두면 편합니다.",
+    "ko": "가드 독 배낭을 겨누며 돌아서므로, 뒤로 돌아갈 때는 배낭을 접어 두면 편합니다.",
     "en": "It turns to target Guard Dog backpacks, so stowing yours makes flanking easier."
    },
    {
@@ -557,7 +557,7 @@
     "en": "When its head is destroyed it goes berserk: faster, but it keeps bleeding out. It occasionally summons a trio of Warriors."
    },
    {
-    "ko": "보통 15~20m 거리에서 돌진합니다. 맞으면 피해를 입고 넘어지며 충격 효과를 받을 수 있습니다. 피하거나, 지형이나 차저 같은 큰 적에 부딪히게 하면 멈춥니다.",
+    "ko": "보통 15~20m 거리에서 돌진합니다. 맞으면 피해를 입고 넘어지며 충격 효과를 받을 수 있습니다. 피하거나, 지형이나 차저 같은 대형 적에 부딪히게 하면 멈춥니다.",
     "en": "Usually charges when you are 15~20m away. A hit deals damage, can knock you down and may concuss you. Dodge it, or let it hit terrain or a larger enemy like a Charger to stop it."
    },
    {
@@ -1300,7 +1300,7 @@
     "en": "The Blitzer, Arc Thrower and Halt (stun rounds) can stun it again and again, stopping its strafing and making it drop the grenade it was about to throw. Then a headshot with the Senator or Anti-Materiel Rifle kills it instantly."
    },
    {
-    "ko": "'가드 독'과 로버는 빗나가지 않아 장갑판을 벗겨 줍니다. 워런트는 자동 추적으로 회피 비행을 무력화해 탄창 하나로 처치할 수 있습니다.",
+    "ko": "가드 독과 로버는 빗나가지 않아 장갑판을 벗겨 줍니다. 워런트는 자동 추적으로 회피 비행을 무력화해 탄창 하나로 처치할 수 있습니다.",
     "en": "The Guard Dog and Rover never miss, so they strip its armor plates for you. The Warrant's target tracking defeats its evasive flying and can kill it within one magazine."
    },
    {
@@ -2932,11 +2932,11 @@
     "en": "Low damage, slow fire and clear telegraphs make each one weak. Unless you are getting surrounded, deal with more dangerous enemies first."
    },
    {
-    "ko": "연사력이 높고 다루기 쉬운 무기로 이리저리 옮겨 가며 쏘세요. 뭉쳐 다녀서 전격 무기와 폭발 무기도 좋고, 특히 오토캐넌 대공포탄이 효과적입니다. 다만 이리저리 움직여서 탄이 느린 폭발 무기로는 직격이 어렵습니다.",
+    "ko": "연사력이 높고 다루기 쉬운 무기로 이리저리 옮겨 가며 쏘세요. 뭉쳐 다녀서 아크 무기와 폭발 무기도 좋고, 특히 오토캐넌 대공포탄이 효과적입니다. 다만 이리저리 움직여서 탄이 느린 폭발 무기로는 직격이 어렵습니다.",
     "en": "Use fast-firing weapons with good handling and snap from target to target. They bunch up, so arc and explosive weapons help too, especially the Autocannon in Flak mode. Slow explosive projectiles struggle to hit them as they bob and weave."
    },
    {
-    "ko": "가까이 달려들므로 '가드 독'과 로버가 쉽게 처리하고, K-9은 전격 연쇄로 무리를 묶어 둡니다.",
+    "ko": "가까이 달려들므로 가드 독과 로버가 쉽게 처리하고, K-9은 아크 연쇄로 무리를 묶어 둡니다.",
     "en": "Because they rush in close, the Guard Dog and Rover pick them off easily, and the K-9 can lock down groups with arc chains."
    },
    {

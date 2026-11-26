@@ -129,7 +129,7 @@ function setSlot(slot, id) {
 
 // --- Coverage ----------------------------------------------------------------------
 const hitsText = (answer) => answer?.hits != null ? L(`${num(answer.hits)}${answer.unit || '발'}${answer.lowerBound ? '+' : ''}`, `${num(answer.hits)}${answer.lowerBound ? '+' : ''}${unitText(answer.unit, answer.hits)}`) : '';
-const ASSUMED_NOUN = L({ pellets: '펠릿', arcs: '전격', bomblets: '자탄', shrapnel: '파편' }, { pellets: 'pellets', arcs: 'arcs', bomblets: 'bomblets', shrapnel: 'fragments' });
+const ASSUMED_NOUN = L({ pellets: '펠릿', arcs: '아크', bomblets: '자탄', shrapnel: '파편' }, { pellets: 'pellets', arcs: 'arcs', bomblets: 'bomblets', shrapnel: 'fragments' });
 const magsText = answer => answer?.magazinesNeeded > 1 ? L(`탄창 ${num(answer.magazinesNeeded)}개`, `${num(answer.magazinesNeeded)} magazines`) : '';
 
 function assumedNote(answer) {
@@ -179,7 +179,8 @@ function enemyHead(row) {
 function alsoLine(row) {
   const others = (row.perSlot || []).map(entry => entry.best)
     .filter(answer => answer?.status === 'route' && answer.weaponId !== row.best?.weaponId)
-    .sort((a, b) => a.hits - b.hits);
+    // Seconds of a held beam or flame stream come after shot counts, never mixed by number.
+    .sort((a, b) => Number(Boolean(a.mode?.stream)) - Number(Boolean(b.mode?.stream)) || a.hits - b.hits);
   if (!others.length) return '';
   return html`<div class="lo-also"><small>${L('그 밖에', 'Also')}</small>${others.map(answer => html`<span class="lo-also-item">${thumb(answer.weaponId, 18)}${nameOf(answer.weaponId)} <b>${answer.partName} ${hitsText(answer)}</b></span>`)}</div>`;
 }

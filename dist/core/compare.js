@@ -30,13 +30,17 @@ function matchup(enemy, rawMode, options) {
   // Keep mode-specific delivery defaults distinct from explicit user overrides.
   // distance: shooting range in metres for projectile falloff (0 = full damage).
   const distance = options.distance > 0 ? options.distance : 0;
-  const key = JSON.stringify([options.shieldCleared === true, distance, assume.hitCount ?? '',
+  // fireMult and ignition: the enemy's wiki fire damage multiplier and ignition threshold, for a held beam or
+  // flame stream (combat.js solveStream).
+  const fireMult = Number.isFinite(options.fireMult) ? options.fireMult : null;
+  const ignition = Number.isFinite(options.ignition?.value) ? { value: options.ignition.value, estimated: Boolean(options.ignition.estimated) } : null;
+  const key = JSON.stringify([options.shieldCleared === true, distance, fireMult, ignition, assume.hitCount ?? '',
     assume.primaryHit === undefined ? rawMode.hitCondition?.defaultPrimaryHit ?? 'blast' : assume.primaryHit,
     assume.bombletDirect === undefined ? rawMode.hitCondition?.defaultBombletDirect ?? false : assume.bombletDirect]);
   if (!values.has(key)) {
     if (values.size >= 64) values.delete(values.keys().next().value);
     const mode = withHitAssumption(rawMode, assume);
-    const combatOptions = { shieldCleared: options.shieldCleared === true, distance };
+    const combatOptions = { shieldCleared: options.shieldCleared === true, distance, fireMult, ignition };
     const single = solveMatchup(enemy, mode, combatOptions);
     const accumulated = single.best ? null : solveAccumulation(enemy, mode, combatOptions);
     // A synthetic target distinguishes a sequence from any single hitbox.
@@ -117,7 +121,8 @@ export function compareAttacks(enemy, entries = [], options = {}) {
       hits: route?.hits ?? null, outcome: route?.outcome ?? null, part: route?.target ?? null,
       conditional: Boolean(route?.conditional), assumption: result.mode.assumption || null, lowerBound: Boolean(route?.lowerBound),
       defaulted, defaultAssumed, fragmentsExcluded, allPelletsAssumed,
-      verified, oneShot: verified && route.hits === 1,
+      // A held stream counts seconds, never shots.
+      verified, oneShot: verified && route.hits === 1 && !rawMode.stream,
       magazinesNeeded: route?.hits != null && shotsPerMagazine > 0 ? Math.ceil(route.hits / shotsPerMagazine) : null,
     };
   });

@@ -1,4 +1,5 @@
-// Runs every check: engine parity with the legacy results, then unit/integrity tests.
+// Runs every check: every file parses, engine parity with the legacy results, then unit/integrity tests.
+await import('./test-syntax.mjs');
 await import('./test-parity.mjs');
 await import('./test-units.mjs');
 await import('./test-structures.mjs');

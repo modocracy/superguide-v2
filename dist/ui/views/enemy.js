@@ -10,6 +10,7 @@ import { pickerEnemyImages } from '../../data/selector-images.js';
 import { combatImages } from '../../data/combat-images.js';
 import { wikiIcons } from '../../data/wiki-icons.js';
 import { enemyPages, difficultyNames } from '../../data/enemy-pages.js';
+import { ignitionOf } from '../../data/enemy-ignition.js';
 import { difficultyIcons } from '../../data/difficulty-icons.js';
 import { enemyWeapons, helldiverArmor } from '../../data/enemy-weapons.js';
 import { enemyAnatomy } from '../../data/enemy-anatomy.js';
@@ -47,7 +48,10 @@ const profileOf = id => weaponProfiles[id] || personalProfiles[id];
 const unsupportedOf = id => unsupportedWeapons[id] || personalUnsupported[id];
 const groupOf = id => GROUPS.find(group => group.id === id);
 // Large and massive enemies call out weapons that finish them in a single hit.
-const oneShot = entry => entry.status === 'route' && entry.best?.hits === 1 && isFatal(entry.best) && !entry.best.lowerBound;
+const oneShot = entry => entry.status === 'route' && !entry.mode?.stream && entry.best?.hits === 1 && isFatal(entry.best) && !entry.best.lowerBound;
+// The enemy's wiki fire damage multiplier and ignition threshold, for held beams, flame streams and burning
+// (core/combat.js solveStream).
+const fireOptions = enemy => ({ fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id) });
 // Enemies without a fatal part die from damage piled onto the main body across
 // several parts; such routes come from solveAccumulation (parts one after another).
 const stepName = step => L(step.partName.replace(/ 한 ?(개|쪽)$/, ''), T(step.partName).replace(/^One /, ''));
@@ -69,14 +73,26 @@ const DISTANCES = [0, 25, 50, 100, 150, 200];
 const hitsDirect = mode => mode && mode.directKind !== 'none' && (mode.standard > 0 || mode.durable > 0);
 const rangeFor = mode => (fallsWithRange(mode) && hitsDirect(mode) ? state.distance : 0);
 // Until the player picks a count, modes with a conservative default use it.
-// Every multi-hit attack shows a hit-rate slider. Aimed hits (pellets, arcs)
-// start at 100 %, scattering bomblets and fragments at 20 %; the data's own
-// default wins when present.
+// Every multi-hit attack shows a hit-rate slider. Arcs start at 100 %, pellets at 50 % (they spread; user
+// request 2026-11-26), scattering bomblets and fragments at 20 %; the data's own default wins when present.
 const HIT_KINDS = {
-  pellets: { noun: L('펠릿', 'pellets'), unit: L('개', ''), per: L('한 발에', 'per shot'), pct: 100, why: L('기본은 펠릿이 모두 맞는다고 계산합니다. 거리가 멀거나 조준이 어긋나면 일부만 맞으니, 명중률을 낮춰 다시 볼 수 있습니다.', 'By default every pellet hits. At range or with a stray aim only some land, so lower the hit rate to see the difference.') },
-  arcs: { noun: L('전격', 'arcs'), unit: L('회', ''), per: L('한 발에', 'per shot'), pct: 100, why: L('기본은 전격이 모두 이 적에게 닿는다고 계산합니다(위키 피해 수치와 같은 기준). 주변 적에게 튀면 일부만 맞습니다.', 'By default every arc reaches this enemy (the same basis as the wiki damage numbers). Arcs that jump to nearby enemies mean fewer hits.') },
+  pellets: { noun: L('펠릿', 'pellets'), unit: L('개', ''), per: L('한 발에', 'per shot'), pct: 50, why: L('펠릿은 퍼지므로 기본은 절반(반올림)이 맞는다고 계산합니다. 가까이서 큰 부위를 쏘면 더 맞고, 멀거나 작은 부위면 덜 맞으니 명중률을 바꿔 다시 볼 수 있습니다.', 'Pellets spread, so by default half of them (rounded) hit. Close up on a big part more land, at range or on a small part fewer, so you can change the hit rate to check again.') },
+  arcs: { noun: L('아크', 'arcs'), unit: L('회', ''), per: L('한 발에', 'per shot'), pct: 100, why: L('기본은 아크가 모두 이 적에게 닿는다고 계산합니다(위키 피해 수치와 같은 기준). 주변 적에게 튀면 일부만 맞습니다.', 'By default every arc reaches this enemy (the same basis as the wiki damage numbers). Arcs that jump to nearby enemies mean fewer hits.') },
   bomblets: { noun: L('자탄', 'bomblets'), unit: L('개', ''), per: L('한 발에', 'per shot'), pct: 20, why: L('자탄은 넓게 흩어져 한 부위에 다 맞는 일이 드물어 기본은 20%로 계산합니다. 0%는 주탄만 계산합니다.', 'Bomblets scatter widely and rarely all hit one part, so the default is 20%. 0% counts the main projectile only.') },
   shrapnel: { noun: L('파편', 'fragments'), unit: L('개', ''), per: L('폭발 1회에', 'per explosion'), pct: 20, why: L('파편은 사방으로 흩어져 기본은 20%로 계산합니다. 0%로 두면 파편을 빼고 직격·폭발만 계산합니다.', 'Fragments fly in every direction, so the default is 20%. At 0% only the impact and explosion are counted.') },
+};
+// Pellets a mode names itself (the Variable's bullets, the Trident's beams) keep that name in these labels.
+const PELLET_EN = { 탄환: 'bullets', 광선: 'beams' };
+const hitKind = c => {
+  const kind = HIT_KINDS[c?.kind];
+  const name = c?.kind === 'pellets' && c.projectileName;
+  if (!kind || !name) return kind;
+  if (c.defaultPct === 100) return { ...kind, noun: L(name, PELLET_EN[name] || 'pellets'),
+    why: L(`기본은 ${josa(name, ['이', '가'])} 모두 맞는다고 계산합니다. 일부만 맞으면 명중률을 낮춰 다시 볼 수 있습니다.`,
+      `By default all the ${PELLET_EN[name] || 'pellets'} hit. If only some land, lower the hit rate to check again.`) };
+  return { ...kind, noun: L(name, PELLET_EN[name] || 'pellets'),
+    why: L(`${josa(name, ['은', '는'])} 퍼지므로 기본은 절반(반올림)이 맞는다고 계산합니다. 가까이서 큰 부위를 쏘면 더 맞고, 멀거나 작은 부위면 덜 맞으니 명중률을 바꿔 다시 볼 수 있습니다.`,
+      `The ${PELLET_EN[name] || 'pellets'} spread, so by default half of them (rounded) hit. Close up on a big part more land, at range or on a small part fewer, so you can change the hit rate to check again.`) };
 };
 const hitCount = (c, pct) => pct <= 0 && c.min === 0 ? 0 : Math.max(c.min, Math.round(c.max * pct / 100));
 // The slider shows the 10 % step that yields this count, preferring the data's
@@ -96,7 +112,7 @@ const defaultCount = mode => {
 const effectiveAssume = mode => state.assume.hitCount === '' && defaultCount(mode) != null
   ? { ...state.assume, hitCount: String(defaultCount(mode)) } : state.assume;
 const defaultLabel = mode => {
-  const c = mode?.hitCondition, kind = HIT_KINDS[c?.kind];
+  const c = mode?.hitCondition, kind = hitKind(c);
   if (!kind) return L('기본 명중 수 가정', 'Default hit assumption');
   const pct = hitPct(c, defaultCount(mode));
   return pct === 100 ? L(`${kind.noun} 전부 명중 가정`, `All ${kind.noun} hit (assumed)`) : pct === 0 ? L(`${kind.noun} 제외`, `No ${kind.noun}`) : L(`${kind.noun} ${pct}% 명중 가정`, `${pct}% of ${kind.noun} hit (assumed)`);
@@ -105,12 +121,12 @@ const defaultLabel = mode => {
 const assumedText = answer => {
   if (answer.fragmentsExcluded) return L(' · 파편 제외', ' · no shrapnel');
   if (answer.defaultAssumed) {
-    const noun = HIT_KINDS[answer.defaultAssumed.kind]?.noun, pct = answer.defaultAssumed.pct ?? Math.round(answer.defaultAssumed.count / answer.defaultAssumed.max * 100);
+    const noun = hitKind(answer.mode?.hitCondition?.kind === answer.defaultAssumed.kind ? answer.mode.hitCondition : answer.defaultAssumed)?.noun, pct = answer.defaultAssumed.pct ?? Math.round(answer.defaultAssumed.count / answer.defaultAssumed.max * 100);
     return L(` · ${noun || '명중'} ${pct}% 가정`, ` · ${pct}% ${noun || 'hits'} assumed`);
   }
-  return answer.allPelletsAssumed ? L(' · 펠릿 전부 명중', ' · all pellets hit') : answer.assumption ? L(' · 명중 수 가정', ' · assumed hits') : '';
+  return answer.allPelletsAssumed ? L(` · ${hitKind(answer.mode?.hitCondition)?.noun ?? '펠릿'} 전부 명중`, ` · all ${hitKind(answer.mode?.hitCondition)?.noun ?? 'pellets'} hit`) : answer.assumption ? L(' · 명중 수 가정', ' · assumed hits') : '';
 };
-const countLine = (c, count) => { const kind = HIT_KINDS[c.kind]; return L(`${kind.per} ${kind.noun} ${c.max}${kind.unit} 중 ${count}${kind.unit}가 이 부위에 명중`, `${count} of ${c.max} ${kind.noun} ${kind.per} hit this part`); };
+const countLine = (c, count) => { const kind = hitKind(c); return L(`${kind.per} ${kind.noun} ${c.max}${kind.unit} 중 ${count}${kind.unit}가 이 부위에 명중`, `${count} of ${c.max} ${kind.noun} ${kind.per} hit this part`); };
 
 
 const PRIMARY_HITS = [['blast', L('주탄 폭발만', 'Main projectile explosion only')], ['direct', L('주탄 직격 + 폭발', 'Main projectile impact + explosion')], ['none', L('주탄 피해 없음', 'No main projectile damage')]];
@@ -129,14 +145,15 @@ function rankWeapons(enemy, shieldCleared, group = state.group) {
       const fallback = defaultCount(mode);
       if (mode.hitCondition && fallback == null) return { mode, status: 'assume' };
       const solved = fallback == null ? mode : withHitAssumption(mode, { ...DEFAULT_ASSUME, hitCount: String(fallback) });
-      const { best, rows } = solveMatchup(enemy, solved, { shieldCleared, distance: state.distance });
+      const { best, rows } = solveMatchup(enemy, solved, { shieldCleared, distance: state.distance, ...fireOptions(enemy) });
       if (!best && noFatalPart(enemy)) {
         const acc = solveAccumulation(enemy, solved, { shieldCleared, distance: state.distance });
         if (acc) return { mode, status: 'route', best: accumulatedBest(acc), rows, defaulted: fallback != null };
       }
       return { mode, status: best ? 'route' : 'none', best, rows, defaulted: fallback != null };
     });
-    const routes = tries.filter(item => item.status === 'route').sort((a, b) => a.best.hits - b.best.hits || Number(a.best.outcome !== 'kill') - Number(b.best.outcome !== 'kill'));
+    // A weapon with both (the Stoker's underbarrel flamethrower) ranks by its shots; seconds never beat shots by number.
+    const routes = tries.filter(item => item.status === 'route').sort((a, b) => Number(Boolean(a.mode.stream)) - Number(Boolean(b.mode.stream)) || a.best.hits - b.best.hits || Number(a.best.outcome !== 'kill') - Number(b.best.outcome !== 'kill'));
     const pick = routes[0] || tries.find(item => item.status === 'assume') || tries.find(item => item.status === 'none') || tries[0];
     return { weapon, order, profile, ...pick, spear: spearCannotLock(enemy, pick.mode), reference: wikiReference(enemy, weapon.id, pick.mode) };
   });
@@ -341,7 +358,7 @@ function attacks(enemy) {
   const damageCell = attack => {
     const parts = [];
     if (attack.damage != null) parts.push(html`${num(attack.damage)}<small>${DAMAGE_TYPES[attack.damageType] ?? ''}${attack.ap != null ? L(`, 관통 ${attack.ap}`, `, AP ${attack.ap}`) : ''}</small>`);
-    if (attack.explosion != null) parts.push(html`${L('폭발', 'Blast')} ${num(attack.explosion)}<small>${attack.explosionAp != null ? L(`폭발 관통 ${attack.explosionAp}`, `blast AP ${attack.explosionAp}`) : ''}</small>`);
+    if (attack.explosion != null) parts.push(html`${L('폭발 피해', 'Blast damage')} ${num(attack.explosion)}<small>${attack.explosionAp != null ? L(`폭발 관통 ${attack.explosionAp}`, `blast AP ${attack.explosionAp}`) : ''}</small>`);
     return parts.length ? parts : html`<span class="faint">${L('위키 참조', 'See the wiki')}</span>`;
   };
   const wiki = `https://helldivers.wiki.gg/wiki/${encodeURIComponent(info.page.replaceAll(' ', '_'))}#Weapons_Loadout`;
@@ -367,7 +384,8 @@ function hero(enemy) {
   const vitals = [
     [L('본체 체력', 'Main health'), num(m.hp)], [L('본체 장갑', 'Main armor'), m.armor], [L('내구도', 'Durability'), pct(m.durability)], [L('폭발 저항', 'Explosive resistance'), pct(m.exdr)],
     ...(m.constitution ? [[L('출혈 체력', 'Bleed-out health'), num(m.constitution)]] : []),
-    [L('화염 저항', 'Fire resistance'), fireText(info?.fireMult)], [L('경직치', 'Stagger threshold'), info?.staggerReq == null ? L('미확인', 'Unverified') : num(info.staggerReq)],
+    // Arc resistance only where the wiki infobox gives arc_mult (the Fleshmob, user request 2026-11-26).
+    [L('화염 저항', 'Fire resistance'), fireText(info?.fireMult)], ...(info?.arcMult != null ? [[L('아크 저항', 'Arc resistance'), fireText(info.arcMult)]] : []), [L('경직치', 'Stagger threshold'), info?.staggerReq == null ? L('미확인', 'Unverified') : num(info.staggerReq)],
     // Enemies that can call reinforcements (wiki Behavior): worth killing first.
     ...(info?.reinforcements ? [[L('증원 호출', 'Calls reinforcements'), REINFORCEMENTS[info.reinforcements]]] : []),
   ];
@@ -391,6 +409,12 @@ const conditionalBest = entry => (entry.rows || []).filter(row => row.conditiona
 const conditionalText = (row, mode) => L(`${row.target.prerequisite}: ${row.target.name} ${num(row.hits)}${unitOf(mode, row.hits).unit}`,
   `${T(row.target.prerequisite)}: ${T(row.target.name)} ${num(row.hits)}${unitOf(mode, row.hits).unit}`);
 
+// How many heat sinks or fuel canisters a held stream's time takes, stream held throughout.
+function capacityText({ kind, seconds }, time) {
+  const count = Math.max(1, Math.ceil(time / seconds - 1e-9));
+  if (kind === 'heat') return count === 1 ? L('방열판 1개 이내', 'Within one heat sink') : L(`방열판 ${count}개`, `${count} heat sinks`);
+  return count === 1 ? L('연료 1통 이내', 'Within one fuel canister') : L(`연료 ${count}통`, `${count} fuel canisters`);
+}
 function rankRow(entry, selected, large = false, noFatal = false) {
   const { weapon, status } = entry;
   const single = large && oneShot(entry);
@@ -404,6 +428,7 @@ function rankRow(entry, selected, large = false, noFatal = false) {
       : entry.spear ? L('직접 락온 불가 · 참고값', 'No direct lock-on · reference only')
       : entry.best.accumulated ? L('누적 처치 · 덩어리를 차례로 터뜨림', 'Cumulative kill · pop the lumps in turn')
       : conditional && conditional.hits < entry.best.hits ? conditionalText(conditional, entry.mode)
+      : entry.mode?.stream?.capacity ? capacityText(entry.mode.stream.capacity, entry.best.seconds ?? entry.best.hits)
       : entry.defaulted ? defaultLabel(entry.mode) : assumptionTag(entry.mode);
     part = html`<span>${entry.best.target.name}</span>${aside ? html`<small>${aside}</small>` : ''}`;
     hits = html`<span class="hits">${num(entry.best.hits)}<small>${unit}${entry.best.lowerBound ? '+' : ''}</small></span>`;
@@ -418,7 +443,7 @@ function rankRow(entry, selected, large = false, noFatal = false) {
     const blocked = entry.rows.every(row => ['blocked', 'shield'].includes(row.outcome) || row.hits != null);
     const pierces = entry.rows.some(row => row.hits != null);
     if (noFatal && pierces) { part = html`<span class="faint">${L('치명 부위 없음 · 여러 부위에 피해를 쌓아야 함', 'No fatal part · damage has to build up over several parts')}</span>`; tag = badge(L('누적 필요', 'Cumulative'), 'conditional'); }
-    else { part = html`<span class="faint">${blocked ? L('확인된 처치 경로 없음', 'No verified kill route') : L('일부 부위 자료 미확인', 'Some part data unverified')}</span>`; tag = badge(blocked ? L('처치 경로 없음', 'No kill route') : L('계산 보류', 'Not calculated'), blocked ? 'blocked' : 'unknown'); }
+    else { part = html`<span class="faint">${blocked ? L('확인된 처치 경로 없음', 'No verified kill route') : entry.rows.some(row => row.reason === 'fire-mult-missing') ? L('이 적의 화염 피해 배율 미확인', 'Fire multiplier unverified for this enemy') : L('일부 부위 자료 미확인', 'Some part data unverified')}</span>`; tag = badge(blocked ? L('처치 경로 없음', 'No kill route') : L('계산 보류', 'Not calculated'), blocked ? 'blocked' : 'unknown'); }
   } else {
     part = html`<span class="faint">${L('정밀 계산 미지원', 'Not supported yet')}</span>`; tag = badge(L('미지원', 'Unsupported'), 'unknown');
   }
@@ -432,8 +457,10 @@ function rankRow(entry, selected, large = false, noFatal = false) {
 
 // The selected weapon's part-by-part calculation opens in a wide side sheet (showMatchupSheet).
 function ranking(enemy, entries, selectedId) {
-  const main = entries.filter(entry => entry.status === 'route' || entry.status === 'assume');
-  const rest = entries.filter(entry => !main.includes(entry));
+  const counted = entries.filter(entry => entry.status === 'route' || entry.status === 'assume');
+  const main = counted.filter(entry => !(entry.status === 'route' && entry.mode?.stream));
+  const streams = counted.filter(entry => !main.includes(entry));
+  const rest = entries.filter(entry => !counted.includes(entry));
   const large = isLargeEnemy(enemy);
   const noFatal = noFatalPart(enemy);
   const singles = large ? entries.filter(oneShot).length : 0;
@@ -446,6 +473,7 @@ function ranking(enemy, entries, selectedId) {
   <div class="panel ranking">
     <div class="rank-head" aria-hidden="true"><span></span><span>${L('무기', 'Weapon')}</span><span>${L('노릴 부위', 'Aim for')}</span><span>${L('횟수', 'Shots')}</span><span>${L('결과', 'Result')}</span></div>
     ${main.map(row)}
+    ${streams.length ? html`<div class="rank-sub">${L('광선·화염 무기 · 같은 부위에 계속 맞힐 때 걸리는 시간', 'Beams and flames · time held on the same part')}</div>${streams.map(row)}` : ''}
     ${rest.length ? html`<details class="rank-more" ${rest.some(entry => entry.weapon.id === selectedId) ? raw('open') : ''}><summary>${L(`처치 경로가 없거나 계산하지 않은 무기 ${rest.length}종`, `${rest.length} weapons with no kill route or not calculated`)}</summary>${rest.map(row)}</details>` : ''}
   </div>`;
 }
@@ -472,10 +500,12 @@ function stageLines(row, enemy, mode) {
       const blasts = d.blasts.map(blast => blast.excluded ? html`<br><span class="faint">${blast.name}: ${L('장치는 폭발 면역 → 0', 'device is immune to explosions → 0')}</span>`
         : html`<br><span>${blast.name}: AP ${num(blast.effectiveAp)} → ${blast.redirected ? L('본체', 'main') : L('부위', 'part')} ${L('장갑', 'armor')} ${num(blast.armor)}, ${L('폭발 저항', 'explosive resistance')} ${pct(blast.exdr)} → <code>${num(blast.redirected ? blast.toMain : blast.toPart)}</code>${blast.redirected ? L(' (본체로)', ' (to main)') : ''}</span>`);
       const ranged = rangeFor(event.attack) && d.direct > 0 ? html` <span class="faint">(${L(`${state.distance}m 거리 감쇠 반영`, `after ${state.distance} m falloff`)})</span>` : '';
-      return html`<div>${who}${deliveryOf(event.attack).hit} <code>${num(d.direct)}</code>${ranged} · ${L('부위 폭발', 'part explosion')} <code>${num(d.explosion)}</code>${d.mainExplosion ? html` · ${L('본체 폭발', 'main explosion')} <code>${num(d.mainExplosion)}</code>` : ''}${blasts}</div>`;
+      return html`<div>${who}${deliveryOf(event.attack).hit} <code>${num(d.direct)}</code>${event.attack.stream ? L('/초', '/s') : ''}${ranged} · ${L('부위 폭발', 'part explosion')} <code>${num(d.explosion)}</code>${d.mainExplosion ? html` · ${L('본체 폭발', 'main explosion')} <code>${num(d.mainExplosion)}</code>` : ''}${blasts}</div>`;
     });
     const transfer = part.partOnly ? L('독립 장치 — 본체 전달 없음', 'Separate device — nothing passes to main') : `${L('본체 전달', 'To main')} ${num(part.toMain)}%${part.overflowCap == null ? L(' · 상한 미확인', ' · cap unverified') : part.overflowCap ? L(` · 누적 상한 ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`, ` · total cap ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`) : L(' · 상한 없음', ' · no cap')}`;
-    const beam = Number.isFinite(stage.contactSeconds) ? html`<div>${L('광선 접촉 약', 'Beam contact about')} <code>${num(stage.contactSeconds)}${L('초', 's')}</code> · ${L('부위 누적', 'part total')} <code>${num(stage.partTotal)}</code> · ${L('본체 전달', 'to main')} <code>${num(stage.mainTotal)}</code></div>` : '';
+    const contact = mode?.stream?.fire ? L('불길 접촉 약', 'Flame contact about') : L('광선 접촉 약', 'Beam contact about');
+    const burned = Number.isFinite(stage.burnTotal) && stage.burnTotal > 0 ? html` · ${L('화상', 'burning')} <code>${num(Math.round(stage.burnTotal))}</code>` : '';
+    const beam = Number.isFinite(stage.contactSeconds) ? html`<div>${contact} <code>${num(stage.contactSeconds)}${L('초', 's')}</code> · ${L('부위 누적', 'part total')} <code>${num(stage.partTotal)}</code> · ${L('본체 전달', 'to main')} <code>${num(stage.mainTotal)}</code>${burned}</div>` : '';
     const header = html`<b>${stageName(stage)}</b> — ${L('체력', 'health')} ${num(partPool(stage.part))}, ${L('장갑', 'armor')} ${num(stage.part.armor)}, ${L('내구도', 'durability')} ${pct(stage.part.durability)}${row.stages.length > 1 && !Number.isFinite(stage.contactSeconds) ? html` → <b>${num(stage.hits)}${unitOf(mode, stage.hits).unit}</b>` : ''}`;
     return html`<li>${header}${lines}${beam}<div class="faint">${transfer}${index === 0 ? L(` · 본체 체력 ${num(main.hp)}`, ` · main health ${num(main.hp)}`) : ''}</div></li>`;
   });
@@ -522,19 +552,22 @@ function wikiReferenceBlock(reference, unit) {
 }
 
 function hitRateControls(mode, c) {
-  const kind = HIT_KINDS[c.kind];
+  const kind = hitKind(c);
   const count = Number(effectiveAssume(mode).hitCount);
   // Keep the percentage the player picked; several steps can round to one count.
   const pct = state.assume.pct != null && hitCount(c, state.assume.pct) === count ? state.assume.pct : hitPct(c, count);
   const low = c.min === 0 ? 0 : 10;
+  // Pellets and arcs: the label already gives the count, and the summary's exact share (6 of 11 = 55%) read as out
+  // of step with the slider's 50%. Bomblets and fragments keep it for what else hits (main projectile, impacts).
+  const summary = ['pellets', 'arcs'].includes(c.kind) ? '' : html` ${assumptionSummary(withHitAssumption(mode, effectiveAssume(mode)))}`;
   return html`<div class="assumptions pellet-range">
     <label for="hit-pct">${L('명중률', 'Hit rate')} <b data-pct-label>${pct}%</b> <span class="faint" data-pct-count>${countLine(c, count)}</span></label>
     <input id="hit-pct" type="range" min="${low}" max="100" step="10" value="${pct}" data-assume-pct data-kind="${c.kind}" data-min="${c.min}" data-max="${c.max}" aria-valuetext="${L(`${pct}%, ${kind.noun} ${count}${kind.unit}`, `${pct}%, ${count} ${kind.noun}`)}">
-    <div class="range-scale" aria-hidden="true"><span>${low}%</span><span>50%</span><span>100%</span></div>
+    <div class="range-scale" aria-hidden="true">${[low, 50, 100].map(value => html`<span style="--at:${(value - low) / (100 - low)}">${value}%</span>`)}</div>
     ${c.kind === 'bomblets' ? html`<div class="bomblet-extra"><label>${L('주탄', 'Main projectile')}
       <select class="select" data-assume="primaryHit">${PRIMARY_HITS.map(([value, name]) => html`<option value="${value}" ${(state.assume.primaryHit ?? mode.hitCondition.defaultPrimaryHit ?? 'blast') === value ? raw('selected') : ''}>${name}</option>`)}</select></label>
       <label class="check"><input type="checkbox" data-assume="bombletDirect" ${(state.assume.bombletDirect ?? mode.hitCondition.defaultBombletDirect ?? false) ? raw('checked') : ''} ${count > 0 ? '' : raw('disabled')}> ${L('자탄 직격도 포함', 'Include bomblet impacts')}</label></div>` : ''}
-    <p>${kind.why} ${assumptionSummary(withHitAssumption(mode, effectiveAssume(mode)))}</p>
+    <p>${kind.why}${summary}</p>
   </div>`;
 }
 
@@ -543,7 +576,7 @@ function assumptionControls(mode) {
   if (!c) return '';
   if (HIT_KINDS[c.kind]) return hitRateControls(mode, c);
   const unit = L(c.kind === 'arcs' ? '회' : '개', '');
-  const label = L({ arcs: '한 발당 이 부위 전격 명중 수', bomblets: '한 발당 이 부위 자탄 명중 수', pellets: '한 발당 이 부위 펠릿 명중 수', shrapnel: '폭발 1회당 이 부위 파편 명중 수' }[c.kind] || '이 부위 명중 수',
+  const label = L({ arcs: '한 발당 이 부위 아크 명중 수', bomblets: '한 발당 이 부위 자탄 명중 수', pellets: '한 발당 이 부위 펠릿 명중 수', shrapnel: '폭발 1회당 이 부위 파편 명중 수' }[c.kind] || '이 부위 명중 수',
     { arcs: 'Arcs per shot hitting this part', bomblets: 'Bomblets per shot hitting this part', pellets: 'Pellets per shot hitting this part', shrapnel: 'Fragments per explosion hitting this part' }[c.kind] || 'Hits on this part');
   const options = Array.from({ length: c.max - c.min + 1 }, (_, i) => c.min + i);
   return html`<div class="assumptions">
@@ -600,7 +633,7 @@ function matchupSection(enemy, entries) {
   // An explicit mode wins; otherwise show the weapon's best-ranked mode.
   const rawMode = profile?.modes.find(mode => mode.id === state.mode) || entries.find(entry => entry.weapon.id === weapon.id)?.mode || profile?.modes[0];
   const mode = withHitAssumption(rawMode, effectiveAssume(rawMode));
-  const matchup = solveMatchup(enemy, mode, { shieldCleared: state.shield, distance: rangeFor(mode) });
+  const matchup = solveMatchup(enemy, mode, { shieldCleared: state.shield, distance: rangeFor(mode), ...fireOptions(enemy) });
   const reference = wikiReference(enemy, weapon.id, mode);
   const stats = attackStats(mode, { distance: rangeFor(mode) });
   const falls = fallsWithRange(mode) && hitsDirect(mode);
@@ -614,7 +647,7 @@ function matchupSection(enemy, entries) {
       <div class="matchup-head">${weaponIcon(weapon.id, 44)}<div><h2>${weapon.name}</h2><a class="ext" href="${group.link(weapon.id)}">${group.linkLabel}</a></div>
         ${compareToggle(weapon, rawMode)}
         ${profile?.modes.length > 1 ? html`<div class="segmented" role="group" aria-label="${profile.modes.some(item => item.beam) ? L('거리', 'Range') : L('발사 모드', 'Firing mode')}">${profile.modes.map(item => html`<button type="button" data-mode-pick="${item.id}" aria-pressed="${item.id === rawMode?.id}">${item.name}</button>`)}</div>` : ''}</div>
-      ${stats.length ? html`<div class="stat-chips">${stats.map(stat => html`<div class="stat-chip"><span>${stat.label}</span><b>${stat.value}</b>${stat.note ? html`<small>${stat.note}</small>` : ''}</div>`)}</div>` : ''}
+      ${stats.length ? html`<div class="stat-chips">${stats.map(stat => html`<div class="stat-chip"><span>${stat.icon ? html`<span class="ico-${stat.icon}" aria-hidden="true"></span>` : ''}${stat.label}</span><b>${stat.value}</b>${stat.note ? html`<small>${stat.note}</small>` : ''}</div>`)}</div>` : ''}
       ${notes.length ? html`<ul class="notes">${notes.map(note => html`<li>${note}</li>`)}</ul>` : ''}
     </div>
     ${mode ? assumptionControls(mode) : ''}
@@ -666,7 +699,7 @@ function compareAssumptions() {
 
 function compareContent() {
   const enemy = enemyById.get(state.enemy);
-  const result = compareAttacks(enemy, compare.picks, { partId: compare.part || undefined, shieldCleared: state.shield, distance: state.distance, assume: compareAssumptions() });
+  const result = compareAttacks(enemy, compare.picks, { partId: compare.part || undefined, shieldCleared: state.shield, distance: state.distance, ...fireOptions(enemy), assume: compareAssumptions() });
   const routes = result.entries.filter(entry => entry.status === 'route' && entry.hits != null);
   const fewest = routes.length > 1 ? Math.min(...routes.map(entry => entry.hits)) : null;
   const partName = entry => entry.part?.name || entry.route?.target?.name || entry.best?.target?.name || '';
@@ -789,7 +822,7 @@ export function mount(container, context) {
   sheetView = null; state.pushedMatchup = false;
   const families = new Set(enemies.map(enemy => enemy.family || enemy.id)).size;
   render(root, html`<div class="page-head"><div><div class="eyebrow">Target Analysis</div><h1>${L('적 대응', 'Enemies')}</h1><p>${L('적을 고르면 지원 무기·주무기·보조무기·투척을 필요 횟수 순으로 비교합니다. 무기를 누르면 부위별 계산이 열립니다.', 'Pick an enemy to rank support, primary, secondary and throwable weapons by shots to kill. Tap a weapon to open the part-by-part math.')}</p></div>
-    <span class="badge outline">${L(`적 ${families}종 · 계산 무기 ${Object.keys(weaponProfiles).length + Object.keys(personalProfiles).length}종`, `${families} enemies · ${Object.keys(weaponProfiles).length + Object.keys(personalProfiles).length} weapons calculated`)}</span></div>
+    <span class="badge outline">${L(`적 ${families}종 · 비교 무기 ${Object.keys(weaponProfiles).length + Object.keys(personalProfiles).length}종`, `${families} enemies · ${Object.keys(weaponProfiles).length + Object.keys(personalProfiles).length} weapons compared`)}</span></div>
   <div class="enemy-layout">
     <aside class="panel picker" aria-label="${L('적 선택', 'Choose an enemy')}">
       <div class="picker-head">

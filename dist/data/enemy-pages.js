@@ -11,6 +11,7 @@ export const enemyPages = {
   "summaryRevision": 142256,
   "subfaction": null,
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 1,
   "reinforcements": "breach",
   "spawning": [
@@ -48,6 +49,7 @@ export const enemyPages = {
   "summaryRevision": 142257,
   "subfaction": "spore-burst",
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 1,
   "spawning": [
    "스포어 버스트 변종 행성에만 나오며, 스캐빈저를 대신합니다."
@@ -80,6 +82,7 @@ export const enemyPages = {
   "summaryRevision": 142272,
   "subfaction": "noxious",
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "reinforcements": "breach",
   "spawning": [
@@ -119,6 +122,7 @@ export const enemyPages = {
   "summaryRevision": 142385,
   "subfaction": "caustic",
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 1,
   "reinforcements": "breach",
   "spawning": [
@@ -154,6 +158,7 @@ export const enemyPages = {
   "summaryRevision": 141525,
   "subfaction": null,
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 1,
   "reinforcements": "breach",
   "spawning": [
@@ -191,6 +196,7 @@ export const enemyPages = {
   "summaryRevision": 136565,
   "subfaction": null,
   "fireMult": 0.7,
+  "arcMult": null,
   "staggerReq": 15,
   "reinforcements": "breach",
   "spawning": [
@@ -234,6 +240,7 @@ export const enemyPages = {
   "summaryRevision": 141544,
   "subfaction": "predator",
   "fireMult": 0.7,
+  "arcMult": null,
   "staggerReq": 15,
   "reinforcements": "breach",
   "spawning": [
@@ -271,6 +278,7 @@ export const enemyPages = {
   "summaryRevision": 137849,
   "subfaction": "spore-burst",
   "fireMult": 0.7,
+  "arcMult": null,
   "staggerReq": 15,
   "spawning": [
    "난이도 2부터 스포어 버스트 변종 행성에 나오며, 헌터를 모두 대신합니다.",
@@ -307,6 +315,7 @@ export const enemyPages = {
   "summaryRevision": 141593,
   "subfaction": null,
   "fireMult": 0.8,
+  "arcMult": null,
   "staggerReq": 20,
   "reinforcements": "breach",
   "spawning": [
@@ -348,6 +357,7 @@ export const enemyPages = {
   "summaryRevision": 141592,
   "subfaction": null,
   "fireMult": 0.8,
+  "arcMult": null,
   "staggerReq": 20,
   "reinforcements": "breach",
   "spawning": [
@@ -385,6 +395,7 @@ export const enemyPages = {
   "summaryRevision": 142384,
   "subfaction": "caustic",
   "fireMult": 0.8,
+  "arcMult": null,
   "staggerReq": 20,
   "reinforcements": "breach",
   "spawning": [
@@ -420,6 +431,7 @@ export const enemyPages = {
   "summaryRevision": 141596,
   "subfaction": "rupture",
   "fireMult": 0.8,
+  "arcMult": null,
   "staggerReq": 20,
   "spawning": [
    "난이도 6부터 럽처 변종 행성에 나오며, 워리어를 모두 대신합니다.",
@@ -456,6 +468,7 @@ export const enemyPages = {
   "summaryRevision": 141595,
   "subfaction": "spore-burst",
   "fireMult": 0.8,
+  "arcMult": null,
   "staggerReq": 20,
   "spawning": [
    "난이도 2부터 스포어 버스트 변종 행성에 나오며, 워리어를 대신합니다. 브루드 커맨더가 부르는 워리어도 포함됩니다.",
@@ -492,6 +505,7 @@ export const enemyPages = {
   "summaryRevision": 141215,
   "subfaction": null,
   "fireMult": 0.8,
+  "arcMult": null,
   "staggerReq": 20,
   "reinforcements": "breach",
   "spawning": [
@@ -541,6 +555,7 @@ export const enemyPages = {
   "summaryRevision": 141213,
   "subfaction": null,
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 25,
   "reinforcements": "breach",
   "spawning": [
@@ -556,7 +571,7 @@ export const enemyPages = {
   "behavior": [
    "지형을 타고 넘어 다가와 발톱으로 근접 공격하며, 옆으로 움직이거나 지나가려는 헬다이버의 길을 막습니다.",
    "머리가 부서지면 광폭 상태가 되어 더 빨라지지만 계속 피를 흘리다 죽습니다. 가끔 워리어 3마리를 불러냅니다.",
-   "보통 15~20m 거리에서 돌진합니다. 맞으면 피해를 입고 넘어지며 충격 효과를 받을 수 있습니다. 피하거나, 지형이나 차저 같은 큰 적에 부딪히게 하면 멈춥니다.",
+   "보통 15~20m 거리에서 돌진합니다. 맞으면 피해를 입고 넘어지며 충격 효과를 받을 수 있습니다. 피하거나, 지형이나 차저 같은 대형 적에 부딪히게 하면 멈춥니다.",
    "페로몬을 뿜어 버그 출몰을 부를 수 있습니다."
   ],
   "behaviorEn": [
@@ -584,6 +599,7 @@ export const enemyPages = {
   "summaryRevision": 142329,
   "subfaction": null,
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 25,
   "reinforcements": "breach",
   "spawning": [
@@ -625,6 +641,7 @@ export const enemyPages = {
   "summaryRevision": 141638,
   "subfaction": null,
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 3부터 나옵니다. 버그 출몰과 순찰대로 나오고, 임무 목표와 버그 둥지를 지킵니다.",
@@ -671,6 +688,7 @@ export const enemyPages = {
   "summaryRevision": 142383,
   "subfaction": "caustic",
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "커스틱 변종 행성에서 난이도 3부터 나오며, 버그 출몰, 순찰대, 임무 목표·소규모 관심 지점·버그 둥지 경비로 나타납니다."
@@ -717,6 +735,7 @@ export const enemyPages = {
   "summaryRevision": 141639,
   "subfaction": "rupture",
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 6부터 럽처 변종 행성에 나오며, 너싱 스퓨어 전부와 커스틱 스퓨어 일부를 대신합니다.",
@@ -757,6 +776,7 @@ export const enemyPages = {
   "summaryRevision": 142233,
   "subfaction": "noxious",
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [],
   "spawningEn": [],
@@ -789,6 +809,7 @@ export const enemyPages = {
   "summaryRevision": 136802,
   "subfaction": null,
   "fireMult": 1.25,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 4부터 나오는 선택 목표인 스토커 둥지에서만 나옵니다.",
@@ -831,6 +852,7 @@ export const enemyPages = {
   "summaryRevision": 137847,
   "subfaction": "predator",
   "fireMult": 1.25,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 4부터 프레데터 변종이 침공한 행성에서 나옵니다.",
@@ -867,6 +889,7 @@ export const enemyPages = {
   "summaryRevision": 141505,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 38,
   "spawning": [
    "난이도 4부터 버그 출몰, 다른 테르미니드와 함께하는 순찰대, 임무 목표 경비로 나오며, 난이도가 높을수록 자주 나옵니다. 소규모 관심 지점에서는 땅속에 숨어 있기도 합니다.",
@@ -913,6 +936,7 @@ export const enemyPages = {
   "summaryRevision": 141504,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 38,
   "spawning": [
    "난이도 3부터 '차저 제거하기' 임무의 목표로 나옵니다.",
@@ -961,6 +985,7 @@ export const enemyPages = {
   "summaryRevision": 142179,
   "subfaction": "caustic",
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 38,
   "spawning": [
    "커스틱 변종 행성에서 나오며, 차저처럼 버그 출몰과 다른 테르미니드와 함께하는 순찰대로 나타납니다.",
@@ -999,6 +1024,7 @@ export const enemyPages = {
   "summaryRevision": 141506,
   "subfaction": "rupture",
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 38,
   "spawning": [
    "럽처 변종이 있는 행성에서만 나옵니다."
@@ -1033,6 +1059,7 @@ export const enemyPages = {
   "summaryRevision": 136861,
   "subfaction": null,
   "fireMult": 1.7,
+  "arcMult": null,
   "staggerReq": 50,
   "spawning": [
    "난이도 5의 '임페일러 제거하기' 임무 목표로 처음 나옵니다.",
@@ -1085,6 +1112,7 @@ export const enemyPages = {
   "summaryRevision": 136531,
   "subfaction": null,
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "난이도 4부터 나오는 슈리커 둥지에서 나오며, 헬다이버가 약 150m 안에 들어오면 둥지가 슈리커를 내보내기 시작합니다.",
@@ -1123,6 +1151,7 @@ export const enemyPages = {
   "summaryRevision": 142362,
   "subfaction": null,
   "fireMult": 1.7,
+  "arcMult": null,
   "staggerReq": 38,
   "spawning": [
    "멀리서도 보이는 단독 순찰로만 나옵니다. 임무 목표나 관심 지점에 고정으로 배치되지 않고, 버그 출몰로도 나오지 않습니다.",
@@ -1177,6 +1206,7 @@ export const enemyPages = {
   "summaryRevision": 141861,
   "subfaction": null,
   "fireMult": 1.7,
+  "arcMult": null,
   "staggerReq": 50,
   "spawning": [
    "난이도 4부터 '바일 타이탄 제거하기' 임무의 목표로 나옵니다.",
@@ -1237,6 +1267,7 @@ export const enemyPages = {
   "summaryRevision": 140147,
   "subfaction": "spore-burst",
   "fireMult": 1.7,
+  "arcMult": null,
   "staggerReq": 50,
   "spawning": [
    "난이도 5부터 스포어 버스트 변종 행성의 '바일 타이탄 제거하기' 임무에서 목표인 바일 타이탄을 대신해 나옵니다.",
@@ -1279,6 +1310,7 @@ export const enemyPages = {
   "summaryRevision": 139241,
   "subfaction": null,
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "하이브 로드가 있는 행성에서는 난이도 7 이상 모든 임무에서 목표나 증원과 상관없이 나올 수 있습니다.",
@@ -1337,6 +1369,7 @@ export const enemyPages = {
   "summaryRevision": 139995,
   "subfaction": null,
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "reinforcements": "dropship",
   "spawning": [
@@ -1380,6 +1413,7 @@ export const enemyPages = {
   "summaryRevision": 140765,
   "subfaction": "jet-brigade",
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "spawning": [
    "난이도 3 이상에서 나옵니다. 봇 투하·순찰대·오토마톤 제조소에서 나오고, 오토마톤 전초기지와 임무 목표를 지킵니다.",
@@ -1422,6 +1456,7 @@ export const enemyPages = {
   "summaryRevision": 139895,
   "subfaction": "incineration",
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "reinforcements": "dropship",
   "spawning": [
@@ -1465,6 +1500,7 @@ export const enemyPages = {
   "summaryRevision": 138833,
   "subfaction": null,
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "reinforcements": "dropship",
   "spawning": [
@@ -1504,6 +1540,7 @@ export const enemyPages = {
   "summaryRevision": 138835,
   "subfaction": null,
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "reinforcements": "dropship",
   "spawning": [
@@ -1547,6 +1584,7 @@ export const enemyPages = {
   "summaryRevision": 138837,
   "subfaction": "jet-brigade",
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "spawning": [
    "제트 여단이 침공·점령한 행성의 모든 난이도에서 나옵니다. 봇 투하, 순찰대 지휘, 오토마톤 전초기지·임무 목표 경비로 나오며, 다른 경량 오토마톤과 달리 오토마톤 제조소에서는 나오지 않습니다.",
@@ -1589,6 +1627,7 @@ export const enemyPages = {
   "summaryRevision": 138836,
   "subfaction": null,
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "reinforcements": "dropship",
   "spawning": [
@@ -1632,6 +1671,7 @@ export const enemyPages = {
   "summaryRevision": 140047,
   "subfaction": "incineration",
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "reinforcements": "dropship",
   "spawning": [
@@ -1675,6 +1715,7 @@ export const enemyPages = {
   "summaryRevision": 138971,
   "subfaction": null,
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "reinforcements": "dropship",
   "spawning": [
@@ -1720,6 +1761,7 @@ export const enemyPages = {
   "summaryRevision": 138973,
   "subfaction": null,
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "reinforcements": "dropship",
   "spawning": [
@@ -1757,6 +1799,7 @@ export const enemyPages = {
   "summaryRevision": 138978,
   "subfaction": null,
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "reinforcements": "dropship",
   "spawning": [
@@ -1806,6 +1849,7 @@ export const enemyPages = {
   "summaryRevision": 139889,
   "subfaction": "jet-brigade",
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 10,
   "spawning": [
    "난이도 2부터 나옵니다. 봇 투하·순찰대·오토마톤 제조소에서 나오고, 오토마톤 전초기지와 임무 목표를 지킵니다.",
@@ -1848,6 +1892,7 @@ export const enemyPages = {
   "summaryRevision": 138975,
   "subfaction": null,
   "fireMult": 1.25,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 2부터 봇 투하, 순찰대, 오토마톤 전초기지·임무 목표 경비로 나오며, 난이도 4부터는 소규모 관심 지점도 지킵니다.",
@@ -1886,6 +1931,7 @@ export const enemyPages = {
   "summaryRevision": 141659,
   "subfaction": "cyborgs",
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 20,
   "spawning": [
    "사이보그 세력이 있는 행성에서 모든 난이도에 나옵니다. 봇 투하·순찰대로 나오고, 오토마톤 전초기지와 임무 목표를 지킵니다."
@@ -1928,6 +1974,7 @@ export const enemyPages = {
   "summaryRevision": 142502,
   "subfaction": "cyborgs",
   "fireMult": 0.5,
+  "arcMult": null,
   "staggerReq": 20,
   "spawning": [
    "사이보그가 있는 행성에서 모든 난이도에 나옵니다.",
@@ -1953,7 +2000,7 @@ export const enemyPages = {
   ],
   "tactics": [
    "명령을 받은 거대 데버스테이터는 느린 이동 속도가 보완되고, 버서커는 더 빨라집니다. 애지테이터를 처치하면 지휘받던 오토마톤이 모두 몇 초 동안 기절해, 마무리하거나 물러날 틈이 생깁니다.",
-   "폭발 피해를 받는 부위가 여러 곳이라 퍼니셔 플라스마와 퓨리파이어가 특히 잘 듣습니다.",
+   "폭발 피해를 받는 부위가 여러 곳이라 퍼니셔 플라스마와 퓨리파이어가 특히 효과적입니다.",
    "체력은 래디컬과 같지만, 장갑 2 갑옷을 먼저 부숴야 속살에 피해가 들어갑니다. 딜리전스는 2~3발로 헬멧을 벗기고 드러난 머리를 한 발에 처치합니다.",
    "레일건 과충전 한 발을 다리에 맞히거나, 유탄 권총 한 발을 직격하거나, 투척 나이프를 머리에 정확히 맞히면 처치합니다. 딜리전스 카운터 저격소총, 데드아이, 사이트라이너는 한 발로 헬멧을 부숴 머리를 노릴 수 있게 합니다.",
    "아크 발사기와 K-9은 경직을 주고 갑옷을 무시하며 여러 적을 한꺼번에 맞혀, 달려드는 애지테이터를 상대하기에 아주 좋습니다."
@@ -1972,6 +2019,7 @@ export const enemyPages = {
   "summaryRevision": 138977,
   "subfaction": null,
   "fireMult": 1.25,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 2부터 나옵니다. 봇 투하, 순찰대, 오토마톤 전초기지·임무 목표 경비로 나옵니다.",
@@ -2012,6 +2060,7 @@ export const enemyPages = {
   "summaryRevision": 138979,
   "subfaction": null,
   "fireMult": 1.25,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 1부터 '데버스테이터 제거하기' 임무의 대상으로 나옵니다.",
@@ -2052,6 +2101,7 @@ export const enemyPages = {
   "summaryRevision": 142504,
   "subfaction": null,
   "fireMult": 1.25,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 1의 '데버스테이터 제거하기' 임무 목표로 처음 나옵니다.",
@@ -2092,6 +2142,7 @@ export const enemyPages = {
   "summaryRevision": 140049,
   "subfaction": "incineration",
   "fireMult": 1.25,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "소각대 행성에서 난이도 1부터 봇 투하, 순찰대, 오토마톤 전초기지·임무 목표 경비, 대형 제조소로 나오며, 난이도 4부터는 소규모 관심 지점도 지킵니다."
@@ -2130,6 +2181,7 @@ export const enemyPages = {
   "summaryRevision": 140048,
   "subfaction": "incineration",
   "fireMult": 1.25,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "소각대가 침공한 행성에서 난이도 3부터 나옵니다. 봇 투하, 순찰대, 오토마톤 전초기지·임무 목표 경비, 대형 제조소에서 나옵니다.",
@@ -2168,6 +2220,7 @@ export const enemyPages = {
   "summaryRevision": 136520,
   "subfaction": "jet-brigade",
   "fireMult": 1.25,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "제트 여단이 침공한 행성에서 난이도 2부터 봇 투하와 순찰대로 나옵니다.",
@@ -2204,6 +2257,7 @@ export const enemyPages = {
   "summaryRevision": 139387,
   "subfaction": null,
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 3부터 봇 투하, 순찰대, 오토마톤 전초기지와 임무 목표 경비로 나옵니다. 난이도 4부터 소규모 관심 지점도 지킵니다.",
@@ -2246,6 +2300,7 @@ export const enemyPages = {
   "summaryRevision": 139395,
   "subfaction": null,
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "난이도 8부터 스카우트 스트라이더 대신 나옵니다. 봇 투하·순찰대로 나오고, 오토마톤 전초기지·임무 목표·소규모 관심 지점을 지킵니다.",
@@ -2286,6 +2341,7 @@ export const enemyPages = {
   "summaryRevision": 141866,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "난이도 4부터 나옵니다. 봇 투하, 순찰대, 오토마톤 전초기지·임무 목표·소규모 관심 지점 경비, 대형 제조소에서 나옵니다.",
@@ -2336,6 +2392,7 @@ export const enemyPages = {
   "summaryRevision": 141870,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "난이도 4부터 나옵니다. 봇 투하, 순찰대, 오토마톤 전초기지·임무 목표·소규모 관심 지점 경비, 대형 제조소에서 나옵니다.",
@@ -2388,6 +2445,7 @@ export const enemyPages = {
   "summaryRevision": 141862,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "난이도 3 전용인 '오토마톤 헐크 제거하기' 임무에서만 나옵니다."
@@ -2436,6 +2494,7 @@ export const enemyPages = {
   "summaryRevision": 141867,
   "subfaction": "incineration",
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "소각대가 침공한 행성에서 난이도 4부터 나옵니다. 봇 투하, 순찰대, 오토마톤 전초기지·임무 목표·소규모 관심 지점 경비, 대형 제조소에서 나옵니다."
@@ -2488,6 +2547,7 @@ export const enemyPages = {
   "summaryRevision": 141868,
   "subfaction": "jet-brigade",
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "제트 여단이 점령한 행성에서는 헐크가 모두 제트 여단 변종으로 바뀝니다. 헐크 스코처와 헐크 브루저가 바뀌고, 헐크 오블리터레이터는 바뀌지 않습니다.",
@@ -2528,6 +2588,7 @@ export const enemyPages = {
   "summaryRevision": 141869,
   "subfaction": "jet-brigade",
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "제트 여단이 점령한 행성에서는 헐크가 모두 제트 여단 변종으로 바뀝니다. 헐크 스코처와 헐크 브루저가 바뀌고, 헐크 오블리터레이터는 바뀌지 않습니다.",
@@ -2568,6 +2629,7 @@ export const enemyPages = {
   "summaryRevision": 139864,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "난이도 3에서는 낮은 확률로 일부 중형~대형 오토마톤 전초기지에만 나옵니다.",
@@ -2618,6 +2680,7 @@ export const enemyPages = {
   "summaryRevision": 139871,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "난이도 3에서는 낮은 확률로 일부 중대형 오토마톤 전초기지에만 나옵니다.",
@@ -2666,6 +2729,7 @@ export const enemyPages = {
   "summaryRevision": 139879,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "난이도 7부터 나오며, 일정 확률로 어나이얼레이터 탱크와 슈레더 탱크를 대신합니다.",
@@ -2708,6 +2772,7 @@ export const enemyPages = {
   "summaryRevision": 142047,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "주로 지휘 벙커 위에 있으며, 난이도 7부터 오토마톤이 점령한 소규모 관심 지점에도 나올 수 있습니다.",
@@ -2752,6 +2817,7 @@ export const enemyPages = {
   "summaryRevision": 137727,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "난이도 4부터 오토마톤 전초기지 안에 보조 목표로 나옵니다. 주변에는 늘 샘플이 있습니다."
@@ -2772,7 +2838,7 @@ export const enemyPages = {
   "tactics": [
    "대부분 장갑 4이고 뒤쪽 방열판만 장갑 3입니다. 오토캐넌·레이저 캐넌 같은 관통 4 무기는 어느 방향에서든 부술 수 있고, 대전차 무기는 한 발이면 됩니다.",
    "관통 3 무기는 뒤쪽 방열판에만 피해를 주므로 뒤로 돌아가야 합니다. 관통 4 무기도 방열판을 쏘면 훨씬 빨리 부서집니다.",
-   "'가드 독' 배낭을 겨누며 돌아서므로, 뒤로 돌아갈 때는 배낭을 접어 두면 편합니다.",
+   "가드 독 배낭을 겨누며 돌아서므로, 뒤로 돌아갈 때는 배낭을 접어 두면 편합니다.",
    "레일건은 80% 충전한 한 발, 에포크는 충전하지 않은 한 발이면 됩니다. 테르밋은 붙으면 한 개로, 고폭은 바로 옆에서 터져야 한 개로 부서지고, 다이너마이트는 두 개를 한 번에 부수기도 합니다.",
    "이글을 뺀 공격 스트라타젬, 거치형 스트라타젬, 대전차 지뢰로도 부술 수 있고, 지옥폭탄을 불러도 됩니다."
   ],
@@ -2790,6 +2856,7 @@ export const enemyPages = {
   "summaryRevision": 136791,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "난이도 4부터 오토마톤 전초기지 안에 보조 목표로 나옵니다. 주변에 제조소, 탄약, 샘플이 함께 있을 수 있습니다."
@@ -2824,6 +2891,7 @@ export const enemyPages = {
   "summaryRevision": 142465,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "난이도 5 이상에서 건십 시설에서 나옵니다. 헬다이버가 150m 안에 들어오면 한 번에 최대 2대씩, 시설 하나당 최대 4대를 내보냅니다.",
@@ -2872,6 +2940,7 @@ export const enemyPages = {
   "summaryRevision": 139884,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [],
   "spawningEn": [],
@@ -2898,6 +2967,7 @@ export const enemyPages = {
   "summaryRevision": 142431,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [],
   "spawningEn": [],
@@ -2924,6 +2994,7 @@ export const enemyPages = {
   "summaryRevision": 139410,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "난이도 6부터 오토마톤 전초기지, 대형 제조소, 봇 투하에서 나오고, 도시 지역이 아닌 곳에서는 순찰대로도 나옵니다.",
@@ -2972,6 +3043,7 @@ export const enemyPages = {
   "summaryRevision": 139888,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "난이도 4부터 '오토마톤 팩토리 스트라이더 제거' 임무에 처음 나옵니다.",
@@ -3032,6 +3104,7 @@ export const enemyPages = {
   "summaryRevision": 142149,
   "subfaction": "cyborgs",
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "오토마톤의 사이보그 세력 소속이라 사이보그가 있는 행성에만 나옵니다.",
@@ -3086,6 +3159,7 @@ export const enemyPages = {
   "summaryRevision": 141977,
   "subfaction": null,
   "fireMult": 0.75,
+  "arcMult": null,
   "staggerReq": 1,
   "spawning": [
    "가장 흔한 일루미닛 적으로, 거의 모든 거주지·순찰대·증원에 나옵니다. 착륙한 워프 함선에서도 자주 나옵니다.",
@@ -3124,6 +3198,7 @@ export const enemyPages = {
   "summaryRevision": 141977,
   "subfaction": null,
   "fireMult": 0.75,
+  "arcMult": null,
   "staggerReq": 1,
   "spawning": [
    "가장 흔한 일루미닛 적으로, 거의 모든 거주지·순찰대·증원에 나옵니다. 착륙한 워프 함선에서도 자주 나옵니다.",
@@ -3162,6 +3237,7 @@ export const enemyPages = {
   "summaryRevision": 141977,
   "subfaction": null,
   "fireMult": 0.75,
+  "arcMult": null,
   "staggerReq": 1,
   "spawning": [
    "가장 흔한 일루미닛 적으로, 거의 모든 거주지·순찰대·증원에 나옵니다. 착륙한 워프 함선에서도 자주 나옵니다.",
@@ -3200,6 +3276,7 @@ export const enemyPages = {
   "summaryRevision": 140071,
   "subfaction": "vote-snatchers",
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 20,
   "spawning": [
    "보트 스내처 행성에는 증원을 부를 와처가 없어서 순찰대와 관심 지점 경비로만 나오지만, 그만큼 훨씬 많은 수가 나옵니다.",
@@ -3238,6 +3315,7 @@ export const enemyPages = {
   "summaryRevision": 142612,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": 35,
   "spawning": [
    "순찰대, 특정 임무 목표, 착륙한 워프 함선, 워프 함선 증원으로 나옵니다.",
@@ -3280,6 +3358,7 @@ export const enemyPages = {
   "summaryRevision": 142611,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": 30,
   "spawning": [
    "무권자 순찰 무리와 함께 자주 나옵니다. 지도 곳곳의 특정 목표, 착륙한 워프 함선, 워프 함선 증원으로도 나옵니다.",
@@ -3300,7 +3379,7 @@ export const enemyPages = {
   "tactics": [
    "가장 가까운 헬다이버와 10m 거리를 유지하려 하고 자주 피해서 맞히기 어렵습니다. 몸을 날려 다가가며 제압 사격을 하면 물러나고 플라스마 탄의 명중률도 떨어집니다.",
    "블리처, 아크 발사기, 홀트(기절탄)로 계속 기절시키면 움직임이 멈추고 던지려던 수류탄도 떨어뜨립니다. 이때 세너터나 대물소총으로 머리를 맞히면 바로 처치합니다.",
-   "'가드 독'과 로버는 빗나가지 않아 장갑판을 벗겨 줍니다. 워런트는 자동 추적으로 회피 비행을 무력화해 탄창 하나로 처치할 수 있습니다.",
+   "가드 독과 로버는 빗나가지 않아 장갑판을 벗겨 줍니다. 워런트는 자동 추적으로 회피 비행을 무력화해 탄창 하나로 처치할 수 있습니다.",
    "제트팩을 부수면 폭발해 바로 죽습니다. 불로 죽으면 제트팩이 저절로 터지기도 하는데, 이 폭발에 휘말린 헬다이버도 죽습니다.",
    "제트팩이 남은 시체도 터질 수 있으니 사라지거나 부서질 때까지 가까이 가지 마세요."
   ],
@@ -3318,6 +3397,7 @@ export const enemyPages = {
   "summaryRevision": 142610,
   "subfaction": null,
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 35,
   "spawning": [
    "맵 곳곳과 순찰대에서 나오고, 증원으로 불려 오기도 합니다. 오버시어 중 가장 드물어서 한 번에 1~2마리만 나옵니다.",
@@ -3358,6 +3438,7 @@ export const enemyPages = {
   "summaryRevision": 140766,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "reinforcements": "warp",
   "spawning": [
@@ -3399,6 +3480,7 @@ export const enemyPages = {
   "summaryRevision": 138037,
   "subfaction": "appropriators",
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "일루미닛의 적임자 세력에 속하며, 적임자가 있는 행성에서만 나옵니다. 약한 적이라 보통 무리 지어 나옵니다."
@@ -3420,8 +3502,8 @@ export const enemyPages = {
   ],
   "tactics": [
    "피해가 낮고 연사가 느리며 공격 예고가 분명해 하나하나는 약합니다. 둘러싸이지 않았다면 더 위험한 적을 먼저 처리하세요.",
-   "연사력이 높고 다루기 쉬운 무기로 이리저리 옮겨 가며 쏘세요. 뭉쳐 다녀서 전격 무기와 폭발 무기도 좋고, 특히 오토캐넌 대공포탄이 효과적입니다. 다만 이리저리 움직여서 탄이 느린 폭발 무기로는 직격이 어렵습니다.",
-   "가까이 달려들므로 '가드 독'과 로버가 쉽게 처리하고, K-9은 전격 연쇄로 무리를 묶어 둡니다.",
+   "연사력이 높고 다루기 쉬운 무기로 이리저리 옮겨 가며 쏘세요. 뭉쳐 다녀서 아크 무기와 폭발 무기도 좋고, 특히 오토캐넌 대공포탄이 효과적입니다. 다만 이리저리 움직여서 탄이 느린 폭발 무기로는 직격이 어렵습니다.",
+   "가까이 달려들므로 가드 독과 로버가 쉽게 처리하고, K-9은 아크 연쇄로 무리를 묶어 둡니다.",
    "W.A.S.P. 발사기와 워런트는 옵트루더에 먼저 잠겨 뒤의 와처나 고위 오버시어를 노리기 어렵습니다. 와처와 비슷하게 생기고 소리도 같지만, 와처가 비추는 원뿔 모양 빛이 없습니다.",
    "와처처럼 죽어서 땅에 닿으면 터져 바로 옆의 헬다이버에게 치명적일 수 있고, 이 폭발이 주변 옵트루더로 번져 연쇄 폭발이 일어날 수 있습니다."
   ],
@@ -3439,6 +3521,7 @@ export const enemyPages = {
   "summaryRevision": 140060,
   "subfaction": null,
   "fireMult": 1.8,
+  "arcMult": 1.8,
   "staggerReq": 45,
   "spawning": [
    "지도 곳곳의 관심 지점 근처, 순찰대, 적 증원으로 나옵니다. 난이도가 높을수록 한 번에 나오는 수가 늘어납니다.",
@@ -3481,6 +3564,7 @@ export const enemyPages = {
   "summaryRevision": 141041,
   "subfaction": "vote-snatchers",
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "보트 스내처 행성에는 증원을 부르는 와처가 없어서, 크러셔는 순찰대와 관심 지점 경비로만 나오지만 수가 훨씬 많습니다.",
@@ -3519,6 +3603,7 @@ export const enemyPages = {
   "summaryRevision": 142505,
   "subfaction": null,
   "fireMult": 1.5,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "순찰대, 모노리스 경비, 일루미닛 증원으로 나옵니다. 보트 스내처가 있는 행성에서는 나오지 않습니다."
@@ -3569,6 +3654,7 @@ export const enemyPages = {
   "summaryRevision": 140066,
   "subfaction": "appropriators",
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "일루미닛의 적임자 세력 소속이라 적임자가 있는 행성에만 나옵니다.",
@@ -3609,6 +3695,7 @@ export const enemyPages = {
   "summaryRevision": 140067,
   "subfaction": "appropriators",
   "fireMult": 1,
+  "arcMult": null,
   "staggerReq": 40,
   "spawning": [
    "일루미닛의 적임자 세력에 속해 적임자가 있는 행성에서만 나오며, 난이도 4부터 나옵니다."
@@ -3649,6 +3736,7 @@ export const enemyPages = {
   "summaryRevision": 142534,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "임무 도중 수시로 작전 지역 밖에서 날아옵니다. 순찰대로 나오지 않고, 임무 시작 시점에도 나오지 않습니다.",
@@ -3695,6 +3783,7 @@ export const enemyPages = {
   "summaryRevision": 141833,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [],
   "spawningEn": [],
@@ -3721,6 +3810,7 @@ export const enemyPages = {
   "summaryRevision": 140064,
   "subfaction": null,
   "fireMult": null,
+  "arcMult": null,
   "staggerReq": null,
   "spawning": [
    "스팅레이처럼 임무 지역 바깥에서 나타납니다. 난이도 8 이상에서는 한 번에 최대 5대까지 나올 수 있습니다.",

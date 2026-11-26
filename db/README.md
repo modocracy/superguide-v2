@@ -32,16 +32,16 @@
 | 충전별 최종 내구·관통·배율 미확인 | purifier, accelerator-rifle, loyalist |
 | 열 단계 전환·탄체 연결 미확인 | double-edge-sickle |
 | 피해 없는 지원 장비 또는 공격 레코드 없음 | stim-pistol, urchin, stun, smoke, smokescreen, shield |
-| 전격 반복·부위 명중 수 미확인 | arc |
+| 아크 반복·부위 명중 수 미확인 | arc |
 | damage 항목의 투척 연결·타격 단위 미확인 | throwing-knife |
 
 모든 피해는 동일 부위에 최대 피해가 닿는 이론값이며 AP는 ap1을 사용합니다. 거리·입사각·도탄·접근 가능성·시간·DoT·상태이상·여러 부위 동시 피해는 계산하지 않습니다. 근접은 엔진이 일반 타격을 표현할 수 있어 6종을 지원하되, 높은 부위/비행 적에게 실제 접근 가능한지는 보장하지 않습니다. Thermite 등은 확인된 폭발만, Breacher는 직격과 붙은 뒤 같은 부위에서 터지는 지연 폭발(2,000·AP7)을, Pyrotech/Melta Mine는 주폭발만 계산하며 제외 성분은 모드 note에 명시합니다.
 
-명중 수 조건은 `hitCondition.kind`의 pellets(산탄), arcs(전격), bomblets(자탄), shrapnel(파편)으로 구분합니다. 모두 `defaultPct`(설정한 기본 백분율)와 `default = Math.max(min, Math.round(max * defaultPct / 100))`를 제공합니다. **산탄·전격은 100%, 자탄·파편은 20%**입니다. Blitzer는 5/5, De-Escalator는 10/10, Airburst의 flak/cluster는 각각 5/25, Eruptor는 6/30, Frag와 Lure Mine는 7/35, Pineapple은 4/18입니다. 산탄 전탄 기본값은 하부 산탄총, Halt의 두 탄종, 여러 총열 동시 사격과 Variable 일제 사격에도 적용됩니다. 이는 제품의 기본 가정이며 관측한 실제 명중률이 아닙니다.
+명중 수 조건은 `hitCondition.kind`의 pellets(산탄), arcs(아크), bomblets(자탄), shrapnel(파편)으로 구분합니다. 모두 `defaultPct`(설정한 기본 백분율)와 `default = Math.max(min, Math.round(max * defaultPct / 100))`를 제공합니다. **산탄·아크는 100%, 자탄·파편은 20%**입니다. Blitzer는 5/5, De-Escalator는 10/10, Airburst의 flak/cluster는 각각 5/25, Eruptor는 6/30, Frag와 Lure Mine는 7/35, Pineapple은 4/18입니다. 산탄 전탄 기본값은 하부 산탄총, Halt의 두 탄종, 여러 총열 동시 사격과 Variable 일제 사격에도 적용됩니다. 이는 제품의 기본 가정이며 관측한 실제 명중률이 아닙니다.
 
 UI는 `withHitAssumption(mode,{hitCount:mode.hitCondition.default})`로 기본값을 적용할 수 있습니다. 10–100% 슬라이더의 선택도 같은 반올림 규칙으로 정수 hitCount를 전달하며 명시한 수가 기본값보다 우선합니다. 엔진의 raw 모드에는 자동으로 이벤트를 넣지 않으며 기존 호출 규칙을 유지합니다. 파편 0개를 명시하면 파편 피해만 제외하고, 양수면 그 수의 파편을 별도 피해 이벤트로 더합니다. 파편은 선택 모드가 아닙니다. 주탄 직격 여부는 투척 폭발·오토캐넌 대공포탄의 근접 기폭은 false, Eruptor 탄체는 true이며 `primaryHit`/`bombletDirect` 선택은 자탄 모드에서만 사용합니다. 자탄의 기본 전달 조건은 주탄 폭발 포함·직격 제외, 자탄 폭발 포함·직격 제외이며, 아래의 W.A.S.P.처럼 모드별 기본값을 명시할 수 있습니다. 기본 명중 수 적용 시 명시한 전달 조건은 보존합니다. 같은 발의 남은 이벤트가 파괴된 장갑 뒤로 통과하는지는 기존 엔진처럼 보류합니다.
 
-`dist/core/explain.js`의 `assumptionSummary(withHitAssumption(mode,{hitCount}))`는 전탄이면 '펠릿 11개가 모두 이 부위에 명중 (전탄 명중 가정)', 부분 명중이면 '펠릿 11개 중 6개 명중 (약 55%)'로 표시합니다. 전격·자탄·파편도 개수와 비율을 표시하고 설정 기본값과 같으면 '(기본 가정)'을 붙입니다. 예: '전격 5회 모두 이 부위에 명중 (기본 가정)', '파편 35개 중 7개(20%)가 이 부위에 명중 (기본 가정) + 주폭발'. 비율은 정수 명중 수 / 최대 개수이며, Pineapple 4/18은 약 22%로 표시하되 기본 슬라이더 값 `defaultPct`는 20입니다. Eruptor는 주탄 직격도 표시하고, 파편 0개는 피해 제외를 명시합니다. 미적용/잘못된 명중 수는 종류별 선택 안내를 표시합니다. `assumptionTag`는 산탄 전탄이면 '전탄 명중 가정', 그 외 기본값이면 '파편 20% 기본 가정' 같은 태그를 반환합니다. Variable 일제 사격에는 `hitCondition.projectileName='탄환'`이 있어 산탄 펠릿으로 부르지 않습니다.
+`dist/core/explain.js`의 `assumptionSummary(withHitAssumption(mode,{hitCount}))`는 전탄이면 '펠릿 11개가 모두 이 부위에 명중 (전탄 명중 가정)', 부분 명중이면 '펠릿 11개 중 6개 명중 (약 55%)'로 표시합니다. 아크·자탄·파편도 개수와 비율을 표시하고 설정 기본값과 같으면 '(기본 가정)'을 붙입니다. 예: '아크 5회 모두 이 부위에 명중 (기본 가정)', '파편 35개 중 7개(20%)가 이 부위에 명중 (기본 가정) + 주폭발'. 비율은 정수 명중 수 / 최대 개수이며, Pineapple 4/18은 약 22%로 표시하되 기본 슬라이더 값 `defaultPct`는 20입니다. Eruptor는 주탄 직격도 표시하고, 파편 0개는 피해 제외를 명시합니다. 미적용/잘못된 명중 수는 종류별 선택 안내를 표시합니다. `assumptionTag`는 산탄 전탄이면 '전탄 명중 가정', 그 외 기본값이면 '파편 20% 기본 가정' 같은 태그를 반환합니다. Variable 일제 사격에는 `hitCondition.projectileName='탄환'`이 있어 산탄 펠릿으로 부르지 않습니다.
 
 개인 투척물 모드는 표시용 `unitLabel`을 추가 제공합니다. 수류탄은 '수류탄', 두 지뢰는 '지뢰', Dynamite는 '다이너마이트'입니다. `unitOf(mode)`는 `{unit:'개',noun:'수류탄 개수',one:'수류탄 1개'}`, `countText({hits:2},mode)`는 '수류탄 2개'를 반환합니다. 기존 C4의 장약 단위와 기존 지원 무기의 숫자/단위 표시는 유지합니다. 이 표시 필드는 계산에는 영향을 주지 않습니다.
 
@@ -215,7 +215,7 @@ npm run check
 
 `scripts/weapon-infobox.mjs`는 로컬 원문만 처리하는 공통 파서입니다. 검증기는 103개 인포박스의 탄창·투척물 수량, 발사 속도, 예비 탄창·낱발, 모든 Damage/Armor 템플릿 수치, 반경과 새 지속 피해·열 용량 필드를 매번 대조합니다. 직격·폭발·변형·펠릿 합계, 연결된 하부 무기의 탄창도 비교 집합에 포함합니다. 피해 범위의 명시된 양 끝은 비교하지만 이를 충전 단계로 배정하지 않습니다. 반경은 innerRadius/radius와 대조하고 Shield의 방어막 반경은 원본 shieldradius와 비교합니다.
 
-모든 수치 불일치를 무기·필드·DB 값·인포박스 원문으로 출력하며, 해당 무기의 `infoboxConflicts`에 정확히 기록되지 않은 불일치가 있으면 실패합니다. 승인 목록은 공통 모듈의 `reviewedConflicts`에 명시되어 있어 재빌드만으로 새 충돌이 자동 승인되지 않습니다. 값이나 원문이 바뀌면 기존 승인과 일치하지 않으므로 다시 검토해야 합니다. 더 이상 존재하지 않는 충돌 기록도 검사합니다. Trident의 6빔 × 60 = 360, Halt의 8 × 2 = 16, Blitzer의 전격 5개 × 50 = 250은 표현 차이이며 충돌로 보고하지 않습니다. Blitzer는 페이지 본문에도 전격 수가 명시되어 notes에 설명합니다. 피해 링크가 없는 Stim Pistol·Smoke·Shield의 피해 0 및 관통 -1 센티널도 충돌로 취급하지 않습니다.
+모든 수치 불일치를 무기·필드·DB 값·인포박스 원문으로 출력하며, 해당 무기의 `infoboxConflicts`에 정확히 기록되지 않은 불일치가 있으면 실패합니다. 승인 목록은 공통 모듈의 `reviewedConflicts`에 명시되어 있어 재빌드만으로 새 충돌이 자동 승인되지 않습니다. 값이나 원문이 바뀌면 기존 승인과 일치하지 않으므로 다시 검토해야 합니다. 더 이상 존재하지 않는 충돌 기록도 검사합니다. Trident의 6빔 × 60 = 360, Halt의 8 × 2 = 16, Blitzer의 아크 5개 × 50 = 250은 표현 차이이며 충돌로 보고하지 않습니다. Blitzer는 페이지 본문에도 아크 수가 명시되어 notes에 설명합니다. 피해 링크가 없는 Stim Pistol·Smoke·Shield의 피해 0 및 관통 -1 센티널도 충돌로 취급하지 않습니다.
 
 ## 필드와 해석
 
@@ -232,10 +232,10 @@ npm run check
 - `shrapnelCount`는 폭발이 흩뿌리는 파편 수(explosion의 shrapnel_count)입니다. 파편 1개의 피해는 id가 `shrapnel`인 variant에 있으며, 원본 탄체 키(예: AC-8_P2)는 이름 괄호에 남깁니다. 실제로 맞는 파편 수는 거리·각도에 따라 달라 합산하지 않습니다.
 - `demolition`/`stun`/`push`는 직격 레코드의 demo/stun/push, 폭발만 있으면 그 폭발 레코드의 값입니다. `splashDemolition`/`splashStun`/`splashPush`는 폭발 레코드의 demo/stun/push입니다(직격과 따로, 폭발이 없으면 null). `element`는 element_name(`none`은 null), `statuses`는 해당 damage의 원본 배열입니다. `splashElement`/`splashStatuses`는 폭발 효과를 별도로 보존합니다. 공격 목록의 status 연결과 지속 피해는 자동 합산하지 않습니다.
 - `record`는 탄체(projectile) 공격의 원본 탄체 키(예: AR-23_P)이고, 탄체가 아니면 null입니다. 거리 감쇠·낙차 계산은 이 키로 `dist/data/ballistics.js`(`node scripts/build-ballistics.mjs`가 같은 스냅샷의 projectile 108개에서 생성: 탄속·구경·질량·항력계수·중력 배율·수명·펠릿 수·ap1~ap4)를 찾습니다. 전투 프로필 모드도 탄체 직격이면 같은 `record`를 갖고(파편·자탄 모드는 없음), 지원 무기 모드는 `dist/data/support-records.js`의 연결을 `combat-data.js`가 붙입니다(`test-support.mjs`가 대조). 엔진은 `solveMatchup`·`compareAttacks`의 `distance`(m) 옵션이 있을 때만 위키 Damage 공식 `1 - 0.75 x (1 - e^(-2Dx))`, `D = 0.0004712389 x 구경^2 x 항력계수 / 질량`을 탄의 직격 피해에 곱합니다. 폭발 피해에는 적용하지 않으며, 기본 0m는 기존 결과와 같습니다.
-- `delivery`는 원본 공격 type입니다. Melee 분류의 damage 직접 참조만 melee로 표현합니다. `unit`과 `damageKind`를 함께 읽으세요. beam_fire_rate=60인 연속 빔(Scythe/Dagger)은 초당 값(`dps`)으로 해석합니다. Trident는 펄스 빔 원본값을 보존하고 시간 단위를 확정하지 않아 damageKind=null입니다. 분사는 입자 1개, 전격은 1회, 근접은 타격 1회입니다. 빔 노출 시간·입자 빈도·연쇄 대상은 계산하지 않습니다.
+- `delivery`는 원본 공격 type입니다. Melee 분류의 damage 직접 참조만 melee로 표현합니다. `unit`과 `damageKind`를 함께 읽으세요. beam_fire_rate=60인 연속 빔(Scythe/Dagger)은 초당 값(`dps`)으로 해석합니다. Trident는 펄스 빔 원본값을 보존하고 시간 단위를 확정하지 않아 damageKind=null입니다. 분사는 입자 1개, 아크는 1회, 근접은 타격 1회입니다. 빔 노출 시간·입자 빈도·연쇄 대상은 계산하지 않습니다.
 - `magazine`=cap(약실 capplus 미합산), `spareMags`=mags를 **원본 예비 탄창 보유 한도**로 해석합니다. 시작량 magstart와 다르며 장전 탄창을 더하거나 빼지 않습니다. heat 방식에서는 교체 방열판 수의 원본 값입니다. 낱발 rounds는 `spareRounds`, 원본 탄약 방식은 `roundType`으로 보존합니다.
 - `rpm`, `ergonomics`, `sway`, `fireModes`는 원본 rpm/ergonomics/sway/fire_modes입니다(`sway`는 조준 흔들림 배율, 1이 표준). fireModes의 `none`도 원본 센티널로 보존합니다. `beamFireRate`/`beams`/`barrels`는 원본 동명 수치이며 rpm이나 pellets로 치환하지 않습니다. `throwableCapacity`/`throwableStart`는 max/start입니다. `fuse`는 신관 시간이 없으면 null이며 projectile lifetime/explosion_delay로 대체하지 않습니다.
-- `attacks`는 type/name/parent/level 전체를 원문 보존합니다. `variants`는 복수 공격·부품·충전 단계마다 전체 피해 필드를 갖습니다. 충돌 폭발은 해당 탄체의 splash에 포함하고 중복 변형으로 만들지 않습니다. 별도 폭발·파편·전격은 별도 변형입니다. level은 연결 깊이이며 모든 변형이 전환 가능한 사격 모드라는 뜻은 아닙니다. 하부 부착 무기는 변형으로 전개하고 `linkedAttacks`에 원본 공격 목록을 남깁니다.
+- `attacks`는 type/name/parent/level 전체를 원문 보존합니다. `variants`는 복수 공격·부품·충전 단계마다 전체 피해 필드를 갖습니다. 충돌 폭발은 해당 탄체의 splash에 포함하고 중복 변형으로 만들지 않습니다. 별도 폭발·파편·아크는 별도 변형입니다. level은 연결 깊이이며 모든 변형이 전환 가능한 사격 모드라는 뜻은 아닙니다. 하부 부착 무기는 변형으로 전개하고 `linkedAttacks`에 원본 공격 목록을 남깁니다.
 - `charge`에는 원본 단계·배율을 보존합니다. 충전 변형은 연결 가능한 탄체의 **원본** 피해만 제공하고, DEFAULT 참조는 null입니다. 배율을 어느 피해에 언제 적용하는지, 이미 반영됐는지 확인할 근거가 없어 곱하지 않습니다. `chargeTime`은 원본 charge_time입니다. 이 변형을 최종 유효 충전 피해로 간주하지 마세요.
 - `fuse`: 투척물 인포박스 `fuse`의 명시된 초 단위 숫자입니다. Impact 같은 비시간식 값, 범위·복수 값, 누락은 null이며 원문을 notes에 남깁니다. 숫자 0이 명시되면 그대로 보존합니다.
 - `reload`: 명시된 초 단위 `reload_time`을 우선하고, 해석 가능한 값이 없으면 `rounds_reload_full_time`(낱발식 전체 장전), 다음으로 `tac_reload_time`을 사용합니다. 대체 출처는 notes/fieldSources에 명시합니다. `reloadTactical`은 `tac_reload_time`만 사용하며 낱발 첫 삽입 시간으로 대체하지 않습니다. 현재 원문의 복합 무기는 주 총열 표기인 8mm(One-Two)/12mm(Stoker) 값을 대표값으로 사용합니다. Eruptor의 `2.75s`는 전술 장전이며 `1.4s (Just Rechambering)`은 별개입니다.
@@ -292,7 +292,7 @@ npm run check
 
 지원 무기 수치는 손으로 적은 두 곳에 있습니다. 계산 엔진이 쓰는 `dist/data/combat-data.js`의 `weaponProfiles`와 스트라타젬 표가 보여 주는 `dist/data/data-support.js`입니다. `scripts/test-support.mjs`(`npm run check`에 포함)가 두 곳을 `source/weapons_data.json`과 대조합니다.
 
-- 엔진 모드와 표의 행마다 어떤 데이터마이닝 기록(탄체·폭발·빔·전격·분사·근접 피해, 자탄)에 해당하는지 검사 파일에 명시합니다. 짝이 없는 새 모드나 행이 생기면 검사가 실패합니다.
+- 엔진 모드와 표의 행마다 어떤 데이터마이닝 기록(탄체·폭발·빔·아크·분사·근접 피해, 자탄)에 해당하는지 검사 파일에 명시합니다. 짝이 없는 새 모드나 행이 생기면 검사가 실패합니다.
 - 직격·내구 피해, 관통, 폭발 피해·관통, 최대 피해 반경(r1)·바깥 반경(r2)을 비교합니다. 충전 사격은 무기의 충전 배율(`damage_mod`)의 마지막 값을 곱합니다(레일건 2.5배, 에포크 2배).
 - 일부러 다른 값은 `reviewed`에 사이트 값·데이터마이닝 값·이유를 함께 적습니다. 예: 유탄 발사기 직격 0(위키 본문 기준, 원본 기록 20), 디폴리에이션 툴 관통 5(접촉 0.5초 뒤 3에서 5로 상승). 값이 바뀌거나 차이가 사라지면 다시 검토하도록 실패합니다.
 - 데이터마이닝에 없는 것은 `notCompared`에 이유를 적습니다. 솔로 사일로(스냅샷에 없음), 멜타건 15m 감쇠(위키 본문 값), 화염방사기·크레메이터 표의 DPS(원본은 입자 1개 기준) 등입니다. 궤도·이글 스트라타젬은 이 스냅샷에 없어 대조하지 않습니다.

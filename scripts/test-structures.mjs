@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { structures, demolitionProfiles } from '../dist/data/demolition-data.js';
+import { structures, demolitionProfiles, WIDE_BLASTS } from '../dist/data/demolition-data.js';
 import { enemies, weaponProfiles } from '../dist/data/combat-data.js';
 import { enemySizes, unmappedEnemySizes } from '../dist/data/enemy-sizes.js';
 import { pickerStructureImages, pickerEnemyImages } from '../dist/data/selector-images.js';
@@ -78,15 +78,30 @@ for (const id of ['stalker-lair', 'infested-tower', 'spore-lung', 'bio-processor
 
 // --- User-specified thresholds ---------------------------------------------------------
 // Where the wiki gives no threshold, the user may set one (thresholdSource 'user').
-// The Transmission Network tower's 10 is the user's value (2026-11-09); its note
+// The Transmission Network tower's 30 is the user's value (2026-11-26); its note
 // tells the reader that the number is not from the wiki.
 const userRoutes = structures.flatMap(structure => structure.routes.filter(route => route.thresholdSource !== undefined).map(route => [structure, route]));
 ok(userRoutes.every(([, route]) => route.thresholdSource === 'user' && Number.isFinite(route.threshold)), 'thresholdSource is only "user", on a number');
-assert.deepEqual(userRoutes.map(([structure, route]) => `${structure.id}/${route.id}=${route.threshold}`), ['transmission-network/tower=10'], 'user-specified thresholds');
+assert.deepEqual(userRoutes.map(([structure, route]) => `${structure.id}/${route.id}=${route.threshold}`), ['transmission-network/tower=30'], 'user-specified thresholds');
 for (const [structure, route] of userRoutes) {
   ok(structure.page && structure.note?.includes(`철거력 ${route.threshold}은 위키 수치가 아니라`), `${structure.id}: note says the threshold ${route.threshold} is not from the wiki`);
   const passes = Object.values(demolitionProfiles).flatMap(profile => profile.modes.map(mode => solveDemolition(structure, profile, mode, { jammerDisabled: true })));
   ok(passes.some(result => result.method === 'force') && passes.every(result => result.reason !== 'threshold-unknown'), `${structure.id}: the user threshold gives verdicts`);
+}
+
+// --- Blast reach: how far from the center a blast still demolishes (user request 2026-11-26) -------------------
+// Full force inside the inner radius, then falling to 0 at the outer: 1 - sqrt(x) for standard blasts, 1 - x^2 for the
+// wide ones (WIDE_BLASTS). The user's figures: the Eagle 500kg keeps force 40 out to about 17 m (a medium bug nest in
+// one bomb), the Hellbomb force 50 out to about 20 m.
+{
+  const reach = (weapon, structure) => solveDemolition(byId.get(structure), demolitionProfiles[weapon], demolitionProfiles[weapon].modes[0], { jammerDisabled: true }).reach;
+  ok(Math.round(reach('eagle-500kg', 'bug-hole').distance) === 17 && reach('eagle-500kg', 'bug-hole').falloff, '500kg: force 40 out to about 17 m');
+  ok(Math.round(reach('hellbomb', 'jammer').distance) === 20 && Math.round(reach('portable-hellbomb', 'jammer').distance) === 20, 'Hellbombs: force 50 out to about 20 m');
+  ok(reach('hellbomb', 'gunship-facility').distance === 17 && !reach('hellbomb', 'gunship-facility').falloff, 'Hellbomb: force 60 only inside 17 m');
+  ok(reach('leveller', 'bug-hole').distance === 10, 'Leveller (standard, force 40): only its inner 10 m against a bug hole');
+  const outer = reach('eagle-airstrike', 'detector'), lower = reach('orbital-precision', 'broadcast');
+  ok(outer == null && lower.distance > 4 && lower.distance < 12, 'no reach when the force falls short; a standard blast stays between its radii');
+  ok(WIDE_BLASTS.every(key => demolitionProfiles[key.split('/')[0]].modes.find(mode => !key.includes('/') || mode.id === key.split('/')[1])?.blast?.wide), 'wide blasts carry the wide falloff');
 }
 
 // --- Engine: an unverified threshold never passes or fails -----------------------------

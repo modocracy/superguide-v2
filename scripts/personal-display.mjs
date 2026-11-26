@@ -29,7 +29,7 @@ export function variantDisplayName(weapon, variant, index) {
   if (weapon.id === 'halt') return variant.id === 'projectile-sg-20-p1' ? '기절탄' : '플레셰트탄';
   if (variant.delivery === 'explosion') return weapon.id === 'breacher' ? '지연 폭발' : '폭발';
   if (variant.delivery === 'spray') return '화염 분사';
-  if (variant.delivery === 'arc') return '전격';
+  if (variant.delivery === 'arc') return '아크';
   if (variant.delivery === 'damage' && weapon.id === 'melta-mine') return '화염벽';
   if (weapon.id === 'double-edge-sickle') return `열 상태별 탄체 ${index + 1}`;
   // Multiple projectile keys do not identify which selectable state they use.
@@ -74,7 +74,8 @@ export function modeDetails(weapon, data, wikitext, warn = message => console.wa
       // The wiki's whole-weapon fire damage belongs to the flamethrower while the main rounds carry no element.
       const ownsFire = !weapon.element && spray.element === weapon.dot?.element;
       if (!ownsFire) warn(`${weapon.id}: fire damage left out, it no longer clearly belongs to the flamethrower`);
-      Object.assign(details.underbarrel, { ap: spray.ap, dot: ownsFire ? weapon.dot : null, fuel: true,
+      // One particle of the spray and its statuses, so the panel shows particle damage and the burn (user request 2026-11-26).
+      Object.assign(details.underbarrel, { direct: spray.direct, durable: spray.durable, ap: spray.ap, delivery: 'spray', statuses: spray.statuses, dot: ownsFire ? weapon.dot : null, fuel: true,
         modeNotes: note('사거리는 약 20m(1인칭 측정)이고, 연료를 가득 채우면 약 6.1초 동안 계속 분사합니다.', /\b20\s?m\b/i, /\b6\.1\s?s/i) });
     }
   }
@@ -101,6 +102,17 @@ export function modeDetails(weapon, data, wikitext, warn = message => console.wa
     else warn(`${weapon.id}: Total mode left out, the wiki no longer says it fires all remaining ammunition`);
   }
   return Object.keys(details).length ? { modeDetails: details } : {};
+}
+
+// How each shot is chambered and how long a beam warms up, from the wiki page (user request 2026-11-26): the infobox
+// firing_modes 'Bolt-Action' or 'Pump-Action' (the bolt or pump is worked after every shot), and a sentence such as
+// 'has a 0.3 second warm-up period before it starts firing' (Scythe, Dagger). Neither is in the datamine or the game
+// data sheet (its first-shot delay column is empty).
+export function actionDetails(box, wikitext) {
+  const modes = String(box.firing_modes ?? '');
+  const action = /bolt-action/i.test(modes) ? 'bolt' : /pump-action/i.test(modes) ? 'pump' : null;
+  const warm = /(\d+(?:\.\d+)?)\s*second warm-?up/i.exec(wikitext);
+  return { ...(action && { action }), ...(warm && { warmUp: Number(warm[1]) }) };
 }
 
 // Choices picked before throwing that only the wiki prose names (Caltrops spread).
@@ -154,8 +166,12 @@ const CAUTIONS = {
 // rev 140507, P-11 Stim Pistol rev 140476, FLAM-66 Torcher rev 141873, P-72 Crisper rev 140485, SMG/FLAM-34 Stoker
 // rev 141944, P/40-K Bolt Pistol rev 141876, GP-20 Ultimatum rev 140471). `after` places the cell with the damage, reach or ammo rows of the detail sheet.
 const EXTRA_STATS = {
+  // Charge times from the wiki pages (user request 2026-11-26): Purifier 'Maximum charge of 1 sec', Loyalist
+  // 'Shorter charge-up time on full charge up from 1 sec to 0.75 sec'; the Accelerator Rifle page gives none.
+  purifier: [{ label: '충전 시간', value: 1, unit: '초', caption: '최대 충전', after: 'ammo' }],
+  loyalist: [{ label: '충전 시간', value: 0.75, unit: '초', caption: '완전 충전', after: 'ammo' }],
   'bolt-pistol': [{ label: '반동', value: 325, unit: '', caption: '모든 무기 중 가장 큼', after: 'ammo' }],
-  ultimatum: [{ label: '사거리', value: 17, unit: 'm', caption: '약 · 서서 수평으로 · 45도면 약 40 m', after: 'reach' }],
+  ultimatum: [{ label: '사거리', value: 17, unit: 'm', caption: '서서 수평으로 발사 · 45도면 약 40 m', after: 'reach' }],
   incendiary: [{ label: '불 지속 시간', value: 20, unit: '초', caption: '남는 불길 · 소이 충격보다 5초 길다', after: 'reach' }],
   'incendiary-impact': [{ label: '불 지속 시간', value: 15, unit: '초', caption: '남는 불길', after: 'reach' }],
   immolation: [{ label: '불 지속 시간', value: 27, unit: '초', caption: '넓은 불 웅덩이', after: 'reach' }],
@@ -163,8 +179,8 @@ const EXTRA_STATS = {
   smoke: [{ label: '연막 지속 시간', value: 30, unit: '초', caption: '연막 구름 3개 각각', after: 'reach' }],
   smokescreen: [{ label: '연막 지속 시간', value: 30, unit: '초', caption: '연막 구름 3개 각각', after: 'reach' }],
   urchin: [{ label: '기절 시간', value: 13.7, unit: '초', caption: '첫 파동부터 약', after: 'reach' }],
-  seeker: [{ label: '탐지 반경', value: 50, unit: 'm', caption: '약 · 적을 찾아 날아가는 거리', after: 'reach' }],
-  'anti-tank-seeker': [{ label: '탐지 반경', value: 50, unit: 'm', caption: '약 · 적을 찾아 날아가는 거리', after: 'reach' }],
+  seeker: [{ label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' }],
+  'anti-tank-seeker': [{ label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' }],
   'stim-pistol': [{ label: '치유', value: 90, unit: '%', caption: '체력의 약 90% · 약 4초에 걸쳐', after: 'damage' }],
   torcher: [{ label: '연속 분사', value: 12.4, unit: '초', caption: '연료통 하나', after: 'ammo' }],
   crisper: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }],
@@ -182,7 +198,10 @@ export function playerDetails(weapon, box) {
   if (weapon.category === 'throwable' && fuse.fuseType === null) playerNotes.push('신관 작동 방식은 아직 확인하지 못했습니다.');
   if (weapon.shrapnelCount > 0) playerNotes.push('기본은 파편의 20%를 반올림한 개수가 같은 부위에 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있으며, 파편 0개를 고르면 파편 피해는 제외합니다.');
   if (weapon.pellets > 1) playerNotes.push('표시 피해는 펠릿 한 개 기준입니다. 기본 계산은 펠릿이 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다.');
-  if (weapon.id === 'blitzer') playerNotes.push('표시 피해는 전격 한 줄기 기준입니다. 기본은 다섯 줄기가 같은 부위에 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다. 실제로 모두 맞는다는 보장은 없습니다.');
+  // G-31 Arc page rev 140502: damage '100 (x10)' in the infobox, and it lets out arcs 'a total of 5 times', bouncing
+  // each time. The page does not say whether the x10 is per bounce or for the whole grenade, so neither is assumed.
+  if (weapon.id === 'arc') playerNotes.push('위키 표기 피해는 아크 1개당 100(x10)입니다. 던지면 땅에 잠시 머문 뒤, 작은 범위에서 튕기며 아크를 모두 5번 내뿜습니다.');
+  if (weapon.id === 'blitzer') playerNotes.push('표시 피해는 아크 한 줄기 기준입니다. 기본은 다섯 줄기가 같은 부위에 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다. 실제로 모두 맞는다는 보장은 없습니다.');
   if ([weapon, ...weapon.variants].some(attack => attack.delivery === 'spray')) playerNotes.push('화염 분사는 불길에 닿은 시간에 따라 피해가 달라져 정확한 처치 탄수를 계산하지 않습니다.');
   if (weapon.delivery === 'beam') playerNotes.push(weapon.damageKind === 'dps'
     ? '표시 피해는 빔이 1초 동안 닿는 기준입니다. 한 발의 피해나 처치 탄수로 환산하지 않습니다.'
@@ -200,6 +219,9 @@ export function playerDetails(weapon, box) {
   if (weapon.id === 'pyrotech') playerNotes.push('처치 탄수는 첫 폭발만 반영합니다. 남은 불길의 지속 피해는 포함하지 않습니다.');
   if (weapon.variants.some(v => v.delivery === 'projectile' && !v.id.startsWith('shrapnel')) && ['missile-pistol', 'warrant'].includes(weapon.id)) playerNotes.push('유도와 비유도를 전환할 수 있습니다. 처치 탄수는 비유도 사격 기준입니다.');
   if (CAUTIONS[weapon.id]) playerNotes.push(...[CAUTIONS[weapon.id]].flat());
+  // Found in play, not on the wiki (user's play experience 2026-11-26): it hits a Grounded Warp Ship from about 400 m.
+  // Kept in the notes and the Warp Ship field tips; the detailed stats leave it out (user decision 2026-11-26).
+  if (weapon.id === 'breacher') playerNotes.push('최대 약 400 m 떨어진 착륙한 워프 함선도 맞혀 한 발에 부술 수 있습니다.');
   // Effect badges straight from the wiki infobox trait list ("Incendiary {{*}} Guided ...").
   const traits = String(box.weapon_traits ?? box.throwable_traits ?? '').split('{{*}}').map(trait => trait.trim().toLowerCase());
   const traitTags = Object.entries(TRAIT_TAGS).filter(([wiki]) => traits.includes(wiki)).map(([, tag]) => tag);

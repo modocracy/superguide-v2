@@ -11,6 +11,20 @@ import { hitDamage, known } from './combat.js';
 
 export const forceRange = value => value == null ? null : typeof value === 'number' ? { min: value, max: value } : value;
 
+// How far from an explosion's center its force still meets a threshold (user request 2026-11-26). Rule from
+// helldiversotl.com/research/explosion-falloff (verified in game code there): full force inside the inner radius, then
+// it falls with the blast damage to 0 at the outer radius, by 1 - sqrt(x) for a standard blast and 1 - x^2 for a wide
+// one (attack.blast.wide), x = 0 at the inner radius and 1 at the outer. Uses the lower end of a disputed force.
+// Returns { distance, falloff }: falloff is true when the distance is past the inner radius (from the falloff).
+export function blastReach(attack, threshold) {
+  const blast = attack?.blast, force = forceRange(attack?.explosion)?.min;
+  if (!blast || threshold == null || !(force >= threshold)) return null;
+  const share = threshold / force;
+  if (!(blast.outer > blast.inner) || share === 1) return { distance: blast.inner, falloff: false };
+  const x = blast.wide ? Math.sqrt(1 - share) : (1 - Math.sqrt(share)) ** 2;
+  return { distance: blast.inner + x * (blast.outer - blast.inner), falloff: true };
+}
+
 const POSSIBLE = ['demolish', 'health', 'conditional'];
 export const isPossible = result => POSSIBLE.includes(result.outcome);
 
@@ -57,7 +71,9 @@ export function solveDemolition(structure, profile, attack, { shieldCleared = fa
   const result = { ...base, routes, health };
 
   // Outer surface first, then wearing down health, then an explosion inside an opening.
-  if (outer) Object.assign(result, { outcome: 'demolish', method: 'force', route: outer.route, via: outer.via, reason: outer.via === 'explosion' ? 'force-blast' : 'force-direct' });
+  // reach: how far from the explosion's center the route still falls (blastReach), where the blast's radii are known.
+  if (outer) Object.assign(result, { outcome: 'demolish', method: 'force', route: outer.route, via: outer.via, reason: outer.via === 'explosion' ? 'force-blast' : 'force-direct',
+    reach: outer.via === 'explosion' ? blastReach(attack, outer.route.threshold) : null });
   else if (health?.hits) Object.assign(result, { outcome: 'health', method: 'health', hits: health.hits, reason: 'health' });
   else if (opening) Object.assign(result, { outcome: 'demolish', method: 'force', route: opening.route, via: opening.via, reason: 'force-opening' });
   else if (routes.some(row => row.verdict === 'unknown')) result.reason = structure.routes.every(route => route.threshold == null) ? 'threshold-unknown' : 'force-unknown';

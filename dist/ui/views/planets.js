@@ -158,7 +158,9 @@ function timeTab() {
 const STATUS_ICONS = { acid: 'damage-acid.svg', bleed: 'damage-bleed.svg', fire: 'damage-fire.svg', gas: 'damage-gas.svg', stun: 'damage-arc.svg', poison: 'status-poison.svg', stagger: 'damage-stagger.svg' };
 
 function statusTab() {
-  return html`<p class="lede-note">${L('헬다이버와 적에게 걸리는 상태 이상입니다.', 'Status effects that hit Helldivers and enemies.')}</p>
+  // How a status builds up (user request 2026-11-26): the wiki's weapon pages give each attack a Status Strength, and the
+  // Status Effects page says large and robotic enemies need more burning build-up before they ignite (1.003.000).
+  return html`<p class="lede-note">${L('헬다이버와 적에게 걸리는 상태 이상입니다. 화상·기절 같은 상태 이상은 맞을 때마다 쌓여서 걸리고, 무기마다 한 번에 누적되는 수치가 다릅니다. 대형 적과 오토마톤은 불이 붙기까지 필요한 수치가 높습니다.', 'Status effects that hit Helldivers and enemies. Effects such as burning and stun build up with each hit, and each weapon adds a different amount at a time. Large enemies and Automatons need a higher amount before they ignite.')}</p>
     <ul class="info-list">${statusEffects.map(item => html`<li class="info-item" id="planet-${item.id}" ${item.id === state.biome ? 'data-focus' : ''}>
       ${STATUS_ICONS[item.id] ? html`<span class="info-icon"><img src="./assets/icons/${STATUS_ICONS[item.id]}" alt="" width="56" height="56" loading="lazy" decoding="async"></span>` : html`<span class="info-icon drawn" aria-hidden="true">${icon(`status-${item.id}`, 30)}</span>`}
       <div class="info-body">

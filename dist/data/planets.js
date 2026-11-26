@@ -986,7 +986,7 @@ export const hazards = [
   "en": "Damaged Hellbomb",
   "detail": [
    "난이도 4부터 맵 곳곳에 땅에 박힌 채 있고, 죽음의 땅 생물군계에서는 모든 난이도에 나옵니다. 옆에 지원 무기가 놓여 있기도 합니다.",
-   "공격을 받으면 잠시 뒤 터지고, 철거력 30 이상인 공격을 받으면 바로 터집니다. 지옥폭탄 스트라타젬과 같은 폭발이라 근처의 적 무리나 큰 적을 한 번에 정리할 수 있습니다.",
+   "공격을 받으면 잠시 뒤 터지고, 철거력 30 이상인 공격을 받으면 바로 터집니다. 지옥폭탄 스트라타젬과 같은 폭발이라 근처의 적 무리나 대형 적을 한 번에 정리할 수 있습니다.",
    "폭발 피해 10,000: 중심 17m 안에서 최대, 25m까지 줄어듭니다."
   ],
   "detailEn": [
@@ -1185,11 +1185,11 @@ export const statusEffects = [
   "en": "Acid Splash",
   "detail": [
    "산성에 묻으면 4초 동안 느려지고 지속 피해를 받을 수 있습니다.",
-   "테르미니드의 산성 공격(스피터·스퓨어·차저·바일 타이탄 등), 버그 지뢰, 스포어 버스트 변종으로 걸립니다."
+   "스피터·스퓨어·차저·바일 타이탄 같은 테르미니드의 산성 공격, 버그 지뢰, 스포어 버스트 변종의 공격에 맞으면 걸립니다."
   ],
   "detailEn": [
    "Acid slows you for 4 seconds and may deal damage over time.",
-   "Terminid acid attacks (Spitters, Spewers, Chargers, Bile Titans and others), Bug Mines and the Spore Burst Strain apply it."
+   "Being hit by Terminid acid attacks such as those of Spitters, Spewers, Chargers and Bile Titans, by Bug Mines or by the Spore Burst Strain applies it."
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Acid_Splash"
  },
@@ -1198,10 +1198,10 @@ export const statusEffects = [
   "name": "출혈",
   "en": "Bleed",
   "detail": [
-   "가슴 부상, 가시 식물, 철조망에 닿으면 걸리며 지속 피해를 받습니다. 세 가지는 각각 따로 쌓입니다."
+   "가슴 부상, 가시 식물, 철조망에 닿으면 걸리며 지속 피해를 받습니다."
   ],
   "detailEn": [
-   "A chest injury, spike plants and barbed wire each cause it, as separate effects, dealing damage over time."
+   "A chest injury, spike plants and barbed wire cause it, dealing damage over time."
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Bleed"
  },
@@ -1210,14 +1210,14 @@ export const statusEffects = [
   "name": "화상",
   "en": "Fire",
   "detail": [
-   "불은 AP 4 장갑까지 뚫고 기본 3초 동안 탑니다. 큰 적은 불 피해 배율이 높을 수 있습니다(임페일러 1.7배).",
-   "화염방사기처럼 직접 뿜는 불은 적을 혼란에 빠뜨리고 느리게 합니다(테르미니드가 아닌 대형 이상의 적은 제외).",
-   "네이팜 이글·네이팜 포격·일회성 네이팜은 1초 동안 훨씬 강한 화상을 더합니다."
+   "화상은 초당 100 피해를 주고 AP 4 장갑까지 뚫으며, 기본 3초 동안 지속됩니다. 대형 적은 화염 피해 배율이 높을 수 있습니다(임페일러 1.7배, 플레시몹 1.8배).",
+   "화염방사기, 크리메이터, 화염 센트리, 토처처럼 불길을 직접 뿜는 무기와 멜타건에 맞은 적은 가스 혼란 효과와 유사하게 1초간 공포 및 0.5초간 슬로우에 걸립니다. 테르미니드가 아닌 대형·초대형 적에게는 공포와 슬로우 모두 걸리지 않습니다.",
+   "네이팜 이글·네이팜 포격·일회성 네이팜은 초당 200 피해를 주는 강한 화상을 더하지만, 1초만 지속됩니다."
   ],
   "detailEn": [
-   "Fire gets through AP 4 armor and burns for 3 seconds by default. Bigger enemies can take more fire damage (Impalers 1.7x).",
-   "A direct flame stream, as from flamethrowers, panics and slows enemies (not large or bigger non-Terminids).",
-   "Napalm Eagle, Napalm Barrage and Expendable Napalm add a much stronger burn that lasts 1 second."
+   "Burning deals 100 damage per second, gets through AP 4 armor and lasts 3 seconds by default. Large enemies can take more fire damage (Impalers 1.7x, Fleshmobs 1.8x).",
+   "Enemies hit by a weapon that shoots a direct flame stream, such as the Flamethrower, Cremator, Flame Sentry and Torcher, or by the Meltagun panic for 1 second and are slowed for 0.5 seconds, much like gas confusion. Large and massive enemies other than Terminids are immune to both the panic and the slow.",
+   "Napalm Eagle, Napalm Barrage and Expendable Napalm add a stronger burn of 200 damage per second, but it lasts only 1 second."
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Fire"
  },
@@ -1226,12 +1226,14 @@ export const statusEffects = [
   "name": "가스",
   "en": "Gas",
   "detail": [
-   "본체 체력에만 지속 피해를 주고 혼란에 빠뜨립니다. 혼란에 빠진 적은 아무 방향으로나 움직이고 공격하며, 가스에 걸리면 25% 느려집니다.",
-   "가스 수류탄·가스 타격·가스 박격포 등은 6초(혼란 5초), 스테릴라이저와 독 브레스는 10초(혼란 9초)입니다."
+   "본체 체력에만 지속 피해를 주고 혼란에 빠뜨립니다. 혼란에 빠진 적은 아무 방향으로나 움직이고 공격하며, 25% 느려집니다.",
+   "6초(혼란 5초) : 가스 수류탄, 가스 타격, 가스 박격포 등",
+   "10초(혼란 9초) : 스터릴라이저, 독 브레스"
   ],
   "detailEn": [
-   "Damage over time to main health only, plus confusion: confused enemies move and attack in random directions, and gassed units are 25% slower.",
-   "Gas grenades, Gas Strikes, the Gas Mortar and similar last 6 seconds (5 s confusion); the Sterilizer and Dog Breath last 10 seconds (9 s confusion)."
+   "Damage over time to main health only, plus confusion: confused enemies move and attack in random directions, and they are 25% slower.",
+   "6 s (5 s confusion): gas grenades, Gas Strikes, the Gas Mortar and similar",
+   "10 s (9 s confusion): the Sterilizer, Dog Breath"
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Gas"
  },
@@ -1241,12 +1243,18 @@ export const statusEffects = [
   "en": "Stun",
   "detail": [
    "적은 잠시 움직이거나 공격하지 못하고, 헬다이버는 크게 느려집니다.",
-   "아크 무기·테슬라 탑·칼트롭 등 1.5초, EMS 박격포·퍼멜러·퍼시파이어 3초, 기절 수류탄·기절 무기류 5초, 기절 포드 부스터 10초.",
-   "궤도 EMS 타격·EMS 박격포·SEAF 정전기장탄은 대부분의 적을 묶는 구름을 만들고, 그 안의 헬다이버는 느려지며 스태미나를 잃습니다."
+   "1.5초 : 아크 무기, 테슬라 탑, 마름쇠 등",
+   "3초 : EMS 박격포, 퍼멜러, 퍼시파이어",
+   "5초 : 기절 수류탄, 기절 무기류",
+   "10초 : 기절 포드 부스터",
+   "궤도 EMS 타격·EMS 박격포·SEAF 정전기장은 대부분의 적을 묶는 구름을 만들고, 그 안의 헬다이버는 느려지며 스태미나를 잃습니다."
   ],
   "detailEn": [
    "Enemies cannot move or attack for a moment; Helldivers are heavily slowed.",
-   "Arc weapons, the Tesla Tower, Caltrops and others 1.5 s; the EMS Mortar, Pummeler and Pacifier 3 s; stun grenades and stun melee 5 s; the Stun Pods booster 10 s.",
+   "1.5 s: arc weapons, the Tesla Tower, Caltrops and others",
+   "3 s: the EMS Mortar, Pummeler, Pacifier",
+   "5 s: stun grenades, stun melee weapons",
+   "10 s: the Stun Pods booster",
    "Orbital EMS Strike, the EMS Mortar and SEAF static field shells leave a cloud that holds most enemies; Helldivers inside are slowed and lose stamina."
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Stun"

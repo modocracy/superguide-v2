@@ -8,6 +8,8 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { parseShipModules, gameEffect } from './ship-module-parse.mjs';
 import { gameText } from './booster-parse.mjs';
 import { shipModules } from '../dist/data/ship-modules.js';
+import { stratagems } from '../dist/core/catalog.js';
+import { stratagemStats } from '../dist/data/stratagem-stats.js';
 
 const read = async name => JSON.parse(await readFile(new URL(`../db/source/${name}`, import.meta.url), 'utf8'));
 const slug = text => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -24,6 +26,47 @@ export async function buildShipModuleUpgrades() {
   const ko = (key, fallback) => { if (strings[key]) return strings[key]; toCheck.push(`no game Korean for "${fallback}" (shown in English)`); return fallback; };
   const { sections, total } = parseShipModules(page.text);
   const stratagemModule = new Map(shipModules.map(module => [module.en, module.id]));
+  // affected: the stratagems each upgrade changes, the 'Affected Stratagems' links of its own wiki page
+  // (db/source/wiki_ship_module_pages.json, scripts/fetch-ship-module-pages.mjs; user request 2026-11-26), matched to
+  // the catalogue by English name. An upgrade for every stratagem (Morale Augmentation) has no list there.
+  const pages = (await read('wiki_ship_module_pages.json')).pages;
+  const norm = text => text.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const byName = new Map(stratagems.flatMap(item => [item.en, item.name, ...(item.aliases ?? [])].filter(Boolean).map(name => [norm(name), item.id])));
+  const idOf = title => byName.get(norm(title)) ?? byName.get(norm(title.replace(/^\S+\s+/, '')));
+  // The module pages were last edited long ago and miss newer stratagems, so an upgrade for a whole type of stratagem
+  // also takes every stratagem of that type in the catalogue (the wiki infobox stratagem_type, stratagem-stats.js `type`;
+  // user decision 2026-11-26), on top of its page list. `where` narrows a type to what the effect needs (sentry ammo,
+  // support weapon magazines or reloads); `not` drops what the page itself says the game leaves out.
+  const TYPE_WIDE = {
+    'Streamlined Request Process': { types: ['Support Weapon'] },
+    'Streamlined Launch Process': { types: ['Support Weapon'] },
+    'Donation Access License': { types: ['Support Weapon'], where: item => item.spareMags != null || item.spareRounds != null },
+    'Payroll Management System': { types: ['Support Weapon'], where: item => statsOf(item)?.reload?.time != null || statsOf(item)?.reload?.tactical != null },
+    // Hand Carts page, Notes: the K-9 is not on the game's list of stratagems the upgrade affects.
+    'Hand Carts': { types: ['Backpack'], not: ['k9'] },
+    'Zero-G Breech Loading': { types: ['Orbital'] },
+    'Targeting Software Upgrade': { types: ['Orbital'] },
+    'Liquid-Ventilated Cockpit': { types: ['Eagle'] },
+    'Expanded Weapons Bay': { types: ['Eagle'] },
+    'Synthetic Supplementation': { types: ['Sentry', 'Emplacement'] },
+    'Rapid Launch System': { types: ['Emplacement'] },
+    'Advanced Construction': { types: ['Sentry'] },
+    // The Tesla Tower is a Sentry by type but launches like an Emplacement (the module pages list it under Rapid Launch
+    // System, not Dynamic Tracking or High-Quality Lubricant): left out of these two (user decision 2026-11-26).
+    'Dynamic Tracking': { types: ['Sentry'], not: ['tesla-tower'] },
+    'High-Quality Lubricant': { types: ['Sentry'], not: ['tesla-tower'] },
+    'Blast Absorption': { types: ['Sentry'] },
+    'Shock Absorption Gel': { types: ['Sentry'], where: item => statsOf(item)?.sentry?.ammo != null },
+  };
+  const statsOf = item => stratagemStats[item.id];
+  const affectedOf = en => {
+    const titles = pages[en]?.affected ?? [];
+    if (!pages[en]) toCheck.push(`${en}: no module page (run scripts/fetch-ship-module-pages.mjs)`);
+    const listed = titles.map(title => idOf(title) ?? (toCheck.push(`${en}: affected "${title}" is no stratagem in the catalogue`), null)).filter(Boolean);
+    const wide = TYPE_WIDE[en];
+    const typed = wide ? stratagems.filter(item => wide.types.includes(statsOf(item)?.type) && (!wide.where || wide.where(item))).map(item => item.id) : [];
+    return [...new Set([...listed, ...typed])].filter(id => !wide?.not?.includes(id));
+  };
   const out = sections.map(section => {
     const icon = icons[section.en];
     if (!icon) toCheck.push(`${section.en}: no icon (run scripts/fetch-ship-module-icons.mjs)`);
@@ -37,6 +80,7 @@ export async function buildShipModuleUpgrades() {
           id: slug(module.en), tier: module.tier, name: ko(module.en, module.en), en: module.en, cost: module.cost,
           effect: effect ? gameText(strings[effect.key], effect.value) : module.effect, effectEn: effect ? gameText(effect.key, effect.value) : module.effect,
           ...(stratagemModule.has(module.en) && { stratagemModule: stratagemModule.get(module.en) }),
+          ...(ids => ids.length ? { affected: ids } : {})(affectedOf(module.en)),
         };
       }),
     };

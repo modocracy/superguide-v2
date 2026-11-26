@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { ballisticsOutput } from './build-ballistics.mjs';
 import { projectileBallistics } from '../dist/data/ballistics.js';
-import { dragOf, falloffAt, distanceAt, trajectory, ballisticsOf } from '../dist/core/ballistics.js';
+import { dragOf, falloffAt, distanceAt, trajectory, ballisticsOf, speedAt, timeAt } from '../dist/core/ballistics.js';
 import { num } from '../dist/core/explain.js';
 import { hitDamage, solveMatchup } from '../dist/core/combat.js';
 import { compareAttacks } from '../dist/core/compare.js';
@@ -40,12 +40,22 @@ check(falling.every((p, i) => !i || p.drop >= falling[i - 1].drop) && falling.at
 const short = trajectory({ ...sample, lifetime: 0.1 }, 200);
 check(short.endX > 80 && short.endX < 90 && short.points.at(-1).x < 90, 'lifetime ends the flight');
 
-// The distance table shows the rounded flight speed at each reachable distance.
+// The multiplier on the speed at impact (helldiversotl.com projectile falloff, game 7.1.0 code): 0.25 + 0.75 * (v / v0)^2,
+// with the straight-path speed v0 * e^(-Dx) and time (e^(Dx) - 1) / (D * v0).
+near(falloffAt(sample, 100), 0.25 + 0.75 * (speedAt(sample, 100) / sample.velocity) ** 2, 1e-12, 'falloff from the speed at impact');
+near(speedAt(sample, 100), 900 * Math.exp(-dragOf(sample) * 100), 1e-9, 'straight-path speed');
+near(timeAt(sample, 100), (Math.exp(dragOf(sample) * 100) - 1) / (dragOf(sample) * 900), 1e-12, 'straight-path flight time');
+near(timeAt({ ...sample, drag: 0 }, 90), 0.1, 1e-12, 'no drag: distance over muzzle velocity');
+// The page's AR-23 Liberator examples: 90 damage at 80% of the reference speed is 65.70, at 50% 39.38.
+near(90 * (0.25 + 0.75 * 0.8 ** 2), 65.7, 1e-9, 'Liberator 80% speed');
+near(90 * (0.25 + 0.75 * 0.5 ** 2), 39.375, 1e-9, 'Liberator 50% speed');
+
+// The distance table shows the rounded straight-path speed at each distance the shot reaches.
 const rifleRecord = 'AR-23_P';
 const riflePoints = trajectory(projectileBallistics[rifleRecord]).points;
 const expectedSpeedRows = [25, 50, 100, 150, 200].map(distance => {
   const point = riflePoints.find(p => p.x === distance);
-  return [String(distance), point ? `${num(Math.round(point.speed))}m/s` : '—'];
+  return [String(distance), point ? `${num(Math.round(speedAt(projectileBallistics[rifleRecord], distance)))}m/s` : '—'];
 });
 for (const expanded of [false, true]) {
   const html = String(ballisticsBlock([{ record: rifleRecord }], expanded));
@@ -55,8 +65,29 @@ for (const expanded of [false, true]) {
   checks++;
 }
 
+// A shot that drops more than 30 m is drawn only out to a nearer range, with table rows to suit (user request 2026-11-26).
+// The rules hold for every record; the numbers of particular weapons come from the datamine, so a wiki download that
+// changes them only prints a CHECK line (user decision 2026-11-26: such checks warn, they do not stop a deploy).
+const notice = (value, message) => { if (!value) console.warn(`CHECK ${message}`); };
+const rangeOf = record => Number(String(ballisticsBlock([{ record }], true)).match(/data-max="(\d+)"/)?.[1]);
+const rowsOf = record => [...String(ballisticsBlock([{ record }], true)).matchAll(/<tr><th scope="row">(\d+)m<\/th>/g)].map(m => Number(m[1]));
+for (const [record, b] of Object.entries(projectileBallistics)) {
+  if (!(b.velocity > 0) || !String(ballisticsBlock([{ record }], true)).includes('data-max')) continue;
+  const range = rangeOf(record), rows = rowsOf(record), ends = trajectory(b).endX;
+  // A fired round keeps 50 m or more unless its flight itself ends sooner; every table row is inside the range.
+  check(b.thrown || range >= 50 || (ends != null && ends < 50), `${record}: a fired round is drawn to at least 50 m (${range} m)`);
+  check(rows.length && rows.every(x => x > 0 && x <= range), `${record}: table rows inside the ${range} m range`);
+}
+notice(JSON.stringify(['AR-23_P', 'GP-20_P', 'GL-21_P', 'G-7_P', 'EAT-700_P1'].map(rangeOf)) === '[200,50,100,25,10]', 'ballistics: chart ranges of the Liberator, Ultimatum, Grenade Launcher, Pineapple fragments and napalm bomblets changed');
+notice(JSON.stringify([rangeOf('PLAS-45_P'), rowsOf('PLAS-45_P').at(-1), rangeOf('R-36_P'), rowsOf('R-36_P').at(-1)]) === '[150,148,180,180]', 'ballistics: the Epoch and Eruptor flight ends changed');
+// The Missile Pistol's missile speeds up in flight, so it shows the wiki's range facts instead of the flight charts.
+{
+  const missile = String(ballisticsBlock([{ record: 'P-33_P' }], true));
+  check(!missile.includes('ballistic-chart') && missile.includes('197') && missile.includes('100'), 'Missile Pistol: wiki range facts, no flight charts');
+}
+
 // Short-lived projectiles ending on an odd metre keep their final point on chart curves.
-for (const oddRecord of ['P-33_P', 'RL-77_P1']) {
+for (const oddRecord of ['RL-77_P1']) {
   const expectedLastX = trajectory(projectileBallistics[oddRecord]).points.at(-1).x;
   const chartHtml = String(ballisticsBlock([{ record: oddRecord }], true));
   const chartLastXs = [...chartHtml.matchAll(/data-points="([^"]+)"/g)]

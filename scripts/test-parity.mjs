@@ -26,6 +26,7 @@ const legacyReason = {
   'no-damage': '이 부위와 본체에 계산상 피해가 들어가지 않습니다.',
   'no-damage-after-armor': '장갑은 제거했지만 노출 부위에 피해를 주지 못합니다.',
   'no-damage-assumed': '선택한 명중 조건에서는 이 부위와 본체에 피해가 들어가지 않습니다.',
+  // The recorded legacy wording ('전격', before the site moved to the game's '아크', 2026-11-26): it must match the fixture.
   'leftover-events': '장갑 파괴 후 같은 발의 남은 전격·자탄이 노출 부위에 닿는지는 자료 미확인입니다. 최종 탄수는 계산 보류합니다.',
   'too-many-hits': '계산 범위를 초과했습니다.',
   'beam-data-missing': '자료 미확인: 광선의 피해·지속시간 또는 부위 수치가 확인되지 않아 계산을 보류합니다.',
@@ -78,7 +79,10 @@ for (const expected of golden.combat) {
   const currentMode = weaponProfiles[expected.weapon].modes.find(item => item.id === expected.mode);
   const key = `${expected.weapon}:${expected.mode}`;
   if (legacyUnsupported[key]) assert(expected.rows.every(row => row.h === null && row.o === 'unknown' && row.r === legacyUnsupported[key]), 'historical unsupported adapter must not bypass any numeric golden result');
-  const mode = legacyUnsupported[key] ? { ...currentMode, unsupported: legacyUnsupported[key] } : currentMode;
+  // Deliberate change (user request 2026-11-26): the De-Escalator's grenade hit (mode.carrier) now comes before its
+  // arcs; the legacy engine left it out, so it is taken off here and checked on its own below the loop.
+  const { carrier: _carrier, ...withoutCarrier } = currentMode;
+  const mode = legacyUnsupported[key] ? { ...withoutCarrier, unsupported: legacyUnsupported[key] } : withoutCarrier;
   const options = addedHitConditions.has(key) ? { ...expected.options, hitCount: 0 } : expected.options;
   // Deliberate change: a partly explosion-resistant part now passes the share it blocks to Main
   // (combat.js hitDamage, exdrRedirect). The legacy engine had no such share, so it is switched off
@@ -112,6 +116,12 @@ for (const expected of golden.combat) {
   checked++;
 }
 assert.equal(checked, golden.combat.length);
+{
+  // The grenade hit is one event before the arcs, at the game data sheet's 20 / 2 / AP 0.
+  const de = weaponProfiles['de-escalator'].modes[0], events = withHitAssumption(de, { hitCount: 3 }).events;
+  assert(events.length === 2 && events[0].attack === de.carrier && events[0].times === 1 && events[1].times === 3, 'de-escalator: one grenade hit, then the arcs picked');
+  assert.deepEqual([de.carrier.standard, de.carrier.durable, de.carrier.ap], [20, 2, 0], 'de-escalator: grenade hit 20 / 2 / AP 0');
+}
 assert(checked > 20000, 'combat coverage shrank');
 assert(beamCarried > 0, 'beam carry-over adapter is exercised');
 
@@ -142,15 +152,20 @@ const healthAdded = { ...Object.fromEntries(Object.entries(stratagemAttackDamage
   'breaching-hammer': ['melee', 'charge'], leveller: ['standard'], speargun: ['standard'], 'solo-silo': ['standard'], autocannon: ['flak'] };
 // Attacks the user confirmed to destroy the Grounded Warp Ship through its shield (2026-11-23): replayed without it.
 const shieldBypassAdded = { 'portable-hellbomb': ['standard'], hellbomb: ['standard'], leveller: ['standard'], 'solo-silo': ['standard'] };
+// Forces corrected after the recording, replayed with their recorded values (user request 2026-11-26: the Eagle 500kg's
+// direct hit is the datamine's 50; the summary table's 40, recorded as a 40-50 dispute, is its impact blast).
+const forceCorrected = { 'eagle-500kg': { standard: { direct: { min: 40, max: 50 } } } };
+assert.equal(demolitionProfiles['eagle-500kg'].modes[0].direct, 50, 'eagle-500kg: direct force 50');
 const legacyMode = (id, mode) => {
   let out = healthAdded[id]?.includes(mode.id) ? { ...mode, damage: undefined } : mode;
+  if (forceCorrected[id]?.[mode.id]) out = { ...out, ...forceCorrected[id][mode.id] };
   if (shieldBypassAdded[id]?.includes(mode.id)) { const { shieldBypass, ...rest } = out; out = rest; }
   return out;
 };
 // Stratagems given a profile from the attack datamine after the recording (2026-11-23) had none then.
 // SEAF Artillery was recorded as a call-in a jammer blocks; the wiki says jammers cannot block it (2026-11-23).
 const callInRemoved = ['seaf-artillery'];
-const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id)).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] ? profile
+const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id)).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] && !forceCorrected[id] ? profile
   : { ...profile, modes: profile.modes.map(mode => legacyMode(id, mode)) }]).map(([id, profile]) => [id, callInRemoved.includes(id) ? { ...profile, requiresCallIn: true } : profile]));
 for (const id of callInRemoved) for (const mode of demolitionProfiles[id].modes) {
   const result = solveDemolition(structures.find(item => item.id === 'jammer'), demolitionProfiles[id], mode);

@@ -19,7 +19,8 @@
 // spread, and semi and burst fire pull the trigger every 0.15 s at most.
 // Choices (user request 2026-11-25): stance, fire mode and fire rate (game data), the muzzle and the underbarrel
 // (their multipliers on drift, climb and spread from the game data, against the fitted parts already in the inputs;
-// chokes and the duckbill change only the spread) and the armor passive
+// chokes and the duckbill change only the spread; a muzzle can also set the fire rate, as the Sai's Focus Lens does),
+// the magazine (the rounds fired, user request 2026-11-26) and the armor passive
 // that cuts recoil by 30% (Engineering Kit, Fortified: 0.7 in the game data; it works in every stance, armor.js).
 import { weaponRecoil } from '../data/weapon-recoil.js';
 import { L } from '../core/i18n.js';
@@ -94,6 +95,9 @@ export function configure(sim, { mode, rpm, slots = {} } = {}) {
   for (const { slot, options, fitted } of sim.slots ?? []) {
     const from = options[fitted], to = options[slots[slot] ?? fitted];
     for (const k of ['drift', 'climb', 'spread']) out[k] = out[k].map((v, a) => v * to[k][a] / from[k][a]);
+    // A part that sets the fire rate or the rounds fired (a muzzle, a magazine) replaces them.
+    if (to.rpm != null) out.rpm = to.rpm;
+    if (to.magazine != null) out.magazine = to.magazine;
   }
   return out;
 }
@@ -132,7 +136,7 @@ class RecoilSim extends Base {
     const sim = this.sim;
     this.stance = 0;
     this.choice = { mode: sim.modes?.[0] ?? 'auto', rpm: sim.rpm, slots: Object.fromEntries((sim.slots ?? []).map(s => [s.slot, s.fitted])), passive: false };
-    const SLOT_NAMES = { muzzle: L('총구', 'Muzzle'), underbarrel: L('총열 하부', 'Underbarrel') };
+    const SLOT_NAMES = { muzzle: L('총구', 'Muzzle'), underbarrel: L('총열 하부', 'Underbarrel'), magazine: L('탄창', 'Magazine') };
     const MODE_NAMES = { auto: L('자동', 'Auto'), semi: L('단발', 'Semi'), burst: L(`점사(${sim.burst}발)`, `Burst (${sim.burst})`) };
     this.modeName = mode => MODE_NAMES[mode];
     // A row of choices: data-choice names the field, data-value its value (JSON). A slot's pick lives under

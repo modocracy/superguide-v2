@@ -9,7 +9,10 @@ const JAMO = /^[ㄱ-ㅎ]+$/;
 
 // NFKC folds full-width characters but also turns typed consonants (ㄱ, U+3131)
 // into conjoining jamo (U+1100); map those back so initial search keeps working.
-export const normalize = value => String(value ?? '').normalize('NFKC').toLowerCase()
+// A Korean keyboard joins two consonants typed in a row into one double final (ㄹ + ㅌ -> ㄾ), so 'ㅇㄹㅌ' arrives
+// as 'ㅇㄾ'; split those back for initial search (user request 2026-11-26). ㄲ ㄸ ㅃ ㅆ ㅉ are initials and stay.
+const SPLIT_FINALS = { ㄳ: 'ㄱㅅ', ㄵ: 'ㄴㅈ', ㄶ: 'ㄴㅎ', ㄺ: 'ㄹㄱ', ㄻ: 'ㄹㅁ', ㄼ: 'ㄹㅂ', ㄽ: 'ㄹㅅ', ㄾ: 'ㄹㅌ', ㄿ: 'ㄹㅍ', ㅀ: 'ㄹㅎ', ㅄ: 'ㅂㅅ' };
+export const normalize = value => String(value ?? '').replace(/[ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ]/g, char => SPLIT_FINALS[char]).normalize('NFKC').toLowerCase()
   .replace(/[ᄀ-ᄒ]/g, char => INITIALS[char.charCodeAt(0) - 0x1100])
   .replace(/[\s\-·"'()/]/g, '');
 export const initials = value => [...normalize(value)].map(char => {

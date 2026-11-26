@@ -152,7 +152,6 @@ kbd { font: 600 11px/1 var(--mono); padding: 3px 5px; border: 1px solid var(--li
 .search-trigger kbd { margin-left: auto; }
 .icon-button { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--line-strong); background: var(--surface); color: var(--text-2); }
 .icon-button:hover { color: var(--text); border-color: var(--text-3); }
-.lang-toggle { width: auto; min-width: 36px; padding: 0 10px; white-space: nowrap; font-size: 13px; font-weight: 750; letter-spacing: .02em; }
 /* The English edition stays hidden for the moment it takes to swap the header
    text and load the dictionary (index.html reveals it after 4 s regardless). */
 :root[lang="en"]:not([data-i18n-ready]) body { visibility: hidden; }
@@ -320,6 +319,8 @@ main[aria-busy] { opacity: .5; transition: opacity .2s .15s; }
 .chip-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; }
 /* With a tally beside it, the title text wraps first so the tally stays on the right. */
 .page-head:has(> .tally) > div:first-child { flex: 1 1 360px; }
+/* A count badge stays at the right of a long lede, as on the enemy page (user request 2026-11-26). */
+.page-head:has(> .badge) > div:first-child { flex: 1 1 360px; }
 .page-head p { color: var(--text-2); margin-top: 4px; }
 .eyebrow { font: 600 13px/1 var(--cond); letter-spacing: .16em; text-transform: uppercase; color: var(--accent-text); display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .eyebrow::before { content: ''; width: 18px; height: 3px; background: var(--accent); }
@@ -832,6 +833,8 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .rank-row .badge { justify-self: end; }
 .rank-head { display: grid; grid-template-columns: 36px minmax(0, 1.3fr) minmax(0, 1fr) 92px 96px; gap: 12px; padding: 8px 14px; font-size: 11.5px; font-weight: 700; color: var(--text-3); border-bottom: 1px solid var(--line); background: var(--surface-2); }
 .rank-head span:nth-child(4), .rank-head span:nth-child(5) { text-align: right; }
+/* Held beams and flames, counted in seconds, below the shot weapons (user request 2026-11-26). */
+.rank-sub { padding: 8px 14px; font-size: 11.5px; font-weight: 700; color: var(--text-3); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface-2); }
 .rank-more > summary { padding: 10px 14px; border-top: 1px solid var(--line); font-size: 13.5px; font-weight: 650; color: var(--text-2); }
 .rank-more > summary:hover { color: var(--text); }
 
@@ -847,7 +850,8 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .rank-filters .group-tabs { margin: 0; }
 .rank-filters .segmented { flex-wrap: wrap; }
 .stat-chip { padding: 7px 11px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); }
-.stat-chip span { display: block; font-size: 11.5px; color: var(--text-3); font-weight: 600; }
+/* The label only (a direct child): an icon inside it ('폭발 철거력') stays inline, and the label keeps to one line. */
+.stat-chip > span { display: block; font-size: 11.5px; color: var(--text-3); font-weight: 600; white-space: nowrap; }
 .stat-chip b { font-size: 16px; }
 .stat-chip small { font-size: 12px; color: var(--text-3); margin-left: 6px; }
 .verdict { padding: 16px 18px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); display: grid; gap: 6px; }
@@ -866,7 +870,9 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .pellet-range label b { font-size: 20px; font-weight: 800; color: var(--accent-text); }
 .pellet-range input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; margin: 0; cursor: pointer; }
 .bomblet-extra { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin-top: 4px; }
-.range-scale { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-3); margin-top: -4px; }
+.range-scale { position: relative; height: 15px; font-size: 11.5px; color: var(--text-3); margin-top: -4px; }
+/* Each label under its value on the track (the thumb's centre runs 8px in from either end). */
+.range-scale span { position: absolute; left: calc(8px + (100% - 16px) * var(--at)); transform: translateX(-50%); white-space: nowrap; }
 
 .parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
 .part-card { padding: 14px; display: grid; gap: 10px; align-content: start; }
@@ -889,7 +895,7 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .aim p:first-child { color: var(--text); }
 .calc { font-size: 13px; color: var(--text-2); display: grid; gap: 6px; }
 .calc ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
-.calc code { font: 12.5px var(--mono); color: var(--text); }
+.calc code { font: inherit; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); }
 .wiki-ref table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
 .wiki-ref th, .wiki-ref td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; }
 
@@ -1103,9 +1109,15 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .info-list.biome-list { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
 .biome-item[data-focus] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 .biome-thumb { grid-column: 1 / -1; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin: -16px -16px 0; width: calc(100% + 32px); max-width: none; display: block; }
-.biome-planets { margin-top: 8px; font-size: 13.5px; color: var(--text-2); }
-.biome-planets summary { cursor: pointer; font-weight: 650; color: var(--text); }
-.biome-planets p { margin-top: 6px; line-height: 1.7; }
+.biome-planets, .module-affected { margin-top: 8px; font-size: 13.5px; color: var(--text-2); }
+:is(.biome-planets, .module-affected) summary { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 650; color: var(--text); list-style: none; }
+/* The same turning triangle as the other folds (user request 2026-11-26). */
+:is(.biome-planets, .module-affected) summary::-webkit-details-marker { display: none; }
+:is(.biome-planets, .module-affected) summary::before { content: ''; width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 7px; border-color: transparent transparent transparent var(--accent-text); transition: transform .15s; }
+:is(.biome-planets, .module-affected)[open] summary::before { transform: rotate(90deg); }
+:is(.biome-planets, .module-affected) p { margin-top: 6px; line-height: 1.7; }
+/* One stratagem a line (user request 2026-11-26). */
+.module-affected ul { margin: 6px 0 0; padding-left: 18px; line-height: 1.7; }
 /* Planet clock speed table (planet tab 'time'). */
 .time-table { min-width: 560px; }
 .time-table tbody th { width: auto; color: var(--text); font-size: 14px; font-weight: 700; }
@@ -1333,7 +1345,6 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
   .bar { gap: 12px; padding: 0 16px; }
   .tabs a { padding: 0 7px; }
   .bar-actions { gap: 6px; }
-  .lang-toggle { padding: 0 8px; }
   .brand-text { display: none; } /* the yellow mark stays and still links home (aria-label) */
 }
 @media (max-width: 1080px) {
@@ -1449,6 +1460,7 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .cost-icon { width: 16px; height: 16px; object-fit: contain; flex: none; }
 .module-section-cost { margin-top: 10px; }
 .module-total { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.module-total .ext { margin-left: auto; }  /* the wiki link at the line's right end */
 .module-applied { margin-top: 6px; font-size: 13px; }
 .module-applied a { color: var(--accent-text); }
 /* Enemy view: the enemy's own attacks and rough torso-hit counts (enemy-weapons.js). */

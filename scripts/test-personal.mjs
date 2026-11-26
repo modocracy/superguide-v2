@@ -166,8 +166,17 @@ for (const profile of Object.values(personalProfiles)) {
 }
 for (const text of playerCopy) ok(!/ap1|원본|레코드|탄체|\blevel\b|damage(?:_id)?|durable|splash|beam_fire_rate|charge_time|tac_reload_time/i.test(text), 'personal combat copy has no internal terminology');
 eq(personalUnsupported.purifier, '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.');
-eq(personalUnsupported.scythe, '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.');
-eq(personalUnsupported.torcher, '불꽃이 몇 번 닿는지 확인되지 않아 발 단위로 계산하지 않습니다.');
+// Trident: six beams per shot, counted like pellets (wiki: 360 per shot, 6 beams).
+eq([personalProfiles.trident.modes[0].standard, personalProfiles.trident.modes[0].hitCondition], [60, { kind: 'pellets', min: 1, max: 6, projectileName: '광선', defaultPct: 50, default: 3 }]);
+// Held beams and flame streams are counted in seconds (user request 2026-11-26).
+const streamOf = id => personalProfiles[id]?.modes[0];
+eq([streamOf('scythe').standard, streamOf('scythe').durable, streamOf('scythe').ap, streamOf('scythe').unit, streamOf('scythe').stream.capacity], [350, 70, 2, '초', { kind: 'heat', seconds: 8 }]);
+eq([streamOf('dagger').standard, streamOf('dagger').durable, streamOf('dagger').stream.capacity.seconds], [250, 50, 6.67]);
+eq([streamOf('torcher').standard, streamOf('torcher').durable, streamOf('torcher').ap, streamOf('torcher').stream.fire, streamOf('torcher').stream.capacity], [150, 150, 4, true, { kind: 'fuel', seconds: 12.4 }]);
+eq([streamOf('crisper').standard, streamOf('crisper').stream.capacity.seconds], [150, 6.1]);
+ok(['scythe', 'dagger', 'torcher', 'crisper'].every(id => streamOf(id).stream.burn?.perSecond === 100), 'beams and flames that set targets alight burn');
+// Fire build-up per second: datamine Fire status (beam 1 per second; flame particle 2 x 75 particles per second).
+eq(['scythe', 'dagger', 'torcher', 'crisper'].map(id => streamOf(id).stream.ignite), [1, 1, 150, 150]);
 ok(personalProfiles.frag.modes[0].note.includes('20%') && personalProfiles.frag.modes[0].note.includes('폭발 피해도'), 'throwable note describes default fragments plus blast');
 ok(personalProfiles.eruptor.modes[0].note.includes('직접 맞혔을 때의 피해와 폭발 피해도'), 'Eruptor note keeps primary direct plus blast');
 const weaponOf = id => personalWeapons.find(w => w.id === id);
@@ -219,7 +228,8 @@ for (const weapon of personalWeapons) {
     ok(Number.isInteger(attack.ammoPerShot) && attack.ammoPerShot > 0, 'ammo use');
     if (attack.hitCondition) {
       const { min, max } = attack.hitCondition;
-      const pct = ['pellets', 'arcs'].includes(attack.hitCondition.kind) ? 100 : 20;
+      // Pellets default to half, the Variable's volley of bullets to all (user decisions 2026-11-26).
+      const pct = attack.hitCondition.kind === 'arcs' || weapon.id === 'variable' && ['volley', 'total'].includes(attack.id) ? 100 : attack.hitCondition.kind === 'pellets' ? 50 : 20;
       eq(attack.hitCondition.defaultPct, pct);
       eq(attack.hitCondition.default, Math.max(min, Math.round(max * pct / 100)), `${weapon.id}/${attack.id}: rounded default count`);
       ok(Number.isInteger(min) && Number.isInteger(max) && min >= 0 && max >= min, 'assumption bounds');
@@ -234,7 +244,10 @@ eq(personalWeapons.find(w => w.id === 'liberator').image, 'AR-23 Liberator Prima
 eq(personalProfiles['one-two'].modes.map(m => m.id), ['standard', 'underbarrel']);
 eq(personalProfiles['one-two'].modes[1].magazine, 1, 'underbarrel capacity does not inherit rifle capacity');
 eq(personalProfiles.halt.modes.map(m => m.magazine), [8, 8], 'independent ammo tubes');
-ok(personalProfiles.stoker.modes[1].unsupported, 'spray underbarrel remains unsupported');
+// The Stoker's underbarrel flamethrower is a held flame stream; the Variable's 'Total' a full magazine (user request 2026-11-26).
+eq([personalProfiles.stoker.modes[1].unit, personalProfiles.stoker.modes[1].standard, personalProfiles.stoker.modes[1].stream.fire, personalProfiles.stoker.modes[1].stream.ignite], ['초', 150, true, 150]);
+const variableTotal = personalProfiles.variable.modes.find(m => m.id === 'total');
+eq([variableTotal.unsupported, variableTotal.ammoPerShot, variableTotal.hitCondition.max, variableTotal.hitCondition.default], [undefined, 49, 49, 49]);
 
 // Independent anatomy arithmetic: Hunter head 40 HP, AV0, durability0;
 // Liberator 90 > 40. Devastator head 110 HP, AV1; Senator 225 > 110.
@@ -293,7 +306,7 @@ eq(assumptionTag(mode('breaker')), '펠릿 명중 수 선택 필요');
 eq(assumptionTag(pelletsTwo), '펠릿 명중 수 가정');
 eq(assumptionTag(fragmentsZero), '파편 제외 · 폭발만');
 eq(assumptionTag(fragmentsThree), '파편 명중 수 가정');
-ok(assumptionText(mode('breaker')).includes('명중률을 낮춰 다시 계산'), 'pellet default caveat');
+ok(assumptionText(mode('breaker')).includes('절반') && assumptionText(mode('breaker')).includes('명중률을 바꿔 다시 계산'), 'pellet default caveat');
 ok(!assumptionText(mode('high-explosive')).includes('직격'), 'pure explosion does not claim direct hit');
 eq(unitOf(mode('frag')), { unit: '개', noun: '수류탄 개수', one: '수류탄 1개' });
 eq(countText({ hits: 2 }, mode('frag')), '수류탄 2개');
@@ -308,13 +321,13 @@ ok(!attackStats(mode('frag')).some(stat => stat.label.includes('자탄')), 'frag
 ok(aimText(frag, fragmentsZero).some(line => line.includes('파편 0개')), 'aim repeats selected assumption');
 ok(aimText(frag, fragmentsZero).some(line => line.includes('폭발 중심')), 'fragment shots retain blast aim condition');
 ok(routeNotes(head('hunter-hardened', mode('breaker')), mode('breaker')).some(note => note.includes('펠릿 수를 고르세요')), 'pending route notes identify pellets');
-eq(assumptionSummary(withHitAssumption(weaponProfiles['de-escalator'].modes[0], { hitCount: 2 })), '전격 10회 중 2회(20%)가 이 부위에 명중 (명중 수 가정)');
+eq(assumptionSummary(withHitAssumption(weaponProfiles['de-escalator'].modes[0], { hitCount: 2 })), '아크 10회 중 2회(20%)가 이 부위에 명중 (명중 수 가정)');
 eq(assumptionSummary(withHitAssumption(weaponProfiles['airburst-launcher'].modes[0], { hitCount: 2 })), '주탄 폭발만 · 자탄 25개 중 2개(8%) 폭발이 이 부위에 명중 (명중 수 가정)');
 eq(assumptionSummary(withHitAssumption(mode('frag'), { hitCount: 7 })), '파편 35개 중 7개(20%)가 이 부위에 명중 (기본 가정) + 주폭발');
 eq(assumptionSummary(withHitAssumption(mode('pineapple'), { hitCount: 4 })), '파편 18개 중 4개(약 22%)가 이 부위에 명중 (기본 가정) + 주폭발', 'display actual rounded count percentage, retain configured 20 in metadata');
-eq(assumptionSummary(withHitAssumption(mode('blitzer'), { hitCount: 5 })), '전격 5회 모두 이 부위에 명중 (기본 가정)');
+eq(assumptionSummary(withHitAssumption(mode('blitzer'), { hitCount: 5 })), '아크 5회 모두 이 부위에 명중 (기본 가정)');
 eq(assumptionTag(withHitAssumption(mode('frag'), { hitCount: 7 })), '파편 20% 기본 가정');
-eq(assumptionTag(withHitAssumption(mode('blitzer'), { hitCount: 5 })), '전격 100% 기본 가정');
+eq(assumptionTag(withHitAssumption(mode('blitzer'), { hitCount: 5 })), '아크 100% 기본 가정');
 eq(assumptionTag(withHitAssumption(weaponProfiles['airburst-launcher'].modes[0], { hitCount: 5 })), '자탄 20% 기본 가정');
 ok(assumptionSummary(withHitAssumption(personalProfiles.variable.modes.find(m => m.id === 'volley'), { hitCount: 2 })).includes('탄환 7개 중 2개'), 'volley bullets are not shotgun pellets');
 eq(mode('eruptor').hitCondition.kind, 'shrapnel');
@@ -436,7 +449,12 @@ eq(resolveAttack('liberator').kind, 'personal');
 eq(resolveAttack('autocannon').profile, weaponProfiles.autocannon);
 ok(resolveAttack('__proto__').unsupported && !resolveAttack('__proto__').profile, 'untrusted IDs cannot resolve prototypes');
 eq(compare('hunter-hardened', 'liberator', { partId: 'head' }).magazinesNeeded, 1);
-eq(compare('hunter-hardened', 'torcher').status, 'unsupported');
+eq(compare('hunter-hardened', 'purifier').status, 'unsupported');
+// A flame stream needs the enemy's fire multiplier; with it, the answer is in seconds and never a one-shot.
+eq(compare('hunter-hardened', 'torcher').status, 'none', 'no fire multiplier, no flame count');
+const torched = compare('hunter-hardened', 'torcher', { fireMult: 1, ignition: { value: 5, estimated: true } });
+eq([torched.status, torched.verified, torched.oneShot, torched.mode.unit], ['route', true, false, '초']);
+ok(torched.hits > 0 && torched.hits < 2, 'a hunter burns down within 2 seconds');
 eq(compare('hunter-hardened', 'liberator', {}, 'not-a-mode').status, 'unsupported');
 eq(compare('hunter-hardened', 'liberator', { partId: 'not-a-part' }).status, 'none');
 const defaultBreaker = compare('hunter-hardened', 'breaker');
@@ -444,22 +462,23 @@ eq(compare('hunter-hardened', 'liberator').oneShot, true, 'one bullet fatal answ
 eq(compare('hunter-hardened', 'frag').oneShot, true, 'one grenade fatal answer');
 eq(compare('hunter-hardened', 'saber').oneShot, true, 'one melee hit fatal answer');
 eq(compare('hunter-hardened', 'senator', { partId: 'claw' }).oneShot, false, 'one-hit nonfatal break is not oneShot');
-eq(compare('hunter-hardened', 'torcher').oneShot, false, 'unsupported is not oneShot');
+eq(compare('hunter-hardened', 'purifier').oneShot, false, 'unsupported is not oneShot');
 eq(compare('harvester', 'recoilless').oneShot, false, 'blocked shield is not oneShot');
 eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: 2 } }).oneShot, false, 'nonaccepted assumption is not oneShot even if hits is 1');
-eq([defaultBreaker.status, defaultBreaker.hits, defaultBreaker.verified, defaultBreaker.defaulted, defaultBreaker.allPelletsAssumed, defaultBreaker.assumption.count], ['route', 1, true, true, true, 11]);
+// Pellets default to half hitting (11 -> 6; user request 2026-11-26).
+eq([defaultBreaker.status, defaultBreaker.hits, defaultBreaker.verified, defaultBreaker.defaulted, defaultBreaker.allPelletsAssumed, defaultBreaker.assumption.count], ['route', 1, true, true, false, 6]);
 const fewerBreaker = compare('hunter-hardened', 'breaker', { assume: { hitCount: 1 } });
 eq([fewerBreaker.hits, fewerBreaker.defaulted, fewerBreaker.allPelletsAssumed, fewerBreaker.status], [2, false, false, 'assume'], 'lower explicit count overrides and increases hits');
 eq(compare('hunter-hardened', 'breaker', { assume: { 'breaker:standard': { hitCount: 1 } } }).hits, 2, 'per-mode override');
 const explicitFull = compare('hunter-hardened', 'breaker', { assume: { hitCount: '11' } });
-eq([explicitFull.verified, explicitFull.defaulted, explicitFull.allPelletsAssumed], [true, false, true], 'explicit max is same full-hit scenario');
-eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: '' } }).allPelletsAssumed, true, 'blank restores full default');
+eq([explicitFull.verified, explicitFull.defaulted, explicitFull.allPelletsAssumed], [false, false, false], 'explicit full hits are an assumption, not the default');
+eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: '' } }).assumption.count, 6, 'blank restores the half default');
 eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: 12 } }).verified, false, 'invalid count cannot silently use default');
 eq(compare('hunter-hardened', 'breaker').hits, 1, 'default cache remains separate from explicit lower count');
 for (const [weaponId, profile] of Object.entries(personalProfiles)) for (const attack of profile.modes) {
   if (attack.hitCondition?.kind !== 'pellets') continue;
   const result = compare('hunter-hardened', weaponId, {}, attack.id);
-  ok(result.defaulted && result.allPelletsAssumed && result.assumption.count === attack.hitCondition.max, `${weaponId}/${attack.id}: comparison applies full pellet default`);
+  ok(result.defaulted && result.assumption.count === Math.max(1, Math.round(attack.hitCondition.max * attack.hitCondition.defaultPct / 100)), `${weaponId}/${attack.id}: comparison applies the pellet default`);
 }
 const assumed = compare('hunter-hardened', 'breaker', { assume: { hitCount: 2 } });
 eq([assumed.status, assumed.hits, assumed.assumption.count, assumed.verified], ['assume', 1, 2, false]);
@@ -537,10 +556,10 @@ for (const loadout of [{ primary: 'eruptor' }, { throwable: 'frag' }]) {
   eq(loadoutCoverage(loadout, 'terminid', { assume: { hitCount: 1 } }).rows.find(row => row.enemyId === 'hunter-hardened').status, 'gap', 'positive fragment assumption cannot close gap');
 }
 const shotgunOnly = loadoutCoverage({ primary: 'breaker' }, 'terminid');
-ok(shotgunOnly.rows.some(row => row.status === 'route' && row.best.allPelletsAssumed), 'shotgun alone covers enemies with full-hit default');
+ok(shotgunOnly.rows.some(row => row.status === 'route' && row.best.defaultAssumed?.kind === 'pellets'), 'shotgun alone covers enemies with the pellet default');
 eq(loadoutView({ primary: 'breaker' }, 'terminid', { limit: 0 }).rows.find(row => row.enemyId === 'hunter-hardened').best.weaponId, 'breaker');
 eq(loadoutCoverage({ primary: 'breaker', secondary: 'senator' }, 'terminid').rows.find(row => row.enemyId === 'hunter-hardened').best.weaponId, 'senator', 'equal hits prefer route without pellet assumption');
-ok(suggestFixes({}, 'terminid', { limit: 20 }).some(gap => gap.replacements.some(candidate => candidate.allPelletsAssumed && candidate.verified)), 'full-pellet routes are available as replacements');
+ok(suggestFixes({}, 'terminid', { limit: 20 }).some(gap => gap.replacements.some(candidate => candidate.defaultAssumed?.kind === 'pellets' && candidate.verified)), 'default-pellet routes are available as replacements');
 const nonSupport = stratagems.find(s => s.category !== 'support');
 eq(loadoutCoverage({ stratagems: [nonSupport.id] }, 'terminid').notComputable[0].id, nonSupport.id);
 eq(decodeLoadout(encodeLoadout({ stratagems: [nonSupport.id] })).stratagems[0], nonSupport.id, 'noncombat stratagems carried');

@@ -6,7 +6,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
   const sprayReason = '불꽃이 몇 번 닿는지 확인되지 않아 발 단위로 계산하지 않습니다.';
   const specialReasons = {
     'double-edge-sickle': '총이 뜨거워지면 피해가 달라집니다. 피해가 바뀌는 정확한 조건을 확인하지 못해 계산하지 않습니다.',
-    arc: '던진 뒤 전격이 몇 번 발생하고 같은 부위에 몇 번 맞는지 확인되지 않아 계산하지 않습니다.',
+    arc: '던진 뒤 아크가 몇 번 발생하고 같은 부위에 몇 번 맞는지 확인되지 않아 계산하지 않습니다.',
     'throwing-knife': '칼 한 개를 던져 맞혔을 때의 정확한 피해를 확인하지 못해 계산하지 않습니다.',
     'stim-pistol': '치료용 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
     smoke: '연막을 펼치는 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
@@ -43,13 +43,56 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     }
     return mode;
   };
+  // A held beam (damage per second) or flame stream (the wiki damage per second) is counted in seconds, as the
+  // support Laser Cannon and Flamethrower are (user request 2026-11-26; dist/data/combat-data.js STREAM_BURN).
+  // Flame particles deal the same durable damage as normal, so the stream keeps the particle's durable share.
+  // Heat: the wiki capacity in seconds; fuel: the wiki notes' 'enough fuel for N seconds of sustained fire'.
+  // Fire build-up per second (dist/data/enemy-ignition.js): a beam's Fire status value is per second like its
+  // damage; a flame particle's value times the particles the wiki DPS implies (DPS / particle damage).
+  const BURN = { perSecond: 100, ap: 4 };
+  const fireStatus = weapon => {
+    const attack = weapon.attacks.find(a => a.level === 1);
+    const record = data.damage[data[attack?.type]?.[attack?.name]?.damage_id];
+    const slot = [1, 2, 3].find(n => record?.[`Status_Name_${n}`] === 'Fire');
+    return slot ? record[`Status_Value_${slot}`] : null;
+  };
+  const streamProfile = weapon => {
+    const beam = weapon.delivery === 'beam';
+    const fuel = Number(pages[weapon.en].wikitext.match(/enough fuel for ([\d.]+) seconds of sustained fire/)?.[1]);
+    const seconds = beam ? weapon.heatCapacity?.seconds : fuel;
+    const dps = beam ? weapon.direct : weapon.dot.perSecond;
+    const durable = beam ? weapon.durable : dps * weapon.durable / weapon.direct;
+    const status = fireStatus(weapon);
+    const ignite = status == null ? null : beam ? status : status * dps / weapon.direct;
+    return {
+      source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
+      note: beam ? '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.'
+        : '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.',
+      modes: [{
+        id: 'standard', name: beam ? '광선 유지' : '불길 유지', standard: dps, durable, ap: weapon.ap,
+        explosion: 0, explosionDurable: 0, explosionAp: 0, innerRadius: null, radius: null, delivery: weapon.delivery, unit: '초', magazine: null, ammoPerShot: 1,
+        stream: { ...(beam ? {} : { fire: true }), burn: ignite ? BURN : null, ...(ignite ? { ignite } : {}),
+          ...(Number.isFinite(seconds) ? { capacity: { kind: beam ? 'heat' : 'fuel', seconds } } : {}) },
+      }],
+    };
+  };
   for (const weapon of weapons) {
+    if (weapon.delivery === 'beam' && weapon.damageKind === 'dps' || weapon.delivery === 'spray' && Number.isFinite(weapon.dot?.perSecond)) {
+      personalProfiles[weapon.id] = streamProfile(weapon);
+      continue;
+    }
     let reason = specialReasons[weapon.id];
     if (weapon.charge) reason = '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.';
-    if (weapon.delivery === 'beam') reason = '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.';
+    // A burst of beams per shot (Trident) is counted like pellets; the wiki infobox damage per shot is beams x one
+    // beam's damage, and the page says it fires 6 beams per shot with no falloff (user request 2026-11-26).
+    const burst = weapon.delivery === 'beam' && weapon.damageKind !== 'dps' && weapon.beams > 1;
+    if (burst && Number(weapon.infoboxRaw?.damage?.match(/\{\{Damage\|Beam\|(\d+)\}\}/)?.[1]) !== weapon.beams * weapon.direct) throw new Error(`${weapon.id}: beam burst damage changed`);
+    if (weapon.delivery === 'beam' && !burst) reason = '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.';
     if (weapon.delivery === 'spray') reason = sprayReason;
     if (reason) { personalUnsupported[weapon.id] = reason; continue; }
     let modes = [makeMode(weapon, weapon, 'standard', weapon.category === 'throwable' ? '폭발 1회' : '기본 사격')];
+    if (burst) Object.assign(modes[0], { hitCondition: { kind: 'pellets', min: 1, max: weapon.beams, projectileName: '광선' },
+      note: '광선이 옆으로 넓게 퍼져 작은 부위에 모두 맞히기 어렵습니다. 거리에 따라 피해가 줄지 않습니다.' });
     if (weapon.id === 'halt') modes = weapon.variants.map((v, i) => makeMode(weapon, v, i ? 'stun' : 'flechette', i ? '기절탄' : '플레셰트탄', 8));
     if (weapon.linkedAttacks.length) {
       modes = [makeMode(weapon, weapon, 'standard', '주 총열')];
@@ -57,6 +100,20 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
         const attack = linked.attacks.find(a => a.level === 1 && a.type !== 'status');
         const variant = weapon.variants.find(v => v.attack?.name === attack?.name && v.attack?.parent === attack?.parent);
         if (!variant) throw new Error(`Missing underbarrel: ${weapon.id}`);
+        // An underbarrel flamethrower (Stoker) is a held flame stream like the Torcher: the infobox's fire damage per
+        // second, the particle's durable share and Fire status build-up (user request 2026-11-26).
+        if (variant.delivery === 'spray') {
+          const dps = Number(weapon.infoboxRaw?.damage?.match(/\{\{Damage\|Fire\|\s*(\d+)\s*DPS\}\}/)?.[1]);
+          if (!Number.isFinite(dps)) throw new Error(`${weapon.id}: underbarrel flame damage per second missing`);
+          const record = data.damage[data.spray[attack.name]?.damage_id];
+          const slot = [1, 2, 3].find(n => record?.[`Status_Name_${n}`] === 'Fire');
+          const ignite = slot ? record[`Status_Value_${slot}`] * dps / variant.direct : null;
+          modes.push({ id: 'underbarrel', name: '하부 부착 무기', standard: dps, durable: dps * variant.durable / variant.direct, ap: variant.ap,
+            explosion: 0, explosionDurable: 0, explosionAp: 0, innerRadius: null, radius: null, delivery: 'spray', unit: '초', magazine: null, ammoPerShot: 1,
+            stream: { fire: true, burn: ignite ? BURN : null, ...(ignite ? { ignite } : {}) },
+            note: '하부 화염방사기를 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다.' });
+          continue;
+        }
         modes.push(makeMode(weapon, variant, 'underbarrel', '하부 부착 무기', data.weapons[linked.dataKey].cap ?? null));
       }
     }
@@ -66,8 +123,12 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     }
     if (['bushwhacker', 'double-freedom'].includes(weapon.id)) modes.push({ ...makeMode(weapon, weapon, 'all-barrels', '일제 사격'), ammoPerShot: weapon.barrels, hitCondition: { kind: 'pellets', min: 1, max: weapon.pellets * weapon.barrels } });
     if (weapon.id === 'variable') modes.push(
-      { ...makeMode(weapon, weapon, 'volley', '일제 사격'), ammoPerShot: 7, hitCondition: { kind: 'pellets', min: 1, max: 7, projectileName: '탄환' } },
-      { id: 'total', name: '전탄 발사', unsupported: '총에 남아 있는 탄약 수를 알 수 없어 한꺼번에 쐈을 때의 피해를 계산하지 않습니다.' },
+      { ...makeMode(weapon, weapon, 'volley', '일제 사격'), ammoPerShot: 7, hitCondition: { kind: 'pellets', min: 1, max: 7, projectileName: '탄환', defaultPct: 100 } },
+      // 'Total' fires every round left at once; counted with a full magazine, all hitting by default like the
+      // volley (user request 2026-11-26).
+      { ...makeMode(weapon, weapon, 'total', '전탄 발사'), ammoPerShot: weapon.magazine,
+        hitCondition: { kind: 'pellets', min: 1, max: weapon.magazine, projectileName: '탄환', defaultPct: 100 },
+        note: `탄창이 가득 찬 상태(${weapon.magazine}발)에서 남은 탄을 모두 쏜다고 보고 계산합니다. 남은 탄이 적으면 피해도 그만큼 줄어듭니다.` },
     );
     // Shrapnel is part of this shot, never a selectable standalone mode.
     if (weapon.shrapnelCount > 0) {
@@ -99,13 +160,16 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
       if (mode.unsupported) continue;
       if (mode.hitCondition) {
         const condition = mode.hitCondition;
-        condition.defaultPct = ['pellets', 'arcs'].includes(condition.kind) ? 100 : 20;
+        // Pellets spread, so half of them is the default (user request 2026-11-26); arcs all reach the target.
+        condition.defaultPct ??= condition.kind === 'arcs' ? 100 : condition.kind === 'pellets' ? 50 : 20;
         condition.default = Math.max(condition.min, Math.round(condition.max * condition.defaultPct / 100));
       }
       if (mode.hitCondition?.kind === 'pellets') {
-        mode.note = [mode.note, `기본은 ${mode.hitCondition.projectileName || '펠릿'}이 모두 맞는다고 계산합니다. 명중률을 낮춰 다시 계산할 수 있습니다.`].filter(Boolean).join(' ');
+        const name = mode.hitCondition.projectileName || '펠릿';
+        const share = mode.hitCondition.defaultPct === 100 ? `${name}이 모두` : `${name}의 절반(반올림)이`;
+        mode.note = [mode.note, `기본은 ${share} 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.`].filter(Boolean).join(' ');
       }
-      if (mode.hitCondition?.kind === 'arcs') mode.note = [mode.note, '기본은 전격이 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있습니다.'].filter(Boolean).join(' ');
+      if (mode.hitCondition?.kind === 'arcs') mode.note = [mode.note, '기본은 아크가 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있습니다.'].filter(Boolean).join(' ');
       if (![mode.standard, mode.durable, mode.ap, mode.explosion, mode.explosionDurable, mode.explosionAp].every(finite)) mode.unsupported = '피해량이나 장갑을 뚫는 능력이 정확히 확인되지 않아 계산하지 않습니다.';
       else if (mode.standard + mode.durable + mode.explosion + mode.explosionDurable === 0) mode.unsupported = '직접 주는 피해가 없는 지원 장비입니다. 적을 기절시키는 등의 효과를 피해로 바꿔 계산하지 않습니다.';
     }

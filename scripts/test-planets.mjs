@@ -135,13 +135,24 @@ const listed = new Set(planets.biomes.map(biome => biome.internal));
 const unlisted = [...new Set(gamePlanets.planets.map(planet => planet.biome))].filter(biome => biome !== '?' && !listed.has(biome));
 ok(!unlisted.length, `game biomes with planets but no wiki biome page: ${unlisted.join(', ')}`);
 
-// Status effects: every number in the detail lines is on the wiki Status Effects page.
+// Status effects: every number in the detail lines is on the wiki Status Effects page, or in the status boxes the page
+// draws from its attack data (Attack_Data module, not in the saved wikitext), read on the page 2026-11-26.
+// The Fleshmob's fire multiplier (1.8) is its wiki enemy infobox's fire_mult (wiki_enemy_pages.json), checked below; the
+// Impaler's 1.7 is also on the Status Effects page.
+const STATUS_BOX_NUMBERS = { fire: ['0.5', '1.8'] };   // Flamer Slowed: Status Duration 0.5 sec
 for (const item of planets.statusEffects) {
   const source = text.status.find(entry => entry.id === item.id);
   ok(source.name ? item.name === game.strings.status[source.name] : item.name === source.ko && Boolean(source.ko), `${item.id}: name is not the game's Korean or the site's translation`);
   ok(item.detail.length === item.detailEn.length, `${item.id}: detail needs Korean and English line by line`);
   ok(wiki.statusEffects.text.includes(`== ${item.en} ==`), `${item.id}: no "${item.en}" section on the wiki Status Effects page`);
-  for (const number of item.detail.concat(item.detailEn).join(' ').match(/\d+(?:\.\d+)?/g) || []) ok(wiki.statusEffects.text.includes(number), `${item.id}: ${number} is not on the wiki Status Effects page`);
+  for (const number of item.detail.concat(item.detailEn).join(' ').match(/\d+(?:\.\d+)?/g) || []) ok(wiki.statusEffects.text.includes(number) || STATUS_BOX_NUMBERS[item.id]?.includes(number), `${item.id}: ${number} is not on the wiki Status Effects page`);
+}
+
+{
+  const pages = (await read('wiki_enemy_pages.json')).pages;
+  const fireMult = title => Number(pages[title]?.fireMult);
+  // A wiki download that changes them only prints a CHECK line, so the burn line can be updated (user decision 2026-11-26).
+  if (!(fireMult('Fleshmob') === 1.8 && fireMult('Impaler') === 1.7)) console.warn(`CHECK planets: the burn line says Impaler 1.7x, Fleshmob 1.8x; the wiki enemy infoboxes now give ${fireMult('Impaler')}, ${fireMult('Fleshmob')}`);
 }
 
 // Stratagem effects: the factor is the percentage in the entry's own description.

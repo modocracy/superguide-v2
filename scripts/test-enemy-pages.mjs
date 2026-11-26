@@ -31,7 +31,7 @@ for (const enemy of enemies) {
   const item = enemyPages[enemy.id];
   const page = wiki[pageTitle(enemy)];
   if (!item || !page || item.revision !== page.revision) { later.noEntry.push(enemy.id); continue; }
-  ok(item.fireMult === numberOf(page.fireMult) && item.staggerReq === numberOf(page.staggerReq), `${enemy.id}: fire multiplier or stagger threshold is not the wiki infobox value`);
+  ok(item.fireMult === numberOf(page.fireMult) && item.arcMult === numberOf(page.arcMult ?? null) && item.staggerReq === numberOf(page.staggerReq), `${enemy.id}: fire or arc multiplier or stagger threshold is not the wiki infobox value`);
   ok(item.subfaction === null || factionGuides.some(guide => guide.id === item.subfaction), `${enemy.id}: unknown subfaction ${item.subfaction}`);
   ok((item.reinforcements ?? null) === reinforcementOf(page), `${enemy.id}: reinforcement call is not what the wiki Behavior says (run build-enemy-pages)`);
   const summary = summaries[item.page];

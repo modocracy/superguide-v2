@@ -43,14 +43,18 @@ const gearMode = (w, mode) => {
   const explosion = record ? maxOf([record, ...blastRecords], 'splashDemolition') : maxOf(list, 'splashDemolition');
   const blast = [{ standard: mode?.explosion ?? 0, ap: mode?.explosionAp ?? 0, durable: mode?.explosionDurable ?? mode?.explosion ?? 0 }, ...delayed.map(e => ({ standard: e.standard, ap: e.ap, durable: e.durable ?? e.standard }))]
     .reduce((best, e) => e.standard > best.standard ? e : best);
+  // The blast's radii for its reach (core/demolition.js blastReach): the mode's, else its record's; gear blasts are standard.
+  const radii = [mode, record].find(r => r?.radius != null && r?.innerRadius != null);
   return {
     id: mode?.id || 'standard', name: mode?.name || L('기본 공격', 'Basic attack'), direct, explosion, forceUnknown: direct == null && explosion == null,
+    ...(radii && explosion > 0 && { blast: { inner: radii.innerRadius, outer: radii.radius, wide: false } }),
     damage: mode ? { standard: mode.standard ?? 0, durable: mode.durable ?? 0, ap: mode.ap ?? 0, explosion: blast.standard, explosionAp: blast.ap, explosionDurable: blast.durable } : null,
     unit: mode?.unit || '발', ...(SHIELD_BYPASS.has(w.id) && { shieldBypass: true }),
   };
 };
+const shotModes = w => (personalProfiles[w.id]?.modes ?? []).filter(mode => !mode.stream);
 const gearProfiles = Object.fromEntries(personalWeapons.map(w => [w.id, {
-  source: w.source, modes: personalProfiles[w.id]?.modes?.length ? personalProfiles[w.id].modes.map(mode => gearMode(w, mode)) : [gearMode(w, null)],
+  source: w.source, modes: shotModes(w).length ? shotModes(w).map(mode => gearMode(w, mode)) : [gearMode(w, null)],
 }]));
 const gearById = new Map(personalWeapons.map(w => [w.id, w]));
 const gearFields = w => ({ names: personalNames(w), text: [typeName(w.type), groupOf(w.category).name], keywords: collabKeywords(warbondSources[`gear/${w.id}`]?.id) });
@@ -94,13 +98,25 @@ const conditionText = (condition, profile) => ({
   jammer: () => L('교란기를 끈 뒤에만 호출할 수 있습니다.', 'Can only be called in once the jammer is off.'),
 })[condition.kind]();
 
+// How far from the blast's center it still demolishes (result.reach, user request 2026-11-26). Past the inner radius the
+// distance comes from the falloff, so it is rounded; its explanation is a tooltip on it (no 'estimate' mark, user
+// decision 2026-11-26).
+const REACH_TIP = L('폭발은 안쪽 반경 밖에서 철거력이 피해와 함께 줄어 바깥 반경에서 0이 됩니다. 이 시설에 필요한 철거력이 남는 거리를 계산한 이론값이고, 폭발 중심에서 시설 몸체까지 잰 거리입니다. 큰 시설은 한가운데에서 재면 이보다 멀어도 부서집니다.',
+  "Past the inner radius a blast's demolition force falls with its damage, to 0 at the outer radius. This is the calculated distance at which the force this structure needs is left, measured from the blast center to the structure's body. A big structure falls even when its middle is farther away.");
+function reachText(reach) {
+  if (!reach) return '';
+  if (!reach.falloff) return L(` · 폭발 중심 ${num(Math.round(reach.distance * 10) / 10)} m 안`, ` · within ${num(Math.round(reach.distance * 10) / 10)} m of the blast center`);
+  const d = num(reach.distance >= 10 ? Math.round(reach.distance) : Math.round(reach.distance * 10) / 10);
+  return html`${L(' · 폭발 중심 ', ' · within ')}${tipLabel(L(`약 ${d} m`, `about ${d} m`), REACH_TIP)}${L(' 안', ' of the blast center')}`;
+}
+
 function howText(result) {
   if (result.method === 'health') {
     const openings = result.routes.filter(row => row.verdict === 'pass' && row.route.opening).map(row => row.route.name);
     return L(`${num(result.hits)}${result.unit}로 체력 파괴${openings.length ? ` · 또는 ${openings.join('·')}에 폭발 1${result.unit}` : ''}`,
       `Destroyed through health in ${num(result.hits)}${unitText(result.unit, result.hits)}${openings.length ? ` · or one explosive ${unitText(result.unit, 1).trim()} into the ${openings.map(T).join(' / ')}` : ''}`);
   }
-  if (result.method === 'force') return L(`${result.route.name}에 ${result.via === 'explosion' ? '폭발' : '직접 명중'} 1${result.unit}로 철거`, `One ${result.via === 'explosion' ? 'explosion' : 'direct hit'} on the ${T(result.route.name)} demolishes it`);
+  if (result.method === 'force') return html`${L(`${result.route.name}에 ${result.via === 'explosion' ? '폭발' : '직접 명중'} 1${result.unit}로 철거`, `One ${result.via === 'explosion' ? 'explosion' : 'direct hit'} on the ${T(result.route.name)} demolishes it`)}${reachText(result.reach)}`;
   return REASON[result.reason] || '';
 }
 
@@ -201,7 +217,7 @@ function weaponResults(head, profile) {
         ${profile.modes.length > 1 ? html`<div class="segmented" role="group" aria-label="${L('탄종·공격', 'Shell / attack')}">${profile.modes.map(item => html`<button type="button" data-mode-pick="${item.id}" aria-pressed="${item.id === mode.id}">${item.name}</button>`)}</div>` : ''}</div>
       <div class="stat-chips">
         <div class="stat-chip"><span>${L(`${mode.directLabel || '직격'} 철거력`, `${T(mode.directLabel) || 'Direct'} demolition force`)}</span><b>${forceText(mode.direct, mode.forceUnknown)}</b></div>
-        <div class="stat-chip"><span>${blastIcon()}${L('폭발 철거력 · 중심부', 'Blast demolition force · center')}</span><b>${forceText(mode.explosion, mode.forceUnknown)}</b></div>
+        <div class="stat-chip"><span>${blastIcon()}${L('폭발 철거력', 'Blast demolition force')}</span><b>${forceText(mode.explosion, mode.forceUnknown)}</b></div>
         ${mode.damage ? html`<div class="stat-chip"><span>${L('시설 피해 (체력 계산용)', 'Structure damage (for health)')}</span><b>${num(mode.damage.standard)}</b><small>${L('폭발', 'Blast')} ${num(mode.damage.explosion)} · AP ${mode.damage.ap}/${mode.damage.explosionAp}</small></div>` : ''}
       </div>
       ${notes.length || mode.shieldBypass || mode.damage?.falloff ? html`<ul class="notes">${notes.map(note => html`<li>${note}</li>`)}${mode.shieldBypass ? html`<li>${L('워프 함선: 본체에 닿으면 보호막을 벗기기 전에도 부술 수 있는 공격입니다.', 'Warp Ship: if it reaches the hull, this attack can destroy it even before the shield is down.')}</li>` : ''}${mode.damage?.falloff ? html`<li>${L('체력 계산은 거리 감쇠 전 최대 피해 기준입니다.', 'Health math uses full damage before falloff.')}</li>` : ''}</ul>` : ''}

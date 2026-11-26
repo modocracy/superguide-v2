@@ -44,9 +44,10 @@ export const factionTactics = {
 // Order within each side is what the faction picks screen shows left to right: Terminid and Automaton guides
 // follow release order (wiki change history and first appearances, checked 2026-11-20); the Illuminate order
 // is the user's (2026-11-20).
-// Each side opens with its Standard guide: the regular units met on Difficulty 10 (user request 2026-11-23).
+// Each side opens with its Standard guide: the regular units met on Difficulty 10 (user request 2026-11-23). In English
+// the Terminid one is the Horde and the Automaton one the Legion; the Illuminate keeps Standard (user request 2026-11-26).
 export const factionGuides = [
-  { id: 'terminid-base', side: 'terminid', name: '기본', en: 'Standard', checklist: false, source: wiki('Terminids'), checkedAt: '2026-11-23',
+  { id: 'terminid-base', side: 'terminid', name: '기본', en: 'Horde', checklist: false, source: wiki('Terminids'), checkedAt: '2026-11-23',
     intro: '대규모 무리와 중장갑 대형 버그가 함께 나옵니다. 무리를 처리할 화력과 대전차 화력을 나눠 준비하세요.',
     coverage: '변종이 아닌 일반 테르미니드 중 난이도 10에서 자주 만나는 9종입니다. 난이도 10에서는 차저가 차저 베히모스로, 브루드 커맨더가 알파 커맨더로 바뀝니다.',
     units: [unit('hunter-hardened', '옆으로 빠르게 움직이다 측면에서 덮치는 소형 버그입니다. 머리 체력 40·장갑 0이라 대부분의 무기로 한 발이면 쓰러집니다.', ['head']),
@@ -83,7 +84,7 @@ export const factionGuides = [
     coverage: '녹셔스 스캐빈저와 스퓨어 두 유닛을 안내합니다. 위키 전술 정보가 아직 비어 있어 공식 공지를 기준으로 합니다.',
     units: [unit('noxious-scavenger', '물 때마다 독이 1중첩 쌓입니다. 현재 위키의 부위 수치는 일반 스캐빈저와 같습니다.', ['body']),
       unit('noxious-spewer', '물 때마다 독이 2중첩 쌓입니다. 복부가 터지면 주변을 묶는 거미줄 폭발이 일어납니다. 최소 난이도 5부터 등장합니다.', ['butt'])] },
-  { id: 'automaton-base', side: 'automaton', name: '기본', en: 'Standard', checklist: false, source: wiki('Automatons'), checkedAt: '2026-11-23',
+  { id: 'automaton-base', side: 'automaton', name: '기본', en: 'Legion', checklist: false, source: wiki('Automatons'), checkedAt: '2026-11-23',
     intro: '멀리서 쏘는 적과 장갑이 두꺼운 적이 많습니다. 엄폐물을 활용하고, 중형 봇을 맞힐 정밀 무기와 대전차 화력을 함께 준비하세요.',
     coverage: '변종이 아닌 일반 오토마톤 중 난이도 10에서 자주 만나는 15종입니다. 난이도 10에서는 스카우트 스트라이더가 강화 스카우트 스트라이더로 바뀝니다.',
     units: [unit('trooper', '5발씩 끊어 쏘고 4초 식힙니다. 헬다이버를 발견하면 조명탄으로 봇 투하를 부를 수 있으니 먼저 처치하세요.', ['torso']),

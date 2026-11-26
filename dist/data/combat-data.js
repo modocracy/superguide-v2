@@ -563,6 +563,14 @@ const shot = (id, name, standard, durable, ap, explosion = 0, explosionAp = 0, e
 const profile = (page, modes, note = '') => ({ source: wiki(page), modes, note });
 const reviewedExplosive = (page, modes, note) => ({ ...profile(page, modes.map(mode => ({ ...mode, reviewedExplosive: true })), note), checkedAt: '2026-09-16', combatOnly: true });
 const reviewedImpact = (page, modes, note) => ({ ...profile(page, modes.map(mode => ({ ...mode, conditionalImpact: true })), note), checkedAt: '2026-09-16', combatOnly: true });
+// A held laser beam or flame stream, counted in seconds (user request 2026-11-26; core/combat.js solveStream).
+// Burning: the wiki status datamine Fire_dmg, 100 per second (durable 100), AP 4, 3 s
+// (Module:Decodedata-Attacks/status data.json, revision 139342). It starts when the stream's fire build-up
+// (`ignite` per second) reaches the enemy's ignition threshold (data/enemy-ignition.js).
+export const STREAM_BURN = { perSecond: 100, ap: 4 };
+const streamMode = (name, dps, durable, ap, delivery, stream) => shot('standard', name, dps, durable, ap, 0, 0, { unit: '초', delivery, magazine: null, stream: { burn: STREAM_BURN, ...stream } });
+const BEAM_NOTE = '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.';
+const FLAME_NOTE = '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.';
 export const weaponProfiles = {
   'meltagun': {
     ...reviewedImpact('40-K_Meltagun', [
@@ -578,8 +586,8 @@ export const weaponProfiles = {
     extraSource: wiki('Module:Decodedata-Attacks/weapons_data.json'),
   },
   'arc-thrower': reviewedImpact('ARC-3_Arc_Thrower', [
-    shot('first-target', '첫 표적 · 전격 명중', 250, 100, 7, 0, 0, { delivery: 'arc', range: 55 }),
-  ], '처음 맞은 적의 이 부위에 전격이 계속 맞는다고 보고 계산합니다. 원하는 부위를 골라 맞힐 수 있는 무기는 아니며, 옆 적으로 튄 전격의 피해는 빼고 계산합니다.'),
+    shot('first-target', '첫 표적 · 아크 명중', 250, 100, 7, 0, 0, { delivery: 'arc', range: 55 }),
+  ], '처음 맞은 적의 이 부위에 아크가 계속 맞는다고 보고 계산합니다. 원하는 부위를 골라 맞힐 수 있는 무기는 아니며, 옆 적으로 튄 아크의 피해는 빼고 계산합니다.'),
   'spear': reviewedImpact('FAF-14_Spear', [
     shot('impact', '유도 미사일 · 착탄 부위 기준', 4000, 4000, 7, 200, 3, { delivery: 'guided', explosionDurable: 200, innerRadius: 1.5, radius: 3 }),
   ], '락온한 미사일이 이 부위에 바로 맞는다고 보고 계산합니다. 실제로 어디에 맞을지는 장담할 수 없고, 폭발이 여러 부위에 함께 들어가는 피해는 합치지 않습니다.'),
@@ -590,8 +598,9 @@ export const weaponProfiles = {
     shot('direct', '직격 기준 · 가스 피해 제외', 650, 275, 5, 0, 0, { delivery: 'harpoon', falloff: true }),
   ], '작살이 직접 맞는 피해만 계산합니다. 가스 구름과 중독 피해는 빼므로, 실제로는 더 적은 발로 처치될 수 있습니다.'),
   'de-escalator': reviewedImpact('GL-52_De-Escalator', [
-    shot('arc', '전격 · 명중 수 조건', 100, 70, 4, 0, 0, { delivery: 'arc', range: 10, hitCondition: { kind: 'arcs', min: 1, max: 10, default: 10, defaultPct: 100 } }),
-  ], '전격 1회는 피해 100(내구 70), 관통 4입니다. 유탄 하나에서 전격 10개가 나가지만 이 부위에 몇 개가 맞는지는 알려지지 않아 맞는 개수를 직접 고르게 했습니다. 유탄이 직접 맞는 피해는 자료마다 값이 달라 빼고, 전격에는 폭발 저항을 적용하지 않습니다.'),
+    // carrier: the grenade's own hit before its arcs, the game data sheet's projectile (datamine GL-52_P), user request 2026-11-26.
+    shot('arc', '아크 · 명중 수 조건', 100, 70, 4, 0, 0, { delivery: 'arc', range: 10, carrier: shot('grenade', '유탄 직격', 20, 2, 0), hitCondition: { kind: 'arcs', min: 1, max: 10, default: 10, defaultPct: 100 } }),
+  ], '유탄이 이 부위에 직접 맞는 피해 20(내구 2, 관통 0)과 고른 개수만큼의 아크 피해를 더합니다. 아크 1개는 피해 100(내구 70), 관통 4입니다. 유탄 하나에서 아크 10개가 나가지만 이 부위에 몇 개가 맞는지는 알려지지 않아 맞는 개수를 직접 고르게 했습니다. 아크에는 폭발 저항을 적용하지 않습니다.'),
   'airburst-launcher': reviewedImpact('RL-77_Airburst_Rocket_Launcher', [
     ...[
       ['flak', '대공포탄 모드', '근접 신관으로 공중에서 터질 수 있어, 주탄이 직접 맞지 않으면 직격 피해는 들어가지 않습니다.'],
@@ -676,6 +685,24 @@ export const weaponProfiles = {
     shot('heat', '대전차 고폭탄(HEAT)', 3200, 3200, 6, 150, 3),
     shot('he', '고폭탄(HE)', 750, 750, 5, 800, 4),
   ]),
+  // Datamine LAS-98 LASER CANNON_B_dm: 350 per second (durable 200), AP 4, Fire status 1.5 per second;
+  // heat 8 per second to 100 = the wiki 12.5 s.
+  'laser-cannon': {
+    ...profile('LAS-98_Laser_Cannon', [streamMode('광선 유지', 350, 200, 4, 'beam', { ignite: 1.5, capacity: { kind: 'heat', seconds: 12.5 } })], BEAM_NOTE),
+    sourceRevision: 141653, checkedAt: '2026-11-26', extraSource: wiki('Module:Decodedata-Attacks/weapons_data.json'),
+  },
+  // The wiki infobox damage per second (Flamethrower 150, Cremator 225), AP 4. Flame particles deal the same
+  // durable damage (datamine FLAM-40 FLAMETHROWER_S_dm 2/2, B/FLAM-80 CREMATOR_S_dm 3/3). No fuel time on the wiki.
+  // Fire build-up: the particle's Fire status (2, Cremator 3) times the particles the wiki DPS implies (150 / 2,
+  // 225 / 3 per second) = 150 and 225 per second.
+  'flamethrower': {
+    ...profile('FLAM-40_Flamethrower', [streamMode('불길 유지', 150, 150, 4, 'spray', { fire: true, ignite: 150 })], FLAME_NOTE),
+    sourceRevision: 140360, checkedAt: '2026-11-26',
+  },
+  'cremator': {
+    ...profile('B/FLAM-80_Cremator', [streamMode('불길 유지', 225, 225, 4, 'spray', { fire: true, ignite: 225 })], FLAME_NOTE),
+    sourceRevision: 141857, checkedAt: '2026-11-26',
+  },
   'railgun': profile('Railgun', [
     shot('safe', '안전 모드 · 기본 충전', 600, 225, 5, 0, 0, { falloff: true }),
     shot('unsafe-max', '안전 해제 모드 · 최대 피해 충전', 1500, 562, 5, 0, 0, { falloff: true }),
@@ -691,8 +718,5 @@ for (const [id, modeIds] of Object.entries(propelledModes)) {
 }
 
 export const unsupportedWeapons = {
-  'flamethrower': '불길의 접촉 시간과 화상 지속 피해가 필요해 탄수로 환산하지 않습니다.',
-  'cremator': '불길의 접촉 시간과 화상 지속 피해가 필요해 탄수로 환산하지 않습니다.',
-  'laser-cannon': '광선의 접촉 시간과 화상을 따로 계산해야 하므로 발 단위 계산을 지원하지 않습니다.',
   'sterilizer': '가스의 지속 시간과 대상별 피해 조건이 필요합니다.',
 };

@@ -72,8 +72,10 @@ const engine = {
   wasp: { submunitions: shot('StA-X3_P1', { bomblet: 'StA-X3_P' }) },
   speargun: { direct: shot('S-11_P') },
   'arc-thrower': { 'first-target': { hit: ['arc', 'ARC-3 ARC THROWER_A'] } },
-  'de-escalator': { arc: { hit: ['arc', 'GL-52_P_IE_A'] } },
+  'de-escalator': { arc: { hit: ['arc', 'GL-52_P_IE_A'], carrier: 'GL-52_P' } },
   meltagun: { near: { hit: ['beam', '40-K MELTAGUN_B'] } },
+  // A held beam: its damage per second is the beam record (user request 2026-11-26).
+  'laser-cannon': { standard: { hit: ['beam', 'LAS-98 LASER CANNON_B'] } },
   'one-true-flag': { melee: { hit: ['damage', 'CQC-1 ONE TRUE FLAG_dm'] } },
   'breaching-hammer': {
     melee: { hit: ['damage', 'CQC-20 BREACHING HAMMER_dm'] },
@@ -92,6 +94,8 @@ const table = {
   'airburst-launcher:bomblet': shot('RL-77_P1'),
   'laser-cannon': { hit: ['beam', 'LAS-98 LASER CANNON_B'] },
   sterilizer: { hit: ['spray', 'TX-41 STERILIZER_S'] },
+  // The table's direct hit is the grenade itself (game data sheet, user request 2026-11-26); the arcs are the engine mode.
+  'de-escalator': shot('GL-52_P'),
   'defoliation-tool': { hit: ['damage', 'CQC-9 DEFOLIATION TOOL_dm'] },
 };
 
@@ -99,9 +103,10 @@ const notCompared = {
   'engine:meltagun/max-range': 'The 40% falloff at 15 m comes from the wiki page; the datamine has no range falloff.',
   'engine:solo-silo/standard': 'MS-11 Solo Silo is not in the datamine snapshot.',
   'table:solo-silo': 'MS-11 Solo Silo is not in the datamine snapshot.',
-  'table:de-escalator': 'The table shows no single direct value (sources conflict); the engine arc mode is checked.',
   'table:flamethrower': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
   'table:cremator': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
+  'engine:flamethrower/standard': 'The held flame stream uses the wiki page DPS; the datamine stores one spray particle.',
+  'engine:cremator/standard': 'The held flame stream uses the wiki page DPS; the datamine stores one spray particle.',
 };
 
 // Values that differ from the datamine on purpose, checked by hand.
@@ -161,6 +166,11 @@ for (const [weaponId, profile] of Object.entries(weaponProfiles)) {
     const projectileKey = spec.hit?.[0] === 'projectile' ? spec.hit[1] : undefined;
     ok(mode.record === projectileKey, `${key}: range falloff record ${mode.record} should be ${projectileKey}`);
     compareBlast(key, spec, { blast: { damage: mode.explosion, durable: mode.explosionDurable, ap: mode.explosion ? mode.explosionAp : undefined, innerRadius: mode.innerRadius, radius: mode.radius } }, key);
+    // The grenade that carries the arcs (De-Escalator) against its projectile record.
+    if (spec.carrier) {
+      const c = mode.carrier;
+      if (ok(c, `${key}: datamine has a carrier record but the mode has no carrier`)) compareHit(`${key}.carrier`, shot(spec.carrier), { hit: { standard: c.standard, durable: c.durable, ap: c.ap } }, `${key} carrier`);
+    } else ok(!mode.carrier, `${key}: has a carrier hit but no datamine record is tied to it`);
     if (spec.bomblet) {
       const bombletSpec = shot(spec.bomblet);
       const b = mode.bomblet;
@@ -203,6 +213,8 @@ for (const id of Object.keys(unsupportedWeapons)) ok(support.some(item => item.i
 // base rate that no longer matches (one of the selectable rates, or the single rate) is printed as
 // a warning, so a refresh that moves a rate does not fail the check.
 const rateWarnings = [];
+// Shots in a minute of charging and firing back to back (user request 2026-11-26), not the datamine's base rate.
+const CYCLE_RATES = new Set(['quasar', 'nova']);
 for (const item of support.filter(item => item.rpmModes || item.rpm != null)) {
   const base = weapons[item.en.toUpperCase()]?.rpm ?? null;
   if (item.rpmModes) {
@@ -211,7 +223,7 @@ for (const item of support.filter(item => item.rpmModes || item.rpm != null)) {
     if (base != null && !item.rpmModes.includes(base)) rateWarnings.push(`${item.id}: datamine base rate ${base} is not one of ${item.rpmModes.join('/')}`);
   } else {
     ok(Number.isFinite(item.rpm) && item.rpm > 0, `${item.id}: fire rate is a positive number`);
-    if (base != null && base !== item.rpm) rateWarnings.push(`${item.id}: datamine base rate ${base}, data says ${item.rpm}`);
+    if (base != null && base !== item.rpm && !CYCLE_RATES.has(item.id)) rateWarnings.push(`${item.id}: datamine base rate ${base}, data says ${item.rpm}`);
   }
 }
 for (const message of rateWarnings) console.warn(`warning: support fire rate: ${message}`);

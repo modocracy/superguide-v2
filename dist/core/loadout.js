@@ -3,6 +3,10 @@ import { enemies } from '../data/combat-data.js';
 import { factionSides, factionGuides } from '../data/faction-data.js';
 import { stratagems, stratagemById } from './catalog.js';
 import { compareAttacks, resolveAttack } from './compare.js';
+// The enemy's wiki fire damage multiplier and ignition threshold, for held beams, flame streams and burning
+// (combat.js solveStream).
+import { enemyPages } from '../data/enemy-pages.js';
+import { ignitionOf } from '../data/enemy-ignition.js';
 import { enemySize, isLargeEnemy } from './enemy-size.js';
 import { L } from './i18n.js';
 
@@ -62,7 +66,9 @@ function slotsOf(loadout) {
 const compareText = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 const simplicity = answer => Number(Boolean(answer.conditional)) + Number(Boolean(answer.assumption) && !answer.fragmentsExcluded) + Number(Boolean(answer.lowerBound))
   + (answer.accumulated ? answer.steps.reduce((sum, step) => sum + step.instances, 0) : Math.max(0, (answer.route?.stages.length || 1) - 1));
+// A held stream counts seconds, so shot answers come first and the two are never compared by number.
 const rank = (a, b) => Number(b.verified) - Number(a.verified)
+  || Number(Boolean(a.mode?.stream)) - Number(Boolean(b.mode?.stream))
   || (a.hits ?? Infinity) - (b.hits ?? Infinity) || simplicity(a) - simplicity(b)
   || Number(a.outcome !== 'kill') - Number(b.outcome !== 'kill')
   || compareText(a.weaponId, b.weaponId) || compareText(a.modeId || '', b.modeId || '');
@@ -70,7 +76,7 @@ const rank = (a, b) => Number(b.verified) - Number(a.verified)
 function answers(enemy, slot, options) {
   const resolved = resolveAttack(slot.weaponId);
   const entries = resolved.profile?.modes.map(mode => ({ weaponId: slot.weaponId, modeId: mode.id })) || [{ weaponId: slot.weaponId }];
-  return compareAttacks(enemy, entries, options).entries.map(answer => ({
+  return compareAttacks(enemy, entries, { ...options, fireMult: enemyPages[enemy?.id]?.fireMult, ignition: ignitionOf(enemy?.id) }).entries.map(answer => ({
     ...answer, ...slot, modeName: answer.modeLabel, partName: answer.part?.name || null,
     partId: answer.part?.id || null, unit: answer.mode?.unit || '발', resultLabel: answer.part?.resultLabel || null,
   })).sort(rank);

@@ -29,6 +29,16 @@ for (const module of modules) {
   ok(module.name && module.effect, `${module.en}: a name and an effect`);
   ok(!/#VALUE|<[ci]/.test(module.effect + module.effectEn), `${module.en}: no game markup left`);
 }
+// Affected stratagems (each upgrade's wiki page, user request 2026-11-26): catalogue ids, no repeats, none for an upgrade
+// that changes every stratagem (Morale Augmentation) or none at all (Nuclear Radar, Power Steering).
+{
+  const { stratagemById } = await import('../dist/core/catalog.js');
+  for (const module of modules) for (const id of module.affected ?? []) ok(stratagemById.has(id), `${module.en}: affected ${id} is no stratagem`);
+  ok(modules.every(module => new Set(module.affected ?? []).size === (module.affected ?? []).length), 'affected lists have no repeats');
+  const of = id => modules.find(module => module.id === id)?.affected ?? [];
+  // What the module pages list can change with a wiki download: a CHECK line only (user decision 2026-11-26).
+  if (!(!of('morale-augmentation').length && !of('nuclear-radar').length && of('circuit-expansion').join() === 'arc-thrower,tesla-tower' && of('atmospheric-monitoring').length === 2)) console.warn('CHECK ship modules: the affected lists of Morale Augmentation, Nuclear Radar, Circuit Expansion or Atmospheric Monitoring changed; review them on the module tab');
+}
 const unlinked = shipModules.filter(module => !modules.some(item => item.stratagemModule === module.id && item.en === module.en)).map(module => module.en);
 const toCheck = [...built.toCheck, ...unlinked.map(en => `catalogue module ${en} is not on the ship module tab`)];
 console.log(`PASS ship modules: ${checks} checks (${shipModuleSections.length} sections, ${modules.length} upgrades, Ship Modules revision ${shipModuleUpgradesSource.revision})${toCheck.length ? `; to check: ${toCheck.length} (${toCheck.join('; ')})` : ''}.`);

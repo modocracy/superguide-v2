@@ -3,7 +3,7 @@ const pick = (weapon, target, label, note) => ({ weapon, targets: [target], labe
 const sporeFire = (weapon, label, note, extra = '') => ({
   ...pick(weapon, null, label, note), adviceOnly: true,
   source: 'https://helldivers.wiki.gg/wiki/Spore_Burst_Warrior#Tactical_Information',
-  limitation: `포자를 막으려면 죽을 때 불타는 상태여야 합니다. 점화되지 않았거나 불이 꺼진 뒤 죽으면 이 조건이 성립하지 않습니다. 화염 노출·표적 선택에 따라 달라 고정 처치 탄수나 시간을 표시하지 않습니다.${extra}`,
+  limitation: `포자를 막으려면 죽을 때 불타는 상태여야 합니다. 점화되지 않았거나 불이 꺼진 뒤 죽으면 이 조건이 성립하지 않습니다. 아래 시간은 같은 부위에 불길을 계속 맞힐 때의 참고값이며, 실제로는 화염 노출과 표적 선택에 따라 달라집니다.${extra}`,
 });
 const tank = [
   pick('recoilless', 'head', '대전차 화력 · 정지 재장전', '머리를 한 번씩 확실히 노립니다. 충전 없이 발사하지만 탄약 배낭이 필요하고 재장전할 때 멈춰야 합니다.'),
@@ -57,7 +57,7 @@ export const factionLoadouts = {
     pick('autocannon', 'body-armor', '몸통 직접 타격 · 거리 확보', '작은 머리 대신 몸통을 맞힙니다. 근접 폭발을 피할 거리와 정지 재장전할 틈이 필요합니다.'),
   ],
   'spore-burst-warrior': [
-    { ...pick('flamethrower', null, '우선 추천 · 포자 방출 억제', '불타는 상태로 죽도록 점화해 포자 방출을 막으세요. 단순히 한 번 불을 붙였다는 이유로 보장되는 것은 아니며, 죽는 시점까지 불타는 상태여야 합니다. 화염 사거리 안으로 접근해야 하고 아군·지면 화염에 주의하세요.'), adviceOnly: true, source: 'https://helldivers.wiki.gg/wiki/Spore_Burst_Warrior#Tactical_Information', limitation: '화염 직격·지면 화염·화상 노출 시간에 따라 달라 고정 처치 탄수나 시간을 표시하지 않습니다. 가스 혼란만으로 같은 포자 억제 효과가 난다고 가정하지 않습니다.' },
+    { ...pick('flamethrower', null, '우선 추천 · 포자 방출 억제', '불타는 상태로 죽도록 점화해 포자 방출을 막으세요. 단순히 한 번 불을 붙였다는 이유로 보장되는 것은 아니며, 죽는 시점까지 불타는 상태여야 합니다. 화염 사거리 안으로 접근해야 하고 아군·지면 화염에 주의하세요.'), adviceOnly: true, source: 'https://helldivers.wiki.gg/wiki/Spore_Burst_Warrior#Tactical_Information', limitation: '아래 시간은 같은 부위에 불길을 계속 맞힐 때의 참고값이며, 실제로는 화염 직격·지면 화염·화상 노출에 따라 달라집니다. 가스 혼란만으로 같은 포자 억제 효과가 난다고 가정하지 않습니다.' },
     sporeFire('cremator', '직접 점화 · 연료 배낭 필요', '화염방사기처럼 접근하는 적을 직접 태워 포자 방출 억제를 노립니다. 연료 배낭을 사용하므로 다른 배낭과 함께 들 수 없고, 지형에 막히거나 가까이서 되튀는 불길에 주의하세요.'),
     pick('machine-gun', 'head', '비화염 대안 · 머리 제거 후 출혈', '화염 장비를 쓰지 않는다면 머리를 제거한 뒤 거리를 벌려 출혈로 죽게 하는 방법이 있습니다. 출혈 중에도 공격하므로 접근하지 마세요. 추가 사격으로 먼저 죽이는 경우까지 포자 억제를 보장하지 않습니다.'),
   ],
@@ -172,7 +172,7 @@ export const factionLoadouts = {
   'noxious-scavenger': [
     { ...pick('flamethrower', null, '공식 공지 추천 · 근거리 화염', '공식 공지가 녹셔스 스캐빈저에 화염방사기를 권합니다. 물리기 전에 몰려오는 무리를 태우세요.'), adviceOnly: true,
       source: 'https://store.steampowered.com/news/app/553850/view/708913061799398450',
-      limitation: '화염 피해는 불길에 닿은 시간에 따라 달라 처치 탄수를 계산하지 않습니다. 공식 공지는 산탄총과 수류탄도 함께 권합니다.' },
+      limitation: '위키에 이 적의 화염 피해 배율이 없어 처치 시간을 계산하지 않습니다. 공식 공지는 산탄총과 수류탄도 함께 권합니다.' },
     pick('stalwart', 'body', '몸통 연사 · 이동 재장전', '무리를 넓게 쓸어내며 물러납니다. 물리면 독이 쌓이므로 거리를 유지하세요.'),
     pick('machine-gun', 'body', '몸통 연사 · 정지 재장전', '다가오기 전에 몸통에 연사합니다. 재장전할 때 멈추므로 엄폐를 확보하세요.'),
   ],

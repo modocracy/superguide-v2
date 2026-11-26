@@ -789,6 +789,20 @@ export const pickerStructureImages = {
     "license": "",
     "kind": "map"
   },
+  "command-bunker": {
+    "src": "./assets/pickers/structure-command-bunker.svg",
+    "title": "Destroy Command Bunkers Mission Icon.svg",
+    "source": "https://helldivers.wiki.gg/wiki/File:Destroy_Command_Bunkers_Mission_Icon.svg",
+    "originalUrl": "https://helldivers.wiki.gg/images/Destroy_Command_Bunkers_Mission_Icon.svg?82d73d",
+    "assetUrl": "https://helldivers.wiki.gg/images/Destroy_Command_Bunkers_Mission_Icon.svg?82d73d",
+    "width": 512,
+    "height": 512,
+    "sha256": "5ff6913fc03df33dabad16203fce02ca973dbe007c2596fc866791ba08f0b9c9",
+    "retrievedAt": "2026-11-26",
+    "uploader": "Dogo314",
+    "license": "",
+    "kind": "map"
+  },
   "cooling-tower": {
     "src": "./assets/pickers/structure-cooling-tower.svg",
     "title": "Halt Cyborg Production Mission Icon.svg",
