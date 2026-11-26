@@ -204,9 +204,6 @@ export function playerDetails(weapon, box) {
   if (weapon.id === 'pyrotech') playerNotes.push('처치 탄수는 첫 폭발만 반영합니다. 남은 불길의 지속 피해는 포함하지 않습니다.');
   if (weapon.variants.some(v => v.delivery === 'projectile' && !v.id.startsWith('shrapnel')) && ['missile-pistol', 'warrant'].includes(weapon.id)) playerNotes.push('유도와 비유도를 전환할 수 있습니다. 처치 탄수는 비유도 사격 기준입니다.');
   if (CAUTIONS[weapon.id]) playerNotes.push(...[CAUTIONS[weapon.id]].flat());
-  // Found in play, not on the wiki (user's play experience 2026-11-26): it hits a Grounded Warp Ship from about 400 m.
-  // Its 1.7 s lifetime does not end the flight: then it sets off the same thermite as on impact (game data sheet).
-  if (weapon.id === 'breacher') playerNotes.push('실전에서는 최대 약 400 m 떨어진 착륙한 워프 함선도 맞혀 한 발에 부술 수 있습니다.');
   // Effect badges straight from the wiki infobox trait list ("Incendiary {{*}} Guided ...").
   const traits = String(box.weapon_traits ?? box.throwable_traits ?? '').split('{{*}}').map(trait => trait.trim().toLowerCase());
   const traitTags = Object.entries(TRAIT_TAGS).filter(([wiki]) => traits.includes(wiki)).map(([, tag]) => tag);
