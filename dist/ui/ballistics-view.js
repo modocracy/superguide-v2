@@ -87,7 +87,31 @@ function chart(title, points, { top, bottom, ticks, label, max = MAX, step = 2, 
 // A rocket-propelled shot keeps its speed: no drag in the damage and drop math (its datamine drag
 // is still listed).
 // extra: cells appended at the end of the record's grid (the weapon's recoil, with the other numbers).
+// Self-propelled shots whose datamine speed is only the launch (the Missile Pistol: 1 m/s for 3 s, so the flight math
+// would end it at 3 m): no charts or table, the wiki's flight facts instead (P-33 Missile Pistol page rev 140479:
+// speeds up to about 50-70 m/s, maximum range about 197 m with no drop, lock-on out to 100 m; user decision 2026-11-26).
+const MISSILE_PISTOL = { range: 197, lock: 100 };
+const SELF_PROPELLED = { 'P-33_P': MISSILE_PISTOL, 'P-33_P1': MISSILE_PISTOL };
+function selfPropelledBlock(label, recordId, extra) {
+  const b = projectileBallistics[recordId], flight = SELF_PROPELLED[recordId];
+  const cell = (name, value, unit, caption) => html`<div><dt>${name}</dt><dd>${value}${unit ? html`<small>${unit}</small>` : ''}</dd>${caption ? html`<div class="caption">${caption}</div>` : ''}</div>`;
+  const ap = b.ap?.some(v => v != null) ? `AP ${b.ap.map(v => num(v)).join(' / ')}` : '—';
+  return html`<div class="ballistic">
+    ${label ? html`<h4>${label}</h4>` : ''}
+    <dl class="detail-grid">
+      ${cell(L('탄속', 'Speed'), L('1 → 약 50~70', '1 → about 50-70'), 'm/s', L('천천히 출발해 날아가며 빨라짐', 'Starts slow and speeds up in flight'))}
+      ${cell(L('질량', 'Mass'), num(b.mass), 'g')}
+      ${cell(L('구경', 'Caliber'), num(b.caliber), 'mm')}
+      ${cell(L('최대 사거리', 'Maximum range'), L(`약 ${num(flight.range)}`, `About ${num(flight.range)}`), 'm', L('떨어지지 않고 곧게 날아감', 'Flies straight, no drop'))}
+      ${cell(L('유도 고정 거리', 'Lock-on range'), num(flight.lock), 'm', L('유도 사격으로 적을 고정할 수 있는 최대 거리', 'The farthest a guided shot can lock on'))}
+      ${cell(L('각도별 관통', 'Penetration by angle'), ap, '', L('25° 미만 · 26~60° · 61~80° · 81~90°', 'Under 25° · 26-60° · 61-80° · 81-90°'))}
+      ${extra}
+    </dl>
+  </div>`;
+}
+
 function recordBlock(label, recordId, propelled, extra = '') {
+  if (SELF_PROPELLED[recordId]) return selfPropelledBlock(label, recordId, extra);
   const { record, b, drag, at, endX, damage, drop, dropTop, marks, markFalloff, max, step } = computeFlight(recordId, propelled);
   const cell = (name, value, unit, caption) => html`<div><dt>${name}</dt><dd>${value}${unit ? html`<small>${unit}</small>` : ''}</dd>${caption ? html`<div class="caption">${caption}</div>` : ''}</div>`;
   const ap = b.ap?.some(v => v != null) ? `AP ${b.ap.map(v => num(v)).join(' / ')}` : '—';

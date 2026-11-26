@@ -70,6 +70,11 @@ const rangeOf = record => Number(String(ballisticsBlock([{ record }], true)).mat
 assert.deepEqual(['AR-23_P', 'GP-20_P', 'GL-21_P', 'G-7_P', 'EAT-700_P1'].map(rangeOf), [200, 50, 100, 25, 10], 'chart ranges follow the drop; a fired round keeps 50 m, fragments and bomblets go shorter');
 assert.deepEqual([...String(ballisticsBlock([{ record: 'GP-20_P' }], true)).matchAll(/<tr><th scope="row">(\d+)m<\/th>/g)].map(m => Number(m[1])), [10, 20, 30, 40, 50], 'Ultimatum table rows to 50 m');
 checks += 2;
+// The Missile Pistol's missile speeds up in flight, so it shows the wiki's range facts instead of the flight charts.
+{
+  const missile = String(ballisticsBlock([{ record: 'P-33_P' }], true));
+  check(!missile.includes('ballistic-chart') && missile.includes('197') && missile.includes('100'), 'Missile Pistol: wiki range facts, no flight charts');
+}
 // A shot whose lifetime ends it short of the range is drawn only as far as it flies: the Epoch's 148 m on a 150 m axis, the
 // Eruptor's 180 m, with the last table row at the end of the flight (user request 2026-11-26).
 const rowsOf = record => [...String(ballisticsBlock([{ record }], true)).matchAll(/<tr><th scope="row">(\d+)m<\/th>/g)].map(m => Number(m[1]));
@@ -77,7 +82,7 @@ assert.deepEqual([rangeOf('PLAS-45_P'), rowsOf('PLAS-45_P').at(-1), rangeOf('R-3
 checks++;
 
 // Short-lived projectiles ending on an odd metre keep their final point on chart curves.
-for (const oddRecord of ['P-33_P', 'RL-77_P1']) {
+for (const oddRecord of ['RL-77_P1']) {
   const expectedLastX = trajectory(projectileBallistics[oddRecord]).points.at(-1).x;
   const chartHtml = String(ballisticsBlock([{ record: oddRecord }], true));
   const chartLastXs = [...chartHtml.matchAll(/data-points="([^"]+)"/g)]
