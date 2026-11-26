@@ -745,7 +745,7 @@ export default {
   "약 1.4초간 전부 닿을 때": "When it all lands over about 1.4 s",
   "발사 제한은 아님": "Not a firing limit",
   "보이는 표적은 약 15–125 m": "About 15–125 m for visible targets",
-  "비안전 최대 피해 · 3초에 폭발": "Unsafe most damage · explodes at 3 s",
+  "최대 피해 · 3초에 폭발": "Most damage · explodes at 3 s",
   "최대 충전 시간": "Max charge time",
   "넘기면 폭발": "Explodes past it",
   "신호기에서": "From the beacon",

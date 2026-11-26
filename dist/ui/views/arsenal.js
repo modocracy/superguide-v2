@@ -618,8 +618,7 @@ const statGrid = (item, effects = [], expanded = false) => {
 // Weapons whose shot grows with the charge rather than switching modes (user request 2026-11-25): no mode tabs; the
 // key stats and the blast show the uncharged to fully charged values as 'a~b'. The data keeps both modes, which other
 // views pick by name (faction picks use 'epoch:charged').
-// Weapons whose charge states show as one 'low~high' range, with the caption under it (Railgun: user request 2026-11-26).
-const CHARGE_RANGE = new Map([['epoch', L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged')], ['railgun', L('안전 모드~비안전 최대 충전', 'Safe Mode~Unsafe full charge')]]);
+const CHARGE_RANGE = new Set(['epoch']);
 export function stratagemDetail(item, { demolition = false, force = null, header = null, titleId = 'sheet-title', variant = state.variant, compare = true, expandable = false, expanded = false } = {}) {
   const cat = categoryOf(item.category);
   const charge = CHARGE_RANGE.has(item.id) && item.variants?.length > 1 ? [withVariant(item, item.variants[0]), withVariant(item, item.variants.at(-1))] : null;
@@ -644,7 +643,7 @@ export function stratagemDetail(item, { demolition = false, force = null, header
   } else if (charge) {
     const cells = specialCells(item, force);
     base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${raw(rangeGrid(String(statsWithEffects(charge[0], cells, expanded)), String(statsWithEffects(charge[1], cells, expanded))))}
-      <p class="faint" style="font-size:12.5px;margin-top:8px">${CHARGE_RANGE.get(item.id)}</p>${item.variants.at(-1).note ? html`<p class="variant-note">${item.variants.at(-1).note}</p>` : ''}</section>`;
+      <p class="faint" style="font-size:12.5px;margin-top:8px">${L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged')}</p></section>`;
   } else {
     base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${statsWithEffects(item, specialCells(item, force), expanded)}</section>`;
   }
