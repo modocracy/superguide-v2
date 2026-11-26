@@ -74,7 +74,7 @@ const rangeFor = mode => (fallsWithRange(mode) && hitsDirect(mode) ? state.dista
 // default wins when present.
 const HIT_KINDS = {
   pellets: { noun: L('펠릿', 'pellets'), unit: L('개', ''), per: L('한 발에', 'per shot'), pct: 100, why: L('기본은 펠릿이 모두 맞는다고 계산합니다. 거리가 멀거나 조준이 어긋나면 일부만 맞으니, 명중률을 낮춰 다시 볼 수 있습니다.', 'By default every pellet hits. At range or with a stray aim only some land, so lower the hit rate to see the difference.') },
-  arcs: { noun: L('전격', 'arcs'), unit: L('회', ''), per: L('한 발에', 'per shot'), pct: 100, why: L('기본은 전격이 모두 이 적에게 닿는다고 계산합니다(위키 피해 수치와 같은 기준). 주변 적에게 튀면 일부만 맞습니다.', 'By default every arc reaches this enemy (the same basis as the wiki damage numbers). Arcs that jump to nearby enemies mean fewer hits.') },
+  arcs: { noun: L('아크', 'arcs'), unit: L('회', ''), per: L('한 발에', 'per shot'), pct: 100, why: L('기본은 아크가 모두 이 적에게 닿는다고 계산합니다(위키 피해 수치와 같은 기준). 주변 적에게 튀면 일부만 맞습니다.', 'By default every arc reaches this enemy (the same basis as the wiki damage numbers). Arcs that jump to nearby enemies mean fewer hits.') },
   bomblets: { noun: L('자탄', 'bomblets'), unit: L('개', ''), per: L('한 발에', 'per shot'), pct: 20, why: L('자탄은 넓게 흩어져 한 부위에 다 맞는 일이 드물어 기본은 20%로 계산합니다. 0%는 주탄만 계산합니다.', 'Bomblets scatter widely and rarely all hit one part, so the default is 20%. 0% counts the main projectile only.') },
   shrapnel: { noun: L('파편', 'fragments'), unit: L('개', ''), per: L('폭발 1회에', 'per explosion'), pct: 20, why: L('파편은 사방으로 흩어져 기본은 20%로 계산합니다. 0%로 두면 파편을 빼고 직격·폭발만 계산합니다.', 'Fragments fly in every direction, so the default is 20%. At 0% only the impact and explosion are counted.') },
 };
@@ -543,7 +543,7 @@ function assumptionControls(mode) {
   if (!c) return '';
   if (HIT_KINDS[c.kind]) return hitRateControls(mode, c);
   const unit = L(c.kind === 'arcs' ? '회' : '개', '');
-  const label = L({ arcs: '한 발당 이 부위 전격 명중 수', bomblets: '한 발당 이 부위 자탄 명중 수', pellets: '한 발당 이 부위 펠릿 명중 수', shrapnel: '폭발 1회당 이 부위 파편 명중 수' }[c.kind] || '이 부위 명중 수',
+  const label = L({ arcs: '한 발당 이 부위 아크 명중 수', bomblets: '한 발당 이 부위 자탄 명중 수', pellets: '한 발당 이 부위 펠릿 명중 수', shrapnel: '폭발 1회당 이 부위 파편 명중 수' }[c.kind] || '이 부위 명중 수',
     { arcs: 'Arcs per shot hitting this part', bomblets: 'Bomblets per shot hitting this part', pellets: 'Pellets per shot hitting this part', shrapnel: 'Fragments per explosion hitting this part' }[c.kind] || 'Hits on this part');
   const options = Array.from({ length: c.max - c.min + 1 }, (_, i) => c.min + i);
   return html`<div class="assumptions">

@@ -86,7 +86,7 @@ const REASONS = {
   'no-damage': L('관통하지 못해 이 부위와 본체 모두 피해가 없습니다.', 'It cannot penetrate, so neither this part nor main health takes damage.'),
   'no-damage-after-armor': L('장갑은 벗길 수 있지만 드러난 부위에는 피해가 들어가지 않습니다.', 'It can strip the armor but does no damage to what is underneath.'),
   'no-damage-assumed': L('선택한 명중 가정에서는 피해가 들어가지 않습니다.', 'The chosen hit assumption deals no damage.'),
-  'leftover-events': L('장갑이 깨진 뒤 같은 발의 남은 전격·자탄이 안쪽에 닿는지 확인되지 않아 계산하지 않았습니다.', 'It is unverified whether the rest of the same shot (arcs, bomblets) reaches the inside once the armor breaks, so this was not calculated.'),
+  'leftover-events': L('장갑이 깨진 뒤 같은 발의 남은 아크·자탄이 안쪽에 닿는지 확인되지 않아 계산하지 않았습니다.', 'It is unverified whether the rest of the same shot (arcs, bomblets) reaches the inside once the armor breaks, so this was not calculated.'),
   'too-many-hits': L('필요 횟수가 계산 범위를 넘습니다.', 'The count needed is beyond the calculation range.'),
   'beam-data-missing': L('광선 피해·지속 시간 또는 부위 수치가 확인되지 않았습니다.', 'Beam damage, duration or part values are unverified.'),
   'beam-blocked': L('광선이 이 부위 장갑을 관통하지 못합니다.', 'The beam cannot penetrate this part\'s armor.'),
@@ -100,7 +100,7 @@ export function deliveryOf(mode) {
   if (mode?.hitCondition?.kind === 'pellets') return { hit: L(`${projectile(mode)} 1개`, `1 ${projectile(mode, 1)}`), verb: L('명중', 'Hit') };
   if (mode?.delivery === 'explosive') return { hit: L('폭발', 'Explosion'), verb: L('기폭', 'Detonation') };
   if (mode?.beam) return { hit: L('광선', 'Beam'), verb: L('광선 유지', 'Beam held') };
-  if (mode?.delivery === 'arc') return { hit: L('전격', 'Arc'), verb: L('전격 명중', 'Arc hit') };
+  if (mode?.delivery === 'arc') return { hit: L('아크', 'Arc'), verb: L('아크 명중', 'Arc hit') };
   if (mode?.delivery === 'guided') return { hit: L('착탄', 'Impact'), verb: L('착탄', 'Impact') };
   if (mode?.delivery === 'flag' || mode?.delivery === 'melee') return { hit: L('타격', 'Strike'), verb: L('타격', 'Strike') };
   if (mode?.delivery === 'adhesive') return { hit: L('부착 폭발', 'Stuck explosion'), verb: L('부착', 'Stick') };
@@ -145,7 +145,7 @@ export function assumptionText(mode) {
     `By default all ${projectile(mode)} hit the same part. You can lower the hit rate to recalculate.`);
   if (c?.kind === 'shrapnel') return L(`기본은 파편의 ${c.defaultPct}%를 반올림한 개수가 같은 부위에 ${mode.delivery === 'explosive' ? '주폭발' : '주탄 직격·폭발'}과 함께 맞는 가정입니다. 명중률을 바꿀 수 있으며, 파편 0개를 고르면 파편 피해는 제외합니다.`,
     `By default ${c.defaultPct}% of the fragments (rounded) hit the same part along with the ${mode.delivery === 'explosive' ? 'main explosion' : 'main projectile\'s impact and explosion'}. You can change the hit rate; 0 fragments leaves shrapnel damage out.`);
-  if (c?.kind === 'arcs') return L('기본은 전격이 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있으며, 실제로 모두 맞는다는 보장은 없습니다.',
+  if (c?.kind === 'arcs') return L('기본은 아크가 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있으며, 실제로 모두 맞는다는 보장은 없습니다.',
     'By default every arc hits the same part. You can lower the hit rate to recalculate; there is no guarantee they all land.');
   if (c?.kind === 'bomblets') return L(`기본은 자탄의 ${c.defaultPct}%를 반올림한 개수의 ${c.defaultBombletDirect ? '직격과 폭발' : '폭발'}이 같은 부위에 맞는 가정입니다.${c.defaultPrimaryHit === 'none' ? ' 주탄 피해는 기본에서 제외합니다.' : ''} 명중률과 주탄·자탄의 직격 여부를 바꿔 다시 계산할 수 있습니다. 여러 부위 동시 피해는 더하지 않습니다.`,
     `By default ${c.defaultPct}% of the bomblets (rounded) hit the same part with their ${c.defaultBombletDirect ? 'impact and explosion' : 'explosion'}.${c.defaultPrimaryHit === 'none' ? ' The main projectile\'s damage is left out by default.' : ''} You can change the hit rate and whether the main projectile and bomblets hit directly. Damage to several parts at once is not added.`);
@@ -161,7 +161,7 @@ export function assumptionText(mode) {
     'Assumes repeated strikes on the same part from the front. Armor melee bonuses are left out.');
   if (mode?.delivery === 'guided') return L('미사일이 해당 부위에 직접 착탄하는 조건. 유도 궤적이 이 부위를 보장하지는 않습니다.',
     'Assumes the missile impacts this part directly. The guided path does not guarantee it.');
-  if (mode?.delivery === 'arc') return L('전격이 해당 부위에 계속 닿는 조건. 전격은 부위를 골라 조준할 수 없습니다.',
+  if (mode?.delivery === 'arc') return L('아크가 해당 부위에 계속 닿는 조건. 아크는 부위를 골라 조준할 수 없습니다.',
     'Assumes the arc keeps hitting this part. Arcs cannot be aimed at a specific part.');
   if (explosionsOf(mode || {}).length) return L('같은 부위에 직격과 최대 폭발 피해가 함께 들어가는 조건. 여러 부위 동시 피해는 더하지 않습니다.',
     'Assumes the part takes the direct hit plus full explosion damage. Damage to several parts at once is not added.');
@@ -241,8 +241,8 @@ export function assumptionSummary(mode) {
     return count === 0 ? L(`폭발 1회당 파편 0개가 이 부위에 명중 + ${primary} (파편 피해 제외)`, `0 fragments per explosion hit this part + ${primary} (shrapnel left out)`)
       : L(`파편 ${max}개 중 ${count}개(${percent})가 이 부위에 명중${tag} + ${primary}`, `${count} of ${max} fragments (${percent}) hit this part${tag} + ${primary}`);
   }
-  if (mode.hitCondition.kind === 'arcs') return (count === max ? L(`전격 ${max}회 모두 이 부위에 명중`, `All ${max} arcs hit this part`)
-    : L(`전격 ${max}회 중 ${count}회(${percent})가 이 부위에 명중`, `${count} of ${max} arcs (${percent}) hit this part`)) + tag;
+  if (mode.hitCondition.kind === 'arcs') return (count === max ? L(`아크 ${max}회 모두 이 부위에 명중`, `All ${max} arcs hit this part`)
+    : L(`아크 ${max}회 중 ${count}회(${percent})가 이 부위에 명중`, `${count} of ${max} arcs (${percent}) hit this part`)) + tag;
   const primary = { none: L('주탄 피해 제외', 'No main projectile damage'), blast: L('주탄 폭발만', 'Main projectile explosion only'), direct: L('주탄 직격 + 폭발', 'Main projectile impact + explosion') }[primaryHit];
   return L(`${primary} · 자탄 ${max}개 중 ${count}개(${percent}) ${bombletDirect && count > 0 ? '직격 + 폭발' : '폭발'}이 이 부위에 명중${tag}`,
     `${primary} · ${count} of ${max} bomblets (${percent}) hit this part with ${bombletDirect && count > 0 ? 'impact + explosion' : 'explosion'}${tag}`);
@@ -265,13 +265,13 @@ export function assumptionTag(mode) {
     ? L(`파편 제외 · ${mode.delivery === 'explosive' ? '폭발만' : '직격·폭발만'}`, `No shrapnel · ${mode.delivery === 'explosive' ? 'explosion only' : 'impact and explosion only'}`)
     : mode.assumption && mode.assumption.count === c.default ? L(`파편 ${c.defaultPct}% 기본 가정`, `Default ${c.defaultPct}% fragments`) : L(`파편 명중 수 ${chosen}`, `Fragment hits: ${chosen}`);
   if (['arcs', 'bomblets'].includes(c?.kind)) {
-    const name = c.kind === 'arcs' ? L('전격', 'arcs') : L('자탄', 'bomblets');
+    const name = c.kind === 'arcs' ? L('아크', 'arcs') : L('자탄', 'bomblets');
     return mode.assumption && mode.assumption.count === c.default ? L(`${name} ${c.defaultPct}% 기본 가정`, `Default ${c.defaultPct}% ${name}`)
       : L(`${name} 명중 수 ${chosen}`, `Hits (${name}): ${chosen}`);
   }
   if (!mode?.conditionalImpact) return '';
   if (mode.beam) return L('광선 유지 가정', 'Assumes beam held');
-  if (mode.delivery === 'arc') return L('전격 명중 가정 · 부위 조준 불가', 'Assumes arc hits · cannot aim at parts');
+  if (mode.delivery === 'arc') return L('아크 명중 가정 · 부위 조준 불가', 'Assumes arc hits · cannot aim at parts');
   if (mode.delivery === 'guided') return L('착탄 부위 가정 · 유도 궤적 비보장', 'Assumed impact point · guided path not guaranteed');
   if (mode.delivery === 'harpoon') return L('직격만 계산 · 가스 피해 제외', 'Impact only · gas damage left out');
   if (mode.delivery === 'flag') return L('찌르기 명중 가정', 'Assumes stab hits');

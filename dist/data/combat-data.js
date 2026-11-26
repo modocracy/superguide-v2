@@ -578,8 +578,8 @@ export const weaponProfiles = {
     extraSource: wiki('Module:Decodedata-Attacks/weapons_data.json'),
   },
   'arc-thrower': reviewedImpact('ARC-3_Arc_Thrower', [
-    shot('first-target', '첫 표적 · 전격 명중', 250, 100, 7, 0, 0, { delivery: 'arc', range: 55 }),
-  ], '처음 맞은 적의 이 부위에 전격이 계속 맞는다고 보고 계산합니다. 원하는 부위를 골라 맞힐 수 있는 무기는 아니며, 옆 적으로 튄 전격의 피해는 빼고 계산합니다.'),
+    shot('first-target', '첫 표적 · 아크 명중', 250, 100, 7, 0, 0, { delivery: 'arc', range: 55 }),
+  ], '처음 맞은 적의 이 부위에 아크가 계속 맞는다고 보고 계산합니다. 원하는 부위를 골라 맞힐 수 있는 무기는 아니며, 옆 적으로 튄 아크의 피해는 빼고 계산합니다.'),
   'spear': reviewedImpact('FAF-14_Spear', [
     shot('impact', '유도 미사일 · 착탄 부위 기준', 4000, 4000, 7, 200, 3, { delivery: 'guided', explosionDurable: 200, innerRadius: 1.5, radius: 3 }),
   ], '락온한 미사일이 이 부위에 바로 맞는다고 보고 계산합니다. 실제로 어디에 맞을지는 장담할 수 없고, 폭발이 여러 부위에 함께 들어가는 피해는 합치지 않습니다.'),
@@ -591,8 +591,8 @@ export const weaponProfiles = {
   ], '작살이 직접 맞는 피해만 계산합니다. 가스 구름과 중독 피해는 빼므로, 실제로는 더 적은 발로 처치될 수 있습니다.'),
   'de-escalator': reviewedImpact('GL-52_De-Escalator', [
     // carrier: the grenade's own hit before its arcs, the game data sheet's projectile (datamine GL-52_P), user request 2026-11-26.
-    shot('arc', '전격 · 명중 수 조건', 100, 70, 4, 0, 0, { delivery: 'arc', range: 10, carrier: shot('grenade', '유탄 직격', 20, 2, 0), hitCondition: { kind: 'arcs', min: 1, max: 10, default: 10, defaultPct: 100 } }),
-  ], '유탄이 이 부위에 직접 맞는 피해 20(내구 2, 관통 0)과 고른 개수만큼의 전격 피해를 더합니다. 전격 1개는 피해 100(내구 70), 관통 4입니다. 유탄 하나에서 전격 10개가 나가지만 이 부위에 몇 개가 맞는지는 알려지지 않아 맞는 개수를 직접 고르게 했습니다. 전격에는 폭발 저항을 적용하지 않습니다.'),
+    shot('arc', '아크 · 명중 수 조건', 100, 70, 4, 0, 0, { delivery: 'arc', range: 10, carrier: shot('grenade', '유탄 직격', 20, 2, 0), hitCondition: { kind: 'arcs', min: 1, max: 10, default: 10, defaultPct: 100 } }),
+  ], '유탄이 이 부위에 직접 맞는 피해 20(내구 2, 관통 0)과 고른 개수만큼의 아크 피해를 더합니다. 아크 1개는 피해 100(내구 70), 관통 4입니다. 유탄 하나에서 아크 10개가 나가지만 이 부위에 몇 개가 맞는지는 알려지지 않아 맞는 개수를 직접 고르게 했습니다. 아크에는 폭발 저항을 적용하지 않습니다.'),
   'airburst-launcher': reviewedImpact('RL-77_Airburst_Rocket_Launcher', [
     ...[
       ['flak', '대공포탄 모드', '근접 신관으로 공중에서 터질 수 있어, 주탄이 직접 맞지 않으면 직격 피해는 들어가지 않습니다.'],

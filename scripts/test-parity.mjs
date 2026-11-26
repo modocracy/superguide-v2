@@ -26,6 +26,7 @@ const legacyReason = {
   'no-damage': '이 부위와 본체에 계산상 피해가 들어가지 않습니다.',
   'no-damage-after-armor': '장갑은 제거했지만 노출 부위에 피해를 주지 못합니다.',
   'no-damage-assumed': '선택한 명중 조건에서는 이 부위와 본체에 피해가 들어가지 않습니다.',
+  // The recorded legacy wording ('전격', before the site moved to the game's '아크', 2026-11-26): it must match the fixture.
   'leftover-events': '장갑 파괴 후 같은 발의 남은 전격·자탄이 노출 부위에 닿는지는 자료 미확인입니다. 최종 탄수는 계산 보류합니다.',
   'too-many-hits': '계산 범위를 초과했습니다.',
   'beam-data-missing': '자료 미확인: 광선의 피해·지속시간 또는 부위 수치가 확인되지 않아 계산을 보류합니다.',

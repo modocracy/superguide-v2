@@ -129,7 +129,7 @@ function setSlot(slot, id) {
 
 // --- Coverage ----------------------------------------------------------------------
 const hitsText = (answer) => answer?.hits != null ? L(`${num(answer.hits)}${answer.unit || '발'}${answer.lowerBound ? '+' : ''}`, `${num(answer.hits)}${answer.lowerBound ? '+' : ''}${unitText(answer.unit, answer.hits)}`) : '';
-const ASSUMED_NOUN = L({ pellets: '펠릿', arcs: '전격', bomblets: '자탄', shrapnel: '파편' }, { pellets: 'pellets', arcs: 'arcs', bomblets: 'bomblets', shrapnel: 'fragments' });
+const ASSUMED_NOUN = L({ pellets: '펠릿', arcs: '아크', bomblets: '자탄', shrapnel: '파편' }, { pellets: 'pellets', arcs: 'arcs', bomblets: 'bomblets', shrapnel: 'fragments' });
 const magsText = answer => answer?.magazinesNeeded > 1 ? L(`탄창 ${num(answer.magazinesNeeded)}개`, `${num(answer.magazinesNeeded)} magazines`) : '';
 
 function assumedNote(answer) {

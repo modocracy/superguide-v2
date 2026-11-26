@@ -28,8 +28,8 @@ import { GROUPS, groupOf, typeName, weaponById, displayName, orderTypes, recoilS
 import { L, T, lang } from '../../core/i18n.js';
 
 const DOT_ICON = { gas: 'gas', fire: 'fire', arc: 'arc', electric: 'arc' };
-const ELEMENTS = { fire: L('화상', 'Fire'), gas: L('가스', 'Gas'), arc: L('전격', 'Arc'), electric: L('전격', 'Arc') };
-const TRAIT_BADGES = { fire: L('화상', 'Fire'), guided: L('유도', 'Guided'), arc: L('전격', 'Arc'), stun: L('기절', 'Stun'), 'one-handed': L('한손', 'One-handed') };
+const ELEMENTS = { fire: L('화상', 'Fire'), gas: L('가스', 'Gas'), arc: L('아크', 'Arc'), electric: L('아크', 'Arc') };
+const TRAIT_BADGES = { fire: L('화상', 'Fire'), guided: L('유도', 'Guided'), arc: L('아크', 'Arc'), stun: L('기절', 'Stun'), 'one-handed': L('한손', 'One-handed') };
 const SORTS = [
   { id: '', name: L('기본 순서', 'Default order') },
   { id: 'damage', name: L('피해 순', 'Damage'), value: w => w.direct != null ? w.direct * (w.pellets || 1) : w.splash },
@@ -119,7 +119,7 @@ export function gearStats(w) {
     : w.direct != null && w.damageKind === 'dps'
     ? { label: L('지속 피해', 'Damage/s'), text: num(w.direct), unit: '/s', caption: L('광선 초당', 'Beam per second') }
     : w.direct != null
-    ? { label: L('피해', 'Damage'), text: w.pellets > 1 ? `${num(w.direct)}×${w.pellets}` : num(w.direct), caption: w.pellets > 1 ? L(`펠릿 ${w.pellets}개`, `${w.pellets} pellets`) : w.splash ? L(`+ 폭발 ${num(w.splash)}`, `+ ${num(w.splash)} blast`) : hitKind(w) === 'arc' ? L('전격 1개', 'Per arc') : L('한 발', 'Per shot') }
+    ? { label: L('피해', 'Damage'), text: w.pellets > 1 ? `${num(w.direct)}×${w.pellets}` : num(w.direct), caption: w.pellets > 1 ? L(`펠릿 ${w.pellets}개`, `${w.pellets} pellets`) : w.splash ? L(`+ 폭발 ${num(w.splash)}`, `+ ${num(w.splash)} blast`) : hitKind(w) === 'arc' ? L('아크 1개', 'Per arc') : L('한 발', 'Per shot') }
     : w.splash != null ? { label: L('폭발', 'Blast'), text: num(w.splash), caption: w.shrapnelCount ? L(`+ 파편 ${w.shrapnelCount}개`, `+ ${w.shrapnelCount} fragments`) : L('중심부 최대', 'Max at center') }
     : w.dot?.perSecond != null ? { label: L('지속 피해', 'Damage/s'), text: num(w.dot.perSecond), unit: '/s', caption: ELEMENTS[w.dot.element] || '' }
     : { label: L('피해', 'Damage'), ...dim(isUtility(w) ? L('없음', 'None') : L('미확인', 'Unverified')), caption: isUtility(w) ? L('지원용', 'Utility') : '' };
@@ -259,7 +259,7 @@ function detailRows(w) {
   if (w.direct != null && w.damageKind === 'dps') add(L('광선 피해', 'Beam damage'), num(w.direct), perSecond, L('비추고 있는 동안', 'While the beam is on target'));
   if (w.direct != null && w.damageKind === 'dps') rows.at(-1).icon = 'laser';
   else if (w.direct != null && kind === 'spray') add(L('입자 피해', 'Particle damage'), num(w.direct), '', L('분사 입자 1개', 'One spray particle'));
-  else if (w.direct != null) add(w.pellets > 1 ? L('펠릿당 피해', 'Damage per pellet') : kind === 'arc' ? L('전격', 'Arc') : kind === 'beam' ? L('광선', 'Beam') : L('직격', 'Direct'), num(w.direct), '', w.pellets > 1 ? L(`${w.pellets}발 모두 맞으면 ${num(w.direct * w.pellets)}`, `${num(w.direct * w.pellets)} if all ${w.pellets} hit`) : L('장갑에 막히지 않을 때', 'When armor does not stop it'));
+  else if (w.direct != null) add(w.pellets > 1 ? L('펠릿당 피해', 'Damage per pellet') : kind === 'arc' ? L('아크', 'Arc') : kind === 'beam' ? L('광선', 'Beam') : L('직격', 'Direct'), num(w.direct), '', w.pellets > 1 ? L(`${w.pellets}발 모두 맞으면 ${num(w.direct * w.pellets)}`, `${num(w.direct * w.pellets)} if all ${w.pellets} hit`) : L('장갑에 막히지 않을 때', 'When armor does not stop it'));
   // Only firing modes carry ammoPerShot (all barrels at once, a volley).
   if (w.ammoPerShot > 1 && w.direct != null) add(L('한 번에 발사', 'Fired at once'), num(w.ammoPerShot), L('발', ''), L(`모두 맞으면 ${num(w.direct * (w.pellets || 1) * w.ammoPerShot)}`, `${num(w.direct * (w.pellets || 1) * w.ammoPerShot)} if all hit`));
   // Fires whatever is left in the magazine (Variable "Total"), so the full magazine is the most.
@@ -284,7 +284,7 @@ function detailRows(w) {
     rows.at(-1).icon = 'fire';
   }
   if (w.radius != null && w.innerRadius != null) add(L('폭발 반경', 'Blast radius'), num(w.innerRadius), 'm', blastCaption(w));
-  else if (w.radius != null && kind === 'arc') add(L('전격 범위', 'Arc reach'), num(w.radius), 'm');
+  else if (w.radius != null && kind === 'arc') add(L('아크 범위', 'Arc reach'), num(w.radius), 'm');
   else if (w.radius != null) add(L('폭발 반경', 'Blast radius'), num(w.radius), 'm', L('외곽', 'Outer'));
   extra('reach');
   // The deployed shield of the Shield grenade (wiki datamine table).
@@ -554,7 +554,7 @@ function specialCells(w) {
   const top = list => strongest(list.map(row => ({ ...row, demo: row.demolition })));
   const rows = [top(all.filter(row => !row.blast)), top(all.filter(row => row.blast))].filter(Boolean);
   // The hit row is named for what hits: a beam, an arc or a flame spray (user request 2026-11-26).
-  const HIT = { direct: ['ico-ballistic', L('직격 효과', 'Direct effects')], beam: ['ico-laser', L('광선 효과', 'Beam effects')], arc: ['ico-arc', L('전격 효과', 'Arc effects')], spray: ['ico-fire', L('분사 효과', 'Spray effects')] };
+  const HIT = { direct: ['ico-ballistic', L('직격 효과', 'Direct effects')], beam: ['ico-laser', L('광선 효과', 'Beam effects')], arc: ['ico-arc', L('아크 효과', 'Arc effects')], spray: ['ico-fire', L('분사 효과', 'Spray effects')] };
   const hitLabel = row => { const [cls, text] = HIT[hitKind(row)]; return html`<span class="${cls}" aria-hidden="true"></span>${tipLabel(text, FORCE_NOTE)}`; };
   return rows.map(row => html`<div><dt>${row.blast ? html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}` : hitLabel(row)}</dt><dd class="force-lines">
     <span class="force-line">${forcePair(L('철거력', 'Demolition'), row.demolition ?? '?')}${forcePair(L('저지력', 'Stagger'), row.stun ?? '?')}${forcePair(L('넉백', 'Push'), row.push ?? '?')}</span></dd></div>`);

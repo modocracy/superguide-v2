@@ -6,7 +6,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
   const sprayReason = '불꽃이 몇 번 닿는지 확인되지 않아 발 단위로 계산하지 않습니다.';
   const specialReasons = {
     'double-edge-sickle': '총이 뜨거워지면 피해가 달라집니다. 피해가 바뀌는 정확한 조건을 확인하지 못해 계산하지 않습니다.',
-    arc: '던진 뒤 전격이 몇 번 발생하고 같은 부위에 몇 번 맞는지 확인되지 않아 계산하지 않습니다.',
+    arc: '던진 뒤 아크가 몇 번 발생하고 같은 부위에 몇 번 맞는지 확인되지 않아 계산하지 않습니다.',
     'throwing-knife': '칼 한 개를 던져 맞혔을 때의 정확한 피해를 확인하지 못해 계산하지 않습니다.',
     'stim-pistol': '치료용 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
     smoke: '연막을 펼치는 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
@@ -105,7 +105,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
       if (mode.hitCondition?.kind === 'pellets') {
         mode.note = [mode.note, `기본은 ${mode.hitCondition.projectileName || '펠릿'}이 모두 맞는다고 계산합니다. 명중률을 낮춰 다시 계산할 수 있습니다.`].filter(Boolean).join(' ');
       }
-      if (mode.hitCondition?.kind === 'arcs') mode.note = [mode.note, '기본은 전격이 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있습니다.'].filter(Boolean).join(' ');
+      if (mode.hitCondition?.kind === 'arcs') mode.note = [mode.note, '기본은 아크가 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있습니다.'].filter(Boolean).join(' ');
       if (![mode.standard, mode.durable, mode.ap, mode.explosion, mode.explosionDurable, mode.explosionAp].every(finite)) mode.unsupported = '피해량이나 장갑을 뚫는 능력이 정확히 확인되지 않아 계산하지 않습니다.';
       else if (mode.standard + mode.durable + mode.explosion + mode.explosionDurable === 0) mode.unsupported = '직접 주는 피해가 없는 지원 장비입니다. 적을 기절시키는 등의 효과를 피해로 바꿔 계산하지 않습니다.';
     }

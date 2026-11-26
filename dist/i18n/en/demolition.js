@@ -103,7 +103,7 @@ export default {
   "임무에서 지정한 저장 시설 기준입니다. 주변의 작은 폭발 드럼통과는 다릅니다.": "Counts the storage facility the mission marks. It is not the same as the small explosive barrels around it.",
   "보호막을 제거하고 열린 출입구 안에 폭발을 넣는 것이 기본 경로입니다. 본체 폭발 피해는 2.5배입니다.": "The standard route is to take down the shield and get a blast inside the open door. The main body takes 2.5× explosive damage.",
   "외벽의 비폭발 공격 허용 여부는 위키 표끼리 다릅니다. 직접 파괴 사례가 확인된 궤도 지원 외에는 해당 경로를 확정하지 않습니다.": "Wiki tables disagree on whether non-explosive attacks work on the hull. Except for orbital support, where direct kills have been confirmed, that route is not treated as confirmed.",
-  "전격을 방출하는 첨탑 본체를 공격하세요. 체력에 피해를 주는 경로도 있습니다.": "Attack the spire body that emits the arcs. Damaging its health also works.",
+  "아크를 방출하는 첨탑 본체를 공격하세요. 체력에 피해를 주는 경로도 있습니다.": "Attack the spire body that emits the arcs. Damaging its health also works.",
   "주변 전원 장치 한 개 기준입니다. 시설 전체의 임무 완료 조건과 구분하세요.": "Counts one nearby PSU. Don't confuse this with the completion condition for the whole objective.",
   "지옥폭탄이나 SEAF 소형 핵탄두의 중심부로 철거하세요.": "Demolish it with the center of a Hellbomb or SEAF Mini-Nuke blast.",
   "스토커 둥지": "Stalker Lair",

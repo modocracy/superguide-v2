@@ -29,7 +29,7 @@ export function variantDisplayName(weapon, variant, index) {
   if (weapon.id === 'halt') return variant.id === 'projectile-sg-20-p1' ? '기절탄' : '플레셰트탄';
   if (variant.delivery === 'explosion') return weapon.id === 'breacher' ? '지연 폭발' : '폭발';
   if (variant.delivery === 'spray') return '화염 분사';
-  if (variant.delivery === 'arc') return '전격';
+  if (variant.delivery === 'arc') return '아크';
   if (variant.delivery === 'damage' && weapon.id === 'melta-mine') return '화염벽';
   if (weapon.id === 'double-edge-sickle') return `열 상태별 탄체 ${index + 1}`;
   // Multiple projectile keys do not identify which selectable state they use.
@@ -196,8 +196,8 @@ export function playerDetails(weapon, box) {
   if (weapon.pellets > 1) playerNotes.push('표시 피해는 펠릿 한 개 기준입니다. 기본 계산은 펠릿이 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다.');
   // G-31 Arc page rev 140502: damage '100 (x10)' in the infobox, and it lets out arcs 'a total of 5 times', bouncing
   // each time. The page does not say whether the x10 is per bounce or for the whole grenade, so neither is assumed.
-  if (weapon.id === 'arc') playerNotes.push('위키 표기 피해는 전격 1개당 100(x10)입니다. 던지면 땅에 잠시 머문 뒤, 작은 범위에서 튕기며 전격을 모두 5번 내뿜습니다.');
-  if (weapon.id === 'blitzer') playerNotes.push('표시 피해는 전격 한 줄기 기준입니다. 기본은 다섯 줄기가 같은 부위에 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다. 실제로 모두 맞는다는 보장은 없습니다.');
+  if (weapon.id === 'arc') playerNotes.push('위키 표기 피해는 아크 1개당 100(x10)입니다. 던지면 땅에 잠시 머문 뒤, 작은 범위에서 튕기며 아크를 모두 5번 내뿜습니다.');
+  if (weapon.id === 'blitzer') playerNotes.push('표시 피해는 아크 한 줄기 기준입니다. 기본은 다섯 줄기가 같은 부위에 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다. 실제로 모두 맞는다는 보장은 없습니다.');
   if ([weapon, ...weapon.variants].some(attack => attack.delivery === 'spray')) playerNotes.push('화염 분사는 불길에 닿은 시간에 따라 피해가 달라져 정확한 처치 탄수를 계산하지 않습니다.');
   if (weapon.delivery === 'beam') playerNotes.push(weapon.damageKind === 'dps'
     ? '표시 피해는 빔이 1초 동안 닿는 기준입니다. 한 발의 피해나 처치 탄수로 환산하지 않습니다.'

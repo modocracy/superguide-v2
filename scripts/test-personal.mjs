@@ -308,13 +308,13 @@ ok(!attackStats(mode('frag')).some(stat => stat.label.includes('자탄')), 'frag
 ok(aimText(frag, fragmentsZero).some(line => line.includes('파편 0개')), 'aim repeats selected assumption');
 ok(aimText(frag, fragmentsZero).some(line => line.includes('폭발 중심')), 'fragment shots retain blast aim condition');
 ok(routeNotes(head('hunter-hardened', mode('breaker')), mode('breaker')).some(note => note.includes('펠릿 수를 고르세요')), 'pending route notes identify pellets');
-eq(assumptionSummary(withHitAssumption(weaponProfiles['de-escalator'].modes[0], { hitCount: 2 })), '전격 10회 중 2회(20%)가 이 부위에 명중 (명중 수 가정)');
+eq(assumptionSummary(withHitAssumption(weaponProfiles['de-escalator'].modes[0], { hitCount: 2 })), '아크 10회 중 2회(20%)가 이 부위에 명중 (명중 수 가정)');
 eq(assumptionSummary(withHitAssumption(weaponProfiles['airburst-launcher'].modes[0], { hitCount: 2 })), '주탄 폭발만 · 자탄 25개 중 2개(8%) 폭발이 이 부위에 명중 (명중 수 가정)');
 eq(assumptionSummary(withHitAssumption(mode('frag'), { hitCount: 7 })), '파편 35개 중 7개(20%)가 이 부위에 명중 (기본 가정) + 주폭발');
 eq(assumptionSummary(withHitAssumption(mode('pineapple'), { hitCount: 4 })), '파편 18개 중 4개(약 22%)가 이 부위에 명중 (기본 가정) + 주폭발', 'display actual rounded count percentage, retain configured 20 in metadata');
-eq(assumptionSummary(withHitAssumption(mode('blitzer'), { hitCount: 5 })), '전격 5회 모두 이 부위에 명중 (기본 가정)');
+eq(assumptionSummary(withHitAssumption(mode('blitzer'), { hitCount: 5 })), '아크 5회 모두 이 부위에 명중 (기본 가정)');
 eq(assumptionTag(withHitAssumption(mode('frag'), { hitCount: 7 })), '파편 20% 기본 가정');
-eq(assumptionTag(withHitAssumption(mode('blitzer'), { hitCount: 5 })), '전격 100% 기본 가정');
+eq(assumptionTag(withHitAssumption(mode('blitzer'), { hitCount: 5 })), '아크 100% 기본 가정');
 eq(assumptionTag(withHitAssumption(weaponProfiles['airburst-launcher'].modes[0], { hitCount: 5 })), '자탄 20% 기본 가정');
 ok(assumptionSummary(withHitAssumption(personalProfiles.variable.modes.find(m => m.id === 'volley'), { hitCount: 2 })).includes('탄환 7개 중 2개'), 'volley bullets are not shotgun pellets');
 eq(mode('eruptor').hitCondition.kind, 'shrapnel');

@@ -161,7 +161,7 @@ for (const w of singles) {
   const content = String(weaponDetail(w));
   ok(!content.includes('data-variant'), `${w.id}: single-mode weapon has no mode tabs`);
   // The Arc grenade shows its arcs as the hit, with no component table (user request 2026-11-26).
-  if (arcShown(w)) ok(!content.includes('class="compare-table gear-modes"') && shows(content, '전격', '100') && content.includes('전격 효과') && !content.includes('폭발 효과'), `${w.id}: arcs as the hit, no component table or blast effect`);
+  if (arcShown(w)) ok(!content.includes('class="compare-table gear-modes"') && shows(content, '아크', '100') && content.includes('아크 효과') && !content.includes('폭발 효과'), `${w.id}: arcs as the hit, no component table or blast effect`);
   // Charge and heat states read as 'low~high' in the key stats, as the Epoch does, and the Accelerator Rifle's empty charge
   // stages get no table (user request 2026-11-26); the others keep their component table.
   else if (['loyalist', 'purifier', 'double-edge-sickle'].includes(w.id)) ok(!content.includes('class="compare-table gear-modes"') && /\d~\d/.test(content), `${w.id}: states as a range, no component table`);
@@ -187,7 +187,7 @@ ok(embeddedWeapon.includes('data-variant="underbarrel" aria-pressed="true"'), 'e
 ok(embeddedWeapon.includes('href="#/gear/arbitrator?m=underbarrel"'), 'full-page link preserves weapon mode');
 // Effect badges from the wiki infobox trait list: each traitTags entry shows once, burn never twice.
 {
-  const LABELS = { fire: '화상', guided: '유도', arc: '전격', stun: '기절', 'one-handed': '한손' };
+  const LABELS = { fire: '화상', guided: '유도', arc: '아크', stun: '기절', 'one-handed': '한손' };
   for (const w of weaponById.values()) {
     const chips = String(weaponDetail(w)).match(/<div class="chips"[\s\S]*?<\/div>/)?.[0] ?? '';
     for (const tag of w.traitTags ?? []) ok(chips.includes(`>${LABELS[tag]}</span>`), `${w.id}: ${LABELS[tag]} badge shown`);
@@ -433,7 +433,7 @@ try {
       const variant = item.variants?.find(v => v.id === id);
       const kinds = new Set(forces.filter(f => !variant || [variant.record ?? []].flat().includes(f.attack) || !claimed.includes(f.attack)).flatMap(f => f.parts.map(p => p.kind)));
       const labels = labelsOf(body);
-      if (['direct', 'beam', 'arc', 'spray'].some(k => kinds.has(k))) ok(labels.some(l => /직격|광선|전격|분사/.test(l)), `${item.id} ${id}: direct effect cell`);
+      if (['direct', 'beam', 'arc', 'spray'].some(k => kinds.has(k))) ok(labels.some(l => /직격|광선|아크|분사/.test(l)), `${item.id} ${id}: direct effect cell`);
       // A blast with no force at all (the De-Escalator's burst) has no cell.
       const blasts = forces.flatMap(f => f.parts).filter(p => p.kind === 'blast' && (p.demo || p.stun || p.push));
       if (kinds.has('blast') && blasts.length) ok(labels.some(l => /폭발 효과/.test(l)), `${item.id} ${id}: blast effect cell`);
@@ -443,7 +443,7 @@ try {
     if (arcShown(w)) continue;   // checked with the single-mode weapons above
     const rows = [w, ...(w.variants ?? [])].filter(r => !String(r.id ?? '').startsWith('shrapnel'));
     const labels = labelsOf(String(weaponDetail(w)));
-    if (rows.some(r => r.delivery !== 'explosion' && (r.demolition != null || r.stun != null || r.push != null))) ok(labels.some(l => /직격|광선|전격|분사/.test(l)), `${w.id}: direct effect cell`);
+    if (rows.some(r => r.delivery !== 'explosion' && (r.demolition != null || r.stun != null || r.push != null))) ok(labels.some(l => /직격|광선|아크|분사/.test(l)), `${w.id}: direct effect cell`);
     if (rows.some(r => (r.delivery === 'explosion' && (r.demolition != null || r.stun != null || r.push != null)) || r.splashDemolition != null || r.splashStun != null || r.splashPush != null)) ok(labels.some(l => /폭발/.test(l)), `${w.id}: blast effect cell`);
   }
 }

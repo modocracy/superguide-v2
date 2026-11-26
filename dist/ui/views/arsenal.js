@@ -60,9 +60,9 @@ function stats(item) {
     : { text: item.rangeLabel || L('미확인', 'Unverified'), dim: !item.rangeLabel || item.rangeLabel === '미확인', label: L('범위', 'Area'), caption: item.rangeNoteShort };
   const kind = hitKind(item);
   const hitName = dps ? (kind === 'beam' ? L('광선 피해', 'Beam damage') : kind === 'spray' && streamOf(item) === 'fire' ? L('화염 피해', 'Fire damage') : L('지속 피해', 'Damage/s'))
-    : { arc: L('전격', 'Arc'), spray: L('입자 피해', 'Particle damage'), beam: L('광선', 'Beam') }[kind] ?? L('직격', 'Direct');
+    : { arc: L('아크', 'Arc'), spray: L('입자 피해', 'Particle damage'), beam: L('광선', 'Beam') }[kind] ?? L('직격', 'Direct');
   // A grenade whose burst is a ring of arcs (De-Escalator) names its second cell for them.
-  const splashName = item.splashKind === 'arc' ? L('전격', 'Arc') : L('폭발', 'Blast');
+  const splashName = item.splashKind === 'arc' ? L('아크', 'Arc') : L('폭발', 'Blast');
   return [
     { label: hitName, icon: dps ? streamOf(item) : '', caption: item.directNoteShort || (none ? L('지원 장비', 'Utility gear') : dps ? L('초당', 'Per second') : item.unit), ...value(item.direct, item.directText) },
     { label: splashName, caption: item.splashNoteShort || (item.splash > 0 ? L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
@@ -422,7 +422,7 @@ function timingBlock(item, expanded = false) {
 
 // Special effects: demolition, stagger and push force of each attack from the wiki attack
 // datamine (stratagem-stats.js `forces`); demolition-data.js where the datamine has no record.
-const FORCE_KIND = { direct: L('직격', 'Direct'), beam: L('광선', 'Beam'), arc: L('전격', 'Arc'), spray: L('분사', 'Spray'), blast: L('폭발', 'Blast'), fragment: L('파편', 'Fragment'), overcharge: L('과충전 폭발', 'Overcharge blast'), backblast: L('후폭풍', 'Backblast'), wreck: L('차량 폭발', 'Vehicle explosion') };
+const FORCE_KIND = { direct: L('직격', 'Direct'), beam: L('광선', 'Beam'), arc: L('아크', 'Arc'), spray: L('분사', 'Spray'), blast: L('폭발', 'Blast'), fragment: L('파편', 'Fragment'), overcharge: L('과충전 폭발', 'Overcharge blast'), backblast: L('후폭풍', 'Backblast'), wreck: L('차량 폭발', 'Vehicle explosion') };
 export { FORCE_NOTE };
 const DIRECT_KINDS = ['direct', 'beam', 'arc', 'spray'];
 // Explosions (the blast, an overcharge, a backblast) carry the blast icon in front of their name.
@@ -438,7 +438,7 @@ const hitKind = item => {
   const kinds = (stratagemStats[item.id]?.forces ?? []).flatMap(group => group.parts.map(part => part.kind));
   if (item.unit === '분사 입자 1개') return 'spray';
   if (kinds.includes('direct')) return 'direct';
-  if (kinds.includes('arc') || (!kinds.length && item.tags?.includes('전격'))) return 'arc';
+  if (kinds.includes('arc') || (!kinds.length && item.tags?.includes('아크'))) return 'arc';
   if (kinds.includes('beam') || streamOf(item) === 'laser') return 'beam';
   return kinds.includes('spray') ? 'spray' : 'direct';
 };
@@ -451,7 +451,7 @@ function fallbackRows(profile, value, item) {
   const top = key => profile.modes.map(mode => mode[key]).filter(force => force != null)
     .reduce((best, force) => best == null || (typeof force === 'number' ? force : force.max) > (typeof best === 'number' ? best : best.max) ? force : best, null);
   const arc = hitKind(item) === 'arc';
-  const rows = [['direct', arc ? html`<span class="ico-arc" aria-hidden="true"></span>${tipLabel(L('전격 효과', 'Arc effects'), FORCE_NOTE)}` : html`<span class="ico-ballistic" aria-hidden="true"></span>${tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)}`], ['explosion', html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}`]].map(([key, label]) => [label, top(key)]).filter(([, force]) => force != null)
+  const rows = [['direct', arc ? html`<span class="ico-arc" aria-hidden="true"></span>${tipLabel(L('아크 효과', 'Arc effects'), FORCE_NOTE)}` : html`<span class="ico-ballistic" aria-hidden="true"></span>${tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)}`], ['explosion', html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}`]].map(([key, label]) => [label, top(key)]).filter(([, force]) => force != null)
     .map(([label, force]) => ({ label, text: html`<span class="force-line">${forcePair(L('철거력', 'Demolition'), value(force))}</span>` }));
   return rows.length ? rows : [{ label: tipLabel(L('철거력', 'Demolition'), FORCE_NOTE), text: html`<span class="force-line dim">${L('확인 중', 'Unverified')}</span>` }];
 }
