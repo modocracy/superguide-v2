@@ -99,8 +99,8 @@ const conditionText = (condition, profile) => ({
 
 // How far from the blast's center it still demolishes (result.reach, user request 2026-11-26). Past the inner radius the
 // distance comes from the falloff estimate, so it is rounded and marked as one.
-const REACH_TIP = L('폭발은 안쪽 반경 밖에서 철거력이 피해와 함께 줄어 바깥 반경에서 0이 됩니다. 이 시설에 필요한 철거력이 남는 거리를 계산한 값입니다.',
-  "Past the inner radius a blast's demolition force falls with its damage, to 0 at the outer radius. This is the distance at which the force this structure needs is left.");
+const REACH_TIP = L('폭발은 안쪽 반경 밖에서 철거력이 피해와 함께 줄어 바깥 반경에서 0이 됩니다. 이 시설에 필요한 철거력이 남는 거리를 계산한 이론값이고, 폭발 중심에서 시설 몸체까지 잰 거리입니다. 큰 시설은 한가운데에서 재면 이보다 멀어도 부서집니다.',
+  "Past the inner radius a blast's demolition force falls with its damage, to 0 at the outer radius. This is the calculated distance at which the force this structure needs is left, measured from the blast center to the structure's body. A big structure falls even when its middle is farther away.");
 function reachText(reach) {
   if (!reach) return '';
   if (!reach.falloff) return L(` · 폭발 중심 ${num(Math.round(reach.distance * 10) / 10)} m 안`, ` · within ${num(Math.round(reach.distance * 10) / 10)} m of the blast center`);
