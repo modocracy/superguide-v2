@@ -47,7 +47,9 @@ const profileOf = id => weaponProfiles[id] || personalProfiles[id];
 const unsupportedOf = id => unsupportedWeapons[id] || personalUnsupported[id];
 const groupOf = id => GROUPS.find(group => group.id === id);
 // Large and massive enemies call out weapons that finish them in a single hit.
-const oneShot = entry => entry.status === 'route' && entry.best?.hits === 1 && isFatal(entry.best) && !entry.best.lowerBound;
+const oneShot = entry => entry.status === 'route' && !entry.mode?.stream && entry.best?.hits === 1 && isFatal(entry.best) && !entry.best.lowerBound;
+// The enemy's wiki fire damage multiplier, for held flame streams and burning (core/combat.js solveStream).
+const fireOf = enemy => enemyPages[enemy.id]?.fireMult;
 // Enemies without a fatal part die from damage piled onto the main body across
 // several parts; such routes come from solveAccumulation (parts one after another).
 const stepName = step => L(step.partName.replace(/ 한 ?(개|쪽)$/, ''), T(step.partName).replace(/^One /, ''));
@@ -129,7 +131,7 @@ function rankWeapons(enemy, shieldCleared, group = state.group) {
       const fallback = defaultCount(mode);
       if (mode.hitCondition && fallback == null) return { mode, status: 'assume' };
       const solved = fallback == null ? mode : withHitAssumption(mode, { ...DEFAULT_ASSUME, hitCount: String(fallback) });
-      const { best, rows } = solveMatchup(enemy, solved, { shieldCleared, distance: state.distance });
+      const { best, rows } = solveMatchup(enemy, solved, { shieldCleared, distance: state.distance, fireMult: fireOf(enemy) });
       if (!best && noFatalPart(enemy)) {
         const acc = solveAccumulation(enemy, solved, { shieldCleared, distance: state.distance });
         if (acc) return { mode, status: 'route', best: accumulatedBest(acc), rows, defaulted: fallback != null };
@@ -392,6 +394,12 @@ const conditionalBest = entry => (entry.rows || []).filter(row => row.conditiona
 const conditionalText = (row, mode) => L(`${row.target.prerequisite}: ${row.target.name} ${num(row.hits)}${unitOf(mode, row.hits).unit}`,
   `${T(row.target.prerequisite)}: ${T(row.target.name)} ${num(row.hits)}${unitOf(mode, row.hits).unit}`);
 
+// How many heat sinks or fuel canisters a held stream's time takes, stream held throughout.
+function capacityText({ kind, seconds }, time) {
+  const count = Math.max(1, Math.ceil(time / seconds - 1e-9));
+  if (kind === 'heat') return count === 1 ? L('방열판 1개 안', 'Within one heat sink') : L(`방열판 ${count}개`, `${count} heat sinks`);
+  return count === 1 ? L('연료 1통 안', 'Within one fuel canister') : L(`연료 ${count}통`, `${count} fuel canisters`);
+}
 function rankRow(entry, selected, large = false, noFatal = false) {
   const { weapon, status } = entry;
   const single = large && oneShot(entry);
@@ -405,6 +413,7 @@ function rankRow(entry, selected, large = false, noFatal = false) {
       : entry.spear ? L('직접 락온 불가 · 참고값', 'No direct lock-on · reference only')
       : entry.best.accumulated ? L('누적 처치 · 덩어리를 차례로 터뜨림', 'Cumulative kill · pop the lumps in turn')
       : conditional && conditional.hits < entry.best.hits ? conditionalText(conditional, entry.mode)
+      : entry.mode?.stream?.capacity ? capacityText(entry.mode.stream.capacity, entry.best.seconds ?? entry.best.hits)
       : entry.defaulted ? defaultLabel(entry.mode) : assumptionTag(entry.mode);
     part = html`<span>${entry.best.target.name}</span>${aside ? html`<small>${aside}</small>` : ''}`;
     hits = html`<span class="hits">${num(entry.best.hits)}<small>${unit}${entry.best.lowerBound ? '+' : ''}</small></span>`;
@@ -419,7 +428,7 @@ function rankRow(entry, selected, large = false, noFatal = false) {
     const blocked = entry.rows.every(row => ['blocked', 'shield'].includes(row.outcome) || row.hits != null);
     const pierces = entry.rows.some(row => row.hits != null);
     if (noFatal && pierces) { part = html`<span class="faint">${L('치명 부위 없음 · 여러 부위에 피해를 쌓아야 함', 'No fatal part · damage has to build up over several parts')}</span>`; tag = badge(L('누적 필요', 'Cumulative'), 'conditional'); }
-    else { part = html`<span class="faint">${blocked ? L('확인된 처치 경로 없음', 'No verified kill route') : L('일부 부위 자료 미확인', 'Some part data unverified')}</span>`; tag = badge(blocked ? L('처치 경로 없음', 'No kill route') : L('계산 보류', 'Not calculated'), blocked ? 'blocked' : 'unknown'); }
+    else { part = html`<span class="faint">${blocked ? L('확인된 처치 경로 없음', 'No verified kill route') : entry.rows.some(row => row.reason === 'fire-mult-missing') ? L('이 적의 화염 피해 배율 미확인', 'Fire multiplier unverified for this enemy') : L('일부 부위 자료 미확인', 'Some part data unverified')}</span>`; tag = badge(blocked ? L('처치 경로 없음', 'No kill route') : L('계산 보류', 'Not calculated'), blocked ? 'blocked' : 'unknown'); }
   } else {
     part = html`<span class="faint">${L('정밀 계산 미지원', 'Not supported yet')}</span>`; tag = badge(L('미지원', 'Unsupported'), 'unknown');
   }
@@ -433,8 +442,10 @@ function rankRow(entry, selected, large = false, noFatal = false) {
 
 // The selected weapon's part-by-part calculation opens in a wide side sheet (showMatchupSheet).
 function ranking(enemy, entries, selectedId) {
-  const main = entries.filter(entry => entry.status === 'route' || entry.status === 'assume');
-  const rest = entries.filter(entry => !main.includes(entry));
+  const counted = entries.filter(entry => entry.status === 'route' || entry.status === 'assume');
+  const main = counted.filter(entry => !(entry.status === 'route' && entry.mode?.stream));
+  const streams = counted.filter(entry => !main.includes(entry));
+  const rest = entries.filter(entry => !counted.includes(entry));
   const large = isLargeEnemy(enemy);
   const noFatal = noFatalPart(enemy);
   const singles = large ? entries.filter(oneShot).length : 0;
@@ -447,6 +458,7 @@ function ranking(enemy, entries, selectedId) {
   <div class="panel ranking">
     <div class="rank-head" aria-hidden="true"><span></span><span>${L('무기', 'Weapon')}</span><span>${L('노릴 부위', 'Aim for')}</span><span>${L('횟수', 'Shots')}</span><span>${L('결과', 'Result')}</span></div>
     ${main.map(row)}
+    ${streams.length ? html`<div class="rank-sub">${L('광선·화염 무기 · 같은 부위에 계속 맞힐 때 걸리는 시간', 'Beams and flames · time held on the same part')}</div>${streams.map(row)}` : ''}
     ${rest.length ? html`<details class="rank-more" ${rest.some(entry => entry.weapon.id === selectedId) ? raw('open') : ''}><summary>${L(`처치 경로가 없거나 계산하지 않은 무기 ${rest.length}종`, `${rest.length} weapons with no kill route or not calculated`)}</summary>${rest.map(row)}</details>` : ''}
   </div>`;
 }
@@ -473,10 +485,12 @@ function stageLines(row, enemy, mode) {
       const blasts = d.blasts.map(blast => blast.excluded ? html`<br><span class="faint">${blast.name}: ${L('장치는 폭발 면역 → 0', 'device is immune to explosions → 0')}</span>`
         : html`<br><span>${blast.name}: AP ${num(blast.effectiveAp)} → ${blast.redirected ? L('본체', 'main') : L('부위', 'part')} ${L('장갑', 'armor')} ${num(blast.armor)}, ${L('폭발 저항', 'explosive resistance')} ${pct(blast.exdr)} → <code>${num(blast.redirected ? blast.toMain : blast.toPart)}</code>${blast.redirected ? L(' (본체로)', ' (to main)') : ''}</span>`);
       const ranged = rangeFor(event.attack) && d.direct > 0 ? html` <span class="faint">(${L(`${state.distance}m 거리 감쇠 반영`, `after ${state.distance} m falloff`)})</span>` : '';
-      return html`<div>${who}${deliveryOf(event.attack).hit} <code>${num(d.direct)}</code>${ranged} · ${L('부위 폭발', 'part explosion')} <code>${num(d.explosion)}</code>${d.mainExplosion ? html` · ${L('본체 폭발', 'main explosion')} <code>${num(d.mainExplosion)}</code>` : ''}${blasts}</div>`;
+      return html`<div>${who}${deliveryOf(event.attack).hit} <code>${num(d.direct)}</code>${event.attack.stream ? L('/초', '/s') : ''}${ranged} · ${L('부위 폭발', 'part explosion')} <code>${num(d.explosion)}</code>${d.mainExplosion ? html` · ${L('본체 폭발', 'main explosion')} <code>${num(d.mainExplosion)}</code>` : ''}${blasts}</div>`;
     });
     const transfer = part.partOnly ? L('독립 장치 — 본체 전달 없음', 'Separate device — nothing passes to main') : `${L('본체 전달', 'To main')} ${num(part.toMain)}%${part.overflowCap == null ? L(' · 상한 미확인', ' · cap unverified') : part.overflowCap ? L(` · 누적 상한 ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`, ` · total cap ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`) : L(' · 상한 없음', ' · no cap')}`;
-    const beam = Number.isFinite(stage.contactSeconds) ? html`<div>${L('광선 접촉 약', 'Beam contact about')} <code>${num(stage.contactSeconds)}${L('초', 's')}</code> · ${L('부위 누적', 'part total')} <code>${num(stage.partTotal)}</code> · ${L('본체 전달', 'to main')} <code>${num(stage.mainTotal)}</code></div>` : '';
+    const contact = mode?.stream?.fire ? L('불길 접촉 약', 'Flame contact about') : L('광선 접촉 약', 'Beam contact about');
+    const burned = Number.isFinite(stage.burnTotal) && stage.burnTotal > 0 ? html` · ${L('화상', 'burning')} <code>${num(Math.round(stage.burnTotal))}</code>` : '';
+    const beam = Number.isFinite(stage.contactSeconds) ? html`<div>${contact} <code>${num(stage.contactSeconds)}${L('초', 's')}</code> · ${L('부위 누적', 'part total')} <code>${num(stage.partTotal)}</code> · ${L('본체 전달', 'to main')} <code>${num(stage.mainTotal)}</code>${burned}</div>` : '';
     const header = html`<b>${stageName(stage)}</b> — ${L('체력', 'health')} ${num(partPool(stage.part))}, ${L('장갑', 'armor')} ${num(stage.part.armor)}, ${L('내구도', 'durability')} ${pct(stage.part.durability)}${row.stages.length > 1 && !Number.isFinite(stage.contactSeconds) ? html` → <b>${num(stage.hits)}${unitOf(mode, stage.hits).unit}</b>` : ''}`;
     return html`<li>${header}${lines}${beam}<div class="faint">${transfer}${index === 0 ? L(` · 본체 체력 ${num(main.hp)}`, ` · main health ${num(main.hp)}`) : ''}</div></li>`;
   });
@@ -601,7 +615,7 @@ function matchupSection(enemy, entries) {
   // An explicit mode wins; otherwise show the weapon's best-ranked mode.
   const rawMode = profile?.modes.find(mode => mode.id === state.mode) || entries.find(entry => entry.weapon.id === weapon.id)?.mode || profile?.modes[0];
   const mode = withHitAssumption(rawMode, effectiveAssume(rawMode));
-  const matchup = solveMatchup(enemy, mode, { shieldCleared: state.shield, distance: rangeFor(mode) });
+  const matchup = solveMatchup(enemy, mode, { shieldCleared: state.shield, distance: rangeFor(mode), fireMult: fireOf(enemy) });
   const reference = wikiReference(enemy, weapon.id, mode);
   const stats = attackStats(mode, { distance: rangeFor(mode) });
   const falls = fallsWithRange(mode) && hitsDirect(mode);
@@ -667,7 +681,7 @@ function compareAssumptions() {
 
 function compareContent() {
   const enemy = enemyById.get(state.enemy);
-  const result = compareAttacks(enemy, compare.picks, { partId: compare.part || undefined, shieldCleared: state.shield, distance: state.distance, assume: compareAssumptions() });
+  const result = compareAttacks(enemy, compare.picks, { partId: compare.part || undefined, shieldCleared: state.shield, distance: state.distance, fireMult: fireOf(enemy), assume: compareAssumptions() });
   const routes = result.entries.filter(entry => entry.status === 'route' && entry.hits != null);
   const fewest = routes.length > 1 ? Math.min(...routes.map(entry => entry.hits)) : null;
   const partName = entry => entry.part?.name || entry.route?.target?.name || entry.best?.target?.name || '';

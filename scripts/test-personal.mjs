@@ -166,8 +166,14 @@ for (const profile of Object.values(personalProfiles)) {
 }
 for (const text of playerCopy) ok(!/ap1|원본|레코드|탄체|\blevel\b|damage(?:_id)?|durable|splash|beam_fire_rate|charge_time|tac_reload_time/i.test(text), 'personal combat copy has no internal terminology');
 eq(personalUnsupported.purifier, '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.');
-eq(personalUnsupported.scythe, '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.');
-eq(personalUnsupported.torcher, '불꽃이 몇 번 닿는지 확인되지 않아 발 단위로 계산하지 않습니다.');
+eq(personalUnsupported.trident, '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.');
+// Held beams and flame streams are counted in seconds (user request 2026-11-26).
+const streamOf = id => personalProfiles[id]?.modes[0];
+eq([streamOf('scythe').standard, streamOf('scythe').durable, streamOf('scythe').ap, streamOf('scythe').unit, streamOf('scythe').stream.capacity], [350, 70, 2, '초', { kind: 'heat', seconds: 8 }]);
+eq([streamOf('dagger').standard, streamOf('dagger').durable, streamOf('dagger').stream.capacity.seconds], [250, 50, 6.67]);
+eq([streamOf('torcher').standard, streamOf('torcher').durable, streamOf('torcher').ap, streamOf('torcher').stream.fire, streamOf('torcher').stream.capacity], [150, 150, 4, true, { kind: 'fuel', seconds: 12.4 }]);
+eq([streamOf('crisper').standard, streamOf('crisper').stream.capacity.seconds], [150, 6.1]);
+ok(['scythe', 'dagger', 'torcher', 'crisper'].every(id => streamOf(id).stream.burn?.perSecond === 100), 'beams and flames that set targets alight burn');
 ok(personalProfiles.frag.modes[0].note.includes('20%') && personalProfiles.frag.modes[0].note.includes('폭발 피해도'), 'throwable note describes default fragments plus blast');
 ok(personalProfiles.eruptor.modes[0].note.includes('직접 맞혔을 때의 피해와 폭발 피해도'), 'Eruptor note keeps primary direct plus blast');
 const weaponOf = id => personalWeapons.find(w => w.id === id);
@@ -436,7 +442,12 @@ eq(resolveAttack('liberator').kind, 'personal');
 eq(resolveAttack('autocannon').profile, weaponProfiles.autocannon);
 ok(resolveAttack('__proto__').unsupported && !resolveAttack('__proto__').profile, 'untrusted IDs cannot resolve prototypes');
 eq(compare('hunter-hardened', 'liberator', { partId: 'head' }).magazinesNeeded, 1);
-eq(compare('hunter-hardened', 'torcher').status, 'unsupported');
+eq(compare('hunter-hardened', 'trident').status, 'unsupported');
+// A flame stream needs the enemy's fire multiplier; with it, the answer is in seconds and never a one-shot.
+eq(compare('hunter-hardened', 'torcher').status, 'none', 'no fire multiplier, no flame count');
+const torched = compare('hunter-hardened', 'torcher', { fireMult: 1 });
+eq([torched.status, torched.verified, torched.oneShot, torched.mode.unit], ['route', true, false, '초']);
+ok(torched.hits > 0 && torched.hits < 2, 'a hunter burns down within 2 seconds');
 eq(compare('hunter-hardened', 'liberator', {}, 'not-a-mode').status, 'unsupported');
 eq(compare('hunter-hardened', 'liberator', { partId: 'not-a-part' }).status, 'none');
 const defaultBreaker = compare('hunter-hardened', 'breaker');
@@ -444,7 +455,7 @@ eq(compare('hunter-hardened', 'liberator').oneShot, true, 'one bullet fatal answ
 eq(compare('hunter-hardened', 'frag').oneShot, true, 'one grenade fatal answer');
 eq(compare('hunter-hardened', 'saber').oneShot, true, 'one melee hit fatal answer');
 eq(compare('hunter-hardened', 'senator', { partId: 'claw' }).oneShot, false, 'one-hit nonfatal break is not oneShot');
-eq(compare('hunter-hardened', 'torcher').oneShot, false, 'unsupported is not oneShot');
+eq(compare('hunter-hardened', 'trident').oneShot, false, 'unsupported is not oneShot');
 eq(compare('harvester', 'recoilless').oneShot, false, 'blocked shield is not oneShot');
 eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: 2 } }).oneShot, false, 'nonaccepted assumption is not oneShot even if hits is 1');
 eq([defaultBreaker.status, defaultBreaker.hits, defaultBreaker.verified, defaultBreaker.defaulted, defaultBreaker.allPelletsAssumed, defaultBreaker.assumption.count], ['route', 1, true, true, true, 11]);

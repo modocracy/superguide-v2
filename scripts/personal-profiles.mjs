@@ -43,7 +43,34 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     }
     return mode;
   };
+  // A held beam (damage per second) or flame stream (the wiki damage per second) is counted in seconds, as the
+  // support Laser Cannon and Flamethrower are (user request 2026-11-26; dist/data/combat-data.js STREAM_BURN).
+  // Flame particles deal the same durable damage as normal, so the stream keeps the particle's durable share.
+  // Heat: the wiki capacity in seconds; fuel: the wiki notes' 'enough fuel for N seconds of sustained fire'.
+  const BURN = { perSecond: 100, ap: 4, after: 1 };
+  const streamProfile = weapon => {
+    const beam = weapon.delivery === 'beam';
+    const fuel = Number(pages[weapon.en].wikitext.match(/enough fuel for ([\d.]+) seconds of sustained fire/)?.[1]);
+    const seconds = beam ? weapon.heatCapacity?.seconds : fuel;
+    const dps = beam ? weapon.direct : weapon.dot.perSecond;
+    const durable = beam ? weapon.durable : dps * weapon.durable / weapon.direct;
+    return {
+      source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
+      note: beam ? '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 화상은 쏘기 시작하고 1초 뒤부터 걸린다고 보며, 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.'
+        : '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 화상은 쏘기 시작하고 1초 뒤부터 걸린다고 보고 본체 체력에 초당 100씩 들어가며, 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.',
+      modes: [{
+        id: 'standard', name: beam ? '광선 유지' : '불길 유지', standard: dps, durable, ap: weapon.ap,
+        explosion: 0, explosionDurable: 0, explosionAp: 0, innerRadius: null, radius: null, delivery: weapon.delivery, unit: '초', magazine: null, ammoPerShot: 1,
+        stream: { ...(beam ? {} : { fire: true }), burn: (weapon.statuses ?? []).includes('Fire') ? BURN : null,
+          ...(Number.isFinite(seconds) ? { capacity: { kind: beam ? 'heat' : 'fuel', seconds } } : {}) },
+      }],
+    };
+  };
   for (const weapon of weapons) {
+    if (weapon.delivery === 'beam' && weapon.damageKind === 'dps' || weapon.delivery === 'spray' && Number.isFinite(weapon.dot?.perSecond)) {
+      personalProfiles[weapon.id] = streamProfile(weapon);
+      continue;
+    }
     let reason = specialReasons[weapon.id];
     if (weapon.charge) reason = '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.';
     if (weapon.delivery === 'beam') reason = '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.';

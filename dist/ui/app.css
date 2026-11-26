@@ -833,6 +833,8 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .rank-row .badge { justify-self: end; }
 .rank-head { display: grid; grid-template-columns: 36px minmax(0, 1.3fr) minmax(0, 1fr) 92px 96px; gap: 12px; padding: 8px 14px; font-size: 11.5px; font-weight: 700; color: var(--text-3); border-bottom: 1px solid var(--line); background: var(--surface-2); }
 .rank-head span:nth-child(4), .rank-head span:nth-child(5) { text-align: right; }
+/* Held beams and flames, counted in seconds, below the shot weapons (user request 2026-11-26). */
+.rank-sub { padding: 8px 14px; font-size: 11.5px; font-weight: 700; color: var(--text-3); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface-2); }
 .rank-more > summary { padding: 10px 14px; border-top: 1px solid var(--line); font-size: 13.5px; font-weight: 650; color: var(--text-2); }
 .rank-more > summary:hover { color: var(--text); }
 

@@ -74,6 +74,8 @@ const engine = {
   'arc-thrower': { 'first-target': { hit: ['arc', 'ARC-3 ARC THROWER_A'] } },
   'de-escalator': { arc: { hit: ['arc', 'GL-52_P_IE_A'], carrier: 'GL-52_P' } },
   meltagun: { near: { hit: ['beam', '40-K MELTAGUN_B'] } },
+  // A held beam: its damage per second is the beam record (user request 2026-11-26).
+  'laser-cannon': { standard: { hit: ['beam', 'LAS-98 LASER CANNON_B'] } },
   'one-true-flag': { melee: { hit: ['damage', 'CQC-1 ONE TRUE FLAG_dm'] } },
   'breaching-hammer': {
     melee: { hit: ['damage', 'CQC-20 BREACHING HAMMER_dm'] },
@@ -103,6 +105,8 @@ const notCompared = {
   'table:solo-silo': 'MS-11 Solo Silo is not in the datamine snapshot.',
   'table:flamethrower': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
   'table:cremator': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
+  'engine:flamethrower/standard': 'The held flame stream uses the wiki page DPS; the datamine stores one spray particle.',
+  'engine:cremator/standard': 'The held flame stream uses the wiki page DPS; the datamine stores one spray particle.',
 };
 
 // Values that differ from the datamine on purpose, checked by hand.

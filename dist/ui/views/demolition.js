@@ -52,8 +52,9 @@ const gearMode = (w, mode) => {
     unit: mode?.unit || '발', ...(SHIELD_BYPASS.has(w.id) && { shieldBypass: true }),
   };
 };
+const shotModes = w => (personalProfiles[w.id]?.modes ?? []).filter(mode => !mode.stream);
 const gearProfiles = Object.fromEntries(personalWeapons.map(w => [w.id, {
-  source: w.source, modes: personalProfiles[w.id]?.modes?.length ? personalProfiles[w.id].modes.map(mode => gearMode(w, mode)) : [gearMode(w, null)],
+  source: w.source, modes: shotModes(w).length ? shotModes(w).map(mode => gearMode(w, mode)) : [gearMode(w, null)],
 }]));
 const gearById = new Map(personalWeapons.map(w => [w.id, w]));
 const gearFields = w => ({ names: personalNames(w), text: [typeName(w.type), groupOf(w.category).name], keywords: collabKeywords(warbondSources[`gear/${w.id}`]?.id) });

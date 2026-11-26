@@ -107,6 +107,19 @@ ok(hitDamage(blastShot, { ...testPart, exdr: 100 }, { hp: 1000, armor: 0, exdr: 
 ok(Math.round(blastFalloff(2.5 / 15) * 1000) === 592 && Math.round(blastFalloff(10 / 15, true) * 1000) === 556, 'standard and wide blast falloff curves');
 const quarterOut = hitDamage(blastShot, testPart, { hp: 1000, armor: 0, exdr: 0 }, { directHit: false, blastDistance: 1.25 });
 ok(quarterOut.explosion === 200, 'a quarter of the way through the falloff band deals half (standard curve)');
+// A held beam or flame stream counts seconds (user request 2026-11-26). Main 1000 at armor 4; a body part passing
+// all damage on. Beam 100/s plus burning 100 x 0.65 (AP 4 = armor 4) from 1 s: 100t + 65(t - 1) = 1000, t = 6.45.
+// A flame stream at fire multiplier 2: 200t + 130(t - 1) = 1000, t = 3.42. Results round up to tenths.
+const streamEnemy = { id: 'stream-test', main: { hp: 1000, armor: 4, durability: 0, exdr: 0 },
+  parts: [{ id: 'body', name: 'body', hp: 5000, armor: 0, durability: 0, exdr: 0, toMain: 100, overflowCap: false, effect: 'kill' }] };
+const streamMode = (fire, extra = {}) => ({ id: 'standard', standard: 100, durable: 100, ap: 4, explosion: 0, explosionAp: 0, unit: '초',
+  stream: { ...(fire ? { fire: true } : {}), burn: { perSecond: 100, ap: 4, after: 1 } }, ...extra });
+ok(solveMatchup(streamEnemy, streamMode(false), { fireMult: 1 }).best.hits === 6.5, 'beam plus burning from 1 s');
+ok(solveMatchup(streamEnemy, streamMode(true), { fireMult: 2 }).best.hits === 3.5, 'flames and burning both take the fire multiplier');
+ok(solveMatchup(streamEnemy, streamMode(true), {}).rows[0].reason === 'fire-mult-missing', 'no fire multiplier, no flame count');
+const beamNoFire = solveMatchup(streamEnemy, streamMode(false), {}).best;
+ok(beamNoFire.hits === 10 && beamNoFire.notes.length === 1, 'a beam with no fire multiplier leaves burning out and says so');
+ok(solveMatchup({ ...streamEnemy, parts: [{ ...streamEnemy.parts[0], armor: 5 }] }, streamMode(false), { fireMult: 1 }).rows[0].outcome === 'blocked', 'AP 4 cannot reach armor 5');
 
 // --- Search ------------------------------------------------------------------------
 const names = query => search(stratagems, query, stratagemFields).map(item => item.name);

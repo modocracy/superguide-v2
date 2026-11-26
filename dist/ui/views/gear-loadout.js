@@ -179,7 +179,8 @@ function enemyHead(row) {
 function alsoLine(row) {
   const others = (row.perSlot || []).map(entry => entry.best)
     .filter(answer => answer?.status === 'route' && answer.weaponId !== row.best?.weaponId)
-    .sort((a, b) => a.hits - b.hits);
+    // Seconds of a held beam or flame stream come after shot counts, never mixed by number.
+    .sort((a, b) => Number(Boolean(a.mode?.stream)) - Number(Boolean(b.mode?.stream)) || a.hits - b.hits);
   if (!others.length) return '';
   return html`<div class="lo-also"><small>${L('그 밖에', 'Also')}</small>${others.map(answer => html`<span class="lo-also-item">${thumb(answer.weaponId, 18)}${nameOf(answer.weaponId)} <b>${answer.partName} ${hitsText(answer)}</b></span>`)}</div>`;
 }

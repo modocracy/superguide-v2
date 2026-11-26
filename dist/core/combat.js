@@ -185,6 +185,7 @@ function solveReviewed(enemy, target, attack, options) {
   }
   if (target.unknownReason) return { ...base, reason: 'part-unknown', detail: target.unknownReason };
   if (attack.beam) return solveBeam(enemy, target, attack, options);
+  if (attack.stream) return solveStream(enemy, target, attack, options);
   if (attack.hitCondition && !attack.events) return { ...base, reason: 'assumption-needed' };
   return solveImpacts(enemy, target, attack, options);
 }
@@ -309,6 +310,85 @@ function solveBeam(enemy, target, attack, options) {
     copy = 1;
     if (!part.next) return { ...done, outcome: part.effect, via: 'part' };
     mainLeft -= stage.mainTotal + (part.destroyMainDamage || 0);
+    part = part.next;
+  }
+  return base;
+}
+
+// A held laser beam or flame stream (user request 2026-11-26) is counted in seconds on the same spot, not in
+// shots. Its own damage per second works like a beam's: the part first, its share on to main health. Fire
+// damage (a flame stream, and burning) is scaled by the enemy's wiki fire multiplier (options.fireMult).
+// Burning, assumed lit `burn.after` seconds into the stream (user decision 2026-11-26), adds its damage per
+// second to main health only (wiki SG-451 Cookout: 'burning damage is inflicted to the main body of the
+// target'), through the main armor at its AP. A beam on an enemy with no fire multiplier leaves burning out;
+// a flame stream there is not counted.
+const STREAM_STEP = 10; // results in tenths of a second, rounded up
+const streamSeconds = seconds => Math.max(1, Math.ceil(seconds * STREAM_STEP - EPSILON)) / STREAM_STEP;
+const MAX_STREAM_SECONDS = 600;
+export const BURN_LEFT_OUT = L('이 적은 화염 피해 배율이 확인되지 않아 화상 피해는 빼고 계산했습니다.', 'This enemy\'s fire damage multiplier is unverified, so burning is left out.');
+
+// Seconds until main health loses `need`: the part passes `rate` per second up to `cap` in all, and burning
+// takes `burn` per second from `burnStart` seconds on.
+function drainSeconds(need, rate, cap, burn, burnStart) {
+  if (need <= EPSILON) return 0;
+  const capAt = rate > 0 ? cap / rate : Infinity;
+  const loss = s => Math.min(rate * s, cap) + burn * Math.max(0, s - burnStart);
+  const points = [0, burnStart, capAt].filter(Number.isFinite).sort((a, b) => a - b);
+  for (let i = 0; i < points.length; i++) {
+    const from = points[i], to = points[i + 1] ?? Infinity;
+    const slope = (from < capAt ? rate : 0) + (from >= burnStart ? burn : 0);
+    const left = need - loss(from);
+    if (left <= EPSILON) return from;
+    if (slope > 0 && from + left / slope <= to + EPSILON) return from + left / slope;
+  }
+  return Infinity;
+}
+
+function solveStream(enemy, target, attack, options) {
+  const base = pending(target);
+  const main = target.main || enemy.main;
+  const { stream } = attack;
+  const fire = options.fireMult;
+  if (stream.fire && !known(fire)) return { ...base, reason: 'fire-mult-missing' };
+  const own = stream.fire ? { ...attack, standard: attack.standard * fire, durable: attack.durable * fire } : attack;
+  const burnKnown = stream.burn && known(fire) && known(main.armor);
+  const burn = burnKnown && !target.isolated ? stream.burn.perSecond * fire * armorFactor(stream.burn.ap, main.armor) : 0;
+  const notes = stream.burn && !known(fire) ? [BURN_LEFT_OUT] : [];
+  const bleedOrKill = main.constitution ? 'bleed' : 'kill';
+  const stages = [];
+  let mainLeft = main.hp;
+  let time = 0;
+  let part = target;
+  let copy = 1;
+  while (part) {
+    const damage = hitDamage(own, part, main, options);
+    const stage = { part, hits: 0, damage, events: [{ name: null, attack, times: 1, damage }], ...(part.copies > 1 ? { copy } : {}) };
+    stages.push(stage);
+    if (![damage.direct, part.hp, part.toMain, main.hp].every(known) || part.hp === 0 || main.hp === 0) {
+      return { ...base, stages, notes, reason: 'beam-data-missing' };
+    }
+    if (damage.direct === 0) {
+      return part === target ? { ...base, stages, notes, outcome: 'blocked', reason: 'stream-blocked' }
+        : { ...base, stages, notes, hits: streamSeconds(time), outcome: 'armor', reason: 'no-damage-after-armor' };
+    }
+    const partTime = part.mainOnly ? Infinity : partPool(part) / damage.direct;
+    const transfer = target.isolated ? 0 : damage.direct * part.toMain / 100;
+    const cap = part.overflowCap ? transferCap(part) : Infinity;
+    const mainTime = target.isolated ? Infinity : drainSeconds(mainLeft, transfer, cap, burn, Math.max(0, stream.burn ? stream.burn.after - time : Infinity));
+    const span = Math.min(partTime, mainTime);
+    if (!Number.isFinite(span) || time + span > MAX_STREAM_SECONDS) return { ...base, stages, notes, reason: 'too-many-hits' };
+    const transferred = Math.min(transfer * span, cap);
+    const burned = burn > 0 ? burn * Math.max(0, time + span - Math.max(time, stream.burn.after)) : 0;
+    time += span;
+    Object.assign(stage, { hits: streamSeconds(span), contactSeconds: span, partTotal: damage.direct * span, mainTotal: transferred, burnTotal: burned });
+    const done = { ...base, stages, notes, hits: streamSeconds(time), seconds: time };
+    if (partTime <= mainTime && part.effect === 'kill' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };
+    if (partTime <= mainTime && mainLeft - transferred - burned - (part.destroyMainDamage || 0) <= EPSILON) return { ...done, outcome: bleedOrKill, via: 'main' };
+    if (mainTime < partTime) return { ...done, outcome: bleedOrKill, via: 'main' };
+    mainLeft -= transferred + burned + (part.destroyMainDamage || 0);
+    if (copy < (part.copies || 1)) { copy++; continue; }
+    copy = 1;
+    if (!part.next) return { ...done, outcome: part.effect, via: 'part' };
     part = part.next;
   }
   return base;

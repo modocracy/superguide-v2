@@ -64,7 +64,7 @@ export function solveAccumulation(enemy, mode, options = {}) {
   options ||= {};
   if (!enemy?.parts?.length || !enemy.main || !known(enemy.main.hp) || enemy.main.hp === 0
     || !optionalKnown(enemy.main, 'constitution') || enemy.regeneration
-    || !mode || mode.unsupported || mode.beam || mode.hitCondition && !mode.events
+    || !mode || mode.unsupported || mode.beam || mode.stream || mode.hitCondition && !mode.events
     || spearCannotLock(enemy, mode) || options.partId
     || !enemy.parts.some(part => Number.isSafeInteger(part.count) && part.count > 0)
     || solveMatchup(enemy, mode, options).best) return null;
