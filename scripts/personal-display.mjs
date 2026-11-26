@@ -104,6 +104,17 @@ export function modeDetails(weapon, data, wikitext, warn = message => console.wa
   return Object.keys(details).length ? { modeDetails: details } : {};
 }
 
+// How each shot is chambered and how long a beam warms up, from the wiki page (user request 2026-11-26): the infobox
+// firing_modes 'Bolt-Action' or 'Pump-Action' (the bolt or pump is worked after every shot), and a sentence such as
+// 'has a 0.3 second warm-up period before it starts firing' (Scythe, Dagger). Neither is in the datamine or the game
+// data sheet (its first-shot delay column is empty).
+export function actionDetails(box, wikitext) {
+  const modes = String(box.firing_modes ?? '');
+  const action = /bolt-action/i.test(modes) ? 'bolt' : /pump-action/i.test(modes) ? 'pump' : null;
+  const warm = /(\d+(?:\.\d+)?)\s*second warm-?up/i.exec(wikitext);
+  return { ...(action && { action }), ...(warm && { warmUp: Number(warm[1]) }) };
+}
+
 // Choices picked before throwing that only the wiki prose names (Caltrops spread).
 // A reworded page leaves it out with a build warning instead of failing the build.
 export function throwChoices(weapon, wikitext, warn = message => console.warn(`warning: ${message}`)) {

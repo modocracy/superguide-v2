@@ -300,13 +300,17 @@ function detailRows(w) {
   else if (w.spareMags != null && !heat) add(L('예비 탄창', 'Spare magazines'), num(w.spareMags), L('개', ''), L('최대 보유', 'Maximum carried'));
   extra('ammo');
   if (heat) {
-    const heatsinks = w.magazine == null && w.spareMags != null ? L(`예비 방열판 ${num(w.spareMags)}개`, `${num(w.spareMags)} spare heatsinks`) : L('방열판 교체로 재장전', 'Reload by swapping the heatsink');
+    // A beam that warms up before it fires (wiki page text: Scythe 0.3 s, Dagger 0.25 s; user request 2026-11-26).
+    const warm = w.warmUp != null ? L(` · 발사 전 예열 ${num(w.warmUp)}초`, ` · ${num(w.warmUp)} s warm-up before firing`) : '';
+    const heatsinks = (w.magazine == null && w.spareMags != null ? L(`예비 방열판 ${num(w.spareMags)}개`, `${num(w.spareMags)} spare heatsinks`) : L('방열판 교체로 재장전', 'Reload by swapping the heatsink')) + warm;
     // A count of shots (Talon): only that many in a row overheats it; fewer, and it cools down between them.
     if (w.heatCapacity.seconds == null && w.heatCapacity.shots != null) add(L('과열까지', 'Until overheat'), num(w.heatCapacity.shots), L('발', ' shots'), L('연달아 쏠 때 · ', 'Firing nonstop · ') + heatsinks);
     else add(L('과열까지', 'Until overheat'), w.heatCapacity.seconds != null ? num(w.heatCapacity.seconds) : w.heatCapacity.raw, w.heatCapacity.seconds != null ? s : '', w.heatCapacity.shots ? L(`약 ${w.heatCapacity.shots}발 · `, `About ${w.heatCapacity.shots} shots · `) + heatsinks : heatsinks);
   }
-  if (w.rpmModes?.length > 1) add(L('연사 모드', 'Fire rate modes'), w.rpmModes.map(num).join(' / '), '', L('분당 발수', 'Rounds per minute'));
-  else if (w.rpm != null) add(L('연사', 'Fire rate'), num(w.rpm), '', L('분당 발수', 'Rounds per minute'));
+  // A bolt or pump worked after every shot (wiki firing_modes, user request 2026-11-26) is why the rate is low.
+  const cycle = { bolt: L(' · 쏠 때마다 볼트를 당겨 한 발씩 장전', ' · the bolt is worked after every shot'), pump: L(' · 쏠 때마다 펌프를 당겨 한 발씩 장전', ' · the pump is worked after every shot') }[w.action] ?? '';
+  if (w.rpmModes?.length > 1) add(L('연사 모드', 'Fire rate modes'), w.rpmModes.map(num).join(' / '), '', L('분당 발수', 'Rounds per minute') + cycle);
+  else if (w.rpm != null) add(L('연사', 'Fire rate'), num(w.rpm), '', L('분당 발수', 'Rounds per minute') + cycle);
   if (w.swingsPerMinute != null) add(L('휘두르기', 'Swings'), num(w.swingsPerMinute), L('/분', '/min'));
   // Where emptying it first is faster (heat weapons: an overheated heat sink pops out by itself, wiki Sickle and Talon
   // pages), the caption says so (user request 2026-11-24).

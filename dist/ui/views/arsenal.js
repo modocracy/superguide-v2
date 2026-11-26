@@ -249,9 +249,11 @@ function ammoCells(item) {
     item.magazine == null && item.spareRounds != null ? cell(L('예비탄', 'Spare rounds'), num(item.spareRounds), L('발', ''), L('최대 보유', 'Maximum carried')) : '',
     // Beam weapons that heat up (datamine heatdata, stratagem-stats.js): how long they fire in a row before
     // overheating; a support weapon then swaps a heat sink, the Laser Sentry burns out and self-destructs.
-    heat ? cell(L('과열까지', 'Until overheat'), num(heat.seconds), L('초', 's'), heat.heatsinks != null
+    heat ? cell(L('과열까지', 'Until overheat'), num(heat.seconds), L('초', 's'), (heat.heatsinks != null
       ? L(`연달아 쏠 때 · 예비 방열판 ${num(heat.heatsinks)}개`, `Firing nonstop · ${num(heat.heatsinks)} spare heatsinks`)
-      : L('연달아 쏠 때 · 과열되면 자폭', 'Firing nonstop · self-destructs when it overheats')) : '',
+      : L('연달아 쏠 때 · 과열되면 자폭', 'Firing nonstop · self-destructs when it overheats'))
+      // A beam that warms up before it fires (data-support.js warmUp: the Laser Cannon's 0.5 s).
+      + (item.warmUp != null ? L(` · 발사 전 예열 ${num(item.warmUp)}초`, ` · ${num(item.warmUp)} s warm-up before firing`) : '')) : '',
   ];
 }
 
