@@ -23,7 +23,6 @@ import { timingOf, modulesOn, setModulesOn, sentryLoadOf } from '../../core/modu
 import { stratagemEffects } from '../../data/planet-stratagem-effects.js';
 import { stratagemStats } from '../../data/stratagem-stats.js';
 import { shipModuleSections } from '../../data/ship-module-upgrades.js';
-import { weaponProfiles } from '../../data/combat-data.js';
 // The ship module tab's counts for the head badge.
 const shipModuleCounts = { sections: shipModuleSections.length, modules: shipModuleSections.reduce((n, section) => n + section.modules.length, 0) };
 import { vehicleDurability } from '../../data/vehicle-durability.js';
@@ -162,7 +161,7 @@ function showTab() {
   // The count badge of the head, as on the enemy page (user request 2026-11-26).
   $('#arsenal-tally', root).textContent = state.tab === 'modules'
     ? L(`부서 ${shipModuleCounts.sections}곳 · 모듈 ${shipModuleCounts.modules}개`, `${shipModuleCounts.sections} sections · ${shipModuleCounts.modules} upgrades`)
-    : L(`스트라타젬 ${stratagems.length}종 · 계산 무기 ${Object.keys(weaponProfiles).length}종`, `${stratagems.length} stratagems · ${Object.keys(weaponProfiles).length} weapons calculated`);
+    : L(`스트라타젬 ${stratagems.length}종`, `${stratagems.length} stratagems`);
   $('#arsenal-browse', root).hidden = state.tab !== 'browse';
   $('#arsenal-modules', root).hidden = state.tab !== 'modules';
   if (state.tab === 'modules') renderModules().catch(error => { console.error(error); ctx.toast(L('함선 모듈 목록을 불러오지 못했습니다.', 'The ship modules could not be loaded.')); });
