@@ -137,13 +137,21 @@ ok(!unlisted.length, `game biomes with planets but no wiki biome page: ${unliste
 
 // Status effects: every number in the detail lines is on the wiki Status Effects page, or in the status boxes the page
 // draws from its attack data (Attack_Data module, not in the saved wikitext), read on the page 2026-11-26.
-const STATUS_BOX_NUMBERS = { fire: ['0.5'] };   // Flamer Slowed: Status Duration 0.5 sec
+// The fire multipliers of the Charger (1.5) and Fleshmob (1.8) are their wiki enemy infoboxes' fire_mult
+// (wiki_enemy_pages.json), checked below; the Impaler's 1.7 is also on the Status Effects page.
+const STATUS_BOX_NUMBERS = { fire: ['0.5', '1.5', '1.8'] };   // Flamer Slowed: Status Duration 0.5 sec
 for (const item of planets.statusEffects) {
   const source = text.status.find(entry => entry.id === item.id);
   ok(source.name ? item.name === game.strings.status[source.name] : item.name === source.ko && Boolean(source.ko), `${item.id}: name is not the game's Korean or the site's translation`);
   ok(item.detail.length === item.detailEn.length, `${item.id}: detail needs Korean and English line by line`);
   ok(wiki.statusEffects.text.includes(`== ${item.en} ==`), `${item.id}: no "${item.en}" section on the wiki Status Effects page`);
   for (const number of item.detail.concat(item.detailEn).join(' ').match(/\d+(?:\.\d+)?/g) || []) ok(wiki.statusEffects.text.includes(number) || STATUS_BOX_NUMBERS[item.id]?.includes(number), `${item.id}: ${number} is not on the wiki Status Effects page`);
+}
+
+{
+  const pages = (await read('wiki_enemy_pages.json')).pages;
+  const fireMult = title => Number(pages[title]?.fireMult);
+  ok(fireMult('Charger') === 1.5 && fireMult('Fleshmob') === 1.8 && fireMult('Impaler') === 1.7, 'fire multipliers in the burn line match the wiki enemy infoboxes');
 }
 
 // Stratagem effects: the factor is the percentage in the entry's own description.
