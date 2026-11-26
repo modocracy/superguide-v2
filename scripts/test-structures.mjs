@@ -78,11 +78,11 @@ for (const id of ['stalker-lair', 'infested-tower', 'spore-lung', 'bio-processor
 
 // --- User-specified thresholds ---------------------------------------------------------
 // Where the wiki gives no threshold, the user may set one (thresholdSource 'user').
-// The Transmission Network tower's 10 is the user's value (2026-11-09); its note
+// The Transmission Network tower's 30 is the user's value (2026-11-26); its note
 // tells the reader that the number is not from the wiki.
 const userRoutes = structures.flatMap(structure => structure.routes.filter(route => route.thresholdSource !== undefined).map(route => [structure, route]));
 ok(userRoutes.every(([, route]) => route.thresholdSource === 'user' && Number.isFinite(route.threshold)), 'thresholdSource is only "user", on a number');
-assert.deepEqual(userRoutes.map(([structure, route]) => `${structure.id}/${route.id}=${route.threshold}`), ['transmission-network/tower=10'], 'user-specified thresholds');
+assert.deepEqual(userRoutes.map(([structure, route]) => `${structure.id}/${route.id}=${route.threshold}`), ['transmission-network/tower=30'], 'user-specified thresholds');
 for (const [structure, route] of userRoutes) {
   ok(structure.page && structure.note?.includes(`철거력 ${route.threshold}은 위키 수치가 아니라`), `${structure.id}: note says the threshold ${route.threshold} is not from the wiki`);
   const passes = Object.values(demolitionProfiles).flatMap(profile => profile.modes.map(mode => solveDemolition(structure, profile, mode, { jammerDisabled: true })));
