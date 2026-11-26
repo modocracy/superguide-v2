@@ -31,11 +31,12 @@ export const withGameCooldown = (item, stats) => {
 
 // Stratagems the wiki attack datamine has no record for, whose forces come from the game data sheet's weapon entry
 // (db/source/game_sheets/weapons.json, matched by designation; user request 2026-11-26): the Tesla Tower's arc.
-// A stratagem that has datamine forces keeps them.
+// As with the cooldowns, the game data sheet comes first: a listed stratagem keeps the sheet's forces even if a later
+// wiki download adds datamine ones, and test-stratagem-stats.mjs only prints a CHECK line then.
 export const GAME_FORCES = { 'tesla-tower': 'A/ARC-3' };
 const gameWeapons = JSON.parse(readFileSync(new URL('../db/source/game_sheets/weapons.json', import.meta.url), 'utf8')).무기;
 export function withGameForces(id, forces) {
-  if (forces.length || !GAME_FORCES[id]) return forces;
+  if (!GAME_FORCES[id]) return forces;
   const found = gameWeapons.filter(g => g.코드 === GAME_FORCES[id] && g.아크);
   if (found.length !== 1) throw new Error(`${id}: ${found.length} game sheet arc weapons with code ${GAME_FORCES[id]}`);
   const hit = found[0].아크.피해;

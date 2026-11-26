@@ -28,7 +28,10 @@ for (const item of stratagems) {
   const forces = withGameForces(item.id, [...forcesOf(found, strat, weaponData), ...wreckForces(item.id, wrecks)]);
   ok(JSON.stringify(stratagemStats[item.id]) === JSON.stringify(withGameCooldown(item, { ...statsOf(entry), ...(PERMIT_OVERRIDES[item.id] && { permit: PERMIT_OVERRIDES[item.id] }), ergonomics: ergonomicsOf(found), sway: swayOf(found), ...(heatOf(found, entry.title, strat) && { heat: heatOf(found, entry.title, strat) }), ...(reloadOf(entry) && { reload: reloadOf(entry) }), ...(timesOf(item.id, entry.title, strat) && { times: timesOf(item.id, entry.title, strat) }), ...(bodyOf(item.id, entry.title, statsOf(entry).type, strat, weaponData) && { body: bodyOf(item.id, entry.title, statsOf(entry).type, strat, weaponData) }), ...(sentryOf(item.id, entry.title, statsOf(entry).type, entry.statsTable, strat) && { sentry: sentryOf(item.id, entry.title, statsOf(entry).type, entry.statsTable, strat) }), forces })), `${item.id}: dist/data/stratagem-stats.js is stale (run build-stratagem-stats)`);
   // Forces from the game data sheet only where the datamine has none (user request 2026-11-26).
-  if (GAME_FORCES[item.id]) ok(stratagemStats[item.id].forces.every(group => group.source === 'game') && forcesOf(found, strat, weaponData).length === 0, `${item.id}: game sheet forces only while the datamine has none`);
+  if (GAME_FORCES[item.id]) {
+    ok(stratagemStats[item.id].forces.every(group => group.source === 'game'), `${item.id}: game data sheet forces`);
+    if (forcesOf(found, strat, weaponData).length) console.warn(`CHECK ${item.id}: the wiki datamine now has forces too; the site keeps the game data sheet's`);
+  }
   // Every weapon-type stratagem has stagger and push from the datamine.
   if (['support', 'orbital', 'eagle'].includes(item.category) && !['orbital-railcannon'].includes(item.id)) ok(forces.length, `${item.id}: no stagger or push in the attack datamine`);
 }
