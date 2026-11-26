@@ -181,8 +181,14 @@ export const demolitionProfiles = {
   'incendiary-mines': profile(shot(null, 30), { conditionalAim: true, note: '시설 가까이에서 지뢰가 실제로 기폭해야 합니다. 잔불은 제외합니다.' }),
   'gas-mines': profile(shot(null, 30), { conditionalAim: true, note: '시설 가까이에서 지뢰가 실제로 기폭해야 합니다. 가스 지속 피해는 제외합니다.' }),
   // The Hellbombs destroy a Grounded Warp Ship whatever its shield (user's play experience 2026-11-23; the wiki is silent).
-  'portable-hellbomb': profile(shot(null, 60, { name: '지옥폭탄 폭발', shieldBypass: true, note: '시설이 중심 17 m 안에 들어오는 조건입니다. 이미 휴대한 폭탄의 기폭은 스트라타젬 호출과 다릅니다.' }), { source: wiki('Portable_Hellbomb') }),
-  'hellbomb': callIn(shot(null, 60, { name: '지옥폭탄 폭발', shieldBypass: true, note: '시설이 중심 17 m 안에 들어오는 조건입니다. 호출이 허용되는 임무 구역에서 장전해야 합니다.' }), { source: wiki('Portable_Hellbomb') }),
+  // 'edge': 50 out to 20 m from the center is the user's value (2026-11-26; the wiki gives only 60 inside 17 m). It agrees
+  // with the wide-blast falloff of helldiversotl.com/research/explosion-falloff (demolition falls with damage, 1 - x^2 over
+  // the 17-25 m band: 50 or more out to about 20.3 m). A big structure (a Stratagem Jammer, pinged within 35 m) falls
+  // when part of its body is inside that band, though its center is farther.
+  'portable-hellbomb': profile([...shot(null, 60, { name: '지옥폭탄 폭발', shieldBypass: true, note: '시설이 중심 17 m 안에 들어오는 조건입니다. 이미 휴대한 폭탄의 기폭은 스트라타젬 호출과 다릅니다.' }),
+    mode('edge', '지옥폭탄 폭발 · 17~20 m', null, 50, { shieldBypass: true, forceSource: 'user', note: '중심에서 17~20 m 사이의 철거력입니다. 위키에는 중심 17 m 안 철거력 60만 있어, 20 m까지 50은 위키 수치가 아니라 이 사이트가 정한 값입니다. 교란기처럼 큰 시설은 중심이 더 멀어도 몸체 일부가 이 범위에 들어오면 부서집니다.' })], { source: wiki('Portable_Hellbomb') }),
+  'hellbomb': callIn([...shot(null, 60, { name: '지옥폭탄 폭발', shieldBypass: true, note: '시설이 중심 17 m 안에 들어오는 조건입니다. 호출이 허용되는 임무 구역에서 장전해야 합니다.' }),
+    mode('edge', '지옥폭탄 폭발 · 17~20 m', null, 50, { shieldBypass: true, forceSource: 'user', note: '중심에서 17~20 m 사이의 철거력입니다. 위키에는 중심 17 m 안 철거력 60만 있어, 20 m까지 50은 위키 수치가 아니라 이 사이트가 정한 값입니다. 교란기처럼 큰 시설은 중심이 더 멀어도 몸체 일부가 이 범위에 들어오면 부서집니다.' })], { source: wiki('Portable_Hellbomb') }),
   // Not a call-in: Stratagem Jammers and Ion Storms cannot block SEAF Artillery (wiki SEAF Artillery rev 139226).
   'seaf-artillery': profile([
     mode('he', '폭탄', 50, 50, { shieldBypass: true }),
