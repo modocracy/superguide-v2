@@ -1210,12 +1210,12 @@ export const statusEffects = [
   "name": "화상",
   "en": "Fire",
   "detail": [
-   "화상은 초당 100 피해를 주고 AP 4 장갑까지 뚫으며, 기본 3초 동안 지속됩니다. 대형 적은 화염 피해 배율이 높을 수 있습니다(차저 1.5배, 임페일러 1.7배, 플레시몹 1.8배).",
+   "화상은 초당 100 피해를 주고 AP 4 장갑까지 뚫으며, 기본 3초 동안 지속됩니다. 대형 적은 화염 피해 배율이 높을 수 있습니다(임페일러 1.7배, 플레시몹 1.8배).",
    "화염방사기, 크리메이터, 화염 센트리, 토처처럼 불길을 직접 뿜는 무기와 멜타건에 맞은 적은 가스 혼란 효과와 유사하게 1초간 공포 및 0.5초간 슬로우에 걸립니다. 테르미니드가 아닌 대형·초대형 적에게는 공포와 슬로우 모두 걸리지 않습니다.",
    "네이팜 이글·네이팜 포격·일회성 네이팜은 초당 200 피해를 주는 강한 화상을 더하지만, 1초만 지속됩니다."
   ],
   "detailEn": [
-   "Burning deals 100 damage per second, gets through AP 4 armor and lasts 3 seconds by default. Large enemies can take more fire damage (Chargers 1.5x, Impalers 1.7x, Fleshmobs 1.8x).",
+   "Burning deals 100 damage per second, gets through AP 4 armor and lasts 3 seconds by default. Large enemies can take more fire damage (Impalers 1.7x, Fleshmobs 1.8x).",
    "Enemies hit by a weapon that shoots a direct flame stream, such as the Flamethrower, Cremator, Flame Sentry and Torcher, or by the Meltagun panic for 1 second and are slowed for 0.5 seconds, much like gas confusion. Large and massive enemies other than Terminids are immune to both the panic and the slow.",
    "Napalm Eagle, Napalm Barrage and Expendable Napalm add a stronger burn of 200 damage per second, but it lasts only 1 second."
   ],
