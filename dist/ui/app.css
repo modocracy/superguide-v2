@@ -895,7 +895,7 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .aim p:first-child { color: var(--text); }
 .calc { font-size: 13px; color: var(--text-2); display: grid; gap: 6px; }
 .calc ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
-.calc code { font: 12.5px var(--mono); color: var(--text); }
+.calc code { font: inherit; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); }
 .wiki-ref table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
 .wiki-ref th, .wiki-ref td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; }
 
