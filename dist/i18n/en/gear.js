@@ -82,7 +82,7 @@ export default {
   "주 총열과 하부 유탄 발사기를 전환해 사용합니다. 탄약과 처치 탄수는 따로 계산합니다.": "Switch between the main barrel and the underbarrel grenade launcher. Ammo and shots to kill are calculated separately.",
   "인포박스 전격 피해 250은 본문에 명시된 50 피해 전격 5개의 합계입니다. DB는 전격당 피해를 유지합니다.": "The infobox arc damage of 250 is the total of the five 50-damage arcs stated in the article body. The DB keeps per-arc damage.",
   "재장전 시간 미확인: 인포박스 reload_time=(필드 또는 원문 없음).": "Reload time unverified: infobox reload_time=(no field or source text).",
-  "위키 표기 피해는 전격 1개당 100(x10)입니다. 던지면 땅에서 잠시 멈췄다가 작은 범위에서 튕기며 전격을 모두 5번 내뿜고 다 쓰면 멈춥니다.": "The wiki lists 100 damage per arc (x10). Once thrown, it rests on the ground for a moment, then lets out arcs a total of 5 times, bouncing in a small area each time, before it wears out.",
+  "위키 표기 피해는 전격 1개당 100(x10)입니다. 던지면 땅에 잠시 머문 뒤, 작은 범위에서 튕기며 전격을 모두 5번 내뿜습니다.": "The wiki lists 100 damage per arc (x10). Once thrown, it rests on the ground for a moment, then bounces in a small area, letting out arcs a total of 5 times.",
   "전격 1회 기준입니다. 다중 방출·연쇄 대상의 피해를 합산하지 않습니다.": "Based on a single arc. Damage from multiple discharges or chained targets is not combined.",
   "표시 피해는 전격 한 줄기 기준입니다. 기본은 다섯 줄기가 같은 부위에 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다. 실제로 모두 맞는다는 보장은 없습니다.": "Displayed damage is per arc. By default, all five arcs are assumed to hit the same part; lower the hit rate to recalculate. There is no guarantee that all of them actually hit.",
   "하위 분류가 없어 위키 인포박스 weapon_type=Explosives을 사용했습니다.": "There is no subcategory, so the wiki infobox weapon_type=Explosives was used.",

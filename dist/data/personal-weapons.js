@@ -7044,7 +7044,7 @@ export const personalWeapons = [
     record: null,
     fuseType: 'timed',
     fuseOptions: [],
-    playerNotes: ['위키 표기 피해는 전격 1개당 100(x10)입니다. 던지면 땅에서 잠시 멈췄다가 작은 범위에서 튕기며 전격을 모두 5번 내뿜고 다 쓰면 멈춥니다.'],
+    playerNotes: ['위키 표기 피해는 전격 1개당 100(x10)입니다. 던지면 땅에 잠시 머문 뒤, 작은 범위에서 튕기며 전격을 모두 5번 내뿜습니다.'],
     traitTags: ['arc'],
     image: 'G-31_ARC_Throwable_Render.png',
     sourceRevision: 140502,

@@ -112,7 +112,7 @@ function shownAs(w) {
 export function gearStats(w) {
   w = shownAs(w);
   const damage = hitKind(w) === 'spray' && w.dot?.perSecond != null
-    ? { label: L('화염 피해', 'Fire damage'), text: num(w.dot.perSecond), unit: '/s', caption: L('분사 초당', 'Spray per second') }
+    ? { label: L('화염 피해', 'Fire damage'), text: num(w.dot.perSecond), unit: '/s', caption: L('분사 중 초당', 'Per second of spray') }
     : w.direct != null && w.damageKind === 'dps'
     ? { label: L('지속 피해', 'Damage/s'), text: num(w.direct), unit: '/s', caption: L('광선 초당', 'Beam per second') }
     : w.direct != null
