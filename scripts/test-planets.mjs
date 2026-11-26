@@ -151,7 +151,8 @@ for (const item of planets.statusEffects) {
 {
   const pages = (await read('wiki_enemy_pages.json')).pages;
   const fireMult = title => Number(pages[title]?.fireMult);
-  ok(fireMult('Charger') === 1.5 && fireMult('Fleshmob') === 1.8 && fireMult('Impaler') === 1.7, 'fire multipliers in the burn line match the wiki enemy infoboxes');
+  // A wiki download that changes them only prints a CHECK line, so the burn line can be updated (user decision 2026-11-26).
+  if (!(fireMult('Charger') === 1.5 && fireMult('Fleshmob') === 1.8 && fireMult('Impaler') === 1.7)) console.warn(`CHECK planets: the burn line says Charger 1.5x, Impaler 1.7x, Fleshmob 1.8x; the wiki enemy infoboxes now give ${fireMult('Charger')}, ${fireMult('Impaler')}, ${fireMult('Fleshmob')}`);
 }
 
 // Stratagem effects: the factor is the percentage in the entry's own description.

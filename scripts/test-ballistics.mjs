@@ -66,20 +66,25 @@ for (const expanded of [false, true]) {
 }
 
 // A shot that drops more than 30 m is drawn only out to a nearer range, with table rows to suit (user request 2026-11-26).
-const rangeOf = record => Number(String(ballisticsBlock([{ record }], true)).match(/data-max="(\d+)"/)[1]);
-assert.deepEqual(['AR-23_P', 'GP-20_P', 'GL-21_P', 'G-7_P', 'EAT-700_P1'].map(rangeOf), [200, 50, 100, 25, 10], 'chart ranges follow the drop; a fired round keeps 50 m, fragments and bomblets go shorter');
-assert.deepEqual([...String(ballisticsBlock([{ record: 'GP-20_P' }], true)).matchAll(/<tr><th scope="row">(\d+)m<\/th>/g)].map(m => Number(m[1])), [10, 20, 30, 40, 50], 'Ultimatum table rows to 50 m');
-checks += 2;
+// The rules hold for every record; the numbers of particular weapons come from the datamine, so a wiki download that
+// changes them only prints a CHECK line (user decision 2026-11-26: such checks warn, they do not stop a deploy).
+const notice = (value, message) => { if (!value) console.warn(`CHECK ${message}`); };
+const rangeOf = record => Number(String(ballisticsBlock([{ record }], true)).match(/data-max="(\d+)"/)?.[1]);
+const rowsOf = record => [...String(ballisticsBlock([{ record }], true)).matchAll(/<tr><th scope="row">(\d+)m<\/th>/g)].map(m => Number(m[1]));
+for (const [record, b] of Object.entries(projectileBallistics)) {
+  if (!(b.velocity > 0) || !String(ballisticsBlock([{ record }], true)).includes('data-max')) continue;
+  const range = rangeOf(record), rows = rowsOf(record), ends = trajectory(b).endX;
+  // A fired round keeps 50 m or more unless its flight itself ends sooner; every table row is inside the range.
+  check(b.thrown || range >= 50 || (ends != null && ends < 50), `${record}: a fired round is drawn to at least 50 m (${range} m)`);
+  check(rows.length && rows.every(x => x > 0 && x <= range), `${record}: table rows inside the ${range} m range`);
+}
+notice(JSON.stringify(['AR-23_P', 'GP-20_P', 'GL-21_P', 'G-7_P', 'EAT-700_P1'].map(rangeOf)) === '[200,50,100,25,10]', 'ballistics: chart ranges of the Liberator, Ultimatum, Grenade Launcher, Pineapple fragments and napalm bomblets changed');
+notice(JSON.stringify([rangeOf('PLAS-45_P'), rowsOf('PLAS-45_P').at(-1), rangeOf('R-36_P'), rowsOf('R-36_P').at(-1)]) === '[150,148,180,180]', 'ballistics: the Epoch and Eruptor flight ends changed');
 // The Missile Pistol's missile speeds up in flight, so it shows the wiki's range facts instead of the flight charts.
 {
   const missile = String(ballisticsBlock([{ record: 'P-33_P' }], true));
   check(!missile.includes('ballistic-chart') && missile.includes('197') && missile.includes('100'), 'Missile Pistol: wiki range facts, no flight charts');
 }
-// A shot whose lifetime ends it short of the range is drawn only as far as it flies: the Epoch's 148 m on a 150 m axis, the
-// Eruptor's 180 m, with the last table row at the end of the flight (user request 2026-11-26).
-const rowsOf = record => [...String(ballisticsBlock([{ record }], true)).matchAll(/<tr><th scope="row">(\d+)m<\/th>/g)].map(m => Number(m[1]));
-assert.deepEqual([rangeOf('PLAS-45_P'), rowsOf('PLAS-45_P').at(-1), rangeOf('R-36_P'), rowsOf('R-36_P').at(-1)], [150, 148, 180, 180], 'ranges end with the flight');
-checks++;
 
 // Short-lived projectiles ending on an odd metre keep their final point on chart curves.
 for (const oddRecord of ['RL-77_P1']) {
