@@ -16,7 +16,8 @@ const iconSpan = (id, side, large = false) => subfactionIcons[id] ? html`<span c
 // A guide named after its enemies (Dragonroach · Hive Lord) shows each enemy's icon before its name.
 const guideLabel = (guide, large = false) => guide.parts
   ? guide.parts.map((part, index) => html`${index ? ' · ' : ''}${iconSpan(part.icon, guide.side, large)}${T(part.name)}`)
-  : html`${iconSpan(guide.id, guide.side, large)}${guide.name}`;
+  // English shows the guide's own English name: the shared dictionary gives every '기본' the same 'Standard'.
+  : html`${iconSpan(guide.id, guide.side, large)}${lang === 'en' && guide.en ? guide.en : guide.name}`;
 import { stratagemById } from '../../core/catalog.js';
 import { recommend, findEnemy } from '../../core/factions.js';
 import { num, unitOf, outcomeOf, countText, aimText, routeNotes, josa, stageName } from '../../core/explain.js';
