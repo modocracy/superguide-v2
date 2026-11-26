@@ -1210,14 +1210,14 @@ export const statusEffects = [
   "name": "화상",
   "en": "Fire",
   "detail": [
-   "불은 AP 4 장갑까지 뚫고 기본 3초 동안 탑니다. 대형 적은 불 피해 배율이 높을 수 있습니다(임페일러 1.7배).",
-   "화염방사기, 크리메이터, 화염 센트리, 토처처럼 불길을 직접 뿜는 무기와 멜타건에 맞은 적은 가스에 걸린 것처럼 아무 방향으로나 움직이고 공격하며, 움직임도 느려집니다. 테르미니드가 아닌 대형·초대형 적에게는 두 효과 모두 걸리지 않습니다.",
-   "네이팜 이글·네이팜 포격·일회성 네이팜은 1초 동안 훨씬 강한 화상을 더합니다."
+   "불은 초당 100 피해를 주고 AP 4 장갑까지 뚫으며, 기본 3초 동안 탑니다. 대형 적은 불 피해 배율이 높을 수 있습니다(임페일러 1.7배).",
+   "화염방사기, 크리메이터, 화염 센트리, 토처처럼 불길을 직접 뿜는 무기와 멜타건에 맞은 적은 가스 혼란 효과와 유사하게 1초간 공포 및 0.5초간 슬로우에 걸립니다. 테르미니드가 아닌 대형·초대형 적에게는 공포와 슬로우 모두 걸리지 않습니다.",
+   "네이팜 이글·네이팜 포격·일회성 네이팜은 초당 200 피해를 주는 강한 화상을 더하지만, 1초만 지속됩니다."
   ],
   "detailEn": [
-   "Fire gets through AP 4 armor and burns for 3 seconds by default. Bigger enemies can take more fire damage (Impalers 1.7x).",
-   "Enemies hit by a weapon that shoots a direct flame stream, such as the Flamethrower, Cremator, Flame Sentry and Torcher, or by the Meltagun move and attack in random directions as if gassed, and are slowed. Large and massive enemies other than Terminids are immune to both.",
-   "Napalm Eagle, Napalm Barrage and Expendable Napalm add a much stronger burn that lasts 1 second."
+   "Fire deals 100 damage per second, gets through AP 4 armor and burns for 3 seconds by default. Large enemies can take more fire damage (Impalers 1.7x).",
+   "Enemies hit by a weapon that shoots a direct flame stream, such as the Flamethrower, Cremator, Flame Sentry and Torcher, or by the Meltagun panic for 1 second and are slowed for 0.5 seconds, much like gas confusion. Large and massive enemies other than Terminids are immune to both the panic and the slow.",
+   "Napalm Eagle, Napalm Barrage and Expendable Napalm add a stronger burn of 200 damage per second, but it lasts only 1 second."
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Fire"
  },
@@ -1226,11 +1226,11 @@ export const statusEffects = [
   "name": "가스",
   "en": "Gas",
   "detail": [
-   "본체 체력에만 지속 피해를 주고 혼란에 빠뜨립니다. 혼란에 빠진 적은 아무 방향으로나 움직이고 공격하며, 가스에 걸리면 25% 느려집니다.",
+   "본체 체력에만 지속 피해를 주고 혼란에 빠뜨립니다. 혼란에 빠진 적은 아무 방향으로나 움직이고 공격하며, 25% 느려집니다.",
    "가스 수류탄·가스 타격·가스 박격포 등은 6초(혼란 5초), 스테릴라이저와 독 브레스는 10초(혼란 9초)입니다."
   ],
   "detailEn": [
-   "Damage over time to main health only, plus confusion: confused enemies move and attack in random directions, and gassed units are 25% slower.",
+   "Damage over time to main health only, plus confusion: confused enemies move and attack in random directions, and they are 25% slower.",
    "Gas grenades, Gas Strikes, the Gas Mortar and similar last 6 seconds (5 s confusion); the Sterilizer and Dog Breath last 10 seconds (9 s confusion)."
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Gas"
