@@ -21,7 +21,7 @@ import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
 import { recoilSimBlock } from '../recoil-sim.js';
 import { modeIcon } from '../mode-icons.js';
-import { detailColumns, detailDisclosure, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
+import { detailColumns, detailDisclosure, detailModeList, detailStatCell, rangeGrid, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { warbondChip } from '../warbond-chip.js';
 import { bindTips, tipLabel } from '../tips.js';
 import { GROUPS, groupOf, typeName, weaponById, displayName, orderTypes, recoilStats, gameErgonomics } from '../gear-shared.js';
@@ -343,9 +343,28 @@ function detailRows(w) {
 // Player-facing names for data-mined attack components.
 const variantLabel = v => v.displayName || (v.id === 'shrapnel' ? L('파편 (1개당)', 'Fragment (each)') : /^explosion-/.test(v.id) ? L('폭발', 'Explosion') : /^projectile-/.test(v.id) ? L('탄체', 'Projectile') : /^charge-stage-/.test(v.id) ? v.name.split(' · ')[0] : v.name);
 
+// Single-mode weapons whose records are states of one shot rather than parts of it (user request 2026-11-26): the key
+// stats show each number from its lowest to its highest state as 'low~high', as the Epoch does, and the component
+// table is left out. The charge stage records with no numbers of their own and the wiki infobox's charge pair stay out.
+const STATE_RANGE = { loyalist: L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged'), purifier: L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged'),
+  'double-edge-sickle': L('열 상태에 따라 가장 낮을 때~가장 높을 때', 'Lowest~highest across the heat states') };
+// The Accelerator Rifle's charge stages have no numbers yet: no range and no table, only its known shot.
+const NO_COMPONENT_TABLE = new Set(['accelerator-rifle', ...Object.keys(STATE_RANGE)]);
+const STATE_FIELDS = ['direct', 'durable', 'ap', 'splash', 'splashAp', 'radius', 'innerRadius'];
+function stateRange(w) {
+  if (!STATE_RANGE[w.id]) return null;
+  const states = (w.variants ?? []).filter(v => !/^(charge-stage-|wiki-)/.test(v.id) && v.direct != null);
+  if (states.length < 2) return null;
+  const pick = how => ({ ...w, ...Object.fromEntries(STATE_FIELDS.map(key => {
+    const values = states.map(v => v[key]).filter(v => v != null);
+    return [key, values.length ? Math[how](...values) : null];
+  })) });
+  return [pick('min'), pick('max')];
+}
+
 function variantTable(w) {
   const variants = w.variants || [];
-  if (variants.length < 2) return '';
+  if (variants.length < 2 || NO_COMPONENT_TABLE.has(w.id)) return '';
   return html`<section class="block gear-block"><h3>${L('모드·구성 요소별 수치', 'Stats by mode and component')}</h3>
     <div class="compare-scroll" role="region" aria-label="${L('모드별 수치', 'Stats by mode')}" tabindex="0"><table class="compare-table gear-modes">
       <thead><tr><th scope="col">${L('구분', 'Part')}</th><th scope="col">${L('직격', 'Direct')}</th><th scope="col">${L('관통', 'Penetration')}</th><th scope="col">${L('폭발', 'Blast')}</th><th scope="col">${L('반경', 'Radius')}</th></tr></thead>
@@ -534,6 +553,13 @@ function specialCells(w) {
 // (user request 2026-11-25).
 const statsWithEffects = (v, w) => detailGrid(v, specialCells(w));
 
+// The penetration chip; a weapon shown as a range of states (stateRange) gives its lowest to highest.
+function apBadge(w) {
+  const range = stateRange(w);
+  if (range && range[0].ap !== range[1].ap) return badge(`AP ${range[0].ap}~${range[1].ap} · ${apBandOf(range[0])?.name}~${apBandOf(range[1])?.name}`, 'accent');
+  return apOf(w) != null ? badge(`${apText(w)} · ${apBandOf({ ap: apOf(w) })?.name}`, 'accent') : '';
+}
+
 export function weaponDetail(w, { header = null, titleId = 'sheet-title', variant = state.variant, expandable = false, expanded = false } = {}) {
   const group = groupOf(w.category);
   const conflicts = w.infoboxConflicts || [];
@@ -548,9 +574,12 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
       : modeTabs(w, modeDetails, current);
     stats = byMode;
   } else {
-    const v = shownAs(w);
-    const base = html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${statsWithEffects(v, v)}</section>`;
-    const blast = blastFigure(v);
+    const v = shownAs(w), range = stateRange(w);
+    const base = range
+      ? html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${raw(rangeGrid(String(statsWithEffects(range[0], w)), String(statsWithEffects(range[1], w))))}
+        <p class="faint" style="font-size:12.5px;margin-top:8px">${STATE_RANGE[w.id]}</p></section>`
+      : html`<section class="block item-detail-key-stats"><h3>${L('기본 수치', 'Key stats')}</h3>${statsWithEffects(v, v)}</section>`;
+    const blast = range ? blastFigure(range[1], range[0]) : blastFigure(v);
     stats = expanded
       ? html`${blast ? detailColumns(base, blast) : base}${variantTable(v)}`
       : html`${base}${blast}${variantTable(v)}`;
@@ -558,7 +587,7 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
   const ballistics = ballisticsBlock([...modes.map(m => ({ label: T(m.name), record: m.record })), { label: L('기본 사격', 'Standard shot'), record: w.record }, ...(w.variants || []).filter(v => v.id !== 'shrapnel').map(v => ({ label: v.displayName, record: v.record }))], expanded, recoilCells(w));
   const art = weaponArt(w, 'gear-art large');
   const identity = html`<div class="detail-id gear-id${expandable ? ' item-detail-actions' : ''}"><div><h2 id="${titleId}">${displayName(w)}</h2><p>${lang === 'en' ? '' : w.en}</p>
-      <div class="chips" style="margin-top:6px">${badge(group.name, 'outline')}${badge(typeName(w.type))}${warbondChip('gear', w.id)}${apOf(w) != null ? badge(`${apText(w)} · ${apBandOf({ ap: apOf(w) })?.name}`, 'accent') : ''}${traits(w)}</div>${holeTier(w) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[w.id]}</p>` : ''}</div>
+      <div class="chips" style="margin-top:6px">${badge(group.name, 'outline')}${badge(typeName(w.type))}${warbondChip('gear', w.id)}${apBadge(w)}${traits(w)}</div>${holeTier(w) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[w.id]}</p>` : ''}</div>
       ${expandable ? itemDetailToggle(expanded) : ''}</div>`;
   return html`${header ?? html`<div class="sheet-top"><span>${group.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
   <div class="sheet-content">

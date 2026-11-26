@@ -10,7 +10,7 @@ import { blastFigure, blastCaption } from '../blast.js';
 import { ballisticsBlock } from '../ballistics-view.js';
 import { recoilSimBlock } from '../recoil-sim.js';
 import { modeIcon } from '../mode-icons.js';
-import { detailColumns, detailModeList, detailStatCell, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
+import { detailColumns, detailModeList, detailStatCell, rangeGrid, bindItemSheetActions, FORCE_NOTE, itemDetailToggle, itemVariantPanel, openItemPanel, openItemSheet, updateItemDetail } from '../item-detail.js';
 import { supportProjectileRecords, propelledModes } from '../../data/support-records.js';
 import { warbondChip } from '../warbond-chip.js';
 import { bindTips, tipLabel } from '../tips.js';
@@ -572,26 +572,6 @@ const statGrid = (item, effects = [], expanded = false) => {
 // key stats and the blast show the uncharged to fully charged values as 'a~b'. The data keeps both modes, which other
 // views pick by name (faction picks use 'epoch:charged').
 const CHARGE_RANGE = new Set(['epoch']);
-// Two renderings of the same stat grid made into one: a value or caption that differs shows as 'low~high', number by
-// number when the rest of the text is the same ('AP 4~5'), else whole ('중장갑~대전차').
-function rangeGrid(low, high) {
-  const CELL = /<div><dt>([\s\S]*?)<\/dt><dd([^>]*)>([\s\S]*?)<\/dd>(?:<div class="caption">([\s\S]*?)<\/div>)?<\/div>/g;
-  const merge = (a = '', b = '') => {
-    if (a === b) return a;
-    const pa = a.split(/(\d[\d,.]*)/), pb = b.split(/(\d[\d,.]*)/);
-    if (pa.length === pb.length && pa.every((part, i) => i % 2 || part === pb[i])) return pa.map((part, i) => (i % 2 && part !== pb[i] ? `${part}~${pb[i]}` : part)).join('');
-    return `${a}~${b}`;
-  };
-  const highCells = [...high.matchAll(CELL)];
-  let index = 0;
-  return low.replace(CELL, (whole, dt, attrs, dd, caption) => {
-    const other = highCells[index++];
-    if (!other || other[1] !== dt) return whole;
-    const text = merge(caption, other[4]);
-    return `<div><dt>${dt}</dt><dd${attrs}>${merge(dd, other[3])}</dd>${text ? `<div class="caption">${text}</div>` : ''}</div>`;
-  });
-}
-
 export function stratagemDetail(item, { demolition = false, force = null, header = null, titleId = 'sheet-title', variant = state.variant, compare = true, expandable = false, expanded = false } = {}) {
   const cat = categoryOf(item.category);
   const charge = CHARGE_RANGE.has(item.id) && item.variants?.length > 1 ? [withVariant(item, item.variants[0]), withVariant(item, item.variants.at(-1))] : null;

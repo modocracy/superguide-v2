@@ -162,6 +162,10 @@ for (const w of singles) {
   ok(!content.includes('data-variant'), `${w.id}: single-mode weapon has no mode tabs`);
   // The Arc grenade shows its arcs as the hit, with no component table (user request 2026-11-26).
   if (arcShown(w)) ok(!content.includes('class="compare-table gear-modes"') && shows(content, '전격', '100') && content.includes('전격 효과') && !content.includes('폭발 효과'), `${w.id}: arcs as the hit, no component table or blast effect`);
+  // Charge and heat states read as 'low~high' in the key stats, as the Epoch does, and the Accelerator Rifle's empty charge
+  // stages get no table (user request 2026-11-26); the others keep their component table.
+  else if (['loyalist', 'purifier', 'double-edge-sickle'].includes(w.id)) ok(!content.includes('class="compare-table gear-modes"') && /\d~\d/.test(content), `${w.id}: states as a range, no component table`);
+  else if (w.id === 'accelerator-rifle') ok(!content.includes('class="compare-table gear-modes"'), `${w.id}: no table of empty charge stages`);
   else if ((w.variants?.length ?? 0) > 1) ok(content.includes('class="compare-table gear-modes"'), `${w.id}: single-mode weapon keeps its component table`);
 }
 // Mode names are set in personal-profiles.mjs (code, not wiki data).
