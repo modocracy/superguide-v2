@@ -278,6 +278,7 @@ export default {
   "유탄 1발": "Per grenade",
   "총열 2개에 각각 · 재장전 없음": "Each of the two guns · no reload",
   "재장전 없음": "No reload",
+  "최대 약 600 m 떨어진 시설도 같은 곳을 계속 맞혀 체력을 깎아 부술 수 있습니다.": "It can destroy a structure as far as about 600 m away by hitting the same spot again and again to wear down its health.",
   "분당 발수 · 총열 2개 합계": "Rounds per minute · both guns together",
   "주포 포탄 1발": "Per main cannon shell",
   "자탄 1개": "Per bomblet",

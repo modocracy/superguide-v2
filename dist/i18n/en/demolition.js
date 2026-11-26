@@ -194,6 +194,7 @@ export default {
   "이글 기총소사로 체력을 깎는 것이 가장 편합니다. 던진 방향으로 길게 쏘므로 가까이 가지 않아도 되지만, 방향을 잘못 던지면 빗나갑니다. 게임에는 중장갑 관통으로 표시되지만 장갑 5인 제조소의 체력도 깎습니다.": "Wearing it down with the Eagle Strafing Run is the easiest way. It fires in a long line in the direction you throw, so you need not get close, but a badly aimed throw misses. The game lists it as heavy armor penetration, yet it does damage the armor 5 Fabricator.",
   "이글 110mm 로켓 포드는 알아서 제조소를 노립니다.": "The Eagle 110mm Rocket Pods target Fabricators by themselves.",
   "대전차 드론 하나로도 부서집니다.": "A single Anti-Tank Seeker grenade destroys it.",
+  "대전차 거치포는 최대 약 600 m 떨어진 제조소도 같은 곳을 계속 맞혀 체력을 깎아 부술 수 있습니다.": "The Anti-Tank Emplacement can destroy a fabricator as far as about 600 m away by hitting the same spot again and again to wear down its health.",
   "환풍구가 잘 보여 멀리서 오토캐넌, 이럽터, 미사일 권총(비유도 모드)으로 저격하기 쉽습니다.": "Its vents are easy to see, so sniping them from afar with the Autocannon, Eruptor or Missile Pistol (unguided mode) is easy.",
   "대전차 드론 하나로는 한 번에 부서지지 않습니다.": "One Anti-Tank Seeker grenade does not destroy it at once.",
   "소리에 아주 예민합니다. 평소에는 시야를 천천히 돌리지만 스트라타젬을 부르는 소리나 교전 소리가 나면 그쪽으로 빠르게 돌아봅니다. 빛이 지나간 뒤 등 뒤로 다가가세요.": "It is very sensitive to sound. Normally it sweeps its light slowly, but stratagem calls or gunfire make it snap toward the noise. Approach from behind after the light passes.",
