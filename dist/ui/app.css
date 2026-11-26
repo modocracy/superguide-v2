@@ -1110,6 +1110,8 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 :is(.biome-planets, .module-affected) summary::before { content: ''; width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 7px; border-color: transparent transparent transparent var(--accent-text); transition: transform .15s; }
 :is(.biome-planets, .module-affected)[open] summary::before { transform: rotate(90deg); }
 :is(.biome-planets, .module-affected) p { margin-top: 6px; line-height: 1.7; }
+/* One stratagem a line (user request 2026-11-26). */
+.module-affected ul { margin: 6px 0 0; padding-left: 18px; line-height: 1.7; }
 /* Planet clock speed table (planet tab 'time'). */
 .time-table { min-width: 560px; }
 .time-table tbody th { width: auto; color: var(--text); font-size: 14px; font-weight: 700; }

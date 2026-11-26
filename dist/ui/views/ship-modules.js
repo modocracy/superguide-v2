@@ -22,7 +22,7 @@ function affectedList(module) {
   const items = (module.affected ?? []).map(id => stratagemById.get(id)).filter(Boolean);
   if (!items.length) return '';
   return html`<details class="module-affected"><summary>${L(`영향받는 스트라타젬 ${items.length}종`, `${items.length} ${items.length === 1 ? 'stratagem' : 'stratagems'} affected`)}</summary>
-    <p>${items.map((item, i) => html`${i ? ' · ' : ''}<a href="#/arsenal/${item.id}">${T(item.name)}</a>`)}</p></details>`;
+    <ul>${items.map(item => html`<li><a href="#/arsenal/${item.id}">${T(item.name)}</a></li>`)}</ul></details>`;
 }
 
 function moduleItem(module, focus) {
