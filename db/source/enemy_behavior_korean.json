@@ -39,7 +39,7 @@
     "en": "Under its command, Heavy Devastators lose their slow movement and Berserkers get even faster. Killing it stuns every Automaton it commands for a few seconds, giving you a chance to finish them or retreat."
    },
    {
-    "ko": "폭발 피해를 받는 부위가 여러 곳이라 퍼니셔 플라스마와 퓨리파이어가 특히 잘 듣습니다.",
+    "ko": "폭발 피해를 받는 부위가 여러 곳이라 퍼니셔 플라스마와 퓨리파이어가 특히 효과적입니다.",
     "en": "Several of its limbs take explosion damage, so the Punisher Plasma and Purifier are exceptional against it."
    },
    {
@@ -557,7 +557,7 @@
     "en": "When its head is destroyed it goes berserk: faster, but it keeps bleeding out. It occasionally summons a trio of Warriors."
    },
    {
-    "ko": "보통 15~20m 거리에서 돌진합니다. 맞으면 피해를 입고 넘어지며 충격 효과를 받을 수 있습니다. 피하거나, 지형이나 차저 같은 큰 적에 부딪히게 하면 멈춥니다.",
+    "ko": "보통 15~20m 거리에서 돌진합니다. 맞으면 피해를 입고 넘어지며 충격 효과를 받을 수 있습니다. 피하거나, 지형이나 차저 같은 대형 적에 부딪히게 하면 멈춥니다.",
     "en": "Usually charges when you are 15~20m away. A hit deals damage, can knock you down and may concuss you. Dodge it, or let it hit terrain or a larger enemy like a Charger to stop it."
    },
    {
