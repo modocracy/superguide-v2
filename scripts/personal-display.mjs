@@ -206,7 +206,7 @@ export function playerDetails(weapon, box) {
   if (CAUTIONS[weapon.id]) playerNotes.push(...[CAUTIONS[weapon.id]].flat());
   // Found in play, not on the wiki (user's play experience 2026-11-26): it hits a Grounded Warp Ship from about 400 m.
   // Kept in the notes and the Warp Ship field tips; the detailed stats leave it out (user decision 2026-11-26).
-  if (weapon.id === 'breacher') playerNotes.push('실전에서는 최대 약 400 m 떨어진 착륙한 워프 함선도 맞혀 한 발에 부술 수 있습니다.');
+  if (weapon.id === 'breacher') playerNotes.push('최대 약 400 m 떨어진 착륙한 워프 함선도 맞혀 한 발에 부술 수 있습니다.');
   // Effect badges straight from the wiki infobox trait list ("Incendiary {{*}} Guided ...").
   const traits = String(box.weapon_traits ?? box.throwable_traits ?? '').split('{{*}}').map(trait => trait.trim().toLowerCase());
   const traitTags = Object.entries(TRAIT_TAGS).filter(([wiki]) => traits.includes(wiki)).map(([, tag]) => tag);
