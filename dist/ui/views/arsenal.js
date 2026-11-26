@@ -55,10 +55,15 @@ function stats(item) {
     : item.radius != null && item.innerRadius != null ? { text: num(item.innerRadius), unit: 'm', label: L('반경', 'Radius'), caption: blastCaption(item) }
     : item.radius != null ? { text: num(item.radius), unit: 'm', label: L('반경', 'Radius'), caption: L('폭발 외곽 반경', 'Outer blast radius') }
     : { text: item.rangeLabel || L('미확인', 'Unverified'), dim: !item.rangeLabel || item.rangeLabel === '미확인', label: L('범위', 'Area'), caption: item.rangeNoteShort };
+  const kind = hitKind(item);
+  const hitName = dps ? (kind === 'beam' ? L('광선 피해', 'Beam damage') : kind === 'spray' && streamOf(item) === 'fire' ? L('화염 피해', 'Fire damage') : L('지속 피해', 'Damage/s'))
+    : { arc: L('전격', 'Arc'), spray: L('입자 피해', 'Particle damage'), beam: L('광선', 'Beam') }[kind] ?? L('직격', 'Direct');
+  // A grenade whose burst is a ring of arcs (De-Escalator) names its second cell for them.
+  const splashName = item.splashKind === 'arc' ? L('전격', 'Arc') : L('폭발', 'Blast');
   return [
-    { label: dps ? L('지속 피해', 'Damage/s') : L('직격', 'Direct'), icon: dps ? streamOf(item) : '', caption: item.directNoteShort || (none ? L('지원 장비', 'Utility gear') : dps ? L('초당', 'Per second') : item.unit), ...value(item.direct, item.directText) },
-    { label: L('폭발', 'Blast'), caption: item.splashNoteShort || (item.splash > 0 ? L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
-    { label: L('관통', 'Penetration'), caption: item.apNoteShort || (item.ap != null ? apBandOf(item).name + (item.splashAp != null && item.splashAp !== item.ap ? L(` · 폭발 AP ${item.splashAp}`, ` · blast AP ${item.splashAp}`) : '') : ''),
+    { label: hitName, icon: dps ? streamOf(item) : '', caption: item.directNoteShort || (none ? L('지원 장비', 'Utility gear') : dps ? L('초당', 'Per second') : item.unit), ...value(item.direct, item.directText) },
+    { label: splashName, caption: item.splashNoteShort || (item.splash > 0 ? L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
+    { label: L('관통', 'Penetration'), caption: item.apNoteShort || (item.ap != null ? apBandOf(item).name + (item.splashAp != null && item.splashAp !== item.ap ? ` · ${splashName} AP ${item.splashAp}` : '') : ''),
       ...(item.ap != null ? { text: `AP ${item.ap}${item.splashAp != null && item.splashAp !== item.ap ? `/${item.splashAp}` : ''}` } : { text: none ? '—' : L('미확인', 'Unverified'), dim: true }) },
     { caption: reach.caption, ...reach },
   ];
@@ -419,15 +424,27 @@ const BLAST_KINDS = ['blast', 'overcharge', 'backblast', 'wreck'];
 // (a beam in the datamine attacks, the 레이저 tag, or the Orbital Laser, whose datamine attack is a spray).
 const streamOf = item => item.extraStats?.some(cell => cell.icon === 'gas') ? 'gas' : item.tags?.includes('화염') ? 'fire'
   : item.tags?.includes('레이저') || item.id === 'orbital-laser' || stratagemStats[item.id]?.forces?.some(group => group.parts.some(part => part.kind === 'beam')) ? 'laser' : '';
+// What the main hit is, for its labels (user request 2026-11-26): a spray particle (a mode whose unit says so), a
+// direct hit, an arc (a datamine arc, or an arc weapon with no datamine record: Tesla Tower), a laser beam (the
+// Orbital Laser's datamine attack is a spray) or a spray.
+const hitKind = item => {
+  const kinds = (stratagemStats[item.id]?.forces ?? []).flatMap(group => group.parts.map(part => part.kind));
+  if (item.unit === '분사 입자 1개') return 'spray';
+  if (kinds.includes('direct')) return 'direct';
+  if (kinds.includes('arc') || (!kinds.length && item.tags?.includes('전격'))) return 'arc';
+  if (kinds.includes('beam') || streamOf(item) === 'laser') return 'beam';
+  return kinds.includes('spray') ? 'spray' : 'direct';
+};
 // Explosions carry the blast icon, arc attacks the arc icon, beams the laser icon and a spray what it sprays.
 const kindIcon = (kind, item) => BLAST_KINDS.includes(kind) ? 'ico-blast' : kind === 'direct' ? 'ico-ballistic' : kind === 'arc' ? 'ico-arc' : kind === 'beam' ? 'ico-laser'
   : kind === 'spray' && streamOf(item) ? `ico-${streamOf(item)}` : '';
 // One force in an effect cell: its name small, its number in the stat font (user request 2026-11-25).
 const forcePair = (name, value) => html`<span class="force-pair"><b>${name}</b><span class="force-val">${value}</span></span>`;
-function fallbackRows(profile, value) {
+function fallbackRows(profile, value, item) {
   const top = key => profile.modes.map(mode => mode[key]).filter(force => force != null)
     .reduce((best, force) => best == null || (typeof force === 'number' ? force : force.max) > (typeof best === 'number' ? best : best.max) ? force : best, null);
-  const rows = [['direct', html`<span class="ico-ballistic" aria-hidden="true"></span>${tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)}`], ['explosion', html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}`]].map(([key, label]) => [label, top(key)]).filter(([, force]) => force != null)
+  const arc = hitKind(item) === 'arc';
+  const rows = [['direct', arc ? html`<span class="ico-arc" aria-hidden="true"></span>${tipLabel(L('전격 효과', 'Arc effects'), FORCE_NOTE)}` : html`<span class="ico-ballistic" aria-hidden="true"></span>${tipLabel(L('직격 효과', 'Direct effects'), FORCE_NOTE)}`], ['explosion', html`<span class="ico-blast" aria-hidden="true"></span>${tipLabel(L('폭발 효과', 'Blast effects'), FORCE_NOTE)}`]].map(([key, label]) => [label, top(key)]).filter(([, force]) => force != null)
     .map(([label, force]) => ({ label, text: html`<span class="force-line">${forcePair(L('철거력', 'Demolition'), value(force))}</span>` }));
   return rows.length ? rows : [{ label: tipLabel(L('철거력', 'Demolition'), FORCE_NOTE), text: html`<span class="force-line dim">${L('확인 중', 'Unverified')}</span>` }];
 }
@@ -448,17 +465,21 @@ function specialCells(item, profile, variant = null) {
   const line = (demo, stun, push) => html`<span class="force-line">${forcePair(L('철거력', 'Demolition'), demo)}${forcePair(L('저지력', 'Stagger'), stun ?? '?')}${forcePair(L('넉백', 'Push'), push ?? '?')}</span>`;
   // Only the strongest direct hit and the strongest blast (user decision 2026-11-19): highest
   // demolition, then stagger, then push. Fragments are left out.
-  const parts = forces.flatMap(group => group.parts);
+  // A laser that the datamine stores as a spray (Orbital Laser) is a beam; a blast with no force at all (the
+  // De-Escalator's burst, whose force is in its arcs) is left out (user request 2026-11-26).
+  const parts = forces.flatMap(group => group.parts).map(part => part.kind === 'spray' && streamOf(item) === 'laser' ? { ...part, kind: 'beam' } : part)
+    .filter(part => part.kind !== 'blast' || part.demo || part.stun || part.push);
   // The overcharge blast (Railgun, Epoch) is the weapon blowing up, and the backblast comes out of the back of a
   // launcher when it fires: neither is a shot, so each gets its own row with a warning.
-  const chosen = [strongest(parts.filter(part => DIRECT_KINDS.includes(part.kind))), strongest(parts.filter(part => part.kind === 'blast')), strongest(parts.filter(part => part.kind === 'overcharge')), strongest(parts.filter(part => part.kind === 'backblast')), strongest(parts.filter(part => part.kind === 'wreck'))].filter(Boolean);
+  // Each kind of hit has its own row: the De-Escalator's grenade hit and its arcs (user request 2026-11-26).
+  const chosen = [...DIRECT_KINDS.map(kind => strongest(parts.filter(part => part.kind === kind))), strongest(parts.filter(part => part.kind === 'blast')), strongest(parts.filter(part => part.kind === 'overcharge')), strongest(parts.filter(part => part.kind === 'backblast')), strongest(parts.filter(part => part.kind === 'wreck'))].filter(Boolean);
   const rows = forces.length
     ? (chosen.length ? chosen : parts.slice(0, 1)).map(part => ({
       label: html`${kindIcon(part.kind, item) ? html`<span class="${kindIcon(part.kind, item)}" aria-hidden="true"></span>` : ''}${tipLabel(html`${FORCE_KIND[part.kind]}${L(' 효과', ' effects')}`, FORCE_NOTE)}`,
       text: html`${line(range(part.kind) ? value(range(part.kind)) : value(part.demo), part.stun, part.push)}${part.kind === 'overcharge' ? html`<span class="force-note">${L('탄이 아니라 과충전하면 무기가 터지는 폭발입니다. 사용자도 죽습니다.', 'Not a shot: the weapon blows up when overcharged, killing the user too.')}</span>` : ''}${part.kind === 'backblast' ? html`<span class="force-note">${L('탄이 아니라 쏠 때 무기 뒤쪽으로 나오는 후폭풍입니다. 뒤에 선 아군이 넘어지거나 다칠 수 있습니다.', 'Not a shot: the blast out of the back of the launcher when it fires. Teammates standing behind can be knocked down or hurt.')}</span>` : ''}${part.kind === 'wreck' ? html`<span class="force-note">${L(`차량이 파괴될 때 연료 탱크가 터지는 폭발입니다. 피해 ${num(part.damage)}, 중심 ${num(part.inner)}m에서 ${num(part.outer)}m까지 줄어들고 충격파는 ${num(part.shockwave)}m까지로 이글 500kg 폭탄과 같은 크기이며, 타고 있던 헬다이버는 죽습니다. 화염방사기 연료가 다 떨어진 뒤에는 일반 차량 폭발로 바뀝니다.`, `Not a shot: the fuel tank blows up when the vehicle is destroyed. ${num(part.damage)} damage out to ${num(part.inner)} m, falling off to ${num(part.outer)} m, with a shockwave out to ${num(part.shockwave)} m, the same size as an Eagle 500kg Bomb, and it kills anyone inside. Once the flamethrower's fuel runs out, it becomes an ordinary vehicle explosion.`)}</span>` : ''}${DIRECT_KINDS.includes(part.kind) && item.directCaution ? html`<span class="force-note">${item.directCaution}</span>` : ''}`,
     }))
     // No attack records in the datamine: the highest direct and blast demolition force of the demolition data.
-    : fallbackRows(profile, value);
+    : fallbackRows(profile, value, item);
   return rows.map(row => html`<div><dt>${row.label}</dt><dd class="force-lines">${row.text}</dd></div>`);
 }
 // The key stats grid with the special effect cells at its end, and their note under it.

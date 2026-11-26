@@ -74,7 +74,8 @@ export function modeDetails(weapon, data, wikitext, warn = message => console.wa
       // The wiki's whole-weapon fire damage belongs to the flamethrower while the main rounds carry no element.
       const ownsFire = !weapon.element && spray.element === weapon.dot?.element;
       if (!ownsFire) warn(`${weapon.id}: fire damage left out, it no longer clearly belongs to the flamethrower`);
-      Object.assign(details.underbarrel, { ap: spray.ap, dot: ownsFire ? weapon.dot : null, fuel: true,
+      // One particle of the spray and its statuses, so the panel shows particle damage and the burn (user request 2026-11-26).
+      Object.assign(details.underbarrel, { direct: spray.direct, durable: spray.durable, ap: spray.ap, delivery: 'spray', statuses: spray.statuses, dot: ownsFire ? weapon.dot : null, fuel: true,
         modeNotes: note('사거리는 약 20m(1인칭 측정)이고, 연료를 가득 채우면 약 6.1초 동안 계속 분사합니다.', /\b20\s?m\b/i, /\b6\.1\s?s/i) });
     }
   }
@@ -182,6 +183,9 @@ export function playerDetails(weapon, box) {
   if (weapon.category === 'throwable' && fuse.fuseType === null) playerNotes.push('신관 작동 방식은 아직 확인하지 못했습니다.');
   if (weapon.shrapnelCount > 0) playerNotes.push('기본은 파편의 20%를 반올림한 개수가 같은 부위에 맞는다고 가정합니다. 명중률을 바꿔 다시 계산할 수 있으며, 파편 0개를 고르면 파편 피해는 제외합니다.');
   if (weapon.pellets > 1) playerNotes.push('표시 피해는 펠릿 한 개 기준입니다. 기본 계산은 펠릿이 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다.');
+  // G-31 Arc page rev 140502: damage '100 (x10)' in the infobox, and it lets out arcs 'a total of 5 times', bouncing
+  // each time. The page does not say whether the x10 is per bounce or for the whole grenade, so neither is assumed.
+  if (weapon.id === 'arc') playerNotes.push('위키 표기 피해는 전격 1개당 100(x10)입니다. 던지면 땅에서 잠시 멈췄다가 작은 범위에서 튕기며 전격을 모두 5번 내뿜고 다 쓰면 멈춥니다.');
   if (weapon.id === 'blitzer') playerNotes.push('표시 피해는 전격 한 줄기 기준입니다. 기본은 다섯 줄기가 같은 부위에 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다. 실제로 모두 맞는다는 보장은 없습니다.');
   if ([weapon, ...weapon.variants].some(attack => attack.delivery === 'spray')) playerNotes.push('화염 분사는 불길에 닿은 시간에 따라 피해가 달라져 정확한 처치 탄수를 계산하지 않습니다.');
   if (weapon.delivery === 'beam') playerNotes.push(weapon.damageKind === 'dps'

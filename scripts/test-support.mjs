@@ -92,6 +92,8 @@ const table = {
   'airburst-launcher:bomblet': shot('RL-77_P1'),
   'laser-cannon': { hit: ['beam', 'LAS-98 LASER CANNON_B'] },
   sterilizer: { hit: ['spray', 'TX-41 STERILIZER_S'] },
+  // The table's direct hit is the grenade itself (game data sheet, user request 2026-11-26); the arcs are the engine mode.
+  'de-escalator': shot('GL-52_P'),
   'defoliation-tool': { hit: ['damage', 'CQC-9 DEFOLIATION TOOL_dm'] },
 };
 
@@ -99,7 +101,6 @@ const notCompared = {
   'engine:meltagun/max-range': 'The 40% falloff at 15 m comes from the wiki page; the datamine has no range falloff.',
   'engine:solo-silo/standard': 'MS-11 Solo Silo is not in the datamine snapshot.',
   'table:solo-silo': 'MS-11 Solo Silo is not in the datamine snapshot.',
-  'table:de-escalator': 'The table shows no single direct value (sources conflict); the engine arc mode is checked.',
   'table:flamethrower': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
   'table:cremator': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
 };

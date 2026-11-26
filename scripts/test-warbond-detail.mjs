@@ -156,10 +156,13 @@ const [pickId, pickProfile] = multiMode[0];
 const picked = String(weaponDetail(weaponById.get(pickId), { variant: pickProfile.modes[1].id }));
 ok(picked.includes(`data-variant="${pickProfile.modes[1].id}" aria-pressed="true"`) && picked.includes(`data-variant-panel="${pickProfile.modes[0].id}" hidden`), 'weapon detail selects the given mode');
 const singles = [...weaponById.values()].filter(w => !(personalProfiles[w.id]?.modes.length > 1));
+const arcShown = w => w.splash === 0 && (w.variants ?? []).some(v => v.delivery === 'arc');
 for (const w of singles) {
   const content = String(weaponDetail(w));
   ok(!content.includes('data-variant'), `${w.id}: single-mode weapon has no mode tabs`);
-  if ((w.variants?.length ?? 0) > 1) ok(content.includes('class="compare-table gear-modes"'), `${w.id}: single-mode weapon keeps its component table`);
+  // The Arc grenade shows its arcs as the hit, with no component table (user request 2026-11-26).
+  if (arcShown(w)) ok(!content.includes('class="compare-table gear-modes"') && shows(content, '전격', '100') && content.includes('전격 효과') && !content.includes('폭발 효과'), `${w.id}: arcs as the hit, no component table or blast effect`);
+  else if ((w.variants?.length ?? 0) > 1) ok(content.includes('class="compare-table gear-modes"'), `${w.id}: single-mode weapon keeps its component table`);
 }
 // Mode names are set in personal-profiles.mjs (code, not wiki data).
 // The tab text after its mode icon (mode-icons.js), if any.
@@ -427,13 +430,16 @@ try {
       const kinds = new Set(forces.filter(f => !variant || [variant.record ?? []].flat().includes(f.attack) || !claimed.includes(f.attack)).flatMap(f => f.parts.map(p => p.kind)));
       const labels = labelsOf(body);
       if (['direct', 'beam', 'arc', 'spray'].some(k => kinds.has(k))) ok(labels.some(l => /직격|광선|전격|분사/.test(l)), `${item.id} ${id}: direct effect cell`);
-      if (kinds.has('blast')) ok(labels.some(l => /폭발 효과/.test(l)), `${item.id} ${id}: blast effect cell`);
+      // A blast with no force at all (the De-Escalator's burst) has no cell.
+      const blasts = forces.flatMap(f => f.parts).filter(p => p.kind === 'blast' && (p.demo || p.stun || p.push));
+      if (kinds.has('blast') && blasts.length) ok(labels.some(l => /폭발 효과/.test(l)), `${item.id} ${id}: blast effect cell`);
     }
   }
   for (const w of personalWeapons) {
+    if (arcShown(w)) continue;   // checked with the single-mode weapons above
     const rows = [w, ...(w.variants ?? [])].filter(r => !String(r.id ?? '').startsWith('shrapnel'));
     const labels = labelsOf(String(weaponDetail(w)));
-    if (rows.some(r => r.delivery !== 'explosion' && (r.demolition != null || r.stun != null || r.push != null))) ok(labels.some(l => /직격/.test(l)), `${w.id}: direct effect cell`);
+    if (rows.some(r => r.delivery !== 'explosion' && (r.demolition != null || r.stun != null || r.push != null))) ok(labels.some(l => /직격|광선|전격|분사/.test(l)), `${w.id}: direct effect cell`);
     if (rows.some(r => (r.delivery === 'explosion' && (r.demolition != null || r.stun != null || r.push != null)) || r.splashDemolition != null || r.splashStun != null || r.splashPush != null)) ok(labels.some(l => /폭발/.test(l)), `${w.id}: blast effect cell`);
   }
 }
