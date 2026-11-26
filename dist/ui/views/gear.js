@@ -345,7 +345,9 @@ const variantLabel = v => v.displayName || (v.id === 'shrapnel' ? L('파편 (1�
 
 // Single-mode weapons whose records are states of one shot rather than parts of it (user request 2026-11-26): the key
 // stats show each number from its lowest to its highest state as 'low~high', as the Epoch does, and the component
-// table is left out. The charge stage records with no numbers of their own and the wiki infobox's charge pair stay out.
+// table is left out. The charge stage records with no numbers of their own stay out; the wiki infobox's charge pair
+// counts for the numbers it gives (the Purifier's direct 100 uncharged, 200 charged, where the datamine has 200 for
+// both: user decision 2026-11-26).
 const STATE_RANGE = { loyalist: L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged'), purifier: L('충전하지 않았을 때~완전히 충전했을 때', 'Uncharged~fully charged'),
   'double-edge-sickle': L('열 상태에 따라 가장 낮을 때~가장 높을 때', 'Lowest~highest across the heat states') };
 // The Accelerator Rifle's charge stages have no numbers yet: no range and no table, only its known shot.
@@ -353,7 +355,7 @@ const NO_COMPONENT_TABLE = new Set(['accelerator-rifle', ...Object.keys(STATE_RA
 const STATE_FIELDS = ['direct', 'durable', 'ap', 'splash', 'splashAp', 'radius', 'innerRadius'];
 function stateRange(w) {
   if (!STATE_RANGE[w.id]) return null;
-  const states = (w.variants ?? []).filter(v => !/^(charge-stage-|wiki-)/.test(v.id) && v.direct != null);
+  const states = (w.variants ?? []).filter(v => !v.id.startsWith('charge-stage-') && v.direct != null);
   if (states.length < 2) return null;
   const pick = how => ({ ...w, ...Object.fromEntries(STATE_FIELDS.map(key => {
     const values = states.map(v => v[key]).filter(v => v != null);
