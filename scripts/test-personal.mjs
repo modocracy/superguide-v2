@@ -167,7 +167,7 @@ for (const profile of Object.values(personalProfiles)) {
 for (const text of playerCopy) ok(!/ap1|원본|레코드|탄체|\blevel\b|damage(?:_id)?|durable|splash|beam_fire_rate|charge_time|tac_reload_time/i.test(text), 'personal combat copy has no internal terminology');
 eq(personalUnsupported.purifier, '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.');
 // Trident: six beams per shot, counted like pellets (wiki: 360 per shot, 6 beams).
-eq([personalProfiles.trident.modes[0].standard, personalProfiles.trident.modes[0].hitCondition], [60, { kind: 'pellets', min: 1, max: 6, projectileName: '광선', defaultPct: 100, default: 6 }]);
+eq([personalProfiles.trident.modes[0].standard, personalProfiles.trident.modes[0].hitCondition], [60, { kind: 'pellets', min: 1, max: 6, projectileName: '광선', defaultPct: 50, default: 3 }]);
 // Held beams and flame streams are counted in seconds (user request 2026-11-26).
 const streamOf = id => personalProfiles[id]?.modes[0];
 eq([streamOf('scythe').standard, streamOf('scythe').durable, streamOf('scythe').ap, streamOf('scythe').unit, streamOf('scythe').stream.capacity], [350, 70, 2, '초', { kind: 'heat', seconds: 8 }]);
@@ -228,7 +228,7 @@ for (const weapon of personalWeapons) {
     ok(Number.isInteger(attack.ammoPerShot) && attack.ammoPerShot > 0, 'ammo use');
     if (attack.hitCondition) {
       const { min, max } = attack.hitCondition;
-      const pct = ['pellets', 'arcs'].includes(attack.hitCondition.kind) ? 100 : 20;
+      const pct = attack.hitCondition.kind === 'arcs' ? 100 : attack.hitCondition.kind === 'pellets' ? 50 : 20;
       eq(attack.hitCondition.defaultPct, pct);
       eq(attack.hitCondition.default, Math.max(min, Math.round(max * pct / 100)), `${weapon.id}/${attack.id}: rounded default count`);
       ok(Number.isInteger(min) && Number.isInteger(max) && min >= 0 && max >= min, 'assumption bounds');
@@ -302,7 +302,7 @@ eq(assumptionTag(mode('breaker')), '펠릿 명중 수 선택 필요');
 eq(assumptionTag(pelletsTwo), '펠릿 명중 수 가정');
 eq(assumptionTag(fragmentsZero), '파편 제외 · 폭발만');
 eq(assumptionTag(fragmentsThree), '파편 명중 수 가정');
-ok(assumptionText(mode('breaker')).includes('명중률을 낮춰 다시 계산'), 'pellet default caveat');
+ok(assumptionText(mode('breaker')).includes('절반') && assumptionText(mode('breaker')).includes('명중률을 바꿔 다시 계산'), 'pellet default caveat');
 ok(!assumptionText(mode('high-explosive')).includes('직격'), 'pure explosion does not claim direct hit');
 eq(unitOf(mode('frag')), { unit: '개', noun: '수류탄 개수', one: '수류탄 1개' });
 eq(countText({ hits: 2 }, mode('frag')), '수류탄 2개');
@@ -461,19 +461,20 @@ eq(compare('hunter-hardened', 'senator', { partId: 'claw' }).oneShot, false, 'on
 eq(compare('hunter-hardened', 'purifier').oneShot, false, 'unsupported is not oneShot');
 eq(compare('harvester', 'recoilless').oneShot, false, 'blocked shield is not oneShot');
 eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: 2 } }).oneShot, false, 'nonaccepted assumption is not oneShot even if hits is 1');
-eq([defaultBreaker.status, defaultBreaker.hits, defaultBreaker.verified, defaultBreaker.defaulted, defaultBreaker.allPelletsAssumed, defaultBreaker.assumption.count], ['route', 1, true, true, true, 11]);
+// Pellets default to half hitting (11 -> 6; user request 2026-11-26).
+eq([defaultBreaker.status, defaultBreaker.hits, defaultBreaker.verified, defaultBreaker.defaulted, defaultBreaker.allPelletsAssumed, defaultBreaker.assumption.count], ['route', 1, true, true, false, 6]);
 const fewerBreaker = compare('hunter-hardened', 'breaker', { assume: { hitCount: 1 } });
 eq([fewerBreaker.hits, fewerBreaker.defaulted, fewerBreaker.allPelletsAssumed, fewerBreaker.status], [2, false, false, 'assume'], 'lower explicit count overrides and increases hits');
 eq(compare('hunter-hardened', 'breaker', { assume: { 'breaker:standard': { hitCount: 1 } } }).hits, 2, 'per-mode override');
 const explicitFull = compare('hunter-hardened', 'breaker', { assume: { hitCount: '11' } });
-eq([explicitFull.verified, explicitFull.defaulted, explicitFull.allPelletsAssumed], [true, false, true], 'explicit max is same full-hit scenario');
-eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: '' } }).allPelletsAssumed, true, 'blank restores full default');
+eq([explicitFull.verified, explicitFull.defaulted, explicitFull.allPelletsAssumed], [false, false, false], 'explicit full hits are an assumption, not the default');
+eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: '' } }).assumption.count, 6, 'blank restores the half default');
 eq(compare('hunter-hardened', 'breaker', { assume: { hitCount: 12 } }).verified, false, 'invalid count cannot silently use default');
 eq(compare('hunter-hardened', 'breaker').hits, 1, 'default cache remains separate from explicit lower count');
 for (const [weaponId, profile] of Object.entries(personalProfiles)) for (const attack of profile.modes) {
   if (attack.hitCondition?.kind !== 'pellets') continue;
   const result = compare('hunter-hardened', weaponId, {}, attack.id);
-  ok(result.defaulted && result.allPelletsAssumed && result.assumption.count === attack.hitCondition.max, `${weaponId}/${attack.id}: comparison applies full pellet default`);
+  ok(result.defaulted && result.assumption.count === Math.max(1, Math.round(attack.hitCondition.max / 2)), `${weaponId}/${attack.id}: comparison applies the half pellet default`);
 }
 const assumed = compare('hunter-hardened', 'breaker', { assume: { hitCount: 2 } });
 eq([assumed.status, assumed.hits, assumed.assumption.count, assumed.verified], ['assume', 1, 2, false]);
@@ -551,10 +552,10 @@ for (const loadout of [{ primary: 'eruptor' }, { throwable: 'frag' }]) {
   eq(loadoutCoverage(loadout, 'terminid', { assume: { hitCount: 1 } }).rows.find(row => row.enemyId === 'hunter-hardened').status, 'gap', 'positive fragment assumption cannot close gap');
 }
 const shotgunOnly = loadoutCoverage({ primary: 'breaker' }, 'terminid');
-ok(shotgunOnly.rows.some(row => row.status === 'route' && row.best.allPelletsAssumed), 'shotgun alone covers enemies with full-hit default');
+ok(shotgunOnly.rows.some(row => row.status === 'route' && row.best.defaultAssumed?.kind === 'pellets'), 'shotgun alone covers enemies with the pellet default');
 eq(loadoutView({ primary: 'breaker' }, 'terminid', { limit: 0 }).rows.find(row => row.enemyId === 'hunter-hardened').best.weaponId, 'breaker');
 eq(loadoutCoverage({ primary: 'breaker', secondary: 'senator' }, 'terminid').rows.find(row => row.enemyId === 'hunter-hardened').best.weaponId, 'senator', 'equal hits prefer route without pellet assumption');
-ok(suggestFixes({}, 'terminid', { limit: 20 }).some(gap => gap.replacements.some(candidate => candidate.allPelletsAssumed && candidate.verified)), 'full-pellet routes are available as replacements');
+ok(suggestFixes({}, 'terminid', { limit: 20 }).some(gap => gap.replacements.some(candidate => candidate.defaultAssumed?.kind === 'pellets' && candidate.verified)), 'default-pellet routes are available as replacements');
 const nonSupport = stratagems.find(s => s.category !== 'support');
 eq(loadoutCoverage({ stratagems: [nonSupport.id] }, 'terminid').notComputable[0].id, nonSupport.id);
 eq(decodeLoadout(encodeLoadout({ stratagems: [nonSupport.id] })).stratagems[0], nonSupport.id, 'noncombat stratagems carried');

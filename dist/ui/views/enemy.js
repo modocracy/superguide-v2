@@ -73,11 +73,10 @@ const DISTANCES = [0, 25, 50, 100, 150, 200];
 const hitsDirect = mode => mode && mode.directKind !== 'none' && (mode.standard > 0 || mode.durable > 0);
 const rangeFor = mode => (fallsWithRange(mode) && hitsDirect(mode) ? state.distance : 0);
 // Until the player picks a count, modes with a conservative default use it.
-// Every multi-hit attack shows a hit-rate slider. Aimed hits (pellets, arcs)
-// start at 100 %, scattering bomblets and fragments at 20 %; the data's own
-// default wins when present.
+// Every multi-hit attack shows a hit-rate slider. Arcs start at 100 %, pellets at 50 % (they spread; user
+// request 2026-11-26), scattering bomblets and fragments at 20 %; the data's own default wins when present.
 const HIT_KINDS = {
-  pellets: { noun: L('펠릿', 'pellets'), unit: L('개', ''), per: L('한 발에', 'per shot'), pct: 100, why: L('기본은 펠릿이 모두 맞는다고 계산합니다. 거리가 멀거나 조준이 어긋나면 일부만 맞으니, 명중률을 낮춰 다시 볼 수 있습니다.', 'By default every pellet hits. At range or with a stray aim only some land, so lower the hit rate to see the difference.') },
+  pellets: { noun: L('펠릿', 'pellets'), unit: L('개', ''), per: L('한 발에', 'per shot'), pct: 50, why: L('펠릿은 퍼지므로 기본은 절반(반올림)이 맞는다고 계산합니다. 가까이서 큰 부위를 쏘면 더 맞고, 멀거나 작은 부위면 덜 맞으니 명중률을 바꿔 다시 볼 수 있습니다.', 'Pellets spread, so by default half of them (rounded) hit. Close up on a big part more land, at range or on a small part fewer, so you can change the hit rate to check again.') },
   arcs: { noun: L('아크', 'arcs'), unit: L('회', ''), per: L('한 발에', 'per shot'), pct: 100, why: L('기본은 아크가 모두 이 적에게 닿는다고 계산합니다(위키 피해 수치와 같은 기준). 주변 적에게 튀면 일부만 맞습니다.', 'By default every arc reaches this enemy (the same basis as the wiki damage numbers). Arcs that jump to nearby enemies mean fewer hits.') },
   bomblets: { noun: L('자탄', 'bomblets'), unit: L('개', ''), per: L('한 발에', 'per shot'), pct: 20, why: L('자탄은 넓게 흩어져 한 부위에 다 맞는 일이 드물어 기본은 20%로 계산합니다. 0%는 주탄만 계산합니다.', 'Bomblets scatter widely and rarely all hit one part, so the default is 20%. 0% counts the main projectile only.') },
   shrapnel: { noun: L('파편', 'fragments'), unit: L('개', ''), per: L('폭발 1회에', 'per explosion'), pct: 20, why: L('파편은 사방으로 흩어져 기본은 20%로 계산합니다. 0%로 두면 파편을 빼고 직격·폭발만 계산합니다.', 'Fragments fly in every direction, so the default is 20%. At 0% only the impact and explosion are counted.') },
@@ -89,8 +88,8 @@ const hitKind = c => {
   const name = c?.kind === 'pellets' && c.projectileName;
   if (!kind || !name) return kind;
   return { ...kind, noun: L(name, PELLET_EN[name] || 'pellets'),
-    why: L(`기본은 ${josa(name, ['이', '가'])} 모두 맞는다고 계산합니다. 거리가 멀거나 조준이 어긋나면 일부만 맞으니, 명중률을 낮춰 다시 볼 수 있습니다.`,
-      `By default every one of the ${PELLET_EN[name] || 'pellets'} hits. At range or off-aim only some land, so you can lower the hit rate to check again.`) };
+    why: L(`${josa(name, ['은', '는'])} 퍼지므로 기본은 절반(반올림)이 맞는다고 계산합니다. 가까이서 큰 부위를 쏘면 더 맞고, 멀거나 작은 부위면 덜 맞으니 명중률을 바꿔 다시 볼 수 있습니다.`,
+      `The ${PELLET_EN[name] || 'pellets'} spread, so by default half of them (rounded) hit. Close up on a big part more land, at range or on a small part fewer, so you can change the hit rate to check again.`) };
 };
 const hitCount = (c, pct) => pct <= 0 && c.min === 0 ? 0 : Math.max(c.min, Math.round(c.max * pct / 100));
 // The slider shows the 10 % step that yields this count, preferring the data's
@@ -554,14 +553,17 @@ function hitRateControls(mode, c) {
   // Keep the percentage the player picked; several steps can round to one count.
   const pct = state.assume.pct != null && hitCount(c, state.assume.pct) === count ? state.assume.pct : hitPct(c, count);
   const low = c.min === 0 ? 0 : 10;
+  // Pellets and arcs: the label already gives the count, and the summary's exact share (6 of 11 = 55%) read as out
+  // of step with the slider's 50%. Bomblets and fragments keep it for what else hits (main projectile, impacts).
+  const summary = ['pellets', 'arcs'].includes(c.kind) ? '' : html` ${assumptionSummary(withHitAssumption(mode, effectiveAssume(mode)))}`;
   return html`<div class="assumptions pellet-range">
     <label for="hit-pct">${L('명중률', 'Hit rate')} <b data-pct-label>${pct}%</b> <span class="faint" data-pct-count>${countLine(c, count)}</span></label>
     <input id="hit-pct" type="range" min="${low}" max="100" step="10" value="${pct}" data-assume-pct data-kind="${c.kind}" data-min="${c.min}" data-max="${c.max}" aria-valuetext="${L(`${pct}%, ${kind.noun} ${count}${kind.unit}`, `${pct}%, ${count} ${kind.noun}`)}">
-    <div class="range-scale" aria-hidden="true"><span>${low}%</span><span>50%</span><span>100%</span></div>
+    <div class="range-scale" aria-hidden="true">${[low, 50, 100].map(value => html`<span style="--at:${(value - low) / (100 - low)}">${value}%</span>`)}</div>
     ${c.kind === 'bomblets' ? html`<div class="bomblet-extra"><label>${L('주탄', 'Main projectile')}
       <select class="select" data-assume="primaryHit">${PRIMARY_HITS.map(([value, name]) => html`<option value="${value}" ${(state.assume.primaryHit ?? mode.hitCondition.defaultPrimaryHit ?? 'blast') === value ? raw('selected') : ''}>${name}</option>`)}</select></label>
       <label class="check"><input type="checkbox" data-assume="bombletDirect" ${(state.assume.bombletDirect ?? mode.hitCondition.defaultBombletDirect ?? false) ? raw('checked') : ''} ${count > 0 ? '' : raw('disabled')}> ${L('자탄 직격도 포함', 'Include bomblet impacts')}</label></div>` : ''}
-    <p>${kind.why} ${assumptionSummary(withHitAssumption(mode, effectiveAssume(mode)))}</p>
+    <p>${kind.why}${summary}</p>
   </div>`;
 }
 

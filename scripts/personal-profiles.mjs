@@ -142,11 +142,12 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
       if (mode.unsupported) continue;
       if (mode.hitCondition) {
         const condition = mode.hitCondition;
-        condition.defaultPct = ['pellets', 'arcs'].includes(condition.kind) ? 100 : 20;
+        // Pellets spread, so half of them is the default (user request 2026-11-26); arcs all reach the target.
+        condition.defaultPct = condition.kind === 'arcs' ? 100 : condition.kind === 'pellets' ? 50 : 20;
         condition.default = Math.max(condition.min, Math.round(condition.max * condition.defaultPct / 100));
       }
       if (mode.hitCondition?.kind === 'pellets') {
-        mode.note = [mode.note, `기본은 ${mode.hitCondition.projectileName || '펠릿'}이 모두 맞는다고 계산합니다. 명중률을 낮춰 다시 계산할 수 있습니다.`].filter(Boolean).join(' ');
+        mode.note = [mode.note, `기본은 ${mode.hitCondition.projectileName || '펠릿'}의 절반(반올림)이 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.`].filter(Boolean).join(' ');
       }
       if (mode.hitCondition?.kind === 'arcs') mode.note = [mode.note, '기본은 아크가 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있습니다.'].filter(Boolean).join(' ');
       if (![mode.standard, mode.durable, mode.ap, mode.explosion, mode.explosionDurable, mode.explosionAp].every(finite)) mode.unsupported = '피해량이나 장갑을 뚫는 능력이 정확히 확인되지 않아 계산하지 않습니다.';
