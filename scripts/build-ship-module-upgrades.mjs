@@ -9,6 +9,7 @@ import { parseShipModules, gameEffect } from './ship-module-parse.mjs';
 import { gameText } from './booster-parse.mjs';
 import { shipModules } from '../dist/data/ship-modules.js';
 import { stratagems } from '../dist/core/catalog.js';
+import { stratagemStats } from '../dist/data/stratagem-stats.js';
 
 const read = async name => JSON.parse(await readFile(new URL(`../db/source/${name}`, import.meta.url), 'utf8'));
 const slug = text => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -32,11 +33,37 @@ export async function buildShipModuleUpgrades() {
   const norm = text => text.toLowerCase().replace(/[^a-z0-9]/g, '');
   const byName = new Map(stratagems.flatMap(item => [item.en, item.name, ...(item.aliases ?? [])].filter(Boolean).map(name => [norm(name), item.id])));
   const idOf = title => byName.get(norm(title)) ?? byName.get(norm(title.replace(/^\S+\s+/, '')));
+  // The module pages were last edited long ago and miss newer stratagems, so an upgrade for a whole type of stratagem
+  // also takes every stratagem of that type in the catalogue (the wiki infobox stratagem_type, stratagem-stats.js `type`;
+  // user decision 2026-11-26), on top of its page list. `where` narrows a type to what the effect needs (sentry ammo,
+  // support weapon magazines or reloads); `not` drops what the page itself says the game leaves out.
+  const TYPE_WIDE = {
+    'Streamlined Request Process': { types: ['Support Weapon'] },
+    'Streamlined Launch Process': { types: ['Support Weapon'] },
+    'Donation Access License': { types: ['Support Weapon'], where: item => item.spareMags != null || item.spareRounds != null },
+    'Payroll Management System': { types: ['Support Weapon'], where: item => statsOf(item)?.reload?.time != null || statsOf(item)?.reload?.tactical != null },
+    // Hand Carts page, Notes: the K-9 is not on the game's list of stratagems the upgrade affects.
+    'Hand Carts': { types: ['Backpack'], not: ['k9'] },
+    'Zero-G Breech Loading': { types: ['Orbital'] },
+    'Targeting Software Upgrade': { types: ['Orbital'] },
+    'Liquid-Ventilated Cockpit': { types: ['Eagle'] },
+    'Expanded Weapons Bay': { types: ['Eagle'] },
+    'Synthetic Supplementation': { types: ['Sentry', 'Emplacement'] },
+    'Rapid Launch System': { types: ['Emplacement'] },
+    'Advanced Construction': { types: ['Sentry'] },
+    'Dynamic Tracking': { types: ['Sentry'] },
+    'High-Quality Lubricant': { types: ['Sentry'] },
+    'Blast Absorption': { types: ['Sentry'] },
+    'Shock Absorption Gel': { types: ['Sentry'], where: item => statsOf(item)?.sentry?.ammo != null },
+  };
+  const statsOf = item => stratagemStats[item.id];
   const affectedOf = en => {
     const titles = pages[en]?.affected ?? [];
     if (!pages[en]) toCheck.push(`${en}: no module page (run scripts/fetch-ship-module-pages.mjs)`);
-    const ids = [...new Set(titles.map(title => idOf(title) ?? (toCheck.push(`${en}: affected "${title}" is no stratagem in the catalogue`), null)).filter(Boolean))];
-    return ids;
+    const listed = titles.map(title => idOf(title) ?? (toCheck.push(`${en}: affected "${title}" is no stratagem in the catalogue`), null)).filter(Boolean);
+    const wide = TYPE_WIDE[en];
+    const typed = wide ? stratagems.filter(item => wide.types.includes(statsOf(item)?.type) && (!wide.where || wide.where(item))).map(item => item.id) : [];
+    return [...new Set([...listed, ...typed])].filter(id => !wide?.not?.includes(id));
   };
   const out = sections.map(section => {
     const icon = icons[section.en];

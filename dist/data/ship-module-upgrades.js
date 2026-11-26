@@ -41,7 +41,15 @@ export const shipModuleSections = [
      "de-escalator",
      "epoch",
      "speargun",
-     "breaching-hammer"
+     "breaching-hammer",
+     "autocannon",
+     "recoilless",
+     "apex",
+     "spear",
+     "airburst-launcher",
+     "wasp",
+     "meltagun",
+     "c4-pack"
     ]
    },
    {
@@ -88,7 +96,12 @@ export const shipModuleSections = [
      "de-escalator",
      "anti-materiel",
      "expendable-at",
-     "quasar"
+     "quasar",
+     "apex",
+     "nova",
+     "meltagun",
+     "bullet-storm",
+     "solo-silo"
     ]
    },
    {
@@ -169,7 +182,9 @@ export const shipModuleSections = [
      "c4-pack",
      "breaching-hammer",
      "wasp",
-     "de-escalator"
+     "de-escalator",
+     "apex",
+     "meltagun"
     ]
    }
   ]
@@ -329,7 +344,8 @@ export const shipModuleSections = [
      "eagle-smoke",
      "eagle-cluster",
      "eagle-napalm",
-     "eagle-rockets"
+     "eagle-rockets",
+     "eagle-gas"
     ]
    },
    {
@@ -371,7 +387,8 @@ export const shipModuleSections = [
      "eagle-smoke",
      "eagle-cluster",
      "eagle-napalm",
-     "eagle-rockets"
+     "eagle-rockets",
+     "eagle-gas"
     ]
    },
    {
@@ -618,7 +635,8 @@ export const shipModuleSections = [
      "grenadier-battlement",
      "tesla-tower",
      "incendiary-mines",
-     "hmg-emplacement"
+     "hmg-emplacement",
+     "personnel-mines"
     ]
    },
    {
@@ -685,7 +703,10 @@ export const shipModuleSections = [
      "de-escalator",
      "anti-materiel",
      "expendable-at",
-     "quasar"
+     "quasar",
+     "apex",
+     "nova",
+     "bullet-storm"
     ]
    }
   ]
@@ -723,7 +744,8 @@ export const shipModuleSections = [
      "autocannon-sentry",
      "gas-mortar",
      "laser-sentry",
-     "flame-sentry"
+     "flame-sentry",
+     "tesla-tower"
     ]
    },
    {
@@ -772,7 +794,9 @@ export const shipModuleSections = [
      "gatling-sentry",
      "mortar-sentry",
      "machine-gun-sentry",
-     "autocannon-sentry"
+     "autocannon-sentry",
+     "gas-mortar",
+     "tesla-tower"
     ]
    },
    {
