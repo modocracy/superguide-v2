@@ -74,7 +74,7 @@ export default {
   "탄체의 직접 충돌과 공중에서 퍼지는 폭발을 구분해야 합니다. 표기 직격 수치만으로 일반적인 건물 철거를 보장하지 않습니다.": "Tell the projectile's direct impact apart from the blasts that spread in the air. The listed impact value alone does not guarantee demolishing ordinary buildings.",
   "화염의 지속 피해는 합산하지 않습니다.": "Sustained fire damage is not added.",
   "연막에는 철거력이 없습니다. 탄체를 시설에 직접 맞히는 조건입니다.": "Smoke has no demolition force. Assumes the projectile hits the structure directly.",
-  "직격은 종합표 40, 개별 통계 50으로 엇갈립니다. 주 폭발 50은 일치합니다. 체력 계산은 추가 착탄 폭발 100을 제외한 보수적인 값입니다.": "Sources disagree on the impact: 40 in the summary table, 50 in the individual stats. The main explosion's 50 matches in both. The health calculation is a conservative value that excludes the extra impact explosion of 100.",
+  "공격 datamine 기준으로 폭탄 직격 50, 착탄 폭발(반경 3 m) 40, 주 폭발 50입니다. 위키 종합표의 40은 착탄 폭발의 값입니다. 체력 계산은 착탄 폭발 피해 100을 제외한 보수적인 값입니다.": "From the attack datamine: the bomb hit 50, its impact blast (3 m radius) 40 and its main blast 50. The wiki summary table's 40 is the impact blast's. The health calculation is a conservative value that leaves out the impact blast's 100 damage.",
   "자동 포탑은 시설을 표적으로 직접 지정할 수 없습니다. 아래 결과는 탄이나 폭발이 시설에 실제로 닿는 경우입니다.": "Automated sentries can't be told to target a structure. The results below assume the rounds or blasts actually reach it.",
   "착탄 효과의 철거력입니다. 기절 효과를 피해량으로 계산하지 않습니다.": "Demolition force of the impact effect. The stun effect is not counted as damage.",
   "시설 가까이에서 지뢰가 실제로 기폭해야 합니다. 배치만으로 철거하지 않습니다.": "The mine has to actually detonate near the structure. Placing it alone won't demolish anything.",

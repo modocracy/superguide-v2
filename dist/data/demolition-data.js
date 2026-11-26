@@ -168,7 +168,9 @@ export const demolitionProfiles = {
   'eagle-napalm': callIn(shot(40, 30, { name: '폭탄', note: '화염의 지속 피해는 합산하지 않습니다.' })),
   'eagle-rockets': callIn(shot(40, 30, { name: '로켓' }), { conditionalAim: true, note: indirect }),
   'eagle-smoke': callIn(shot(40, null, { name: '연막탄 탄체 직격', note: '연막에는 철거력이 없습니다. 탄체를 시설에 직접 맞히는 조건입니다.' })),
-  'eagle-500kg': callIn(shot({ min: 40, max: 50 }, 50, { name: '폭탄 · 주 폭발', shieldBypass: true, damage: damage(2000, 2000, 7, 1500, 6), note: '직격은 종합표 40, 개별 통계 50으로 엇갈립니다. 주 폭발 50은 일치합니다. 체력 계산은 추가 착탄 폭발 100을 제외한 보수적인 값입니다.' }), { source: wiki('Eagle_500Kg_Bomb'), conflictingSource: demolitionSource }),
+  // Direct 50 and blasts 40 / 50 from the attack datamine (S_P, S_P_IE, S_P_E); the Demolition summary table's 40 is the
+  // impact blast's (user request 2026-11-26: the 40 belongs to the blasts, not the hit).
+  'eagle-500kg': callIn(shot(50, 50, { name: '폭탄 · 주 폭발', shieldBypass: true, damage: damage(2000, 2000, 7, 1500, 6), note: '공격 datamine 기준으로 폭탄 직격 50, 착탄 폭발(반경 3 m) 40, 주 폭발 50입니다. 위키 종합표의 40은 착탄 폭발의 값입니다. 체력 계산은 착탄 폭발 피해 100을 제외한 보수적인 값입니다.' }), { source: wiki('Eagle_500Kg_Bomb'), conflictingSource: demolitionSource }),
   'hmg-emplacement': profile(shot(20, null)),
   'at-emplacement': profile(shot(30, 30)),
   'grenadier-battlement': profile(shot(null, 30)),

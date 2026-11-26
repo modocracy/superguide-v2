@@ -151,15 +151,20 @@ const healthAdded = { ...Object.fromEntries(Object.entries(stratagemAttackDamage
   'breaching-hammer': ['melee', 'charge'], leveller: ['standard'], speargun: ['standard'], 'solo-silo': ['standard'], autocannon: ['flak'] };
 // Attacks the user confirmed to destroy the Grounded Warp Ship through its shield (2026-11-23): replayed without it.
 const shieldBypassAdded = { 'portable-hellbomb': ['standard'], hellbomb: ['standard'], leveller: ['standard'], 'solo-silo': ['standard'] };
+// Forces corrected after the recording, replayed with their recorded values (user request 2026-11-26: the Eagle 500kg's
+// direct hit is the datamine's 50; the summary table's 40, recorded as a 40-50 dispute, is its impact blast).
+const forceCorrected = { 'eagle-500kg': { standard: { direct: { min: 40, max: 50 } } } };
+assert.equal(demolitionProfiles['eagle-500kg'].modes[0].direct, 50, 'eagle-500kg: direct force 50');
 const legacyMode = (id, mode) => {
   let out = healthAdded[id]?.includes(mode.id) ? { ...mode, damage: undefined } : mode;
+  if (forceCorrected[id]?.[mode.id]) out = { ...out, ...forceCorrected[id][mode.id] };
   if (shieldBypassAdded[id]?.includes(mode.id)) { const { shieldBypass, ...rest } = out; out = rest; }
   return out;
 };
 // Stratagems given a profile from the attack datamine after the recording (2026-11-23) had none then.
 // SEAF Artillery was recorded as a call-in a jammer blocks; the wiki says jammers cannot block it (2026-11-23).
 const callInRemoved = ['seaf-artillery'];
-const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id)).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] ? profile
+const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id)).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] && !forceCorrected[id] ? profile
   : { ...profile, modes: profile.modes.map(mode => legacyMode(id, mode)) }]).map(([id, profile]) => [id, callInRemoved.includes(id) ? { ...profile, requiresCallIn: true } : profile]));
 for (const id of callInRemoved) for (const mode of demolitionProfiles[id].modes) {
   const result = solveDemolition(structures.find(item => item.id === 'jammer'), demolitionProfiles[id], mode);
