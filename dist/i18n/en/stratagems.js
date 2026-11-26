@@ -259,7 +259,7 @@ export default {
   "연속 폭발": "Chain explosions",
   "전격 효과 범위": "Arc effect range",
   "전격 1개 · 내구 피해 70": "Per arc · Durable damage 70",
-  "적 대응 계산에는 유탄 직격 피해를 넣지 않고, 고른 개수만큼의 전격 피해만 넣습니다.": "Shots to kill leaves out the grenade hit and counts only the arcs you pick.",
+  "적 대응 계산은 유탄 직격 1번과 고른 개수만큼의 전격 피해를 더합니다.": "Shots to kill adds one grenade hit to the arcs you pick.",
   "대용량": "High capacity",
   "약 · 위키 운용 거리": "Approx. · Wiki effective range",
   "플라즈마": "Plasma",

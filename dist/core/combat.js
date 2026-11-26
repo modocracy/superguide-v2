@@ -116,8 +116,10 @@ export function withHitAssumption(mode, { hitCount = '',
     && ['none', 'blast', 'direct'].includes(primaryHit) && typeof bombletDirect === 'boolean';
   if (!valid) return { ...mode, events: undefined, assumption: undefined };
   const event = (name, attack, times, directHit) => ({ name, attack, times, directHit });
+  // A grenade that lets out the arcs (mode.carrier, De-Escalator) hits once before them (user request 2026-11-26).
   const events = ['arcs', 'pellets'].includes(kind)
-    ? [event(kind === 'arcs' ? L('전격', 'Arcs') : L('명중 탄체·펠릿', 'Projectiles/pellets hit'), mode, count, true)]
+    ? [...(mode.carrier ? [event(L('유탄 직격', 'Grenade hit'), mode.carrier, 1, true)] : []),
+      event(kind === 'arcs' ? L('전격', 'Arcs') : L('명중 탄체·펠릿', 'Projectiles/pellets hit'), mode, count, true)]
     : kind === 'shrapnel'
       ? [event(L('주탄·폭발', 'Main projectile/explosion'), mode, 1, mode.delivery !== 'explosive'),
         ...(count === 0 ? [] : [event(L('명중 파편', 'Fragments hit'), mode.bomblet, count, true)])]

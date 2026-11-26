@@ -72,7 +72,7 @@ const engine = {
   wasp: { submunitions: shot('StA-X3_P1', { bomblet: 'StA-X3_P' }) },
   speargun: { direct: shot('S-11_P') },
   'arc-thrower': { 'first-target': { hit: ['arc', 'ARC-3 ARC THROWER_A'] } },
-  'de-escalator': { arc: { hit: ['arc', 'GL-52_P_IE_A'] } },
+  'de-escalator': { arc: { hit: ['arc', 'GL-52_P_IE_A'], carrier: 'GL-52_P' } },
   meltagun: { near: { hit: ['beam', '40-K MELTAGUN_B'] } },
   'one-true-flag': { melee: { hit: ['damage', 'CQC-1 ONE TRUE FLAG_dm'] } },
   'breaching-hammer': {
@@ -162,6 +162,11 @@ for (const [weaponId, profile] of Object.entries(weaponProfiles)) {
     const projectileKey = spec.hit?.[0] === 'projectile' ? spec.hit[1] : undefined;
     ok(mode.record === projectileKey, `${key}: range falloff record ${mode.record} should be ${projectileKey}`);
     compareBlast(key, spec, { blast: { damage: mode.explosion, durable: mode.explosionDurable, ap: mode.explosion ? mode.explosionAp : undefined, innerRadius: mode.innerRadius, radius: mode.radius } }, key);
+    // The grenade that carries the arcs (De-Escalator) against its projectile record.
+    if (spec.carrier) {
+      const c = mode.carrier;
+      if (ok(c, `${key}: datamine has a carrier record but the mode has no carrier`)) compareHit(`${key}.carrier`, shot(spec.carrier), { hit: { standard: c.standard, durable: c.durable, ap: c.ap } }, `${key} carrier`);
+    } else ok(!mode.carrier, `${key}: has a carrier hit but no datamine record is tied to it`);
     if (spec.bomblet) {
       const bombletSpec = shot(spec.bomblet);
       const b = mode.bomblet;

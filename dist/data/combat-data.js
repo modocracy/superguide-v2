@@ -590,8 +590,9 @@ export const weaponProfiles = {
     shot('direct', '직격 기준 · 가스 피해 제외', 650, 275, 5, 0, 0, { delivery: 'harpoon', falloff: true }),
   ], '작살이 직접 맞는 피해만 계산합니다. 가스 구름과 중독 피해는 빼므로, 실제로는 더 적은 발로 처치될 수 있습니다.'),
   'de-escalator': reviewedImpact('GL-52_De-Escalator', [
-    shot('arc', '전격 · 명중 수 조건', 100, 70, 4, 0, 0, { delivery: 'arc', range: 10, hitCondition: { kind: 'arcs', min: 1, max: 10, default: 10, defaultPct: 100 } }),
-  ], '전격 1회는 피해 100(내구 70), 관통 4입니다. 유탄 하나에서 전격 10개가 나가지만 이 부위에 몇 개가 맞는지는 알려지지 않아 맞는 개수를 직접 고르게 했습니다. 유탄이 직접 맞는 피해는 자료마다 값이 달라 빼고, 전격에는 폭발 저항을 적용하지 않습니다.'),
+    // carrier: the grenade's own hit before its arcs, the game data sheet's projectile (datamine GL-52_P), user request 2026-11-26.
+    shot('arc', '전격 · 명중 수 조건', 100, 70, 4, 0, 0, { delivery: 'arc', range: 10, carrier: shot('grenade', '유탄 직격', 20, 2, 0), hitCondition: { kind: 'arcs', min: 1, max: 10, default: 10, defaultPct: 100 } }),
+  ], '유탄이 이 부위에 직접 맞는 피해 20(내구 2, 관통 0)과 고른 개수만큼의 전격 피해를 더합니다. 전격 1개는 피해 100(내구 70), 관통 4입니다. 유탄 하나에서 전격 10개가 나가지만 이 부위에 몇 개가 맞는지는 알려지지 않아 맞는 개수를 직접 고르게 했습니다. 전격에는 폭발 저항을 적용하지 않습니다.'),
   'airburst-launcher': reviewedImpact('RL-77_Airburst_Rocket_Launcher', [
     ...[
       ['flak', '대공포탄 모드', '근접 신관으로 공중에서 터질 수 있어, 주탄이 직접 맞지 않으면 직격 피해는 들어가지 않습니다.'],

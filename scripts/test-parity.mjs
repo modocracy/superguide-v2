@@ -78,7 +78,10 @@ for (const expected of golden.combat) {
   const currentMode = weaponProfiles[expected.weapon].modes.find(item => item.id === expected.mode);
   const key = `${expected.weapon}:${expected.mode}`;
   if (legacyUnsupported[key]) assert(expected.rows.every(row => row.h === null && row.o === 'unknown' && row.r === legacyUnsupported[key]), 'historical unsupported adapter must not bypass any numeric golden result');
-  const mode = legacyUnsupported[key] ? { ...currentMode, unsupported: legacyUnsupported[key] } : currentMode;
+  // Deliberate change (user request 2026-11-26): the De-Escalator's grenade hit (mode.carrier) now comes before its
+  // arcs; the legacy engine left it out, so it is taken off here and checked on its own below the loop.
+  const { carrier: _carrier, ...withoutCarrier } = currentMode;
+  const mode = legacyUnsupported[key] ? { ...withoutCarrier, unsupported: legacyUnsupported[key] } : withoutCarrier;
   const options = addedHitConditions.has(key) ? { ...expected.options, hitCount: 0 } : expected.options;
   // Deliberate change: a partly explosion-resistant part now passes the share it blocks to Main
   // (combat.js hitDamage, exdrRedirect). The legacy engine had no such share, so it is switched off
@@ -112,6 +115,12 @@ for (const expected of golden.combat) {
   checked++;
 }
 assert.equal(checked, golden.combat.length);
+{
+  // The grenade hit is one event before the arcs, at the game data sheet's 20 / 2 / AP 0.
+  const de = weaponProfiles['de-escalator'].modes[0], events = withHitAssumption(de, { hitCount: 3 }).events;
+  assert(events.length === 2 && events[0].attack === de.carrier && events[0].times === 1 && events[1].times === 3, 'de-escalator: one grenade hit, then the arcs picked');
+  assert.deepEqual([de.carrier.standard, de.carrier.durable, de.carrier.ap], [20, 2, 0], 'de-escalator: grenade hit 20 / 2 / AP 0');
+}
 assert(checked > 20000, 'combat coverage shrank');
 assert(beamCarried > 0, 'beam carry-over adapter is exercised');
 
