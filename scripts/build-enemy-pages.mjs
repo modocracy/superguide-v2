@@ -39,11 +39,11 @@ for (const enemy of enemies) {
   else if (summary.revision !== page.revision) notes.push(`${title}: summary written from revision ${summary.revision}, wiki is now ${page.revision}`);
   if (page.faction && !MAIN.has(page.faction) && !SUBFACTIONS[page.faction]) notes.push(`${title}: unknown faction ${page.faction} (no subfaction shown)`);
   const subfaction = guideIds.has(SUBFACTIONS[page.faction]) ? SUBFACTIONS[page.faction] : null;
-  for (const [key, value] of [['fire_mult', page.fireMult], ['stagger_req', page.staggerReq]]) if (value != null && infoboxNumber(value) == null) notes.push(`${title}: ${key} "${value}" is not a number (shown as unverified)`);
+  for (const [key, value] of [['fire_mult', page.fireMult], ['arc_mult', page.arcMult], ['stagger_req', page.staggerReq]]) if (value != null && infoboxNumber(value) == null) notes.push(`${title}: ${key} "${value}" is not a number (shown as unverified)`);
   const lines = key => summary?.[key] ?? [];
   out[enemy.id] = {
     page: title, revision: page.revision, ...(summary && { summaryRevision: summary.revision }), subfaction,
-    fireMult: infoboxNumber(page.fireMult), staggerReq: infoboxNumber(page.staggerReq),
+    fireMult: infoboxNumber(page.fireMult), arcMult: infoboxNumber(page.arcMult ?? null), staggerReq: infoboxNumber(page.staggerReq),
     // Calls reinforcements (wiki Behavior text): 'breach' | 'dropship' | 'warp'; left out when it does not.
     ...(reinforcementOf(page) && { reinforcements: reinforcementOf(page) }),
     spawning: lines('spawning').map(line => line.ko), spawningEn: lines('spawning').map(line => line.en),

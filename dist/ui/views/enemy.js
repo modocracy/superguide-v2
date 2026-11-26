@@ -367,7 +367,8 @@ function hero(enemy) {
   const vitals = [
     [L('본체 체력', 'Main health'), num(m.hp)], [L('본체 장갑', 'Main armor'), m.armor], [L('내구도', 'Durability'), pct(m.durability)], [L('폭발 저항', 'Explosive resistance'), pct(m.exdr)],
     ...(m.constitution ? [[L('출혈 체력', 'Bleed-out health'), num(m.constitution)]] : []),
-    [L('화염 저항', 'Fire resistance'), fireText(info?.fireMult)], [L('경직치', 'Stagger threshold'), info?.staggerReq == null ? L('미확인', 'Unverified') : num(info.staggerReq)],
+    // Arc resistance only where the wiki infobox gives arc_mult (the Fleshmob, user request 2026-11-26).
+    [L('화염 저항', 'Fire resistance'), fireText(info?.fireMult)], ...(info?.arcMult != null ? [[L('아크 저항', 'Arc resistance'), fireText(info.arcMult)]] : []), [L('경직치', 'Stagger threshold'), info?.staggerReq == null ? L('미확인', 'Unverified') : num(info.staggerReq)],
     // Enemies that can call reinforcements (wiki Behavior): worth killing first.
     ...(info?.reinforcements ? [[L('증원 호출', 'Calls reinforcements'), REINFORCEMENTS[info.reinforcements]]] : []),
   ];

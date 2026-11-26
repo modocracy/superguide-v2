@@ -44,7 +44,7 @@ for (let i = 0; i < titles.length; i += 40) {
     const text = page.revisions[0].slots.main.content;
     out.pages[title] = {
       title: page.title, revision: page.revisions[0].revid,
-      faction: field(text, 'faction') || null, fireMult: field(text, 'fire_mult') || field(text, 'elemental_mult') || null, staggerReq: field(text, 'stagger_req') || null,
+      faction: field(text, 'faction') || null, fireMult: field(text, 'fire_mult') || field(text, 'elemental_mult') || null, arcMult: field(text, 'arc_mult') || null, staggerReq: field(text, 'stagger_req') || null,
       minDifficulty: /Difficulty\|(\d+)/.exec(field(text, 'min_difficulty'))?.[1] ?? null,
       spawning: section(text, 'Spawning'), behavior: section(text, 'Behaviou?r'),
     };
