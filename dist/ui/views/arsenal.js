@@ -282,7 +282,8 @@ function ammoCells(item) {
   const ownNote = item.ammoNote ? T(item.ammoNote) : '';
   const wikiNote = item.magazineWiki != null ? L(`게임 데이터 기준 · 위키 표기 ${num(item.magazineWiki)}`, `Game data · wiki says ${num(item.magazineWiki)}`) : '';
   return [
-    item.durable != null ? cell(L('내구 피해', 'Durable damage'), num(item.durable), item.damageKind === 'dps' ? '/s' : '', L('단단한 부위에 들어가는 피해', 'Damage against durable parts')) : '',
+    // durableText: a range in place of one number (Railgun Unsafe Mode).
+    item.durable != null ? cell(L('내구 피해', 'Durable damage'), item.durableText ?? num(item.durable), item.damageKind === 'dps' ? '/s' : '', L('단단한 부위에 들어가는 피해', 'Damage against durable parts')) : '',
     item.magazine != null ? cell(item.fuel ? L('연료', 'Fuel') : L('용량', 'Capacity'), num(item.magazine), item.fuel ? '' : item.countUnit ? L('개', '') : L('발', ''), [ownNote, spare, wikiNote].filter(Boolean).join(' · ')) : '',
     item.magazine == null && item.spareMags != null ? cell(item.fuel ? L('예비 연료통', 'Spare tanks') : L('예비 탄창', 'Spare magazines'), num(item.spareMags), L('개', ''), L('최대 보유', 'Maximum carried')) : '',
     item.magazine == null && item.spareRounds != null ? cell(L('예비탄', 'Spare rounds'), num(item.spareRounds), L('발', ''), L('최대 보유', 'Maximum carried')) : '',

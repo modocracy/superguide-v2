@@ -592,7 +592,6 @@ export default {
   "충전량을 조절해 약점에 강한 한 발을 꽂는 레일건.": "Railgun that lets you control charge to put one strong shot into a weak spot.",
   "안전 모드로 익힌 뒤 안전 해제 모드에서 충전량을 관리하세요. 작은 약점에 정확히 맞히는 운용이 중요합니다.": "Learn it in Safe mode, then manage your charge in Unsafe mode. Hitting small weak spots precisely is what matters.",
   "과충전하면 무기와 사용자에게 위험합니다. 자폭 피해를 적에게 맞는 탄의 폭발 피해로 계산하지 않습니다.": "Overcharging is dangerous to the weapon and to you. Self-destruct damage is not counted as explosive damage from the round hitting an enemy.",
-  "충전이 덜 되면 피해가 600–1,500 사이로 줄어듭니다. 과충전 자폭은 적에게 주는 피해에 포함하지 않습니다.": "With less than a full charge, damage drops to between 600 and 1,500. Overcharge self-destruct is not included in damage to enemies.",
   "장갑을 뚫는 아크를 여러 적에게 연쇄시키는 무기.": "Weapon that chains armor-piercing arcs across multiple enemies.",
   "충전 후 선두 적을 맞혀 뒤쪽 적으로 아크를 연결하세요. 적을 한쪽 방향에 모으면 연쇄를 활용하기 쉽습니다.": "After charging, hit the lead enemy to chain the arc to the ones behind it. Herding enemies into one direction makes the chain easier to use.",
   "아크가 동료에게도 이어집니다. 아군이 표적 뒤에 있는지 확인하세요.": "Arcs chain to teammates too. Check whether any teammates are behind the target.",
