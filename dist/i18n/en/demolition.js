@@ -160,7 +160,7 @@ export default {
   "퀘이사 캐넌은 1발, 노바는 3발로 보이는 곳 어디서나 부술 수 있어 이동하면서 보급 부담 없이 정리하기 좋습니다.": "The Quasar Cannon (1 shot) and the Nova (3 shots) destroy it from any angle in line of sight, which clears Fabricators on the move without using up supplies.",
   "스피어나 이글 기총소사처럼 관통 5 공격을 여러 번 맞혀 체력을 깎아도 부서집니다.": "Repeated hits with armor penetration 5, such as the Spear or the Eagle Strafing Run, also destroy it by wearing down its health.",
   "부서질 때 크게 폭발해 가까이 있는 헬다이버와 적이 날아가거나 죽습니다.": "It explodes violently when destroyed, throwing or killing Helldivers and enemies nearby.",
-  "이럽터는 환풍구에 1발이면 부숩니다.": "The Eruptor destroys it with 1 shot into a vent.",
+  "폭발 철거력이 20 이상이면 상단 환풍구 안에 넣어 1발에 부술 수 있습니다. 이럽터, 익스플로딩 크로스보우, 이빅터, 원-투(하부 유탄 발사기) 같은 주무기, 유탄 권총과 미사일 권총 같은 보조 무기, 오토캐넌, 유탄 발사기, 무반동포 같은 지원 무기, 연막·기절을 뺀 대부분의 수류탄이 해당합니다.": "Any blast of demolition force 20 or more destroys it in one shot when it goes into an upper vent: primaries such as the Eruptor, Exploding Crossbow, Evictor and One-Two (underbarrel grenade launcher), secondaries such as the Grenade Pistol and Missile Pistol, support weapons such as the Autocannon, Grenade Launcher and Recoilless Rifle, and most grenades other than smoke and stun.",
   "체력으로 부술 때는 스피어 1발, 무반동포·일회성 대전차·퀘이사 캐넌 2발, 노바 7발이 필요합니다.": "Through its health it takes 1 Spear shot, 2 shots from the Recoilless Rifle, Expendable Anti-Tank or Quasar Cannon, or 7 Nova shots.",
   "표면이 넓어 이글 기총소사의 탄이 대부분 맞으면 쉽게 부서집니다.": "Its large surface lets an Eagle Strafing Run destroy it easily when most shells connect.",
   "캐넌 포탑, 어나이얼레이터 탱크, 팩토리 스트라이더의 포격을 유도해 부술 수도 있습니다.": "You can also bait a Cannon Turret, Annihilator Tank or Factory Strider into destroying it.",
