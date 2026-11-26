@@ -790,7 +790,7 @@ export function mount(container, context) {
   sheetView = null; state.pushedMatchup = false;
   const families = new Set(enemies.map(enemy => enemy.family || enemy.id)).size;
   render(root, html`<div class="page-head"><div><div class="eyebrow">Target Analysis</div><h1>${L('적 대응', 'Enemies')}</h1><p>${L('적을 고르면 지원 무기·주무기·보조무기·투척을 필요 횟수 순으로 비교합니다. 무기를 누르면 부위별 계산이 열립니다.', 'Pick an enemy to rank support, primary, secondary and throwable weapons by shots to kill. Tap a weapon to open the part-by-part math.')}</p></div>
-    <span class="badge outline">${L(`적 ${families}종 · 계산 무기 ${Object.keys(weaponProfiles).length + Object.keys(personalProfiles).length}종`, `${families} enemies · ${Object.keys(weaponProfiles).length + Object.keys(personalProfiles).length} weapons calculated`)}</span></div>
+    <span class="badge outline">${L(`적 ${families}종 · 비교 무기 ${Object.keys(weaponProfiles).length + Object.keys(personalProfiles).length}종`, `${families} enemies · ${Object.keys(weaponProfiles).length + Object.keys(personalProfiles).length} weapons compared`)}</span></div>
   <div class="enemy-layout">
     <aside class="panel picker" aria-label="${L('적 선택', 'Choose an enemy')}">
       <div class="picker-head">

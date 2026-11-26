@@ -800,7 +800,7 @@ export function mount(container, context) {
   // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
   Object.assign(state, { detail: null, variant: '', expanded: false, panelSnapshot: null });
   const count = id => stratagems.filter(item => item.category === id).length;
-  LEDES.browse = L(`${stratagems.length}종의 피해·관통·범위와 사용법. 카드를 누르면 자세한 기준이 열립니다.`, `Damage, penetration, reach and how to use all ${stratagems.length} stratagems. Open a card for the details behind the numbers.`);
+  LEDES.browse = L('스트라타젬마다 피해와 관통, 범위, 그리고 쓰는 법을 정리했습니다. 카드를 누르면 자세한 수치와 그 기준이 열립니다.', 'The damage, penetration, reach and use of every stratagem. Open a card for the detailed numbers and what they are based on.');
   // Two tabs as on the gear view: the catalogue and the ship modules (moved from the gear view, user request 2026-11-26).
   render(root, html`<div class="page-head gear-head"><div><div class="eyebrow">Stratagem Arsenal</div>
     <h1 class="sr-only">${L('스트라타젬 도감', 'Stratagems')}</h1>

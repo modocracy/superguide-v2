@@ -719,7 +719,7 @@ const LEDES = {
 function showTab() {
   for (const button of $$('[data-tab-pick]', root)) button.setAttribute('aria-pressed', String(button.dataset.tabPick === state.tab));
   $('#gear-lede', root).textContent = LEDES[state.tab];
-  setTally(state.tab === 'browse' ? L(`무기 ${personalWeapons.length}종 · 부착물 ${Object.keys(attachmentParts).length}종`, `${personalWeapons.length} weapons · ${Object.keys(attachmentParts).length} attachments`) : '');
+  setTally(state.tab === 'browse' ? L(`무기 ${personalWeapons.length}종`, `${personalWeapons.length} weapons`) : '');
   $('#gear-browse', root).hidden = state.tab !== 'browse';
   $('#gear-loadout', root).hidden = state.tab !== 'loadout';
   $('#gear-armor', root).hidden = state.tab !== 'armor';
@@ -736,7 +736,7 @@ export function mount(container, context) {
   // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
   Object.assign(state, { detail: null, variant: '', expanded: false, panelSnapshot: null });
   const count = id => personalWeapons.filter(w => w.category === id).length;
-  LEDES.browse = L(`주무기 ${count('primary')}종 · 보조무기 ${count('secondary')}종 · 투척 ${count('throwable')}종의 수치. 카드를 누르면 자세한 기준이 열립니다.`, `Stats for ${count('primary')} primaries, ${count('secondary')} secondaries and ${count('throwable')} throwables. Open a card for the details behind the numbers.`);
+  LEDES.browse = L('주무기, 보조무기, 투척 무기의 피해와 관통, 탄약 같은 수치를 한눈에 비교해 보세요. 카드를 누르면 자세한 수치와 그 기준이 열립니다.', 'Compare the damage, penetration, ammo and other numbers of primaries, secondaries and throwables at a glance. Open a card for the detailed numbers and what they are based on.');
   render(root, html`<div class="page-head gear-head"><div><div class="eyebrow">Armory</div>
     <h1 class="sr-only">${L('장비', 'Gear')}</h1>
     <div class="gear-tabs" role="group" aria-label="${L('장비 보기', 'Gear views')}"><button type="button" data-tab-pick="browse">${L('장비 둘러보기', 'Browse gear')}</button><button type="button" data-tab-pick="armor">${L('방어구', 'Armor')}</button><button type="button" data-tab-pick="boosters">${L('부스터', 'Boosters')}</button><button type="button" data-tab-pick="loadout">${L('로드아웃 점검', 'Loadout check')}</button></div>
