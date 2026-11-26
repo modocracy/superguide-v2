@@ -1456,6 +1456,7 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .cost-icon { width: 16px; height: 16px; object-fit: contain; flex: none; }
 .module-section-cost { margin-top: 10px; }
 .module-total { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.module-total .ext { margin-left: auto; }  /* the wiki link at the line's right end */
 .module-applied { margin-top: 6px; font-size: 13px; }
 .module-applied a { color: var(--accent-text); }
 /* Enemy view: the enemy's own attacks and rough torso-hit counts (enemy-weapons.js). */
