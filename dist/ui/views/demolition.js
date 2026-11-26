@@ -216,7 +216,7 @@ function weaponResults(head, profile) {
         ${profile.modes.length > 1 ? html`<div class="segmented" role="group" aria-label="${L('탄종·공격', 'Shell / attack')}">${profile.modes.map(item => html`<button type="button" data-mode-pick="${item.id}" aria-pressed="${item.id === mode.id}">${item.name}</button>`)}</div>` : ''}</div>
       <div class="stat-chips">
         <div class="stat-chip"><span>${L(`${mode.directLabel || '직격'} 철거력`, `${T(mode.directLabel) || 'Direct'} demolition force`)}</span><b>${forceText(mode.direct, mode.forceUnknown)}</b></div>
-        <div class="stat-chip"><span>${blastIcon()}${L('폭발 철거력 · 중심부', 'Blast demolition force · center')}</span><b>${forceText(mode.explosion, mode.forceUnknown)}</b></div>
+        <div class="stat-chip"><span>${blastIcon()}${L('폭발 철거력', 'Blast demolition force')}</span><b>${forceText(mode.explosion, mode.forceUnknown)}</b></div>
         ${mode.damage ? html`<div class="stat-chip"><span>${L('시설 피해 (체력 계산용)', 'Structure damage (for health)')}</span><b>${num(mode.damage.standard)}</b><small>${L('폭발', 'Blast')} ${num(mode.damage.explosion)} · AP ${mode.damage.ap}/${mode.damage.explosionAp}</small></div>` : ''}
       </div>
       ${notes.length || mode.shieldBypass || mode.damage?.falloff ? html`<ul class="notes">${notes.map(note => html`<li>${note}</li>`)}${mode.shieldBypass ? html`<li>${L('워프 함선: 본체에 닿으면 보호막을 벗기기 전에도 부술 수 있는 공격입니다.', 'Warp Ship: if it reaches the hull, this attack can destroy it even before the shield is down.')}</li>` : ''}${mode.damage?.falloff ? html`<li>${L('체력 계산은 거리 감쇠 전 최대 피해 기준입니다.', 'Health math uses full damage before falloff.')}</li>` : ''}</ul>` : ''}
