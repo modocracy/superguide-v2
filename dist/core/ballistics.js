@@ -5,6 +5,11 @@
 // Drop is drawn from the same drag plus gravity: 9.82 m/s^2 times the record's gravity multiplier, the
 // value helldiversotl.com's ballistics calculator uses as checked in the game code (game 7.1.0; not on the
 // wiki; user decision 2026-11-23). The same site's drag term matches the wiki's D exactly.
+// helldiversotl.com/research/projectile-falloff (game 7.1.0 code, read 2026-11-26) gives the same multiplier on the
+// speed at impact, 0.25 + 0.75 * (v / v0)^2: it can pass 1.0 when the shooter's forward speed is added, armor
+// penetration does not change, and a shot loses speed (and damage) when it passes through something. Damage, speed
+// and flight time here follow the straight path (a target at the same height: what an aimed arc loses climbing it
+// regains coming down); only the drop uses the level-fire trajectory.
 import { projectileBallistics } from '../data/ballistics.js';
 
 export const GAME_GRAVITY = 9.82;
@@ -18,8 +23,12 @@ export const fallsWithRange = attack => !attack?.propelled && dragOf(ballisticsO
 // Drag deceleration D, per metre.
 export const dragOf = b => (b && b.caliber > 0 && b.mass > 0 && b.drag > 0 ? (0.0004712389 * b.caliber ** 2 * b.drag) / b.mass : 0);
 
-// Damage multiplier after `x` metres of flight.
-export const falloffAt = (b, x) => (x > 0 ? 1 - 0.75 * (1 - Math.exp(-2 * dragOf(b) * x)) : 1);
+// Speed after `x` metres along the straight path: v0 * e^(-Dx).
+export const speedAt = (b, x) => b.velocity * Math.exp(-dragOf(b) * x);
+// Time to fly `x` metres along it: (e^(Dx) - 1) / (D * v0), or x / v0 without drag.
+export const timeAt = (b, x) => { const d = dragOf(b); return d ? (Math.exp(d * x) - 1) / (d * b.velocity) : x / b.velocity; };
+// Damage multiplier after `x` metres of flight: 0.25 + 0.75 * (speed / v0)^2.
+export const falloffAt = (b, x) => (x > 0 ? 0.25 + 0.75 * (speedAt(b, x) / b.velocity) ** 2 : 1);
 
 // Distance at which damage falls to `share` (0.25-1), or null when it never does.
 export function distanceAt(b, share) {

@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { ballisticsOutput } from './build-ballistics.mjs';
 import { projectileBallistics } from '../dist/data/ballistics.js';
-import { dragOf, falloffAt, distanceAt, trajectory, ballisticsOf } from '../dist/core/ballistics.js';
+import { dragOf, falloffAt, distanceAt, trajectory, ballisticsOf, speedAt, timeAt } from '../dist/core/ballistics.js';
 import { num } from '../dist/core/explain.js';
 import { hitDamage, solveMatchup } from '../dist/core/combat.js';
 import { compareAttacks } from '../dist/core/compare.js';
@@ -40,12 +40,22 @@ check(falling.every((p, i) => !i || p.drop >= falling[i - 1].drop) && falling.at
 const short = trajectory({ ...sample, lifetime: 0.1 }, 200);
 check(short.endX > 80 && short.endX < 90 && short.points.at(-1).x < 90, 'lifetime ends the flight');
 
-// The distance table shows the rounded flight speed at each reachable distance.
+// The multiplier on the speed at impact (helldiversotl.com projectile falloff, game 7.1.0 code): 0.25 + 0.75 * (v / v0)^2,
+// with the straight-path speed v0 * e^(-Dx) and time (e^(Dx) - 1) / (D * v0).
+near(falloffAt(sample, 100), 0.25 + 0.75 * (speedAt(sample, 100) / sample.velocity) ** 2, 1e-12, 'falloff from the speed at impact');
+near(speedAt(sample, 100), 900 * Math.exp(-dragOf(sample) * 100), 1e-9, 'straight-path speed');
+near(timeAt(sample, 100), (Math.exp(dragOf(sample) * 100) - 1) / (dragOf(sample) * 900), 1e-12, 'straight-path flight time');
+near(timeAt({ ...sample, drag: 0 }, 90), 0.1, 1e-12, 'no drag: distance over muzzle velocity');
+// The page's AR-23 Liberator examples: 90 damage at 80% of the reference speed is 65.70, at 50% 39.38.
+near(90 * (0.25 + 0.75 * 0.8 ** 2), 65.7, 1e-9, 'Liberator 80% speed');
+near(90 * (0.25 + 0.75 * 0.5 ** 2), 39.375, 1e-9, 'Liberator 50% speed');
+
+// The distance table shows the rounded straight-path speed at each distance the shot reaches.
 const rifleRecord = 'AR-23_P';
 const riflePoints = trajectory(projectileBallistics[rifleRecord]).points;
 const expectedSpeedRows = [25, 50, 100, 150, 200].map(distance => {
   const point = riflePoints.find(p => p.x === distance);
-  return [String(distance), point ? `${num(Math.round(point.speed))}m/s` : '—'];
+  return [String(distance), point ? `${num(Math.round(speedAt(projectileBallistics[rifleRecord], distance)))}m/s` : '—'];
 });
 for (const expanded of [false, true]) {
   const html = String(ballisticsBlock([{ record: rifleRecord }], expanded));

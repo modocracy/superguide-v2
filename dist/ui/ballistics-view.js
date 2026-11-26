@@ -7,7 +7,7 @@ import { detailDisclosure } from './item-detail.js';
 import { L } from '../core/i18n.js';
 import { num } from '../core/explain.js';
 import { projectileBallistics } from '../data/ballistics.js';
-import { dragOf, falloffAt, trajectory } from '../core/ballistics.js';
+import { dragOf, falloffAt, speedAt, timeAt, trajectory } from '../core/ballistics.js';
 
 const MAX = 200;
 const MARKS = [25, 50, 100, 150, 200];
@@ -89,8 +89,8 @@ function recordBlock(label, recordId, propelled, extra = '') {
       <tbody>${MARKS.map((x, idx) => { const p = at(x); return html`<tr><th scope="row">${x}m</th>
         <td>${markFalloff[idx]}%</td>
         <td>${p ? dropText(p.drop) : '—'}</td>
-        <td>${p ? `${num(round(p.time, 0.01))}${L('초', 's')}` : '—'}</td>
-        <td>${p ? `${num(Math.round(p.speed))}m/s` : '—'}</td></tr>`; })}</tbody>
+        <td>${p ? `${num(round(timeAt(b, x), 0.01))}${L('초', 's')}` : '—'}</td>
+        <td>${p ? `${num(Math.round(speedAt(b, x)))}m/s` : '—'}</td></tr>`; })}</tbody>
     </table></div>
   </div>`;
 }
@@ -110,7 +110,7 @@ export function ballisticsBlock(entries, expanded = false, recoil = []) {
   if (!list.length && !recoil.length) return '';
   const content = html`${list.map((e, i) => recordBlock(list.length > 1 ? e.label : '', e.record, e.propelled, i === 0 ? recoil.map(recoilCell) : ''))}
     ${recoil.length && !list.length ? html`<div class="ballistic"><dl class="detail-grid">${recoil.map(recoilCell)}</dl></div>` : ''}
-    ${list.length ? html`<p class="faint" style="font-size:12.5px;margin:-10px 0 16px">${L('탄 피해 계산에는 중력과 궤적을 반영하지 않습니다. 낙차는 중력 9.82m/s²에 중력 배율을 곱하고, 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage leaves out gravity and the flight path. Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
+    ${list.length ? html`<p class="faint" style="font-size:12.5px;margin:-10px 0 16px">${L('탄 피해는 맞을 때의 탄속으로 정해집니다: 0.25 + 0.75 × (맞을 때 탄속 ÷ 처음 탄속)². 그래서 아무리 멀어도 25% 밑으로는 줄지 않고, 관통력은 거리와 상관없이 그대로입니다. 표의 탄 피해, 도달 시간, 탄속은 같은 높이의 표적을 맞힐 때처럼 항력만 넣어 계산한 값입니다. 위로 쏘면 더 줄고 아래로 쏘면 덜 줄며, 달리면서 쏘면 이동 속도가 더해져 100%를 넘을 수도 있습니다. 무언가를 뚫고 나간 탄은 느려져 다음 피해가 줄어듭니다. 낙차는 중력 9.82m/s²에 중력 배율을 곱하고 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다.', 'Shot damage is set by the speed at impact: 0.25 + 0.75 × (speed at impact ÷ muzzle velocity)². So it never falls below 25% however far, and armor penetration stays the same at any range. In the table, shot damage, flight time and speed are calculated with drag only, as for a target at the same height. Shooting upward loses more and downward less, and firing on the move adds your speed, which can take it past 100%. A round that passes through something slows down, so its next hit does less. Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot.')}</p>` : ''}
   `;
   return detailDisclosure(L('세부 수치', 'Detailed stats'), content, { className: 'ballistic-block', expanded });
 }
