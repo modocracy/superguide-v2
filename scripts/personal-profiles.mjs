@@ -100,6 +100,20 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
         const attack = linked.attacks.find(a => a.level === 1 && a.type !== 'status');
         const variant = weapon.variants.find(v => v.attack?.name === attack?.name && v.attack?.parent === attack?.parent);
         if (!variant) throw new Error(`Missing underbarrel: ${weapon.id}`);
+        // An underbarrel flamethrower (Stoker) is a held flame stream like the Torcher: the infobox's fire damage per
+        // second, the particle's durable share and Fire status build-up (user request 2026-11-26).
+        if (variant.delivery === 'spray') {
+          const dps = Number(weapon.infoboxRaw?.damage?.match(/\{\{Damage\|Fire\|\s*(\d+)\s*DPS\}\}/)?.[1]);
+          if (!Number.isFinite(dps)) throw new Error(`${weapon.id}: underbarrel flame damage per second missing`);
+          const record = data.damage[data.spray[attack.name]?.damage_id];
+          const slot = [1, 2, 3].find(n => record?.[`Status_Name_${n}`] === 'Fire');
+          const ignite = slot ? record[`Status_Value_${slot}`] * dps / variant.direct : null;
+          modes.push({ id: 'underbarrel', name: '하부 부착 무기', standard: dps, durable: dps * variant.durable / variant.direct, ap: variant.ap,
+            explosion: 0, explosionDurable: 0, explosionAp: 0, innerRadius: null, radius: null, delivery: 'spray', unit: '초', magazine: null, ammoPerShot: 1,
+            stream: { fire: true, burn: ignite ? BURN : null, ...(ignite ? { ignite } : {}) },
+            note: '하부 화염방사기를 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다.' });
+          continue;
+        }
         modes.push(makeMode(weapon, variant, 'underbarrel', '하부 부착 무기', data.weapons[linked.dataKey].cap ?? null));
       }
     }
@@ -110,7 +124,11 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     if (['bushwhacker', 'double-freedom'].includes(weapon.id)) modes.push({ ...makeMode(weapon, weapon, 'all-barrels', '일제 사격'), ammoPerShot: weapon.barrels, hitCondition: { kind: 'pellets', min: 1, max: weapon.pellets * weapon.barrels } });
     if (weapon.id === 'variable') modes.push(
       { ...makeMode(weapon, weapon, 'volley', '일제 사격'), ammoPerShot: 7, hitCondition: { kind: 'pellets', min: 1, max: 7, projectileName: '탄환', defaultPct: 100 } },
-      { id: 'total', name: '전탄 발사', unsupported: '총에 남아 있는 탄약 수를 알 수 없어 한꺼번에 쐈을 때의 피해를 계산하지 않습니다.' },
+      // 'Total' fires every round left at once; counted with a full magazine, all hitting by default like the
+      // volley (user request 2026-11-26).
+      { ...makeMode(weapon, weapon, 'total', '전탄 발사'), ammoPerShot: weapon.magazine,
+        hitCondition: { kind: 'pellets', min: 1, max: weapon.magazine, projectileName: '탄환', defaultPct: 100 },
+        note: `탄창이 가득 찬 상태(${weapon.magazine}발)에서 남은 탄을 모두 쏜다고 보고 계산합니다. 남은 탄이 적으면 피해도 그만큼 줄어듭니다.` },
     );
     // Shrapnel is part of this shot, never a selectable standalone mode.
     if (weapon.shrapnelCount > 0) {

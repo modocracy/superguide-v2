@@ -259,7 +259,9 @@ function detailRows(w) {
   if (w.direct != null && w.damageKind === 'dps') add(L('광선 피해', 'Beam damage'), num(w.direct), perSecond, L('비추고 있는 동안', 'While the beam is on target'));
   if (w.direct != null && w.damageKind === 'dps') rows.at(-1).icon = 'laser';
   else if (w.direct != null && kind === 'spray') add(L('입자 피해', 'Particle damage'), num(w.direct), '', L('분사 입자 1개', 'One spray particle'));
-  else if (w.direct != null) add(w.pellets > 1 ? L('펠릿당 피해', 'Damage per pellet') : kind === 'arc' ? L('아크', 'Arc') : kind === 'beam' ? L('광선', 'Beam') : L('직격', 'Direct'), num(w.direct), '', w.pellets > 1 ? L(`${w.pellets}발 모두 맞으면 ${num(w.direct * w.pellets)}`, `${num(w.direct * w.pellets)} if all ${w.pellets} hit`) : L('장갑에 막히지 않을 때', 'When armor does not stop it'));
+  else if (w.direct != null) add(w.pellets > 1 ? L('펠릿당 피해', 'Damage per pellet') : kind === 'arc' ? L('아크 피해', 'Arc damage') : kind === 'beam' ? L('광선 피해', 'Beam damage') : L('직격', 'Direct'), num(w.direct), '', w.pellets > 1 ? L(`${w.pellets}발 모두 맞으면 ${num(w.direct * w.pellets)}`, `${num(w.direct * w.pellets)} if all ${w.pellets} hit`) : L('장갑에 막히지 않을 때', 'When armor does not stop it'));
+  // Arc and beam hits carry their damage icon (user request 2026-11-26).
+  if (w.direct != null && w.damageKind !== 'dps' && kind !== 'spray' && !(w.pellets > 1) && { arc: 1, beam: 1 }[kind]) rows.at(-1).icon = kind === 'arc' ? 'arc' : 'laser';
   // Only firing modes carry ammoPerShot (all barrels at once, a volley).
   if (w.ammoPerShot > 1 && w.direct != null) add(L('한 번에 발사', 'Fired at once'), num(w.ammoPerShot), L('발', ''), L(`모두 맞으면 ${num(w.direct * (w.pellets || 1) * w.ammoPerShot)}`, `${num(w.direct * (w.pellets || 1) * w.ammoPerShot)} if all hit`));
   // Fires whatever is left in the magazine (Variable "Total"), so the full magazine is the most.

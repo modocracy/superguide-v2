@@ -121,24 +121,25 @@ export function attackStats(mode, { distance = 0 } = {}) {
   const durable = value => L(`내구 ${value}`, `Durable ${value}`);
   const radii = (inner, outer) => L(`중심 ${num(inner)}m / 외곽 ${num(outer)}m`, `inner ${num(inner)}m / outer ${num(outer)}m`);
   if (mode.beam) return [
-    { label: L('초당 피해', 'Damage per second'), value: `${num(mode.beam.standardPerSecond)}`, note: `${durable(num(mode.beam.durablePerSecond))}${L('/초', '/s')}` },
+    { label: L('초당 피해', 'Damage per second'), icon: 'laser', value: `${num(mode.beam.standardPerSecond)}`, note: `${durable(num(mode.beam.durablePerSecond))}${L('/초', '/s')}` },
     { label: L('1발 지속', 'One shot lasts'), value: `${num(mode.beam.duration)}${L('초', 's')}`, note: L(`최대 ${num(mode.standard)}`, `Max ${num(mode.standard)}`) },
     { label: L('관통', 'Penetration'), value: `AP ${mode.ap}` },
   ];
   if (mode.stream) {
     const { burn, capacity } = mode.stream;
     return [
-      { label: L('초당 피해', 'Damage per second'), value: num(mode.standard), note: `${durable(num(mode.durable))} · AP ${mode.ap}` },
-      ...(burn ? [{ label: L('화상', 'Burning'), value: `${num(burn.perSecond)}${L('/초', '/s')}`, note: L(`AP ${burn.ap} · 본체 체력 · 점화 수치 초당 ${num(mode.stream.ignite)}`, `AP ${burn.ap} · main health · fire build-up ${num(mode.stream.ignite)}/s`) }] : []),
+      { label: L('초당 피해', 'Damage per second'), icon: mode.stream.fire ? 'fire' : 'laser', value: num(mode.standard), note: `${durable(num(mode.durable))} · AP ${mode.ap}` },
+      ...(burn ? [{ label: L('화상', 'Burning'), icon: 'fire', value: `${num(burn.perSecond)}${L('/초', '/s')}`, note: L(`AP ${burn.ap} · 본체 체력 · 점화 수치 초당 ${num(mode.stream.ignite)}`, `AP ${burn.ap} · main health · fire build-up ${num(mode.stream.ignite)}/s`) }] : []),
       ...(capacity ? [{ label: capacity.kind === 'heat' ? L('과열까지', 'Until overheating') : L('연료 1통', 'One fuel canister'), value: `${num(capacity.seconds)}${L('초', 's')}` }] : []),
     ];
   }
   const stats = [];
   if (mode.directKind !== 'none' && !(mode.standard === 0 && mode.durable === 0)) {
-    stats.push({ label: deliveryOf(mode).hit, value: num(left(mode.standard)), note: `${durable(num(left(mode.durable)))} · AP ${mode.ap}${range < 1 ? L(` · ${distance}m에서 ${Math.round(range * 100)}%`, ` · ${Math.round(range * 100)}% at ${distance} m`) : ''}` });
+    const arc = mode.delivery === 'arc';
+    stats.push({ label: arc ? L('아크 피해', 'Arc damage') : deliveryOf(mode).hit, icon: arc ? 'arc' : mode.delivery === 'beam' ? 'laser' : mode.delivery === 'spray' ? 'fire' : ['melee', 'flag'].includes(mode.delivery) ? '' : 'ballistic', value: num(left(mode.standard)), note: `${durable(num(left(mode.durable)))} · AP ${mode.ap}${range < 1 ? L(` · ${distance}m에서 ${Math.round(range * 100)}%`, ` · ${Math.round(range * 100)}% at ${distance} m`) : ''}` });
   }
   for (const blast of explosionsOf(mode)) {
-    stats.push({ label: blast.name || L('폭발', 'Explosion'), value: num(blast.durable ?? blast.standard), note: `AP ${num(blast.ap)}${Number.isFinite(blast.innerRadius) ? ` · ${radii(blast.innerRadius, blast.radius)}` : ''}` });
+    stats.push({ label: blast.name || L('폭발', 'Explosion'), icon: 'blast', value: num(blast.durable ?? blast.standard), note: `AP ${num(blast.ap)}${Number.isFinite(blast.innerRadius) ? ` · ${radii(blast.innerRadius, blast.radius)}` : ''}` });
   }
   if (mode.bomblet) {
     const b = mode.bomblet;

@@ -160,8 +160,8 @@ const arcShown = w => w.splash === 0 && (w.variants ?? []).some(v => v.delivery 
 for (const w of singles) {
   const content = String(weaponDetail(w));
   ok(!content.includes('data-variant'), `${w.id}: single-mode weapon has no mode tabs`);
-  // The Arc grenade shows its arcs as the hit, with no component table (user request 2026-11-26).
-  if (arcShown(w)) ok(!content.includes('class="compare-table gear-modes"') && shows(content, '아크', '100') && content.includes('아크 효과') && !content.includes('폭발 효과'), `${w.id}: arcs as the hit, no component table or blast effect`);
+  // The Arc grenade shows its arcs as the hit ('아크 피해' with the arc icon), with no component table (user requests 2026-11-26).
+  if (arcShown(w)) ok(!content.includes('class="compare-table gear-modes"') && shows(content, '<span class="ico-arc" aria-hidden="true"></span>아크 피해', '100') && content.includes('아크 효과') && !content.includes('폭발 효과'), `${w.id}: arcs as the hit, no component table or blast effect`);
   // Charge and heat states read as 'low~high' in the key stats, as the Epoch does, and the Accelerator Rifle's empty charge
   // stages get no table (user request 2026-11-26); the others keep their component table.
   else if (['loyalist', 'purifier', 'double-edge-sickle'].includes(w.id)) ok(!content.includes('class="compare-table gear-modes"') && /\d~\d/.test(content), `${w.id}: states as a range, no component table`);

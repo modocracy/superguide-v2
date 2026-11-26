@@ -229,7 +229,7 @@ for (const weapon of personalWeapons) {
     if (attack.hitCondition) {
       const { min, max } = attack.hitCondition;
       // Pellets default to half, the Variable's volley of bullets to all (user decisions 2026-11-26).
-      const pct = attack.hitCondition.kind === 'arcs' || weapon.id === 'variable' && attack.id === 'volley' ? 100 : attack.hitCondition.kind === 'pellets' ? 50 : 20;
+      const pct = attack.hitCondition.kind === 'arcs' || weapon.id === 'variable' && ['volley', 'total'].includes(attack.id) ? 100 : attack.hitCondition.kind === 'pellets' ? 50 : 20;
       eq(attack.hitCondition.defaultPct, pct);
       eq(attack.hitCondition.default, Math.max(min, Math.round(max * pct / 100)), `${weapon.id}/${attack.id}: rounded default count`);
       ok(Number.isInteger(min) && Number.isInteger(max) && min >= 0 && max >= min, 'assumption bounds');
@@ -244,7 +244,10 @@ eq(personalWeapons.find(w => w.id === 'liberator').image, 'AR-23 Liberator Prima
 eq(personalProfiles['one-two'].modes.map(m => m.id), ['standard', 'underbarrel']);
 eq(personalProfiles['one-two'].modes[1].magazine, 1, 'underbarrel capacity does not inherit rifle capacity');
 eq(personalProfiles.halt.modes.map(m => m.magazine), [8, 8], 'independent ammo tubes');
-ok(personalProfiles.stoker.modes[1].unsupported, 'spray underbarrel remains unsupported');
+// The Stoker's underbarrel flamethrower is a held flame stream; the Variable's 'Total' a full magazine (user request 2026-11-26).
+eq([personalProfiles.stoker.modes[1].unit, personalProfiles.stoker.modes[1].standard, personalProfiles.stoker.modes[1].stream.fire, personalProfiles.stoker.modes[1].stream.ignite], ['초', 150, true, 150]);
+const variableTotal = personalProfiles.variable.modes.find(m => m.id === 'total');
+eq([variableTotal.unsupported, variableTotal.ammoPerShot, variableTotal.hitCondition.max, variableTotal.hitCondition.default], [undefined, 49, 49, 49]);
 
 // Independent anatomy arithmetic: Hunter head 40 HP, AV0, durability0;
 // Liberator 90 > 40. Devastator head 110 HP, AV1; Senator 225 > 110.

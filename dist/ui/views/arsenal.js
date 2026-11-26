@@ -62,12 +62,14 @@ function stats(item) {
     : { text: item.rangeLabel || L('미확인', 'Unverified'), dim: !item.rangeLabel || item.rangeLabel === '미확인', label: L('범위', 'Area'), caption: item.rangeNoteShort };
   const kind = hitKind(item);
   const hitName = dps ? (kind === 'beam' ? L('광선 피해', 'Beam damage') : kind === 'spray' && streamOf(item) === 'fire' ? L('화염 피해', 'Fire damage') : L('지속 피해', 'Damage/s'))
-    : { arc: L('아크', 'Arc'), spray: L('입자 피해', 'Particle damage'), beam: L('광선', 'Beam') }[kind] ?? L('직격', 'Direct');
+    : { arc: L('아크 피해', 'Arc damage'), spray: L('입자 피해', 'Particle damage'), beam: L('광선 피해', 'Beam damage') }[kind] ?? L('직격', 'Direct');
+  // Arc and beam hits carry their damage icon, as the continuous ones do (user request 2026-11-26).
+  const hitIcon = dps ? streamOf(item) : { arc: 'arc', beam: 'laser' }[kind] ?? '';
   // A grenade whose burst is a ring of arcs (De-Escalator) names its second cell for them.
-  const splashName = item.splashKind === 'arc' ? L('아크', 'Arc') : L('폭발', 'Blast');
+  const splashName = item.splashKind === 'arc' ? L('아크 피해', 'Arc damage') : L('폭발', 'Blast');
   return [
-    { label: hitName, icon: dps ? streamOf(item) : '', caption: item.directNoteShort || (none ? L('지원 장비', 'Utility gear') : dps ? L('초당', 'Per second') : item.unit), ...value(item.direct, item.directText) },
-    { label: splashName, caption: item.splashNoteShort || (item.splash > 0 ? L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
+    { label: hitName, icon: hitIcon, caption: item.directNoteShort || (none ? L('지원 장비', 'Utility gear') : dps ? L('초당', 'Per second') : item.unit), ...value(item.direct, item.directText) },
+    { label: splashName, icon: item.splashKind === 'arc' ? 'arc' : '', caption: item.splashNoteShort || (item.splash > 0 ? L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
     { label: L('관통', 'Penetration'), caption: item.apNoteShort || (item.ap != null ? apBandOf(item).name + (item.splashAp != null && item.splashAp !== item.ap ? ` · ${splashName} AP ${item.splashAp}` : '') : ''),
       ...(item.ap != null ? { text: `AP ${item.ap}${item.splashAp != null && item.splashAp !== item.ap ? `/${item.splashAp}` : ''}` } : { text: none ? '—' : L('미확인', 'Unverified'), dim: true }) },
     { caption: reach.caption, ...reach },
@@ -76,7 +78,8 @@ function stats(item) {
 
 // Card cells are narrow: an unverified value shows as "?" there in English.
 const cellText = stat => lang === 'en' && stat.dim && stat.text === 'Unverified' ? '?' : stat.text;
-const statRow = item => html`<dl class="stat-row">${stats(item).map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}" title="${stat.dim ? stat.text : ''}">${cellText(stat)}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd></div>`)}</dl>`;
+// A weapon with no reach to show (the HMG Emplacement, user request 2026-11-26) drops that cell on its card and detail.
+const statRow = item => html`<dl class="stat-row">${stats(item).filter((stat, index) => !(index === 3 && item.noReach)).map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}" title="${stat.dim ? stat.text : ''}">${cellText(stat)}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd></div>`)}</dl>`;
 
 // One-line numbers for a mode, used on cards and in the comparison table.
 function variantBrief(item, variant) {
@@ -606,7 +609,7 @@ const statGrid = (item, effects = [], expanded = false) => {
     .map(cell => statCell({ label: cell.label, icon: cell.icon, text: typeof cell.value === 'number' ? num(cell.value) : cell.value, unit: lang === 'en' ? UNIT_EN[cell.unit] ?? cell.unit : cell.unit, caption: cell.caption }));
   // A direct hit that practically never happens (a carrier shell bursting in the air) is flagged in orange.
   if (item.directWarn) direct.warn = item.directWarn;
-  return html`<dl class="detail-grid">${[direct, blast].filter(stat => !absent(stat)).map(statCell)}${durable}${absent(ap) ? '' : statCell(ap)}${extra('damage')}${unverifiedArea ? '' : statCell(reach)}${extra('reach')}${ammo}${extra('ammo')}${rateCell(item)}${reloadCell(item)}${sentryCells.map(statCell)}${timeCells.map(statCell)}${bodyCells.map(statCell)}${handling.map(statCell)}${effects}</dl>`;
+  return html`<dl class="detail-grid">${[direct, blast].filter(stat => !absent(stat)).map(statCell)}${durable}${absent(ap) ? '' : statCell(ap)}${extra('damage')}${unverifiedArea || item.noReach ? '' : statCell(reach)}${extra('reach')}${ammo}${extra('ammo')}${rateCell(item)}${reloadCell(item)}${sentryCells.map(statCell)}${timeCells.map(statCell)}${bodyCells.map(statCell)}${handling.map(statCell)}${effects}</dl>`;
 };
 
 // Weapons whose shot grows with the charge rather than switching modes (user request 2026-11-25): no mode tabs; the

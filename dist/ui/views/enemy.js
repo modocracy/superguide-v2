@@ -152,7 +152,8 @@ function rankWeapons(enemy, shieldCleared, group = state.group) {
       }
       return { mode, status: best ? 'route' : 'none', best, rows, defaulted: fallback != null };
     });
-    const routes = tries.filter(item => item.status === 'route').sort((a, b) => a.best.hits - b.best.hits || Number(a.best.outcome !== 'kill') - Number(b.best.outcome !== 'kill'));
+    // A weapon with both (the Stoker's underbarrel flamethrower) ranks by its shots; seconds never beat shots by number.
+    const routes = tries.filter(item => item.status === 'route').sort((a, b) => Number(Boolean(a.mode.stream)) - Number(Boolean(b.mode.stream)) || a.best.hits - b.best.hits || Number(a.best.outcome !== 'kill') - Number(b.best.outcome !== 'kill'));
     const pick = routes[0] || tries.find(item => item.status === 'assume') || tries.find(item => item.status === 'none') || tries[0];
     return { weapon, order, profile, ...pick, spear: spearCannotLock(enemy, pick.mode), reference: wikiReference(enemy, weapon.id, pick.mode) };
   });
@@ -646,7 +647,7 @@ function matchupSection(enemy, entries) {
       <div class="matchup-head">${weaponIcon(weapon.id, 44)}<div><h2>${weapon.name}</h2><a class="ext" href="${group.link(weapon.id)}">${group.linkLabel}</a></div>
         ${compareToggle(weapon, rawMode)}
         ${profile?.modes.length > 1 ? html`<div class="segmented" role="group" aria-label="${profile.modes.some(item => item.beam) ? L('거리', 'Range') : L('발사 모드', 'Firing mode')}">${profile.modes.map(item => html`<button type="button" data-mode-pick="${item.id}" aria-pressed="${item.id === rawMode?.id}">${item.name}</button>`)}</div>` : ''}</div>
-      ${stats.length ? html`<div class="stat-chips">${stats.map(stat => html`<div class="stat-chip"><span>${stat.label}</span><b>${stat.value}</b>${stat.note ? html`<small>${stat.note}</small>` : ''}</div>`)}</div>` : ''}
+      ${stats.length ? html`<div class="stat-chips">${stats.map(stat => html`<div class="stat-chip"><span>${stat.icon ? html`<span class="ico-${stat.icon}" aria-hidden="true"></span>` : ''}${stat.label}</span><b>${stat.value}</b>${stat.note ? html`<small>${stat.note}</small>` : ''}</div>`)}</div>` : ''}
       ${notes.length ? html`<ul class="notes">${notes.map(note => html`<li>${note}</li>`)}</ul>` : ''}
     </div>
     ${mode ? assumptionControls(mode) : ''}
