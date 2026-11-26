@@ -122,6 +122,11 @@ ok(solveMatchup(streamEnemy, streamMode(false), lit(1)).best.hits === 6.5, 'beam
 ok(solveMatchup(streamEnemy, streamMode(true), lit(2)).best.hits === 3.5, 'flames and burning both take the fire multiplier');
 ok(solveMatchup(streamEnemy, streamMode(false), lit(1, 20)).best.hits === 7.7, 'a higher ignition threshold lights later');
 ok(solveMatchup(streamEnemy, streamMode(false), { fireMult: 1 }).best.hits === 10, 'no ignition threshold, no burning');
+// Main armor 5 stops burning (AP 4) and says so; a kill before the fire catches says no burning was added.
+const armored = solveMatchup({ ...streamEnemy, main: { ...streamEnemy.main, armor: 5 } }, streamMode(false), lit(1)).best;
+ok(armored.hits === 10 && armored.notes.some(note => note.includes('본체 장갑이 5')), 'main armor above AP 4 stops burning');
+const quick = solveMatchup({ ...streamEnemy, main: { ...streamEnemy.main, hp: 50 } }, streamMode(false), lit(1)).best;
+ok(quick.hits === 0.5 && quick.ignitedAt === 1 && quick.notes.some(note => note.includes('그 전에 끝나므로')), 'over before the fire catches');
 ok(solveMatchup(streamEnemy, streamMode(true), {}).rows[0].reason === 'fire-mult-missing', 'no fire multiplier, no flame count');
 const beamNoFire = solveMatchup(streamEnemy, streamMode(false), {}).best;
 ok(beamNoFire.hits === 10 && beamNoFire.notes.length === 1, 'a beam with no fire multiplier leaves burning out and says so');

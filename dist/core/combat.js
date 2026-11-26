@@ -328,6 +328,8 @@ const streamSeconds = seconds => Math.max(1, Math.ceil(seconds * STREAM_STEP - E
 const MAX_STREAM_SECONDS = 600;
 export const BURN_LEFT_OUT = L('이 적은 화염 피해 배율이 확인되지 않아 화상 피해는 빼고 계산했습니다.', 'This enemy\'s fire damage multiplier is unverified, so burning is left out.');
 const NO_IGNITION = L('점화 기준치가 주어지지 않아 화상 피해는 빼고 계산했습니다.', 'No ignition threshold was given, so burning is left out.');
+const OVER_BEFORE_BURN = L('그 전에 끝나므로 화상 피해는 들어가지 않습니다.', 'It is over before that, so no burning damage is added.');
+const armorStopsBurn = (armor, ap) => L(`본체 장갑이 ${armor}라 화상(관통 ${ap})은 본체에 들어가지 않습니다.`, `Main armor ${armor} stops burning (AP ${ap}), so it adds no damage.`);
 const tenths = value => Math.round(value * 10) / 10;
 function ignitionNote(ignition, ignite, after) {
   // A flame stream lights within a tenth of a second; say so rather than 'about 0 s'.
@@ -368,7 +370,9 @@ function solveStream(enemy, target, attack, options) {
   const after = stream.burn && known(ignition?.value) && stream.ignite > 0 ? ignition.value / stream.ignite : null;
   const burnKnown = after != null && known(fire) && known(main.armor);
   const burn = burnKnown && !target.isolated ? stream.burn.perSecond * fire * armorFactor(stream.burn.ap, main.armor) : 0;
-  const notes = !stream.burn ? [] : !known(fire) ? [BURN_LEFT_OUT] : after == null ? [NO_IGNITION] : burn > 0 ? [ignitionNote(ignition, stream.ignite, after)] : [];
+  const armorStops = burnKnown && !target.isolated && burn === 0;
+  const notes = !stream.burn ? [] : !known(fire) ? [BURN_LEFT_OUT] : after == null ? [NO_IGNITION]
+    : armorStops ? [armorStopsBurn(main.armor, stream.burn.ap)] : burn > 0 ? [ignitionNote(ignition, stream.ignite, after)] : [];
   const bleedOrKill = main.constitution ? 'bleed' : 'kill';
   const stages = [];
   let mainLeft = main.hp;
@@ -396,7 +400,8 @@ function solveStream(enemy, target, attack, options) {
     const burned = burn > 0 ? burn * Math.max(0, time + span - Math.max(time, after)) : 0;
     time += span;
     Object.assign(stage, { hits: streamSeconds(span), contactSeconds: span, partTotal: damage.direct * span, mainTotal: transferred, burnTotal: burned });
-    const done = { ...base, stages, notes, hits: streamSeconds(time), seconds: time, ignitedAt: burn > 0 ? after : null };
+    // Over before the fire catches: say no burning was added.
+    const done = { ...base, stages, notes: burn > 0 && time < after ? [...notes, OVER_BEFORE_BURN] : notes, hits: streamSeconds(time), seconds: time, ignitedAt: burn > 0 ? after : null };
     if (partTime <= mainTime && part.effect === 'kill' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };
     if (partTime <= mainTime && mainLeft - transferred - burned - (part.destroyMainDamage || 0) <= EPSILON) return { ...done, outcome: bleedOrKill, via: 'main' };
     if (mainTime < partTime) return { ...done, outcome: bleedOrKill, via: 'main' };

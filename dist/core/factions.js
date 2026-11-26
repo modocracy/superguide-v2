@@ -34,7 +34,8 @@ export function recommend(unit, choice, enemy = findEnemy(unit.enemy), engineOpt
   if (!enemy || !mode) throw new Error(`Unknown faction recommendation: ${unit.enemy}/${choice}`);
   const approach = factionApproaches[`${enemy.id}:${choice}`];
   // Guides assume the shield is handled; approaches may exclude the direct hit.
-  const matchup = solveMatchup(enemy, mode, { shieldCleared: true, ...engineOptions, ...(approach ? { directHit: approach.directHit } : {}) });
+  // Fire multiplier and ignition threshold for a held beam or flame stream, as on the enemy view (no effect on shots).
+  const matchup = solveMatchup(enemy, mode, { shieldCleared: true, fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id), ...engineOptions, ...(approach ? { directHit: approach.directHit } : {}) });
   const aims = approach ? [approach.target] : pick?.targets || factionAimTargets[`${enemy.id}:${choice}`] || unit.targets;
   // Only the editor's aim points count: never silently swap in an easier-to-count part.
   const options = sortRoutes(aims.map(id => matchup.rows.find(row => row.target.id === id)).filter(row => row && isFatal(row)));
