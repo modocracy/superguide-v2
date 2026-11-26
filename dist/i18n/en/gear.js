@@ -85,6 +85,7 @@ export default {
   "위키 표기 피해는 전격 1개당 100(x10)입니다. 던지면 땅에 잠시 머문 뒤, 작은 범위에서 튕기며 전격을 모두 5번 내뿜습니다.": "The wiki lists 100 damage per arc (x10). Once thrown, it rests on the ground for a moment, then bounces in a small area, letting out arcs a total of 5 times.",
   "전격 1회 기준입니다. 다중 방출·연쇄 대상의 피해를 합산하지 않습니다.": "Based on a single arc. Damage from multiple discharges or chained targets is not combined.",
   "표시 피해는 전격 한 줄기 기준입니다. 기본은 다섯 줄기가 같은 부위에 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다. 실제로 모두 맞는다는 보장은 없습니다.": "Displayed damage is per arc. By default, all five arcs are assumed to hit the same part; lower the hit rate to recalculate. There is no guarantee that all of them actually hit.",
+  "실전에서는 최대 약 400 m 떨어진 착륙한 워프 함선도 맞혀 한 발에 부술 수 있습니다.": "In play it can hit a Grounded Warp Ship as far as about 400 m away and destroy it in one shot.",
   "하위 분류가 없어 위키 인포박스 weapon_type=Explosives을 사용했습니다.": "There is no subcategory, so the wiki infobox weapon_type=Explosives was used.",
   "낱발 예비탄은 spareRounds에 보존하며 spareMags로 환산하지 않습니다.": "Spare single rounds are preserved in spareRounds and are not converted to spareMags.",
   "표시 피해는 펠릿 한 개 기준입니다. 기본 계산은 펠릿이 모두 맞는다고 가정하며, 명중률을 낮춰 다시 계산할 수 있습니다.": "Displayed damage is per pellet. The default calculation assumes all pellets hit; lower the hit rate to recalculate.",
@@ -186,5 +187,5 @@ export default {
   "반동": "Recoil",
   "모든 무기 중 가장 큼": "The highest of any weapon",
   "사거리": "Range",
-  "약 · 서서 수평으로 · 45도면 약 40 m": "About · standing, fired flat · about 40 m at 45 degrees",
+  "서서 수평으로 발사 · 45도면 약 40 m": "Fired flat, standing · about 40 m at 45 degrees",
 };

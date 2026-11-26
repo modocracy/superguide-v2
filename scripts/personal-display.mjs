@@ -156,7 +156,7 @@ const CAUTIONS = {
 // rev 141944, P/40-K Bolt Pistol rev 141876, GP-20 Ultimatum rev 140471). `after` places the cell with the damage, reach or ammo rows of the detail sheet.
 const EXTRA_STATS = {
   'bolt-pistol': [{ label: '반동', value: 325, unit: '', caption: '모든 무기 중 가장 큼', after: 'ammo' }],
-  ultimatum: [{ label: '사거리', value: 17, unit: 'm', caption: '약 · 서서 수평으로 · 45도면 약 40 m', after: 'reach' }],
+  ultimatum: [{ label: '사거리', value: 17, unit: 'm', caption: '서서 수평으로 발사 · 45도면 약 40 m', after: 'reach' }],
   incendiary: [{ label: '불 지속 시간', value: 20, unit: '초', caption: '남는 불길 · 소이 충격보다 5초 길다', after: 'reach' }],
   'incendiary-impact': [{ label: '불 지속 시간', value: 15, unit: '초', caption: '남는 불길', after: 'reach' }],
   immolation: [{ label: '불 지속 시간', value: 27, unit: '초', caption: '넓은 불 웅덩이', after: 'reach' }],
@@ -204,6 +204,9 @@ export function playerDetails(weapon, box) {
   if (weapon.id === 'pyrotech') playerNotes.push('처치 탄수는 첫 폭발만 반영합니다. 남은 불길의 지속 피해는 포함하지 않습니다.');
   if (weapon.variants.some(v => v.delivery === 'projectile' && !v.id.startsWith('shrapnel')) && ['missile-pistol', 'warrant'].includes(weapon.id)) playerNotes.push('유도와 비유도를 전환할 수 있습니다. 처치 탄수는 비유도 사격 기준입니다.');
   if (CAUTIONS[weapon.id]) playerNotes.push(...[CAUTIONS[weapon.id]].flat());
+  // Found in play, not on the wiki (user's play experience 2026-11-26): the datamine's 1.7 s lifetime would end the
+  // round at about 250 m, yet it hits a Grounded Warp Ship from about 400 m.
+  if (weapon.id === 'breacher') playerNotes.push('실전에서는 최대 약 400 m 떨어진 착륙한 워프 함선도 맞혀 한 발에 부술 수 있습니다.');
   // Effect badges straight from the wiki infobox trait list ("Incendiary {{*}} Guided ...").
   const traits = String(box.weapon_traits ?? box.throwable_traits ?? '').split('{{*}}').map(trait => trait.trim().toLowerCase());
   const traitTags = Object.entries(TRAIT_TAGS).filter(([wiki]) => traits.includes(wiki)).map(([, tag]) => tag);

@@ -110,6 +110,13 @@ function selfPropelledBlock(label, recordId, extra) {
   </div>`;
 }
 
+// How far a shot flies before its lifetime runs out, past the charts' range (the Breacher's 1.7 s: about 250 m), along
+// the straight path: ln(1 + D * v0 * T) / D, or v0 * T without drag; rounded to 10 m (user request 2026-11-26).
+// Where play shows a round flying farther than its datamine lifetime allows (user's play experience 2026-11-26: the
+// Breacher hits a Grounded Warp Ship from about 400 m), the caption says both.
+const PLAYED_REACH = { 'P-34_P': 400 };
+const lifeReach = b => { const d = dragOf(b), x = d ? Math.log(1 + d * b.velocity * b.lifetime) / d : b.velocity * b.lifetime; return Math.round(x / 10) * 10; };
+
 function recordBlock(label, recordId, propelled, extra = '') {
   if (SELF_PROPELLED[recordId]) return selfPropelledBlock(label, recordId, extra);
   const { record, b, drag, at, endX, damage, drop, dropTop, marks, markFalloff, max, step } = computeFlight(recordId, propelled);
@@ -125,7 +132,8 @@ function recordBlock(label, recordId, propelled, extra = '') {
       ${cell(L('구경', 'Caliber'), num(b.caliber), 'mm')}
       ${cell(L('항력계수', 'Drag coefficient'), num(record.drag), '', propelled ? L('로켓 추진으로 속도가 유지되어 계산에서 뺌', 'Left out: rocket propulsion keeps its speed') : L('클수록 빨리 느려짐', 'Higher slows it sooner'))}
       ${cell(L('중력 배율', 'Gravity multiplier'), num(b.gravity), '×', b.gravity ? L('클수록 많이 떨어짐', 'Higher drops more') : L('떨어지지 않고 곧게 날아감', 'Flies straight, no drop'))}
-      ${cell(L('탄 수명', 'Lifetime'), b.lifetime ? num(b.lifetime) : L('제한 없음', 'No limit'), b.lifetime ? L('초', 's') : '', endX != null ? L(`약 ${num(Math.round(endX))}m에서 사라짐`, `Gone at about ${num(Math.round(endX))} m`) : '')}
+      ${cell(L('탄 수명', 'Lifetime'), b.lifetime ? num(b.lifetime) : L('제한 없음', 'No limit'), b.lifetime ? L('초', 's') : '', endX != null ? L(`약 ${num(Math.round(endX))}m에서 사라짐`, `Gone at about ${num(Math.round(endX))} m`) : PLAYED_REACH[recordId] ? L(`자료상 약 ${num(lifeReach(b))}m · 실전에서는 약 ${num(PLAYED_REACH[recordId])}m까지 맞힘`, `About ${num(lifeReach(b))} m by the data · hits out to about ${num(PLAYED_REACH[recordId])} m in play`)
+        : b.lifetime ? L(`약 ${num(lifeReach(b))}m까지 날아감`, `Flies about ${num(lifeReach(b))} m`) : '')}
       ${cell(L('각도별 관통', 'Penetration by angle'), ap, '', L('25° 미만 · 26~60° · 61~80° · 81~90°', 'Under 25° · 26-60° · 61-80° · 81-90°'))}
       ${extra}
     </dl>

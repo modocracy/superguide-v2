@@ -4745,7 +4745,7 @@ export const personalWeapons = [
     playerNotes: ['쏠 때 사용자의 움직임이 탄에 더해져, 다이빙하거나 점프 팩·고속 정찰 차량을 타고 쏘면 더 멀리 갑니다.', '예비 탄은 어떤 방어구 패시브로도 늘지 않지만, 탄약 상자 하나로 예비 탄이 가득 찹니다.'],
     traitTags: ['one-handed'],
     extraStats: [
-      { label: '사거리', value: 17, unit: 'm', caption: '약 · 서서 수평으로 · 45도면 약 40 m', after: 'reach' },
+      { label: '사거리', value: 17, unit: 'm', caption: '서서 수평으로 발사 · 45도면 약 40 m', after: 'reach' },
     ],
     image: 'GP-20 Ultimatum Secondary Render.png',
     sourceRevision: 140471,
@@ -5434,7 +5434,7 @@ export const personalWeapons = [
     record: 'P-34_P',
     fuseType: null,
     fuseOptions: [],
-    playerNotes: ['불붙거나 가스에 노출된 뒤 이어지는 지속 피해는 처치 탄수에 더하지 않습니다.', '사격 모드는 하나입니다. 처치 탄수는 직격과 붙은 뒤의 지연 폭발을 함께 반영하며, 지속 피해는 포함하지 않습니다.'],
+    playerNotes: ['불붙거나 가스에 노출된 뒤 이어지는 지속 피해는 처치 탄수에 더하지 않습니다.', '사격 모드는 하나입니다. 처치 탄수는 직격과 붙은 뒤의 지연 폭발을 함께 반영하며, 지속 피해는 포함하지 않습니다.', '실전에서는 최대 약 400 m 떨어진 착륙한 워프 함선도 맞혀 한 발에 부술 수 있습니다.'],
     traitTags: ['one-handed'],
     image: 'P-34 Breacher Secondary Render.png',
     sourceRevision: 140789,
