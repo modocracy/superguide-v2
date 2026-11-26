@@ -3,8 +3,10 @@ import { enemies } from '../data/combat-data.js';
 import { factionSides, factionGuides } from '../data/faction-data.js';
 import { stratagems, stratagemById } from './catalog.js';
 import { compareAttacks, resolveAttack } from './compare.js';
-// The enemy's wiki fire damage multiplier, for held flame streams and burning (combat.js solveStream).
+// The enemy's wiki fire damage multiplier and ignition threshold, for held beams, flame streams and burning
+// (combat.js solveStream).
 import { enemyPages } from '../data/enemy-pages.js';
+import { ignitionOf } from '../data/enemy-ignition.js';
 import { enemySize, isLargeEnemy } from './enemy-size.js';
 import { L } from './i18n.js';
 
@@ -74,7 +76,7 @@ const rank = (a, b) => Number(b.verified) - Number(a.verified)
 function answers(enemy, slot, options) {
   const resolved = resolveAttack(slot.weaponId);
   const entries = resolved.profile?.modes.map(mode => ({ weaponId: slot.weaponId, modeId: mode.id })) || [{ weaponId: slot.weaponId }];
-  return compareAttacks(enemy, entries, { ...options, fireMult: enemyPages[enemy?.id]?.fireMult }).entries.map(answer => ({
+  return compareAttacks(enemy, entries, { ...options, fireMult: enemyPages[enemy?.id]?.fireMult, ignition: ignitionOf(enemy?.id) }).entries.map(answer => ({
     ...answer, ...slot, modeName: answer.modeLabel, partName: answer.part?.name || null,
     partId: answer.part?.id || null, unit: answer.mode?.unit || '발', resultLabel: answer.part?.resultLabel || null,
   })).sort(rank);

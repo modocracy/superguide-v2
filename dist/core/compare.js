@@ -30,15 +30,17 @@ function matchup(enemy, rawMode, options) {
   // Keep mode-specific delivery defaults distinct from explicit user overrides.
   // distance: shooting range in metres for projectile falloff (0 = full damage).
   const distance = options.distance > 0 ? options.distance : 0;
-  // fireMult: the enemy's wiki fire damage multiplier, for a held beam or flame stream (combat.js solveStream).
+  // fireMult and ignition: the enemy's wiki fire damage multiplier and ignition threshold, for a held beam or
+  // flame stream (combat.js solveStream).
   const fireMult = Number.isFinite(options.fireMult) ? options.fireMult : null;
-  const key = JSON.stringify([options.shieldCleared === true, distance, fireMult, assume.hitCount ?? '',
+  const ignition = Number.isFinite(options.ignition?.value) ? { value: options.ignition.value, estimated: Boolean(options.ignition.estimated) } : null;
+  const key = JSON.stringify([options.shieldCleared === true, distance, fireMult, ignition, assume.hitCount ?? '',
     assume.primaryHit === undefined ? rawMode.hitCondition?.defaultPrimaryHit ?? 'blast' : assume.primaryHit,
     assume.bombletDirect === undefined ? rawMode.hitCondition?.defaultBombletDirect ?? false : assume.bombletDirect]);
   if (!values.has(key)) {
     if (values.size >= 64) values.delete(values.keys().next().value);
     const mode = withHitAssumption(rawMode, assume);
-    const combatOptions = { shieldCleared: options.shieldCleared === true, distance, fireMult };
+    const combatOptions = { shieldCleared: options.shieldCleared === true, distance, fireMult, ignition };
     const single = solveMatchup(enemy, mode, combatOptions);
     const accumulated = single.best ? null : solveAccumulation(enemy, mode, combatOptions);
     // A synthetic target distinguishes a sequence from any single hitbox.

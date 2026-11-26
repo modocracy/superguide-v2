@@ -565,11 +565,12 @@ const reviewedExplosive = (page, modes, note) => ({ ...profile(page, modes.map(m
 const reviewedImpact = (page, modes, note) => ({ ...profile(page, modes.map(mode => ({ ...mode, conditionalImpact: true })), note), checkedAt: '2026-09-16', combatOnly: true });
 // A held laser beam or flame stream, counted in seconds (user request 2026-11-26; core/combat.js solveStream).
 // Burning: the wiki status datamine Fire_dmg, 100 per second (durable 100), AP 4, 3 s
-// (Module:Decodedata-Attacks/status data.json, revision 139342). It is assumed lit 1 second into the stream.
-export const STREAM_BURN = { perSecond: 100, ap: 4, after: 1 };
+// (Module:Decodedata-Attacks/status data.json, revision 139342). It starts when the stream's fire build-up
+// (`ignite` per second) reaches the enemy's ignition threshold (data/enemy-ignition.js).
+export const STREAM_BURN = { perSecond: 100, ap: 4 };
 const streamMode = (name, dps, durable, ap, delivery, stream) => shot('standard', name, dps, durable, ap, 0, 0, { unit: '초', delivery, magazine: null, stream: { burn: STREAM_BURN, ...stream } });
-const BEAM_NOTE = '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 화상은 쏘기 시작하고 1초 뒤부터 걸린다고 보며, 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.';
-const FLAME_NOTE = '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 화상은 쏘기 시작하고 1초 뒤부터 걸린다고 보고 본체 체력에 초당 100씩 들어가며, 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.';
+const BEAM_NOTE = '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 이르면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.';
+const FLAME_NOTE = '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 이르면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.';
 export const weaponProfiles = {
   'meltagun': {
     ...reviewedImpact('40-K_Meltagun', [
@@ -684,19 +685,22 @@ export const weaponProfiles = {
     shot('heat', '대전차 고폭탄(HEAT)', 3200, 3200, 6, 150, 3),
     shot('he', '고폭탄(HE)', 750, 750, 5, 800, 4),
   ]),
-  // Datamine LAS-98 LASER CANNON_B_dm: 350 per second (durable 200), AP 4; heat 8 per second to 100 = the wiki 12.5 s.
+  // Datamine LAS-98 LASER CANNON_B_dm: 350 per second (durable 200), AP 4, Fire status 1.5 per second;
+  // heat 8 per second to 100 = the wiki 12.5 s.
   'laser-cannon': {
-    ...profile('LAS-98_Laser_Cannon', [streamMode('광선 유지', 350, 200, 4, 'beam', { capacity: { kind: 'heat', seconds: 12.5 } })], BEAM_NOTE),
+    ...profile('LAS-98_Laser_Cannon', [streamMode('광선 유지', 350, 200, 4, 'beam', { ignite: 1.5, capacity: { kind: 'heat', seconds: 12.5 } })], BEAM_NOTE),
     sourceRevision: 141653, checkedAt: '2026-11-26', extraSource: wiki('Module:Decodedata-Attacks/weapons_data.json'),
   },
   // The wiki infobox damage per second (Flamethrower 150, Cremator 225), AP 4. Flame particles deal the same
   // durable damage (datamine FLAM-40 FLAMETHROWER_S_dm 2/2, B/FLAM-80 CREMATOR_S_dm 3/3). No fuel time on the wiki.
+  // Fire build-up: the particle's Fire status (2, Cremator 3) times the particles the wiki DPS implies (150 / 2,
+  // 225 / 3 per second) = 150 and 225 per second.
   'flamethrower': {
-    ...profile('FLAM-40_Flamethrower', [streamMode('불길 유지', 150, 150, 4, 'spray', { fire: true })], FLAME_NOTE),
+    ...profile('FLAM-40_Flamethrower', [streamMode('불길 유지', 150, 150, 4, 'spray', { fire: true, ignite: 150 })], FLAME_NOTE),
     sourceRevision: 140360, checkedAt: '2026-11-26',
   },
   'cremator': {
-    ...profile('B/FLAM-80_Cremator', [streamMode('불길 유지', 225, 225, 4, 'spray', { fire: true })], FLAME_NOTE),
+    ...profile('B/FLAM-80_Cremator', [streamMode('불길 유지', 225, 225, 4, 'spray', { fire: true, ignite: 225 })], FLAME_NOTE),
     sourceRevision: 141857, checkedAt: '2026-11-26',
   },
   'railgun': profile('Railgun', [

@@ -10,6 +10,7 @@ import { pickerEnemyImages } from '../../data/selector-images.js';
 import { combatImages } from '../../data/combat-images.js';
 import { wikiIcons } from '../../data/wiki-icons.js';
 import { enemyPages, difficultyNames } from '../../data/enemy-pages.js';
+import { ignitionOf } from '../../data/enemy-ignition.js';
 import { difficultyIcons } from '../../data/difficulty-icons.js';
 import { enemyWeapons, helldiverArmor } from '../../data/enemy-weapons.js';
 import { enemyAnatomy } from '../../data/enemy-anatomy.js';
@@ -48,8 +49,9 @@ const unsupportedOf = id => unsupportedWeapons[id] || personalUnsupported[id];
 const groupOf = id => GROUPS.find(group => group.id === id);
 // Large and massive enemies call out weapons that finish them in a single hit.
 const oneShot = entry => entry.status === 'route' && !entry.mode?.stream && entry.best?.hits === 1 && isFatal(entry.best) && !entry.best.lowerBound;
-// The enemy's wiki fire damage multiplier, for held flame streams and burning (core/combat.js solveStream).
-const fireOf = enemy => enemyPages[enemy.id]?.fireMult;
+// The enemy's wiki fire damage multiplier and ignition threshold, for held beams, flame streams and burning
+// (core/combat.js solveStream).
+const fireOptions = enemy => ({ fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id) });
 // Enemies without a fatal part die from damage piled onto the main body across
 // several parts; such routes come from solveAccumulation (parts one after another).
 const stepName = step => L(step.partName.replace(/ 한 ?(개|쪽)$/, ''), T(step.partName).replace(/^One /, ''));
@@ -131,7 +133,7 @@ function rankWeapons(enemy, shieldCleared, group = state.group) {
       const fallback = defaultCount(mode);
       if (mode.hitCondition && fallback == null) return { mode, status: 'assume' };
       const solved = fallback == null ? mode : withHitAssumption(mode, { ...DEFAULT_ASSUME, hitCount: String(fallback) });
-      const { best, rows } = solveMatchup(enemy, solved, { shieldCleared, distance: state.distance, fireMult: fireOf(enemy) });
+      const { best, rows } = solveMatchup(enemy, solved, { shieldCleared, distance: state.distance, ...fireOptions(enemy) });
       if (!best && noFatalPart(enemy)) {
         const acc = solveAccumulation(enemy, solved, { shieldCleared, distance: state.distance });
         if (acc) return { mode, status: 'route', best: accumulatedBest(acc), rows, defaulted: fallback != null };
@@ -615,7 +617,7 @@ function matchupSection(enemy, entries) {
   // An explicit mode wins; otherwise show the weapon's best-ranked mode.
   const rawMode = profile?.modes.find(mode => mode.id === state.mode) || entries.find(entry => entry.weapon.id === weapon.id)?.mode || profile?.modes[0];
   const mode = withHitAssumption(rawMode, effectiveAssume(rawMode));
-  const matchup = solveMatchup(enemy, mode, { shieldCleared: state.shield, distance: rangeFor(mode), fireMult: fireOf(enemy) });
+  const matchup = solveMatchup(enemy, mode, { shieldCleared: state.shield, distance: rangeFor(mode), ...fireOptions(enemy) });
   const reference = wikiReference(enemy, weapon.id, mode);
   const stats = attackStats(mode, { distance: rangeFor(mode) });
   const falls = fallsWithRange(mode) && hitsDirect(mode);
@@ -681,7 +683,7 @@ function compareAssumptions() {
 
 function compareContent() {
   const enemy = enemyById.get(state.enemy);
-  const result = compareAttacks(enemy, compare.picks, { partId: compare.part || undefined, shieldCleared: state.shield, distance: state.distance, fireMult: fireOf(enemy), assume: compareAssumptions() });
+  const result = compareAttacks(enemy, compare.picks, { partId: compare.part || undefined, shieldCleared: state.shield, distance: state.distance, ...fireOptions(enemy), assume: compareAssumptions() });
   const routes = result.entries.filter(entry => entry.status === 'route' && entry.hits != null);
   const fewest = routes.length > 1 ? Math.min(...routes.map(entry => entry.hits)) : null;
   const partName = entry => entry.part?.name || entry.route?.target?.name || entry.best?.target?.name || '';

@@ -174,6 +174,8 @@ eq([streamOf('dagger').standard, streamOf('dagger').durable, streamOf('dagger').
 eq([streamOf('torcher').standard, streamOf('torcher').durable, streamOf('torcher').ap, streamOf('torcher').stream.fire, streamOf('torcher').stream.capacity], [150, 150, 4, true, { kind: 'fuel', seconds: 12.4 }]);
 eq([streamOf('crisper').standard, streamOf('crisper').stream.capacity.seconds], [150, 6.1]);
 ok(['scythe', 'dagger', 'torcher', 'crisper'].every(id => streamOf(id).stream.burn?.perSecond === 100), 'beams and flames that set targets alight burn');
+// Fire build-up per second: datamine Fire status (beam 1 per second; flame particle 2 x 75 particles per second).
+eq(['scythe', 'dagger', 'torcher', 'crisper'].map(id => streamOf(id).stream.ignite), [1, 1, 150, 150]);
 ok(personalProfiles.frag.modes[0].note.includes('20%') && personalProfiles.frag.modes[0].note.includes('폭발 피해도'), 'throwable note describes default fragments plus blast');
 ok(personalProfiles.eruptor.modes[0].note.includes('직접 맞혔을 때의 피해와 폭발 피해도'), 'Eruptor note keeps primary direct plus blast');
 const weaponOf = id => personalWeapons.find(w => w.id === id);
@@ -445,7 +447,7 @@ eq(compare('hunter-hardened', 'liberator', { partId: 'head' }).magazinesNeeded, 
 eq(compare('hunter-hardened', 'trident').status, 'unsupported');
 // A flame stream needs the enemy's fire multiplier; with it, the answer is in seconds and never a one-shot.
 eq(compare('hunter-hardened', 'torcher').status, 'none', 'no fire multiplier, no flame count');
-const torched = compare('hunter-hardened', 'torcher', { fireMult: 1 });
+const torched = compare('hunter-hardened', 'torcher', { fireMult: 1, ignition: { value: 5, estimated: true } });
 eq([torched.status, torched.verified, torched.oneShot, torched.mode.unit], ['route', true, false, '초']);
 ok(torched.hits > 0 && torched.hits < 2, 'a hunter burns down within 2 seconds');
 eq(compare('hunter-hardened', 'liberator', {}, 'not-a-mode').status, 'unsupported');

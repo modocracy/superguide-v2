@@ -129,7 +129,7 @@ export function attackStats(mode, { distance = 0 } = {}) {
     const { burn, capacity } = mode.stream;
     return [
       { label: L('초당 피해', 'Damage per second'), value: num(mode.standard), note: `${durable(num(mode.durable))} · AP ${mode.ap}` },
-      ...(burn ? [{ label: L('화상', 'Burning'), value: `${num(burn.perSecond)}${L('/초', '/s')}`, note: L(`AP ${burn.ap} · ${num(burn.after)}초 뒤부터 · 본체 체력`, `AP ${burn.ap} · from ${num(burn.after)} s · main health`) }] : []),
+      ...(burn ? [{ label: L('화상', 'Burning'), value: `${num(burn.perSecond)}${L('/초', '/s')}`, note: L(`AP ${burn.ap} · 본체 체력 · 점화 수치 초당 ${num(mode.stream.ignite)}`, `AP ${burn.ap} · main health · fire build-up ${num(mode.stream.ignite)}/s`) }] : []),
       ...(capacity ? [{ label: capacity.kind === 'heat' ? L('과열까지', 'Until overheating') : L('연료 1통', 'One fuel canister'), value: `${num(capacity.seconds)}${L('초', 's')}` }] : []),
     ];
   }
@@ -167,8 +167,8 @@ export function assumptionText(mode) {
   if (mode?.beam) return L('같은 부위에 광선을 계속 유지하는 조건. 한 발은 약 1.4초 분량으로 환산합니다.',
     'Assumes the beam stays on the same part. One shot counts as about 1.4 seconds of beam.');
   if (mode?.stream) return mode.delivery === 'spray'
-    ? L('같은 부위에 불길이 모두 계속 닿는 조건. 화상은 1초 뒤부터 걸린다고 봅니다.', 'Assumes the whole flame stream stays on the same part. Burning is assumed to set in after 1 second.')
-    : L('같은 부위에 광선을 계속 비추는 조건. 화상은 1초 뒤부터 걸린다고 봅니다.', 'Assumes the beam stays on the same part. Burning is assumed to set in after 1 second.');
+    ? L('같은 부위에 불길이 모두 계속 닿는 조건. 쌓인 점화 수치가 적의 점화 기준치에 이르면 불이 붙는다고 봅니다.', 'Assumes the whole flame stream stays on the same part. It catches fire once the build-up reaches the enemy\'s ignition threshold.')
+    : L('같은 부위에 광선을 계속 비추는 조건. 쌓인 점화 수치가 적의 점화 기준치에 이르면 불이 붙는다고 봅니다.', 'Assumes the beam stays on the same part. It catches fire once the build-up reaches the enemy\'s ignition threshold.');
   if (c) return L('선택한 명중 수가 모두 해당 부위에 최대 피해로 들어가는 가정. 여러 부위 동시 피해는 더하지 않습니다.',
     'Assumes every chosen hit lands on the part at full damage. Damage to several parts at once is not added.');
   if (mode?.delivery === 'adhesive') return L('장약 하나하나가 해당 부위에 최대 폭발 피해를 주는 조건. 여러 부위 동시 피해는 더하지 않습니다.',

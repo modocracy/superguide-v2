@@ -318,14 +318,27 @@ function solveBeam(enemy, target, attack, options) {
 // A held laser beam or flame stream (user request 2026-11-26) is counted in seconds on the same spot, not in
 // shots. Its own damage per second works like a beam's: the part first, its share on to main health. Fire
 // damage (a flame stream, and burning) is scaled by the enemy's wiki fire multiplier (options.fireMult).
-// Burning, assumed lit `burn.after` seconds into the stream (user decision 2026-11-26), adds its damage per
-// second to main health only (wiki SG-451 Cookout: 'burning damage is inflicted to the main body of the
-// target'), through the main armor at its AP. A beam on an enemy with no fire multiplier leaves burning out;
-// a flame stream there is not counted.
+// Burning starts once the stream's fire status build-up (`ignite` per second, datamine) reaches the enemy's
+// ignition threshold (options.ignition, data/enemy-ignition.js; user decision 2026-11-26), and then adds its
+// damage per second to main health only (wiki SG-451 Cookout: 'burning damage is inflicted to the main body of
+// the target'), through the main armor at its AP. The build-up is assumed not to fade while the stream is held.
+// A beam on an enemy with no fire multiplier leaves burning out; a flame stream there is not counted.
 const STREAM_STEP = 10; // results in tenths of a second, rounded up
 const streamSeconds = seconds => Math.max(1, Math.ceil(seconds * STREAM_STEP - EPSILON)) / STREAM_STEP;
 const MAX_STREAM_SECONDS = 600;
 export const BURN_LEFT_OUT = L('이 적은 화염 피해 배율이 확인되지 않아 화상 피해는 빼고 계산했습니다.', 'This enemy\'s fire damage multiplier is unverified, so burning is left out.');
+const NO_IGNITION = L('점화 기준치가 주어지지 않아 화상 피해는 빼고 계산했습니다.', 'No ignition threshold was given, so burning is left out.');
+const tenths = value => Math.round(value * 10) / 10;
+function ignitionNote(ignition, ignite, after) {
+  // A flame stream lights within a tenth of a second; say so rather than 'about 0 s'.
+  const soon = after < 0.1;
+  const when = soon ? L('불이 0.1초 안에 붙습니다', 'Burning starts within 0.1 s') : L(`불이 붙기까지 약 ${tenths(after)}초입니다`, `Burning starts after about ${tenths(after)} s`);
+  return ignition.estimated
+    ? L(`${when}. 이 적의 점화 기준치는 알려지지 않아 ${ignition.value}로 추정했고, 무기는 초당 ${ignite}씩 쌓습니다.`,
+      `${when}. This enemy's ignition threshold is unknown, estimated at ${ignition.value}; the weapon builds up ${ignite} per second.`)
+    : L(`${when}. 점화 기준치 ${ignition.value}에 무기가 초당 ${ignite}씩 쌓습니다.`,
+      `${when}: an ignition threshold of ${ignition.value}, built up at ${ignite} per second.`);
+}
 
 // Seconds until main health loses `need`: the part passes `rate` per second up to `cap` in all, and burning
 // takes `burn` per second from `burnStart` seconds on.
@@ -351,9 +364,11 @@ function solveStream(enemy, target, attack, options) {
   const fire = options.fireMult;
   if (stream.fire && !known(fire)) return { ...base, reason: 'fire-mult-missing' };
   const own = stream.fire ? { ...attack, standard: attack.standard * fire, durable: attack.durable * fire } : attack;
-  const burnKnown = stream.burn && known(fire) && known(main.armor);
+  const ignition = options.ignition;
+  const after = stream.burn && known(ignition?.value) && stream.ignite > 0 ? ignition.value / stream.ignite : null;
+  const burnKnown = after != null && known(fire) && known(main.armor);
   const burn = burnKnown && !target.isolated ? stream.burn.perSecond * fire * armorFactor(stream.burn.ap, main.armor) : 0;
-  const notes = stream.burn && !known(fire) ? [BURN_LEFT_OUT] : [];
+  const notes = !stream.burn ? [] : !known(fire) ? [BURN_LEFT_OUT] : after == null ? [NO_IGNITION] : burn > 0 ? [ignitionNote(ignition, stream.ignite, after)] : [];
   const bleedOrKill = main.constitution ? 'bleed' : 'kill';
   const stages = [];
   let mainLeft = main.hp;
@@ -374,11 +389,11 @@ function solveStream(enemy, target, attack, options) {
     const partTime = part.mainOnly ? Infinity : partPool(part) / damage.direct;
     const transfer = target.isolated ? 0 : damage.direct * part.toMain / 100;
     const cap = part.overflowCap ? transferCap(part) : Infinity;
-    const mainTime = target.isolated ? Infinity : drainSeconds(mainLeft, transfer, cap, burn, Math.max(0, stream.burn ? stream.burn.after - time : Infinity));
+    const mainTime = target.isolated ? Infinity : drainSeconds(mainLeft, transfer, cap, burn, burn > 0 ? Math.max(0, after - time) : Infinity);
     const span = Math.min(partTime, mainTime);
     if (!Number.isFinite(span) || time + span > MAX_STREAM_SECONDS) return { ...base, stages, notes, reason: 'too-many-hits' };
     const transferred = Math.min(transfer * span, cap);
-    const burned = burn > 0 ? burn * Math.max(0, time + span - Math.max(time, stream.burn.after)) : 0;
+    const burned = burn > 0 ? burn * Math.max(0, time + span - Math.max(time, after)) : 0;
     time += span;
     Object.assign(stage, { hits: streamSeconds(span), contactSeconds: span, partTotal: damage.direct * span, mainTotal: transferred, burnTotal: burned });
     const done = { ...base, stages, notes, hits: streamSeconds(time), seconds: time };

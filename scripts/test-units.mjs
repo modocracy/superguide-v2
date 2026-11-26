@@ -15,6 +15,7 @@ import { wikiIcons } from '../dist/data/wiki-icons.js';
 import { combatImages } from '../dist/data/combat-images.js';
 import { pickerEnemyImages, pickerStructureImages } from '../dist/data/selector-images.js';
 import { solveMatchup, hitDamage, blastFalloff } from '../dist/core/combat.js';
+import { ignitionThresholds, ignitionOf, IGNITION_DEFAULT } from '../dist/data/enemy-ignition.js';
 import { recommend } from '../dist/core/factions.js';
 import { versionFiles, readSources, localReferences } from './version-assets.mjs';
 
@@ -108,18 +109,29 @@ ok(Math.round(blastFalloff(2.5 / 15) * 1000) === 592 && Math.round(blastFalloff(
 const quarterOut = hitDamage(blastShot, testPart, { hp: 1000, armor: 0, exdr: 0 }, { directHit: false, blastDistance: 1.25 });
 ok(quarterOut.explosion === 200, 'a quarter of the way through the falloff band deals half (standard curve)');
 // A held beam or flame stream counts seconds (user request 2026-11-26). Main 1000 at armor 4; a body part passing
-// all damage on. Beam 100/s plus burning 100 x 0.65 (AP 4 = armor 4) from 1 s: 100t + 65(t - 1) = 1000, t = 6.45.
+// all damage on. Burning starts at ignition threshold / build-up: 5 / 5 per second = 1 s.
+// Beam 100/s plus burning 100 x 0.65 (AP 4 = armor 4) from 1 s: 100t + 65(t - 1) = 1000, t = 6.45.
 // A flame stream at fire multiplier 2: 200t + 130(t - 1) = 1000, t = 3.42. Results round up to tenths.
+// Threshold 20 (4 s): 100t + 65(t - 4) = 1000, t = 7.64.
 const streamEnemy = { id: 'stream-test', main: { hp: 1000, armor: 4, durability: 0, exdr: 0 },
   parts: [{ id: 'body', name: 'body', hp: 5000, armor: 0, durability: 0, exdr: 0, toMain: 100, overflowCap: false, effect: 'kill' }] };
 const streamMode = (fire, extra = {}) => ({ id: 'standard', standard: 100, durable: 100, ap: 4, explosion: 0, explosionAp: 0, unit: '초',
-  stream: { ...(fire ? { fire: true } : {}), burn: { perSecond: 100, ap: 4, after: 1 } }, ...extra });
-ok(solveMatchup(streamEnemy, streamMode(false), { fireMult: 1 }).best.hits === 6.5, 'beam plus burning from 1 s');
-ok(solveMatchup(streamEnemy, streamMode(true), { fireMult: 2 }).best.hits === 3.5, 'flames and burning both take the fire multiplier');
+  stream: { ...(fire ? { fire: true } : {}), burn: { perSecond: 100, ap: 4 }, ignite: 5 }, ...extra });
+const lit = (fireMult, value = 5) => ({ fireMult, ignition: { value, estimated: false } });
+ok(solveMatchup(streamEnemy, streamMode(false), lit(1)).best.hits === 6.5, 'beam plus burning from 1 s');
+ok(solveMatchup(streamEnemy, streamMode(true), lit(2)).best.hits === 3.5, 'flames and burning both take the fire multiplier');
+ok(solveMatchup(streamEnemy, streamMode(false), lit(1, 20)).best.hits === 7.7, 'a higher ignition threshold lights later');
+ok(solveMatchup(streamEnemy, streamMode(false), { fireMult: 1 }).best.hits === 10, 'no ignition threshold, no burning');
 ok(solveMatchup(streamEnemy, streamMode(true), {}).rows[0].reason === 'fire-mult-missing', 'no fire multiplier, no flame count');
 const beamNoFire = solveMatchup(streamEnemy, streamMode(false), {}).best;
 ok(beamNoFire.hits === 10 && beamNoFire.notes.length === 1, 'a beam with no fire multiplier leaves burning out and says so');
-ok(solveMatchup({ ...streamEnemy, parts: [{ ...streamEnemy.parts[0], armor: 5 }] }, streamMode(false), { fireMult: 1 }).rows[0].outcome === 'blocked', 'AP 4 cannot reach armor 5');
+ok(solveMatchup({ ...streamEnemy, parts: [{ ...streamEnemy.parts[0], armor: 5 }] }, streamMode(false), lit(1)).rows[0].outcome === 'blocked', 'AP 4 cannot reach armor 5');
+// Ignition thresholds: each names a real enemy and uses its range's maximum (or the only value given).
+for (const [id, item] of Object.entries(ignitionThresholds)) {
+  ok(enemies.some(enemy => enemy.id === id), `${id}: ignition threshold for an unknown enemy`);
+  ok(item.value === (item.max ?? item.min) && item.revision > 0 && item.source.startsWith('https://helldivers.wiki.gg/wiki/'), `${id}: ignition threshold value and source`);
+}
+ok(ignitionOf('charger').value === 8.5 && !ignitionOf('charger').estimated && ignitionOf('bile-titan').value === IGNITION_DEFAULT && ignitionOf('bile-titan').estimated, 'unknown thresholds are estimated');
 
 // --- Search ------------------------------------------------------------------------
 const names = query => search(stratagems, query, stratagemFields).map(item => item.name);
