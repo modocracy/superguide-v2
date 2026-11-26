@@ -152,7 +152,6 @@ kbd { font: 600 11px/1 var(--mono); padding: 3px 5px; border: 1px solid var(--li
 .search-trigger kbd { margin-left: auto; }
 .icon-button { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--line-strong); background: var(--surface); color: var(--text-2); }
 .icon-button:hover { color: var(--text); border-color: var(--text-3); }
-.lang-toggle { width: auto; min-width: 36px; padding: 0 10px; white-space: nowrap; font-size: 13px; font-weight: 750; letter-spacing: .02em; }
 /* The English edition stays hidden for the moment it takes to swap the header
    text and load the dictionary (index.html reveals it after 4 s regardless). */
 :root[lang="en"]:not([data-i18n-ready]) body { visibility: hidden; }
@@ -1340,7 +1339,6 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
   .bar { gap: 12px; padding: 0 16px; }
   .tabs a { padding: 0 7px; }
   .bar-actions { gap: 6px; }
-  .lang-toggle { padding: 0 8px; }
   .brand-text { display: none; } /* the yellow mark stays and still links home (aria-label) */
 }
 @media (max-width: 1080px) {
