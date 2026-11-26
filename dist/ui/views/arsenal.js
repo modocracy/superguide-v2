@@ -68,7 +68,8 @@ function stats(item) {
   // A grenade whose burst is a ring of arcs (De-Escalator) names its second cell for them.
   const splashName = item.splashKind === 'arc' ? L('아크 피해', 'Arc damage') : L('폭발 피해', 'Blast damage');
   return [
-    { label: hitName, icon: hitIcon, caption: item.directNoteShort || (none ? L('지원 장비', 'Utility gear') : dps ? L('초당', 'Per second') : item.unit), ...value(item.direct, item.directText) },
+    // A hit with no caption of its own says when it lands in full, as the gear's does (user request 2026-11-26).
+    { label: hitName, icon: hitIcon, caption: item.directNoteShort || (none ? L('지원 장비', 'Utility gear') : dps ? L('초당', 'Per second') : item.unit || (item.direct > 0 ? L('관통이 장갑보다 높을 때 들어가는 피해', 'Damage when penetration beats the armor') : '')), ...value(item.direct, item.directText) },
     { label: splashName, icon: item.splashKind === 'arc' ? 'arc' : item.splash > 0 ? 'blast' : '', caption: item.splashNoteShort || (item.splash > 0 ? item.innerRadius != null ? L(`반경 ${num(item.innerRadius)}m`, `${num(item.innerRadius)} m radius`) : L('중심부 최대', 'Max at center') : ''), ...value(item.splash, item.splashText, L('없음', 'None')) },
     { label: L('관통', 'Penetration'), caption: item.apNoteShort || (item.ap != null ? apBandOf(item).name + (item.splashAp != null && item.splashAp !== item.ap ? ` · ${splashName} AP ${item.splashAp}` : '') : ''),
       ...(item.ap != null ? { text: `AP ${item.ap}${item.splashAp != null && item.splashAp !== item.ap ? `/${item.splashAp}` : ''}` } : { text: none ? '—' : L('미확인', 'Unverified'), dim: true }) },

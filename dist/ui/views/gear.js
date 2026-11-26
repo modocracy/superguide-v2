@@ -259,7 +259,7 @@ function detailRows(w) {
   if (w.direct != null && w.damageKind === 'dps') add(L('광선 피해', 'Beam damage'), num(w.direct), perSecond, L('비추고 있는 동안', 'While the beam is on target'));
   if (w.direct != null && w.damageKind === 'dps') rows.at(-1).icon = 'laser';
   else if (w.direct != null && kind === 'spray') add(L('입자 피해', 'Particle damage'), num(w.direct), '', L('분사 입자 1개', 'One spray particle'));
-  else if (w.direct != null) add(w.pellets > 1 ? L('펠릿당 피해', 'Damage per pellet') : kind === 'arc' ? L('아크 피해', 'Arc damage') : kind === 'beam' ? L('광선 피해', 'Beam damage') : L('직격 피해', 'Direct damage'), num(w.direct), '', w.pellets > 1 ? L(`${w.pellets}발 모두 맞으면 ${num(w.direct * w.pellets)}`, `${num(w.direct * w.pellets)} if all ${w.pellets} hit`) : L('장갑에 막히지 않을 때', 'When armor does not stop it'));
+  else if (w.direct != null) add(w.pellets > 1 ? L('펠릿당 피해', 'Damage per pellet') : kind === 'arc' ? L('아크 피해', 'Arc damage') : kind === 'beam' ? L('광선 피해', 'Beam damage') : L('직격 피해', 'Direct damage'), num(w.direct), '', w.pellets > 1 ? L(`${w.pellets}발 모두 맞으면 ${num(w.direct * w.pellets)}`, `${num(w.direct * w.pellets)} if all ${w.pellets} hit`) : L('관통이 장갑보다 높을 때 들어가는 피해', 'Damage when penetration beats the armor'));
   // Arc and beam hits carry their damage icon (user request 2026-11-26).
   if (w.direct != null && w.damageKind !== 'dps' && kind !== 'spray' && !(w.pellets > 1)) rows.at(-1).icon = kind === 'arc' ? 'arc' : kind === 'beam' ? 'laser' : 'ballistic';
   // Direct, durable, then blast damage (user request 2026-11-26); the volley counts follow them.
