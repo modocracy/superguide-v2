@@ -29,7 +29,7 @@ function boosterCard(booster, focus) {
 /** Renders the boosters tab into panel. state.focus marks one booster. */
 export function renderBoosters(panel, { state }) {
   const focus = boosters.some(item => item.id === state.focus) ? state.focus : '';
-  render(panel, html`<div class="arsenal-meta"><span role="status">${L(html`부스터 <b>${boosters.length}</b>종 · 분대 전원에게 적용`, html`<b>${boosters.length}</b> boosters · each applies to the whole squad`)}</span><span>${L(`자료 확인 ${boostersCheckedAt}`, `Checked ${boostersCheckedAt}`)}</span></div>
+  render(panel, html`<div class="arsenal-meta"><span role="status">${L('분대 전원에게 적용', 'Each applies to the whole squad')}</span><span>${L(`자료 확인 ${boostersCheckedAt}`, `Checked ${boostersCheckedAt}`)}</span></div>
     <ul class="info-list">${boosters.map(booster => boosterCard(booster, focus))}</ul>`);
   const marked = focus && $(`#booster-${focus}`, panel);
   if (marked) requestAnimationFrame(() => marked.scrollIntoView({ block: 'center' }));

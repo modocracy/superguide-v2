@@ -23,6 +23,9 @@ import { timingOf, modulesOn, setModulesOn, sentryLoadOf } from '../../core/modu
 import { stratagemEffects } from '../../data/planet-stratagem-effects.js';
 import { stratagemStats } from '../../data/stratagem-stats.js';
 import { shipModuleSections } from '../../data/ship-module-upgrades.js';
+import { weaponProfiles } from '../../data/combat-data.js';
+// The ship module tab's counts for the head badge.
+const shipModuleCounts = { sections: shipModuleSections.length, modules: shipModuleSections.reduce((n, section) => n + section.modules.length, 0) };
 import { vehicleDurability } from '../../data/vehicle-durability.js';
 
 const SORTS = [
@@ -156,6 +159,10 @@ async function renderModules() {
 function showTab() {
   for (const button of $$('[data-tab-pick]', root)) button.setAttribute('aria-pressed', String(button.dataset.tabPick === state.tab));
   $('#arsenal-lede', root).textContent = LEDES[state.tab];
+  // The count badge of the head, as on the enemy page (user request 2026-11-26).
+  $('#arsenal-tally', root).textContent = state.tab === 'modules'
+    ? L(`부서 ${shipModuleCounts.sections}곳 · 모듈 ${shipModuleCounts.modules}개`, `${shipModuleCounts.sections} sections · ${shipModuleCounts.modules} upgrades`)
+    : L(`스트라타젬 ${stratagems.length}종 · 계산 무기 ${Object.keys(weaponProfiles).length}종`, `${stratagems.length} stratagems · ${Object.keys(weaponProfiles).length} weapons calculated`);
   $('#arsenal-browse', root).hidden = state.tab !== 'browse';
   $('#arsenal-modules', root).hidden = state.tab !== 'modules';
   if (state.tab === 'modules') renderModules().catch(error => { console.error(error); ctx.toast(L('함선 모듈 목록을 불러오지 못했습니다.', 'The ship modules could not be loaded.')); });
@@ -799,7 +806,7 @@ export function mount(container, context) {
   render(root, html`<div class="page-head gear-head"><div><div class="eyebrow">Stratagem Arsenal</div>
     <h1 class="sr-only">${L('스트라타젬 도감', 'Stratagems')}</h1>
     <div class="gear-tabs" role="group" aria-label="${L('스트라타젬 보기', 'Stratagem views')}"><button type="button" data-tab-pick="browse">${L('스트라타젬 도감', 'Stratagems')}</button><button type="button" data-tab-pick="modules">${L('함선 모듈', 'Ship modules')}</button></div>
-    <p id="arsenal-lede"></p></div></div>
+    <p id="arsenal-lede"></p></div><span class="badge outline" id="arsenal-tally"></span></div>
   <div id="arsenal-browse">
   <div class="arsenal-tools">
     <div class="row">

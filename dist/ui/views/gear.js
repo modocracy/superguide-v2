@@ -669,6 +669,8 @@ async function renderArmor() {
   }
   const module = await armorUi;
   if (state.tab !== 'armor') return;
+  const { armors, armorPassives } = await import('../../data/armor.js');
+  setTally(L(`방어구 ${armors.length}종 · 패시브 ${armorPassives.length}종`, `${armors.length} armor sets · ${armorPassives.length} passives`));
   // The address is saved after the render, which lets go of passives the new weight lacks.
   module.renderArmor(panel, { state: armor, onChange: () => renderArmor().then(syncUrl), onOpen: id => { armor.detail = id; syncUrl(); openArmor(); } });
   if (armor.detail) openArmor();
@@ -696,10 +698,18 @@ async function renderBoosters() {
   }
   const module = await boostersUi;
   if (state.tab !== 'boosters') return;
+  const { boosters } = await import('../../data/boosters.js');
+  setTally(L(`부스터 ${boosters.length}종`, `${boosters.length} boosters`));
   module.renderBoosters(panel, { state: booster });
 }
 
 // --- View lifecycle -------------------------------------------------------------------
+// The count badge of the head (none on the loadout check).
+function setTally(text) {
+  const badge = $('#gear-tally', root);
+  badge.hidden = !text;
+  badge.textContent = text || '';
+}
 const LEDES = {
   browse: '',
   loadout: L('무기와 스트라타젬을 담고 팩션을 고르면, 주요 적마다 무엇으로 몇 번 만에 처치하는지와 대응 공백을 보여 줍니다.', 'Fill in your weapons and stratagems and pick a faction to see what kills each key enemy in how many shots — and where your loadout has gaps.'),
@@ -709,6 +719,7 @@ const LEDES = {
 function showTab() {
   for (const button of $$('[data-tab-pick]', root)) button.setAttribute('aria-pressed', String(button.dataset.tabPick === state.tab));
   $('#gear-lede', root).textContent = LEDES[state.tab];
+  setTally(state.tab === 'browse' ? L(`무기 ${personalWeapons.length}종 · 부착물 ${Object.keys(attachmentParts).length}종`, `${personalWeapons.length} weapons · ${Object.keys(attachmentParts).length} attachments`) : '');
   $('#gear-browse', root).hidden = state.tab !== 'browse';
   $('#gear-loadout', root).hidden = state.tab !== 'loadout';
   $('#gear-armor', root).hidden = state.tab !== 'armor';
@@ -729,7 +740,7 @@ export function mount(container, context) {
   render(root, html`<div class="page-head gear-head"><div><div class="eyebrow">Armory</div>
     <h1 class="sr-only">${L('장비', 'Gear')}</h1>
     <div class="gear-tabs" role="group" aria-label="${L('장비 보기', 'Gear views')}"><button type="button" data-tab-pick="browse">${L('장비 둘러보기', 'Browse gear')}</button><button type="button" data-tab-pick="armor">${L('방어구', 'Armor')}</button><button type="button" data-tab-pick="boosters">${L('부스터', 'Boosters')}</button><button type="button" data-tab-pick="loadout">${L('로드아웃 점검', 'Loadout check')}</button></div>
-    <p id="gear-lede"></p></div></div>
+    <p id="gear-lede"></p></div><span class="badge outline" id="gear-tally" hidden></span></div>
   <div id="gear-browse">
     <div class="arsenal-tools">
       <div class="row">

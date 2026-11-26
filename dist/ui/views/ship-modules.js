@@ -53,7 +53,7 @@ function sectionBlock(section, focus) {
 export function renderModules(panel, { state }) {
   const modules = shipModuleSections.flatMap(section => section.modules);
   const focus = modules.some(module => module.id === state.focus) ? state.focus : '';
-  render(panel, html`<div class="arsenal-meta"><span role="status">${L(html`부서 <b>${shipModuleSections.length}</b>곳, 모듈 <b>${modules.length}</b>개`, html`<b>${shipModuleSections.length}</b> sections, <b>${modules.length}</b> upgrades`)}</span><span>${external(shipModuleUpgradesSource.page, L(`위키 Ship Modules 문서 (판 ${shipModuleUpgradesSource.revision})`, `Wiki Ship Modules page (revision ${shipModuleUpgradesSource.revision})`))}</span></div>
+  render(panel, html`<div class="arsenal-meta"><span></span><span>${external(shipModuleUpgradesSource.page, L(`위키 Ship Modules 문서 (판 ${shipModuleUpgradesSource.revision})`, `Wiki Ship Modules page (revision ${shipModuleUpgradesSource.revision})`))}</span></div>
     <p class="lede-note module-total">${L('모든 모듈 비용 합계', 'Total cost of every module')}: ${costLine(shipModuleTotal)}</p>
     <div class="armor-passives">${shipModuleSections.map(section => sectionBlock(section, focus))}</div>`);
   const marked = focus && $(`#module-${focus}`, panel);
