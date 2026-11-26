@@ -25,8 +25,8 @@ const round = (value, step) => Math.round(value / step) * step;
 // How the two charts are worked out, as tooltips on their titles (user request 2026-11-26: not a note under the block).
 const DAMAGE_TIP = L('탄 피해는 맞을 때의 탄속으로 정해집니다: 0.25 + 0.75 × (맞을 때 탄속 ÷ 처음 탄속)². 그래서 아무리 멀어도 25% 밑으로는 줄지 않고, 관통력은 거리와 상관없이 그대로입니다. 그래프와 표의 탄 피해, 도달 시간, 탄속은 같은 높이의 표적을 맞힐 때처럼 항력만 넣어 계산한 값입니다. 위로 쏘면 더 줄고 아래로 쏘면 덜 줄며, 달리면서 쏘면 이동 속도가 더해져 100%를 넘을 수도 있습니다. 무언가를 뚫고 나간 탄은 느려져 다음 피해가 줄어듭니다.',
   'Shot damage is set by the speed at impact: 0.25 + 0.75 × (speed at impact ÷ muzzle velocity)². So it never falls below 25% however far, and armor penetration stays the same at any range. In the chart and the table, shot damage, flight time and speed are calculated with drag only, as for a target at the same height. Shooting upward loses more and downward less, and firing on the move adds your speed, which can take it past 100%. A round that passes through something slows down, so its next hit does less.');
-const DROP_TIP = L('낙차는 중력 9.82m/s²에 중력 배율을 곱하고 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다. 낙차가 30m를 넘는 탄은 그보다 가까운 거리까지만 보여 줍니다(직접 쏘는 탄은 최소 50m).',
-  'Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot. A shot that drops more than 30 m is shown only out to a nearer range (at least 50 m for a fired round).');
+const DROP_TIP = L('낙차는 중력 9.82m/s²에 중력 배율을 곱하고 항력을 함께 넣어 수평으로 쐈을 때를 계산한 값입니다. 낙차가 30m를 넘는 탄은 그보다 가까운 거리까지만 보여 주고(직접 쏘는 탄은 최소 50m), 탄 수명이 다해 사라지는 탄은 사라지는 거리까지만 보여 줍니다.',
+  'Drop uses gravity of 9.82 m/s² times the gravity multiplier, with drag, for a level shot. A shot that drops more than 30 m is shown only out to a nearer range (at least 50 m for a fired round), and a shot whose lifetime runs out only as far as it flies.');
 
 // Cache computed projectile curves so switching panel <-> fullscreen never re-integrates trajectories.
 const FLIGHT_CACHE = new Map();
@@ -41,7 +41,11 @@ function computeFlight(recordId, propelled) {
   const at = x => (points[x]?.x === x ? points[x] : points.find(p => p.x === x));
   // A distance the flight never reaches (a short lifetime) is judged by where it ends: the curve just stops there.
   const ranges = record.thrown ? RANGES : RANGES.filter(x => x >= MIN_FIRED);
-  const max = ranges.find(x => (at(x) ?? points.at(-1)).drop <= DROP_LIMIT) ?? ranges.at(-1);
+  let max = ranges.find(x => (at(x) ?? points.at(-1)).drop <= DROP_LIMIT) ?? ranges.at(-1);
+  // A shot whose lifetime ends it short of that range (the Epoch at 148 m) is drawn only as far as it flies, the axis
+  // rounded up to 10 m (5 m under 10 m) (user request 2026-11-26).
+  const ends = endX != null && endX < max;
+  if (ends) max = endX < 10 ? Math.max(5, Math.ceil(endX / 5 - 0.01) * 5) : Math.ceil(endX / 10 - 0.01) * 10;
   const step = max >= 50 ? 2 : 1;
   const shown = points.filter(p => p.x <= max);
   const damage = [];
@@ -56,7 +60,9 @@ function computeFlight(recordId, propelled) {
     }
   }
   const dropTop = maxDrop < 1 ? Math.ceil(maxDrop * 10) / 10 : maxDrop < 10 ? Math.ceil(maxDrop) : Math.ceil(maxDrop / 5) * 5;
-  const marks = MARKS[max];
+  // Table rows: the standard ones of the range; for a flight that ends short, those of the next standard range up
+  // before its end, then the last whole metre it reaches.
+  const marks = ends ? [...MARKS[[...RANGES].reverse().find(r => r >= max)].filter(x => x < Math.floor(endX)), Math.floor(endX)] : MARKS[max];
   const markFalloff = marks.map(x => Math.round(falloffAt(b, x) * 100));
   cached = { record, b, drag, at, endX, damage, drop, dropTop, marks, markFalloff, max, step };
   FLIGHT_CACHE.set(key, cached);
