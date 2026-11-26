@@ -291,7 +291,7 @@ function reloadCell(item) {
 function rateCell(item) {
   if (item.rpmModes?.length > 1) return html`<div><dt>${L('연사 모드', 'Fire rate modes')}</dt><dd>${item.rpmModes.map(num).join(' / ')}</dd><div class="caption">${L('분당 발수 · 골라서 사용', 'Rounds per minute · pick one')}</div></div>`;
   if (item.rpm == null) return '';
-  return html`<div><dt>${L('연사', 'Fire rate')}</dt><dd>${num(item.rpm)}</dd><div class="caption">${L('분당 발수', 'Rounds per minute')}</div></div>`;
+  return html`<div><dt>${L('연사', 'Fire rate')}</dt><dd>${num(item.rpm)}</dd><div class="caption">${item.rpmNote ? T(item.rpmNote) : L('분당 발수', 'Rounds per minute')}</div></div>`;
 }
 // Modes picked on the weapon that change how it fires or detonates (Airburst cluster/flak,
 // W.A.S.P. burst/artillery). Each mode lists its own facts; the damage stats stay below.
