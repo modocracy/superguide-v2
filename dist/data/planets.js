@@ -1227,11 +1227,13 @@ export const statusEffects = [
   "en": "Gas",
   "detail": [
    "본체 체력에만 지속 피해를 주고 혼란에 빠뜨립니다. 혼란에 빠진 적은 아무 방향으로나 움직이고 공격하며, 25% 느려집니다.",
-   "가스 수류탄·가스 타격·가스 박격포 등은 6초(혼란 5초), 스테릴라이저와 독 브레스는 10초(혼란 9초)입니다."
+   "6초(혼란 5초) : 가스 수류탄, 가스 타격, 가스 박격포 등",
+   "10초(혼란 9초) : 스터릴라이저, 독 브레스"
   ],
   "detailEn": [
    "Damage over time to main health only, plus confusion: confused enemies move and attack in random directions, and they are 25% slower.",
-   "Gas grenades, Gas Strikes, the Gas Mortar and similar last 6 seconds (5 s confusion); the Sterilizer and Dog Breath last 10 seconds (9 s confusion)."
+   "6 s (5 s confusion): gas grenades, Gas Strikes, the Gas Mortar and similar",
+   "10 s (9 s confusion): the Sterilizer, Dog Breath"
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Gas"
  },
@@ -1241,12 +1243,18 @@ export const statusEffects = [
   "en": "Stun",
   "detail": [
    "적은 잠시 움직이거나 공격하지 못하고, 헬다이버는 크게 느려집니다.",
-   "아크 무기·테슬라 탑·마름쇠 등 1.5초, EMS 박격포·퍼멜러·퍼시파이어 3초, 기절 수류탄·기절 무기류 5초, 기절 포드 부스터 10초.",
+   "1.5초 : 아크 무기, 테슬라 탑, 마름쇠 등",
+   "3초 : EMS 박격포, 퍼멜러, 퍼시파이어",
+   "5초 : 기절 수류탄, 기절 무기류",
+   "10초 : 기절 포드 부스터",
    "궤도 EMS 타격·EMS 박격포·SEAF 정전기장은 대부분의 적을 묶는 구름을 만들고, 그 안의 헬다이버는 느려지며 스태미나를 잃습니다."
   ],
   "detailEn": [
    "Enemies cannot move or attack for a moment; Helldivers are heavily slowed.",
-   "Arc weapons, the Tesla Tower, Caltrops and others 1.5 s; the EMS Mortar, Pummeler and Pacifier 3 s; stun grenades and stun melee 5 s; the Stun Pods booster 10 s.",
+   "1.5 s: arc weapons, the Tesla Tower, Caltrops and others",
+   "3 s: the EMS Mortar, Pummeler, Pacifier",
+   "5 s: stun grenades, stun melee weapons",
+   "10 s: the Stun Pods booster",
    "Orbital EMS Strike, the EMS Mortar and SEAF static field shells leave a cloud that holds most enemies; Helldivers inside are slowed and lose stamina."
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Stun"
