@@ -241,7 +241,7 @@
     "en": "Armor penetration 3 weapons can only damage the rear heatsink, so you have to get behind it. Armor penetration 4 weapons also destroy it much faster through the heatsink."
    },
    {
-    "ko": "'가드 독' 배낭을 겨누며 돌아서므로, 뒤로 돌아갈 때는 배낭을 접어 두면 편합니다.",
+    "ko": "가드 독 배낭을 겨누며 돌아서므로, 뒤로 돌아갈 때는 배낭을 접어 두면 편합니다.",
     "en": "It turns to target Guard Dog backpacks, so stowing yours makes flanking easier."
    },
    {
@@ -1300,7 +1300,7 @@
     "en": "The Blitzer, Arc Thrower and Halt (stun rounds) can stun it again and again, stopping its strafing and making it drop the grenade it was about to throw. Then a headshot with the Senator or Anti-Materiel Rifle kills it instantly."
    },
    {
-    "ko": "'가드 독'과 로버는 빗나가지 않아 장갑판을 벗겨 줍니다. 워런트는 자동 추적으로 회피 비행을 무력화해 탄창 하나로 처치할 수 있습니다.",
+    "ko": "가드 독과 로버는 빗나가지 않아 장갑판을 벗겨 줍니다. 워런트는 자동 추적으로 회피 비행을 무력화해 탄창 하나로 처치할 수 있습니다.",
     "en": "The Guard Dog and Rover never miss, so they strip its armor plates for you. The Warrant's target tracking defeats its evasive flying and can kill it within one magazine."
    },
    {
@@ -2936,7 +2936,7 @@
     "en": "Use fast-firing weapons with good handling and snap from target to target. They bunch up, so arc and explosive weapons help too, especially the Autocannon in Flak mode. Slow explosive projectiles struggle to hit them as they bob and weave."
    },
    {
-    "ko": "가까이 달려들므로 '가드 독'과 로버가 쉽게 처리하고, K-9은 아크 연쇄로 무리를 묶어 둡니다.",
+    "ko": "가까이 달려들므로 가드 독과 로버가 쉽게 처리하고, K-9은 아크 연쇄로 무리를 묶어 둡니다.",
     "en": "Because they rush in close, the Guard Dog and Rover pick them off easily, and the K-9 can lock down groups with arc chains."
    },
    {
