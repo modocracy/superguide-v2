@@ -51,6 +51,12 @@ ok(configure(lib, { slots: { muzzle: comp } }).climb[1] < lib.climb[1], 'liberat
 ok(configure(lib, { slots: { underbarrel: grip } }).climb[1] < lib.climb[1], 'liberator: the vertical foregrip cuts vertical climb');
 const sweeper = weaponRecoil['gear/sweeper'].sim, full = slotOf(sweeper, 'muzzle').options.findIndex(o => o.en === 'Full Choke');
 ok(configure(sweeper, { slots: { muzzle: full } }).spread[0] < sweeper.spread[0], 'sweeper: the full choke tightens the spread');
+// A muzzle that sets the fire rate and a magazine that sets the rounds fired (user request 2026-11-26).
+const sai = weaponRecoil['gear/sai'].sim, focus = slotOf(sai, 'muzzle').options.findIndex(o => o.en === 'Focus Lens');
+const saiFocus = configure(sai, { slots: { muzzle: focus } });
+ok(saiFocus.rpm === 600 && saiFocus.spread[0] < sai.spread[0], 'sai: the Focus Lens fires at 600 RPM with a tighter spread');
+ok(configure(sai, { slots: { magazine: slotOf(sai, 'magazine').options.findIndex(o => o.en === 'High Capacity Heatsink') } }).magazine > sai.magazine, 'sai: the high capacity heatsink fires more rounds before overheating');
+ok(configure(lib, { slots: { magazine: slotOf(lib, 'magazine').options.findIndex(o => o.en === 'Drum Magazine') } }).magazine === 60, 'liberator: the drum magazine fires 60 rounds');
 // The view climbs steadily (no recovery) by about 0.015 degrees a round for the Stalwart standing, as real firing
 // in a mission did (2026-11-25), and firing faster or slower climbs the same per round.
 const stalwart = { ...weaponRecoil['arsenal/stalwart'].sim, random: [[0, 1], [0, 1]], drift: [0, 0] };
