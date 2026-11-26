@@ -141,7 +141,8 @@ function syncUrl() {
 // --- Tabs: the catalogue and the ship modules (ship-modules.js, loaded on demand) ----------------
 const LEDES = {
   browse: '',
-  modules: L('슈퍼 구축함의 여섯 부서에 샘플과 요청 신청서를 사용해서 업그레이드하는 영구 강화입니다. 업그레이드마다 영향받는 스트라타젬을 펼쳐 볼 수 있습니다.', 'Permanent Super Destroyer upgrades in six sections, paid for with samples and Requisition Slips. Open each upgrade to see the stratagems it changes.'),
+  // Each upgrade's wiki page requires the one before it in its section, so a section unlocks tier by tier.
+  modules: L('슈퍼 구축함의 여섯 부서에 샘플과 요청 신청서를 사용해서 업그레이드하는 영구 강화입니다. 부서마다 1단계부터 차례로 해금할 수 있습니다.', 'Permanent Super Destroyer upgrades in six sections, paid for with samples and Requisition Slips. Each section unlocks in order, from tier 1 up.'),
 };
 const shipModule = { focus: '' };
 let modulesUi = null;
