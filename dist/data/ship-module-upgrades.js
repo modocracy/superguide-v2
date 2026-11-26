@@ -744,8 +744,7 @@ export const shipModuleSections = [
      "autocannon-sentry",
      "gas-mortar",
      "laser-sentry",
-     "flame-sentry",
-     "tesla-tower"
+     "flame-sentry"
     ]
    },
    {
@@ -795,8 +794,7 @@ export const shipModuleSections = [
      "mortar-sentry",
      "machine-gun-sentry",
      "autocannon-sentry",
-     "gas-mortar",
-     "tesla-tower"
+     "gas-mortar"
     ]
    },
    {

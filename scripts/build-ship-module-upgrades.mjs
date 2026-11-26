@@ -51,8 +51,10 @@ export async function buildShipModuleUpgrades() {
     'Synthetic Supplementation': { types: ['Sentry', 'Emplacement'] },
     'Rapid Launch System': { types: ['Emplacement'] },
     'Advanced Construction': { types: ['Sentry'] },
-    'Dynamic Tracking': { types: ['Sentry'] },
-    'High-Quality Lubricant': { types: ['Sentry'] },
+    // The Tesla Tower is a Sentry by type but launches like an Emplacement (the module pages list it under Rapid Launch
+    // System, not Dynamic Tracking or High-Quality Lubricant): left out of these two (user decision 2026-11-26).
+    'Dynamic Tracking': { types: ['Sentry'], not: ['tesla-tower'] },
+    'High-Quality Lubricant': { types: ['Sentry'], not: ['tesla-tower'] },
     'Blast Absorption': { types: ['Sentry'] },
     'Shock Absorption Gel': { types: ['Sentry'], where: item => statsOf(item)?.sentry?.ammo != null },
   };
