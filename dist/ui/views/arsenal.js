@@ -29,9 +29,9 @@ import { vehicleDurability } from '../../data/vehicle-durability.js';
 
 const SORTS = [
   { id: '', name: L('기본 순서', 'Default order') },
-  { id: 'direct', name: L('직격 피해 순', 'Direct damage'), value: item => item.direct },
-  { id: 'splash', name: L('폭발 피해 순', 'Blast damage'), value: item => item.splash },
-  { id: 'ap', name: L('관통력 순', 'Penetration'), value: item => item.ap },
+  { id: 'direct', name: L('직격 피해 순', 'Direct damage'), value: item => chargeTop(item).direct },
+  { id: 'splash', name: L('폭발 피해 순', 'Blast damage'), value: item => chargeTop(item).splash },
+  { id: 'ap', name: L('관통력 순', 'Penetration'), value: item => chargeTop(item).ap },
   { id: 'reach', name: L('사거리·반경 순', 'Range / radius'), value: item => item.range ?? item.innerRadius ?? item.radius },
 ];
 const MAX_COMPARE = 3;
@@ -82,7 +82,12 @@ const cellText = stat => lang === 'en' && stat.dim && stat.text === 'Unverified'
 // A weapon with no reach to show (the HMG Emplacement, a support weapon whose reach is unverified; user requests
 // 2026-11-26) drops that cell on its card and detail.
 const hiddenReach = (item, reach) => item.noReach || item.category === 'support' && reach.dim && reach.text === L('미확인', 'Unverified');
-const statRow = item => html`<dl class="stat-row">${stats(item).filter((stat, index) => !(index === 3 && hiddenReach(item, stat))).map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}" title="${stat.dim ? stat.text : ''}">${cellText(stat)}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd></div>`)}</dl>`;
+const statRow = item => {
+  const charge = CHARGE_RANGE.has(item.id) && item.variants?.length > 1 ? [stats(withVariant(item, item.variants[0])), stats(withVariant(item, item.variants.at(-1)))] : null;
+  const cells = stats(item).map((stat, index) => charge ? { ...stat, text: rangeText(charge[0][index].text, charge[1][index].text) } : stat);
+  return statRowOf(item, cells);
+};
+const statRowOf = (item, cells) => html`<dl class="stat-row">${cells.filter((stat, index) => !(index === 3 && hiddenReach(item, stat))).map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}" title="${stat.dim ? stat.text : ''}">${cellText(stat)}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd></div>`)}</dl>`;
 
 // One-line numbers for a mode, used on cards and in the comparison table.
 function variantBrief(item, variant) {
@@ -132,7 +137,7 @@ function card(item) {
 // --- Filtering -------------------------------------------------------------------
 function visibleItems() {
   const band = AP_FILTERS.find(item => item.id === state.ap);
-  let items = stratagems.filter(item => (!state.c || item.category === state.c) && (!band || band.test(item)) && (!state.p || permitOf(item) === state.p));
+  let items = stratagems.filter(item => (!state.c || item.category === state.c) && (!band || band.test(chargeTop(item))) && (!state.p || permitOf(item) === state.p));
   items = search(items, state.q, item => { const fields = stratagemFields(item); return { ...fields, keywords: collabKeywords(warbondSources[`arsenal/${item.id}`]?.id) }; });
   const sort = SORTS.find(item => item.id === state.sort);
   if (sort?.value) items = [...items].sort((a, b) => (sort.value(b) ?? -1) - (sort.value(a) ?? -1));
@@ -624,6 +629,15 @@ const statGrid = (item, effects = [], expanded = false) => {
 // key stats and the blast show the uncharged to fully charged values as 'a~b'. The data keeps both modes, which other
 // views pick by name (faction picks use 'epoch:charged').
 const CHARGE_RANGE = new Set(['epoch']);
+// A charge weapon's fully charged numbers, which its AP filter and sorts go by (user request 2026-11-26).
+const chargeTop = item => CHARGE_RANGE.has(item.id) && item.variants?.length > 1 ? withVariant(item, item.variants.at(-1)) : item;
+// Two texts as one 'low~high' range, number by number where they differ ('AP 4' and 'AP 5' -> 'AP 4~5').
+function rangeText(low, high) {
+  if (low === high) return low;
+  const a = String(low).split(/(\d[\d,.]*)/), b = String(high).split(/(\d[\d,.]*)/);
+  if (a.length === b.length && a.every((part, i) => i % 2 || part === b[i])) return a.map((part, i) => (i % 2 && part !== b[i] ? `${part}~${b[i]}` : part)).join('');
+  return `${low}~${high}`;
+}
 export function stratagemDetail(item, { demolition = false, force = null, header = null, titleId = 'sheet-title', variant = state.variant, compare = true, expandable = false, expanded = false } = {}) {
   const cat = categoryOf(item.category);
   const charge = CHARGE_RANGE.has(item.id) && item.variants?.length > 1 ? [withVariant(item, item.variants[0]), withVariant(item, item.variants.at(-1))] : null;
