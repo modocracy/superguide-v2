@@ -1211,12 +1211,12 @@ export const statusEffects = [
   "en": "Fire",
   "detail": [
    "불은 AP 4 장갑까지 뚫고 기본 3초 동안 탑니다. 큰 적은 불 피해 배율이 높을 수 있습니다(임페일러 1.7배).",
-   "화염방사기처럼 직접 뿜는 불은 적을 혼란에 빠뜨리고 느리게 합니다(테르미니드가 아닌 대형 이상의 적은 제외).",
+   "화염방사기처럼 직접 뿜는 불은 적을 혼란에 빠뜨려 아무 방향으로나 움직이고 공격하게 하고(Fire Panic), 느리게 합니다(Flamer Slowed). 테르미니드가 아닌 대형 이상의 적에는 듣지 않습니다.",
    "네이팜 이글·네이팜 포격·일회성 네이팜은 1초 동안 훨씬 강한 화상을 더합니다."
   ],
   "detailEn": [
    "Fire gets through AP 4 armor and burns for 3 seconds by default. Bigger enemies can take more fire damage (Impalers 1.7x).",
-   "A direct flame stream, as from flamethrowers, panics and slows enemies (not large or bigger non-Terminids).",
+   "A direct flame stream, as from flamethrowers, panics enemies into moving and attacking at random (Fire Panic) and slows them (Flamer Slowed). Large or bigger non-Terminids are immune.",
    "Napalm Eagle, Napalm Barrage and Expendable Napalm add a much stronger burn that lasts 1 second."
   ],
   "wiki": "https://helldivers.wiki.gg/wiki/Status_Effects#Fire"
