@@ -276,6 +276,8 @@ export default {
   "로켓 1발": "Per rocket",
   "탄 1발": "Per round",
   "유탄 1발": "Per grenade",
+  "총열 2개에 각각 · 재장전 없음": "Each of the two guns · no reload",
+  "재장전 없음": "No reload",
   "주포 포탄 1발": "Per main cannon shell",
   "자탄 1개": "Per bomblet",
   "대전차 포탄 1발": "Per anti-tank shell",
