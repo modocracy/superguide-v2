@@ -76,12 +76,17 @@ const legacyReplayed = new Set();
 let checked = 0, beamCarried = 0, addedRows = 0;
 for (const expected of golden.combat) {
   const enemy = legacyEnemy(enemies.find(item => item.id === expected.enemy));
-  const currentMode = weaponProfiles[expected.weapon].modes.find(item => item.id === expected.mode);
+  // Deliberate change (user request 2026-11-27): the Expendable Napalm's only mode is a burning time now; the recorded
+  // missile-only shot is replayed as it was (its numbers are checked against the datamine in test-support.mjs).
+  const currentMode = expected.weapon === 'expendable-napalm' && expected.mode === 'standard'
+    ? { id: 'standard', name: '주탄 기준·자탄과 화염 제외', standard: 500, durable: 500, ap: 3, explosion: 250, explosionAp: 6, explosionDurable: 250, innerRadius: 1.6, radius: 8, explosionName: '주폭발', reviewedExplosive: true }
+    : weaponProfiles[expected.weapon].modes.find(item => item.id === expected.mode);
   const key = `${expected.weapon}:${expected.mode}`;
   if (legacyUnsupported[key]) assert(expected.rows.every(row => row.h === null && row.o === 'unknown' && row.r === legacyUnsupported[key]), 'historical unsupported adapter must not bypass any numeric golden result');
   // Deliberate change (user request 2026-11-26): the De-Escalator's grenade hit (mode.carrier) now comes before its
   // arcs; the legacy engine left it out, so it is taken off here and checked on its own below the loop.
-  const { carrier: _carrier, ...withoutCarrier } = currentMode;
+  // The thermite burn on main health (mainDot, data audit 2026-11-27) is new too: replayed without it.
+  const { carrier: _carrier, mainDot: _mainDot, fire: _fire, ...withoutCarrier } = currentMode;
   // Deliberate change (user request 2026-11-27): the speargun's gas blast (3, AP 6; test-support.mjs checks it against
   // the datamine) was left out of the legacy profile, so it is taken off for the replay.
   const legacyMode = key === 'speargun:direct' ? { ...withoutCarrier, explosion: 0, explosionAp: 0, explosionDurable: undefined, innerRadius: undefined, radius: undefined } : withoutCarrier;
@@ -159,7 +164,8 @@ const healthAdded = { ...Object.fromEntries(Object.entries(stratagemAttackDamage
 const shieldBypassAdded = { 'portable-hellbomb': ['standard'], hellbomb: ['standard'], leveller: ['standard'], 'solo-silo': ['standard'] };
 // Forces corrected after the recording, replayed with their recorded values (user request 2026-11-26: the Eagle 500kg's
 // direct hit is the datamine's 50; the summary table's 40, recorded as a 40-50 dispute, is its impact blast).
-const forceCorrected = { 'eagle-500kg': { standard: { direct: { min: 40, max: 50 } } } };
+// The Eagle Cluster Bomb's direct force 40 was its bomb, which splits in the air (data audit, user request 2026-11-27).
+const forceCorrected = { 'eagle-500kg': { standard: { direct: { min: 40, max: 50 } } }, 'eagle-cluster': { standard: { direct: 40 } } };
 assert.equal(demolitionProfiles['eagle-500kg'].modes[0].direct, 50, 'eagle-500kg: direct force 50');
 const legacyMode = (id, mode) => {
   let out = healthAdded[id]?.includes(mode.id) ? { ...mode, damage: undefined, hits: undefined } : mode;
@@ -177,6 +183,8 @@ const checkingProfile = id => ({ source: weaponProfiles[id].source, modes: weapo
 const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id) || forceAdded.includes(id)).map(([id, profile]) => [id, forceAdded.includes(id) ? checkingProfile(id) : profile]).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] && !forceCorrected[id] ? profile
   : { ...profile, modes: profile.modes.map(mode => legacyMode(id, mode)) }]).map(([id, profile]) => [id, callInRemoved.includes(id) ? { ...profile, requiresCallIn: true } : profile]));
 // The Orbital Laser's note said its sustained damage was not counted until seconds were (user request 2026-11-27).
+// The Eagle Cluster Bomb's note changed with its direct force (data audit, user request 2026-11-27).
+legacyProfiles['eagle-cluster'] = { ...legacyProfiles['eagle-cluster'], note: '탄체의 직접 충돌과 공중에서 퍼지는 폭발을 구분해야 합니다. 표기 직격 수치만으로 일반적인 건물 철거를 보장하지 않습니다.' };
 legacyProfiles['orbital-laser'] = { ...legacyProfiles['orbital-laser'], note: '레이저가 시설을 실제로 훑는 조건입니다. 원하는 시설을 직접 조준할 수 없고 지속 피해의 탄수는 계산하지 않습니다.' };
 for (const id of callInRemoved) for (const mode of demolitionProfiles[id].modes) {
   const result = solveDemolition(structures.find(item => item.id === 'jammer'), demolitionProfiles[id], mode);
@@ -195,7 +203,9 @@ for (const [id, modeIds] of Object.entries(healthAdded)) if (legacyProfiles[id])
   // With jammers off, so a call-in rule changed since (SEAF Artillery) does not count as a health change.
   const current = solveDemolition(structure, demolitionProfiles[id], demolitionProfiles[id].modes.find(mode => mode.id === modeId), { jammerDisabled: true });
   const legacy = solveDemolition(structure, legacyProfiles[id], legacyProfiles[id].modes.find(mode => mode.id === modeId), { jammerDisabled: true });
-  assert(current.routes.every((row, index) => row.verdict === legacy.routes[index].verdict), `${structure.id} × ${id}/${modeId}: force verdicts unchanged`);
+  // A force corrected since (forceCorrected) changes its verdicts on purpose.
+  if (!forceCorrected[id]) assert(current.routes.every((row, index) => row.verdict === legacy.routes[index].verdict), `${structure.id} × ${id}/${modeId}: force verdicts unchanged`);
+  if (forceCorrected[id]) continue;
   if (legacy.reason === 'health-unknown') { assert(current.outcome !== 'unknown', `${structure.id} × ${id}/${modeId}: health damage resolves it`); healthResolved++; }
   else if (!current.health) assert.equal(current.outcome, legacy.outcome, `${structure.id} × ${id}/${modeId}: unchanged without health`);
 }

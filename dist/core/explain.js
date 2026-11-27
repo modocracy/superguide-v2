@@ -106,6 +106,7 @@ export function deliveryOf(mode) {
   if (mode?.stream?.gas) return { hit: L('가스', 'Gas'), verb: L('가스 구름', 'Gas cloud') };
   if (mode?.stream?.burnOnly) return { hit: L('화상', 'Burning'), verb: mode.stream.poolName === '불길' ? L('불길', 'Fire') : L('불 웅덩이', 'Fire pool') };
   if (mode?.beam) return { hit: L('광선', 'Beam'), verb: L('광선 유지', 'Beam held') };
+  if (mode?.stream && mode.delivery === 'saw') return { hit: L('톱날', 'Blade'), verb: L('톱날 유지', 'Blade held') };
   if (mode?.stream) return mode.delivery === 'spray' ? { hit: L('불길', 'Flames'), verb: L('불길 유지', 'Flames held') } : { hit: L('광선', 'Beam'), verb: L('광선 유지', 'Beam held') };
   if (mode?.delivery === 'arc') return { hit: L('아크', 'Arc'), verb: L('아크 명중', 'Arc hit') };
   if (mode?.delivery === 'guided') return { hit: L('착탄', 'Impact'), verb: L('착탄', 'Impact') };
@@ -140,12 +141,13 @@ export function attackStats(mode, { distance = 0 } = {}) {
       { label: mode.stream.poolName === '불길' ? L('불길', 'Fire') : L('불 웅덩이', 'Fire pool'), value: mode.stream.pool == null ? L('미확인', 'Unverified') : `${num(mode.stream.pool)}${L('초', 's')}`, ...(mode.stream.blastAt ? { note: L(`불꽃 ${num(mode.stream.blastAt)}초 + 폭발 뒤 ${num(mode.stream.pool - mode.stream.blastAt)}초`, `${num(mode.stream.blastAt)} s of sparks + ${num(mode.stream.pool - mode.stream.blastAt)} s after the blast`) } : {}) },
     ];
     return [
-      { label: L('초당 피해', 'Damage per second'), icon: mode.stream.fire ? 'fire' : 'laser', value: num(mode.standard), note: `${durable(num(mode.durable))} · AP ${mode.ap}` },
+      { label: L('초당 피해', 'Damage per second'), icon: mode.stream.fire ? 'fire' : mode.delivery === 'saw' ? '' : 'laser', value: num(mode.standard), note: `${durable(num(mode.durable))} · AP ${mode.ap}` },
       ...(burn ? [{ label: L('화상', 'Burning'), icon: 'fire', value: `${num(burn.perSecond)}${L('/초', '/s')}`, note: L(`AP ${burn.ap} · 본체 체력 · 점화 수치 초당 ${num(mode.stream.ignite)}`, `AP ${burn.ap} · main health · fire build-up ${num(mode.stream.ignite)}/s`) }] : []),
       ...(mode.stream.warmUp ? [{ label: L('발사 전 예열', 'Warm-up'), value: `${num(mode.stream.warmUp)}${L('초', 's')}` }] : []),
       ...(capacity ? [{ label: capacity.kind === 'heat' ? L('과열까지', 'Until overheating') : L('연료 1통', 'One fuel canister'), value: `${num(capacity.seconds)}${L('초', 's')}` }] : []),
     ];
   }
+  const burnOn = mode.mainDot ? [{ label: L('붙은 뒤 타는 피해', 'Burn after sticking'), icon: 'fire', value: num(mode.mainDot.total), note: L(`초당 ${num(mode.mainDot.perSecond)} × ${num(mode.mainDot.duration)}초 · 본체 체력`, `${num(mode.mainDot.perSecond)}/s × ${num(mode.mainDot.duration)} s · main health`) }] : [];
   const stats = [];
   if (mode.directKind !== 'none' && !(mode.standard === 0 && mode.durable === 0)) {
     const arc = mode.delivery === 'arc';
@@ -163,6 +165,7 @@ export function attackStats(mode, { distance = 0 } = {}) {
         note: `${durable(num(b.durable))} · AP ${num(b.ap)}${b.explosion > 0 ? L(` · 폭발 AP ${num(b.explosionAp)}`, ` · explosion AP ${num(b.explosionAp)}`) : ''}` });
     } else stats.push({ label: L('자탄 1개', '1 bomblet'), value: `${num(b.standard)}${plusBlast(num(b.explosion))}`, note: `AP ${b.ap}/${b.explosionAp} · ${radii(b.innerRadius, b.radius)}` });
   }
+  stats.push(...burnOn);
   return stats;
 }
 
@@ -185,6 +188,7 @@ export function assumptionText(mode) {
     'Assumes the beam stays on the same part. One shot counts as about 1.4 seconds of beam.');
   if (mode?.stream?.gas) return L('적이 가스 구름 안에 머물며 계속 중독되는 조건. 가스는 부위와 상관없이 본체 체력에 들어갑니다.', 'Assumes the enemy stays in the gas cloud and stays poisoned. Gas goes to main health whatever the part.');
   if (mode?.stream?.burnOnly) return L(`적이 ${mode.stream.poolName ?? '불 웅덩이'} 안에 머물며 계속 타는 조건. 화상은 부위와 상관없이 본체 체력에 들어갑니다.`, 'Assumes the enemy stays in the fire and keeps burning. Burning goes to main health whatever the part.');
+  if (mode?.stream && mode.delivery === 'saw') return L('같은 부위에 톱날을 계속 대고 있는 조건.', 'Assumes the blade stays on the same part.');
   if (mode?.stream) return mode.delivery === 'spray'
     ? L('같은 부위에 불길이 모두 계속 닿는 조건. 쌓인 점화 수치가 적의 점화 기준치에 도달하면 불이 붙는다고 봅니다.', 'Assumes the whole flame stream stays on the same part. It catches fire once the build-up reaches the enemy\'s ignition threshold.')
     : L('같은 부위에 광선을 계속 비추는 조건. 쌓인 점화 수치가 적의 점화 기준치에 도달하면 불이 붙는다고 봅니다.', 'Assumes the beam stays on the same part. It catches fire once the build-up reaches the enemy\'s ignition threshold.');
@@ -308,6 +312,7 @@ export function assumptionTag(mode) {
   }
   if (mode?.stream?.gas) return L('가스 구름 안 가정', 'Assumes it stays in the cloud');
   if (mode?.stream?.burnOnly) return L(`${mode.stream.poolName ?? '불 웅덩이'} 안 가정`, 'Assumes it stays in the fire');
+  if (mode?.stream && mode.delivery === 'saw') return L('톱날 유지 가정', 'Assumes the blade is held');
   if (mode?.stream) return mode.delivery === 'spray' ? L('불길 유지 가정', 'Assumes flames held') : L('광선 유지 가정', 'Assumes beam held');
   if (!mode?.conditionalImpact) return '';
   if (mode.beam) return L('광선 유지 가정', 'Assumes beam held');

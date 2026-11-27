@@ -45,6 +45,8 @@ export const ATTACKS = {
   // pellet, the Eagle Cluster Bomb's bomblet blast (its impact is left out, as the enemy pages do), the Orbital
   // Airburst's fragment and its impact blast.
   'breakthrough': { standard: ['P9', null] },
+  // The Expendable Napalm's missile hit and blast for structures (its enemy mode is a burning time now).
+  'expendable-napalm': { standard: ['EAT-700_P', 'EAT-700_P_IE'] },
   'eagle-cluster': { standard: [null, 'P13_IE'] },
   'orbital-airburst': { standard: ['P14', 'P14_IE'] },
   // Vehicles, one demolition mode per weapon tab (the tab's datamine record in data-equipment.js); the

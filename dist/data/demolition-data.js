@@ -112,7 +112,7 @@ function datamineProfiles(options) {
 export const demolitionProfiles = {
   'autocannon': profile([
     mode('aphet', '철갑고폭예광탄(APHET)', 30, 30, { damage: combatDamage('autocannon', 'aphet') }),
-    mode('flak', '대공포탄 모드', 20, 20, { damage: combatDamage('autocannon', 'flak'), note: '근접 신관이 입구 앞에서 터지면 내부 철거에 실패할 수 있습니다. 파편 피해의 탄수 계산은 보류합니다.' }),
+    mode('flak', '대공포탄 모드', 20, 20, { damage: combatDamage('autocannon', 'flak'), note: '근접 신관이 입구 앞에서 터지면 내부 철거에 실패할 수 있습니다.' }),
   ], { source: wiki('AC-8_Autocannon') }),
   'recoilless': profile([
     mode('heat', '대전차 고폭탄(HEAT)', 30, 30, { damage: combatDamage('recoilless', 'heat') }),
@@ -165,7 +165,9 @@ export const demolitionProfiles = {
   'orbital-smoke': callIn(shot(50, null, { name: '연막탄 탄체 직격', note: '연막이 아니라 떨어지는 탄체를 직접 맞혀야 합니다.' })),
   'eagle-airstrike': callIn(shot(40, 40, { name: '폭탄' })),
   'eagle-strafing': callIn(shot(30, 30, { name: '기총탄' })),
-  'eagle-cluster': callIn(shot(40, 30, { name: '탄체·집속 폭발' }), { conditionalAim: true, note: '탄체의 직접 충돌과 공중에서 퍼지는 폭발을 구분해야 합니다. 표기 직격 수치만으로 일반적인 건물 철거를 보장하지 않습니다.' }),
+  // The bomb splits in the air and never hits a structure itself (user request 2026-11-27): no direct force, as the
+  // Orbital Airburst Strike's.
+  'eagle-cluster': callIn(shot(null, 30, { name: '집속 폭발' }), { conditionalAim: true, note: '모탄은 공중에서 갈라져 시설에 직접 맞지 않으므로 자탄 폭발의 철거력만 봅니다.' }),
   'eagle-napalm': callIn(shot(40, 30, { name: '폭탄', note: '화염의 지속 피해는 합산하지 않습니다.' })),
   'eagle-rockets': callIn(shot(40, 30, { name: '로켓' }), { conditionalAim: true, note: indirect }),
   'eagle-smoke': callIn(shot(40, null, { name: '연막탄 탄체 직격', note: '연막에는 철거력이 없습니다. 탄체를 시설에 직접 맞히는 조건입니다.' })),
@@ -201,7 +203,7 @@ export const demolitionProfiles = {
   // the strongest hit and the strongest blast; fragments left out), 2026-11-23.
   ...datamineProfiles({
     flamethrower: { label: '분사' }, sterilizer: { label: '분사' }, cremator: { label: '분사' }, 'defoliation-tool': {}, 'one-true-flag': { damage: 'melee' },
-    'airburst-launcher': { damage: 'flak', note: '집속 모드의 로켓은 공중에서 갈라져 직격하지 않습니다.' }, 'expendable-napalm': { damage: 'standard' },
+    'airburst-launcher': { damage: 'flak', note: '집속 모드의 로켓은 공중에서 갈라져 직격하지 않습니다.' }, 'expendable-napalm': {},
     'orbital-airburst': { callIn: true, noDirect: true, note: '공중에서 터지는 포탄이라 직격은 사실상 일어나지 않습니다. 폭발이 시설에 닿아야 합니다.' },
     'eagle-gas': { callIn: true },
     'machine-gun-sentry': { automatic: true }, 'gatling-sentry': { automatic: true }, 'gas-mortar': { automatic: true }, 'flame-sentry': { automatic: true, label: '분사' }, 'laser-sentry': { automatic: true, label: '광선' },
@@ -263,7 +265,14 @@ for (const [key, note] of Object.entries(HEALTH_NOTES)) {
 // Bomb's S_P4_E lets out 8 bomblets, each Orbital Airburst shell's S_P15_IE 12 fragments; the De-Escalator's arcs and
 // grenade are its enemy page mode. `each` is one of them, `base` what lands once per shot.
 const deEscalator = combatDamage('de-escalator', 'arc');
+const airburst = combatDamage('airburst-launcher', 'flak'), flak = combatDamage('autocannon', 'flak');
+// The Airburst Rocket Launcher's 25 bomblets and the Autocannon flak's 30 fragments, as its enemy page counts them: the
+// rocket's or shell's blast once (its direct hit left out), then each bomblet's blast or fragment's hit (user request
+// 2026-11-27, the data audit).
+const blastOnly = d => ({ standard: 0, durable: 0, ap: 0, explosion: d.explosion, explosionAp: d.explosionAp, explosionDurable: d.explosionDurable ?? d.explosion });
 const HITS = {
+  'airburst-launcher': { ...airburst.hitCondition, each: blastOnly(airburst.bomblet), base: blastOnly(airburst) },
+  'autocannon/flak': { ...flak.hitCondition, each: { explosion: 0, explosionAp: 0, ...flak.bomblet }, base: blastOnly(flak) },
   breakthrough: { kind: 'pellets', min: 1, max: 40, defaultPct: 50 },
   'eagle-cluster': { kind: 'bomblets', min: 0, max: 8, defaultPct: 20 },
   'orbital-airburst': { kind: 'shrapnel', min: 0, max: 12, defaultPct: 20 },
@@ -274,10 +283,11 @@ const HITS = {
 // page revision 142597: 8 submunitions each, 64 in all without upgrades).
 const PER_CALL = { 'orbital-airburst': 4, 'eagle-cluster': 8 };
 for (const [id, count] of Object.entries(PER_CALL)) demolitionProfiles[id].modes[0].perCall = count;
-for (const [id, hits] of Object.entries(HITS)) {
-  const target = demolitionProfiles[id].modes[0];
+for (const [key, hits] of Object.entries(HITS)) {
+  const [id, modeId] = key.split('/');
+  const target = modeId ? demolitionProfiles[id].modes.find(entry => entry.id === modeId) : demolitionProfiles[id].modes[0];
   const each = hits.each ?? target.damage;
-  if (!each) throw new Error(`${id}: no per-hit damage for the hit rate`);
+  if (!each) throw new Error(`${key}: no per-hit damage for the hit rate`);
   Object.assign(target, { hitKey: `${id}/${target.id}`, hits: { kind: hits.kind, min: hits.min, max: hits.max, defaultPct: hits.defaultPct, each, base: hits.base ?? null } });
 }
 for (const id of ['hmg-emplacement', 'tesla-tower', 'k9', 'hellbomb', 'portable-hellbomb']) {

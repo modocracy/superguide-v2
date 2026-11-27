@@ -595,6 +595,11 @@ export const weaponProfiles = {
   'one-true-flag': reviewedImpact('CQC-1_One_True_Flag', [
     shot('melee', '일반 찌르기', 200, 100, 3, 0, 0, { unit: '회', delivery: 'flag' }),
   ], '깃발 끝으로 이 부위를 찌르는 일반 공격 기준입니다. 깃발을 꽂는 동작과 방어구의 근접 피해 증가 효과는 빼고 계산합니다.'),
+  // The Defoliation Tool's blade held on a part, in seconds (data audit, user request 2026-11-27): the datamine's
+  // CQC-9 DEFOLIATION TOOL_dm 450 / durable 225 a second; AP 5, which the wiki page says it reaches after 0.5 s of contact
+  // (the datamine holds the starting 3). No burning.
+  'defoliation-tool': profile('CQC-9_Defoliation_Tool', [shot('standard', '톱날 유지', 450, 225, 5, 0, 0, { unit: '초', delivery: 'saw', magazine: null, stream: { burn: null } })],
+    '톱날을 같은 부위에 계속 대고 있을 때 걸리는 시간입니다. 관통은 0.5초 동안 닿은 뒤의 AP 5 기준이고, 처음 0.5초의 낮은 관통은 반영하지 않습니다.'),
   'speargun': reviewedImpact('S-11_Speargun', [
     // The spear's blast that lets out the gas: datamine S-11_P_E, 3 (AP 6), radii 2 / 5 m (user request 2026-11-27).
     shot('direct', '직격 기준 · 가스 피해 제외', 650, 275, 5, 3, 6, { delivery: 'harpoon', falloff: true, explosionDurable: 3, innerRadius: 2, radius: 5 }),
@@ -630,19 +635,17 @@ export const weaponProfiles = {
     shot('standard', '일반 발사', 400, 200, 4, 500, 4, { explosionDurable: 500, innerRadius: 2.3, radius: 3, falloff: true }),
     shot('charged', '완전 충전 발사', 800, 400, 5, 800, 5, { explosionDurable: 800, innerRadius: 3, radius: 4, falloff: true }),
   ], '일반 발사와 완전 충전은 피해·관통·폭발 반경이 다르므로 모드를 골라 확인하세요. 과충전으로 터지는 자폭은 빼고 계산합니다.'),
-  'expendable-napalm': (napalm => ({ ...napalm, modes: [...napalm.modes, {
-    // The napalm in seconds (user request 2026-11-27): the missile's hit and blast (EAT-700_P, _P_IE) and 20% of its 20
-    // bomblets (EAT-700_P1: 200 / AP 0, its blast P1_IE 50 / AP 3; the enemy pages' default for bomblets) come off main
-    // health first, then burning and Burning Heavy, 100 + 200 a second at AP 4 times the fire multiplier (wiki status
-    // datamine Fire, BurningHeavy), while the enemy stays in the fire. The blast's Fire status is 100. How long the fire
-    // lasts is not given anywhere, so it is not limited.
-    id: 'fire', name: '불길 · 주탄·자탄 20% 포함', standard: 0, durable: 0, ap: 0, explosion: 0, explosionAp: 0, delivery: 'pool', unit: '초', magazine: null,
-    stream: { fire: true, burnOnly: true, burn: { perSecond: 300, ap: 4 }, ignite: 100, pool: null, poolName: '불길',
+  // The napalm in seconds, its only mode (user requests 2026-11-27): the missile's hit and blast (EAT-700_P, _P_IE) and
+  // 20% of its 20 bomblets (EAT-700_P1: 200 / AP 0, its blast P1_IE 50 / AP 3; the enemy pages' default for bomblets)
+  // hit the part first, then burning and Burning Heavy, 100 + 200 a second at AP 4 times the fire multiplier (wiki
+  // status datamine Fire, BurningHeavy), while the enemy stays in the fire. The blast's Fire status is 100. How long the
+  // fire lasts is not given anywhere, so it is not limited. A missile that kills on its own counts as one shot.
+  'expendable-napalm': { ...profile('EAT-700_Expendable_Napalm', [{
+    id: 'standard', name: '불길 · 주탄·자탄 20% 포함', standard: 0, durable: 0, ap: 0, explosion: 0, explosionAp: 0, delivery: 'pool', unit: '초', magazine: null,
+    stream: { fire: true, burnOnly: true, burn: { perSecond: 300, ap: 4 }, ignite: 100, pool: null, poolName: '불길', countUnit: '발',
       blast: { id: 'blast', name: '주탄', standard: 500, durable: 500, ap: 3, explosion: 250, explosionDurable: 250, explosionAp: 6, delivery: 'explosive' },
       bomblets: { count: 4, of: 20, attack: { standard: 200, durable: 200, ap: 0, explosion: 50, explosionDurable: 50, explosionAp: 3 } } },
-  }] }))(reviewedExplosive('EAT-700_Expendable_Napalm', [
-    shot('standard', '주탄 기준·자탄과 화염 제외', 500, 500, 3, 250, 6, { explosionDurable: 250, innerRadius: 1.6, radius: 8, explosionName: '주폭발' }),
-  ], '주탄 기준은 주탄의 직격과 주폭발만 발 수로 셉니다. 불길 모드는 주탄과 자탄 20%를 먼저 빼고, 남은 본체 체력을 불길 안의 화상(초당 100)과 강한 화상(초당 200)으로 깎는 시간입니다. 불길이 얼마나 남는지는 자료가 없어 계산 시간 동안 남는다고 봅니다.')),
+  }], '주탄과 자탄 20%를 먼저 빼고, 남은 본체 체력을 불길 안의 화상(초당 100)과 강한 화상(초당 200)으로 깎는 시간입니다. 주탄과 자탄만으로 처치되면 1발로 셉니다. 불길이 얼마나 남는지는 자료가 없어 계산 시간 동안 남는다고 봅니다.'), checkedAt: '2026-09-16', combatOnly: true },
   'solo-silo': reviewedExplosive('MS-11_Solo_Silo', [
     shot('standard', '미사일 1발 · 충돌 폭발과 주폭발', 0, 0, 0, 0, 0, {
       directKind: 'none',

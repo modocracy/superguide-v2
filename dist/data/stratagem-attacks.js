@@ -33,6 +33,7 @@ export const stratagemAttackDamage = {
   "gunner-frv": {"standard":{"standard":150,"durable":35,"ap":4,"explosion":0,"explosionAp":0}},
   "supply-frv": {"standard":{"standard":65,"durable":15,"ap":3,"explosion":0,"explosionAp":0}},
   "breakthrough": {"standard":{"standard":90,"durable":30,"ap":4,"explosion":0,"explosionAp":0}},
+  "expendable-napalm": {"standard":{"standard":500,"durable":500,"ap":3,"explosion":250,"explosionAp":6}},
   "eagle-cluster": {"standard":{"standard":0,"durable":0,"ap":0,"explosion":350,"explosionAp":3}},
   "orbital-airburst": {"standard":{"standard":300,"durable":150,"ap":3,"explosion":350,"explosionAp":3}},
   "maelstrom": {"missile":{"standard":0,"durable":0,"ap":0,"explosion":2000,"explosionAp":5},"gatling":{"standard":150,"durable":35,"ap":4,"explosion":0,"explosionAp":0}},

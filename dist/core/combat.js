@@ -205,6 +205,12 @@ function solveImpacts(enemy, target, attack, options) {
   let shots = 0;
   let part = target;
   let copy = 1;
+  // Incendiary rounds (attack.fire): each projectile adds its Fire build-up; once it reaches the enemy's ignition
+  // threshold, burning takes its damage per second from main health for the time between shots (data audit 2026-11-27).
+  const fire = attack.fire && known(options.fireMult) && known(options.ignition?.value) && !target.isolated ? attack.fire : null;
+  const burnGap = fire ? fire.burn.perSecond * options.fireMult * armorFactor(fire.burn.ap, main.armor) * fire.interval : 0;
+  let build = 0, lit = false, burned = 0;
+  const fireNotes = () => burned > 0 ? { notes: [L(`점화 기준치 ${options.ignition.value}에 닿아 불이 붙고, 발 사이 화상이 본체 체력을 ${Math.round(burned)}만큼 더 깎았습니다.`, `It caught fire at the ignition threshold of ${options.ignition.value}; burning between shots took ${Math.round(burned)} more off main health.`)] } : {};
 
   while (part) {
     const hits = events.map(event => ({ ...event, damage: hitDamage(event.attack, part, main, { ...options, directHit: event.directHit ?? options.directHit }) }));
@@ -222,7 +228,12 @@ function solveImpacts(enemy, target, attack, options) {
     let capLeft = transferCap(part);
     let advanced = false;
     for (let shot = 0; shot < MAX_HITS && !advanced; shot++) {
+      if (lit && burnGap > 0) {
+        mainLeft -= burnGap; burned += burnGap;
+        if (mainLeft <= 0) return { ...base, stages, hits: shots, outcome: main.constitution && mainLeft > -main.constitution ? 'bleed' : 'kill', via: 'main', ...fireNotes() };
+      }
       shots++; stage.hits++;
+      if (fire && !lit) { build += fire.status * perShot; lit = build >= options.ignition.value; }
       let applied = 0;
       eventsInShot: for (const event of hits) for (let i = 0; i < event.times; i++) {
         applied++;
@@ -233,10 +244,12 @@ function solveImpacts(enemy, target, attack, options) {
           : floor(partDamage * part.toMain / 100);
         if (part.overflowCap) { transfer = Math.min(transfer, capLeft); capLeft -= transfer; }
         mainLeft -= transfer + mainExplosion;
+        // A sticky thermite charge burns on into main health once per shot (attack.mainDot; data audit 2026-11-27).
+        if (attack.mainDot && applied === perShot && !target.isolated) mainLeft -= attack.mainDot.total;
         partLeft -= partDamage;
         if (partLeft <= 0) mainLeft -= part.destroyMainDamage || 0;
 
-        const done = { ...base, stages, hits: shots };
+        const done = { ...base, stages, hits: shots, ...fireNotes() };
         // A fatal part kills outright, skipping the main bleed-out pool.
         if (partLeft <= 0 && part.effect === 'kill' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };
         if (partLeft <= -(part.constitution || Infinity) && part.effect === 'bleed' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };

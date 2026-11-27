@@ -1,6 +1,7 @@
 // English for the Korean text of demolition-data.js,
 // looked up by the exact Korean string (see core/i18n.js).
 export default {
+  "집속 폭발": "Cluster blasts",
   "가스 무기는 시설 체력 계산을 하지 않습니다.": "Gas weapons are left out of the structure health math.",
   "이 화염 무기는 시설 체력 계산을 하지 않습니다.": "This flame weapon is left out of the structure health math.",
   "과충전 자폭은 제외합니다.": "The overcharge self-destruct is left out.",
@@ -13,7 +14,6 @@ export default {
   "시설에 닿은 광선": "Beam on the structure",
   "탄체·초기 효과": "Projectile·initial effect",
   "연막탄 탄체 직격": "Smoke shell impact",
-  "탄체·집속 폭발": "Projectile·cluster blast",
   "지옥폭탄 폭발": "Hellbomb explosion",
   "네이팜탄": "Napalm",
   "연막탄 · 탄체 직격": "Smoke · Shell impact",
@@ -58,7 +58,7 @@ export default {
   "전원 장치 한 개": "One PSU",
   "모노리스": "Monolith",
   "모노리스 본체": "Monolith Body",
-  "근접 신관이 입구 앞에서 터지면 내부 철거에 실패할 수 있습니다. 파편 피해의 탄수 계산은 보류합니다.": "If the proximity fuze detonates in front of the entrance, demolition from inside can fail. Shots-to-kill from shrapnel damage is not calculated.",
+  "근접 신관이 입구 앞에서 터지면 내부 철거에 실패할 수 있습니다.": "If the proximity fuse goes off in front of the entrance, it can fail to demolish inside.",
   "공격이 시설에 실제로 닿는 조건입니다. 자동 조준·유도·살포 위치로 인해 원하는 부위를 직접 선택하지 못할 수 있습니다.": "Assumes the attack actually reaches the structure. Auto-targeting, guidance or spread position may stop you from picking the exact part you want.",
   "광선이 실제로 닿아야 합니다.": "The beam has to actually touch it. Sustained damage is not counted in shots.",
   "본체가 폭발 중심 3 m 안에 있는 조건입니다. 워프 함선은 보호막이 있어도 장약 한 개로 체력을 소진할 수 있습니다.": "Assumes the main body is within 3 m of the blast center. One charge can deplete a Warp Ship's health even with its shield up.",
@@ -74,7 +74,7 @@ export default {
   "탄체 또는 초기 효과 중심부 기준입니다. 가스 지속 피해의 철거력은 0이며, 구름 전체가 철거력 50인 것은 아닙니다.": "Based on the projectile or the center of the initial effect. Sustained gas damage has 0 demolition force; the whole cloud does not carry demolition force 50.",
   "탄체 직격과 초기 효과를 구분합니다. 전기장에 오래 머문다고 철거력이 누적되지는 않습니다.": "Projectile impact and the initial effect are counted separately. Staying in the static field longer does not stack demolition force.",
   "연막이 아니라 떨어지는 탄체를 직접 맞혀야 합니다.": "You have to hit it with the falling shell itself, not the smoke.",
-  "탄체의 직접 충돌과 공중에서 퍼지는 폭발을 구분해야 합니다. 표기 직격 수치만으로 일반적인 건물 철거를 보장하지 않습니다.": "Tell the projectile's direct impact apart from the blasts that spread in the air. The listed impact value alone does not guarantee demolishing ordinary buildings.",
+  "모탄은 공중에서 갈라져 시설에 직접 맞지 않으므로 자탄 폭발의 철거력만 봅니다.": "The bomb splits in the air and never hits a structure itself, so only the bomblet blasts' force counts.",
   "화염의 지속 피해는 합산하지 않습니다.": "Sustained fire damage is not added.",
   "연막에는 철거력이 없습니다. 탄체를 시설에 직접 맞히는 조건입니다.": "Smoke has no demolition force. Assumes the projectile hits the structure directly.",
   "공격 datamine 기준으로 폭탄 직격 50, 착탄 폭발(반경 3 m) 40, 주 폭발 50입니다. 위키 종합표의 40은 착탄 폭발의 값입니다. 체력 계산은 착탄 폭발 피해 100을 제외한 보수적인 값입니다.": "From the attack datamine: the bomb hit 50, its impact blast (3 m radius) 40 and its main blast 50. The wiki summary table's 40 is the impact blast's. The health calculation is a conservative value that leaves out the impact blast's 100 damage.",
