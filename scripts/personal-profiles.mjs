@@ -52,6 +52,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
   // Fire build-up per second (dist/data/enemy-ignition.js): a beam's Fire status value is per second like its
   // damage; a flame particle's value times the particles the wiki DPS implies (DPS / particle damage).
   const BURN = { perSecond: 100, ap: 4 };
+  const lighterOf = record => record?.lighter_lightup_time > 0 ? Math.round(record.lighter_lightup_time * 100) / 100 : undefined;
   const fireStatus = weapon => {
     const attack = weapon.attacks.find(a => a.level === 1);
     const record = data.damage[data[attack?.type]?.[attack?.name]?.damage_id];
@@ -66,12 +67,13 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     const durable = beam ? weapon.durable : dps * weapon.durable / weapon.direct;
     const status = fireStatus(weapon);
     const ignite = status == null ? null : beam ? status : status * dps / weapon.direct;
-    // A beam's warm-up before it fires, from its wiki page (Scythe 0.3 s, Dagger 0.25 s; user request 2026-11-27).
-    const warmUp = beam ? actionDetails({}, pages[weapon.en].wikitext).warmUp : undefined;
+    // A beam's warm-up before it fires, from its wiki page (Scythe 0.3 s, Dagger 0.25 s), and a flamethrower's pilot
+    // light ignition, the datamine's lighter_lightup_time (user requests 2026-11-27).
+    const warmUp = beam ? actionDetails({}, pages[weapon.en].wikitext).warmUp : lighterOf(data.weapons[weapon.dataKey ?? weapon.name_o ?? weapon.datamineName]);
     return {
       source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
       note: beam ? '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 발사 전 예열 시간은 더하고, 방열판 교체 시간은 넣지 않습니다.'
-        : '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.',
+        : '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 발사 전 점화 시간은 더하고, 재장전 시간은 넣지 않습니다.',
       modes: [{
         id: 'standard', name: beam ? '광선 유지' : '불길 유지', standard: dps, durable, ap: weapon.ap,
         explosion: 0, explosionDurable: 0, explosionAp: 0, innerRadius: null, radius: null, delivery: weapon.delivery, unit: '초', magazine: null, ammoPerShot: 1,
@@ -132,7 +134,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
           const ignite = slot ? record[`Status_Value_${slot}`] * dps / variant.direct : null;
           modes.push({ id: 'underbarrel', name: '하부 부착 무기', standard: dps, durable: dps * variant.durable / variant.direct, ap: variant.ap,
             explosion: 0, explosionDurable: 0, explosionAp: 0, innerRadius: null, radius: null, delivery: 'spray', unit: '초', magazine: null, ammoPerShot: 1,
-            stream: { fire: true, burn: ignite ? BURN : null, ...(ignite ? { ignite } : {}) },
+            stream: { fire: true, burn: ignite ? BURN : null, ...(ignite ? { ignite } : {}), ...(lighterOf(data.weapons[linked.dataKey]) ? { warmUp: lighterOf(data.weapons[linked.dataKey]) } : {}) },
             note: '하부 화염방사기를 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다.' });
           continue;
         }

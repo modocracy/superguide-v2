@@ -182,9 +182,10 @@ export const EXTRA_STATS = {
   seeker: [{ label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' }],
   'anti-tank-seeker': [{ label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' }],
   'stim-pistol': [{ label: '치유', value: 90, unit: '%', caption: '체력의 약 90% · 약 4초에 걸쳐', after: 'damage' }],
-  torcher: [{ label: '연속 분사', value: 12.4, unit: '초', caption: '연료통 하나', after: 'ammo' }],
-  crisper: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }],
-  stoker: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }],
+  // The pilot light: the attack datamine's lighter_lightup_time 0.7 s and lighter_time_to_shutoff 10 s (user request 2026-11-27).
+  torcher: [{ label: '연속 분사', value: 12.4, unit: '초', caption: '연료통 하나', after: 'ammo' }, { label: '점화', value: 0.7, unit: '초', caption: '첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음', after: 'ammo' }],
+  crisper: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }, { label: '점화', value: 0.7, unit: '초', caption: '첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음', after: 'ammo' }],
+  stoker: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }, { label: '점화', value: 0.7, unit: '초', caption: '하부 화염방사기 · 첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음', after: 'ammo' }],
 };
 
 // Wiki infobox traits shown as badges on the gear page, in this order.

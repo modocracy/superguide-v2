@@ -333,7 +333,11 @@ const NO_IGNITION = L('점화 기준치가 주어지지 않아 화상 피해는 
 const OVER_BEFORE_BURN = L('그 전에 끝나므로 화상 피해는 들어가지 않습니다.', 'It is over before that, so no burning damage is added.');
 const armorStopsBurn = (armor, ap) => L(`본체 장갑이 ${armor}라 화상(관통 ${ap})은 본체에 들어가지 않습니다.`, `Main armor ${armor} stops burning (AP ${ap}), so it adds no damage.`);
 const tenths = value => Math.round(value * 10) / 10;
-const warmNote = warm => L(`발사 전 예열 ${tenths(warm)}초를 더했습니다.`, `Includes the ${tenths(warm)} s warm-up before firing.`);
+// A flamethrower's pilot light (stream.fire) is counted from the first ignition: it stays lit about 10 s after the last
+// shot (datamine lighter_time_to_shutoff; user request 2026-11-27).
+const warmNote = (warm, flame) => flame
+  ? L(`첫 점화 기준으로 점화 ${tenths(warm)}초를 더했습니다. 점화기는 마지막으로 쏜 뒤 약 10초 동안 켜져 있어 그동안은 바로 쏠 수 있습니다.`, `Counts the first ignition: ${tenths(warm)} s for the pilot light. It stays lit about 10 s after the last shot, and fires at once until then.`)
+  : L(`발사 전 예열 ${tenths(warm)}초를 더했습니다.`, `Includes the ${tenths(warm)} s warm-up before firing.`);
 function ignitionNote(ignition, ignite, after) {
   // A flame stream lights within a tenth of a second; say so rather than 'about 0 s'.
   const soon = after < 0.1;
@@ -378,7 +382,7 @@ function solveStream(enemy, target, attack, options) {
     : armorStops ? [armorStopsBurn(main.armor, stream.burn.ap)] : burn > 0 && !stream.burnOnly ? [ignitionNote(ignition, stream.ignite, after)] : [];
   const bleedOrKill = main.constitution ? 'bleed' : 'kill';
   const warm = stream.warmUp || 0;
-  if (warm) notes.push(warmNote(warm));
+  if (warm) notes.push(warmNote(warm, stream.fire));
   if (stream.burnOnly) return solveBurn(base, target, main, stream, ignition, burn, armorStops, notes, bleedOrKill, options, own);
   const stages = [];
   let mainLeft = main.hp;

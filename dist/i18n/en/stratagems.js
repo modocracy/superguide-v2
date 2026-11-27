@@ -1,6 +1,8 @@
 // English for the Korean text of data-support.js, data-offense.js, data-equipment.js and data-mission.js,
 // looked up by the exact Korean string (see core/i18n.js).
 export default {
+  "점화": "Ignition",
+  "첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음": "Before the first shot \u00b7 stays lit about 10 s after the last",
   "레이저": "Laser",
   "자동 표적 획득": "Auto target acquisition",
   "아크": "Arc",

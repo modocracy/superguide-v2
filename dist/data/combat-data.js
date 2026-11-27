@@ -571,7 +571,7 @@ const reviewedImpact = (page, modes, note) => ({ ...profile(page, modes.map(mode
 export const STREAM_BURN = { perSecond: 100, ap: 4 };
 const streamMode = (name, dps, durable, ap, delivery, stream) => shot('standard', name, dps, durable, ap, 0, 0, { unit: '초', delivery, magazine: null, stream: { burn: STREAM_BURN, ...stream } });
 const BEAM_NOTE = '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 발사 전 예열 시간은 더하고, 방열판 교체 시간은 넣지 않습니다.';
-const FLAME_NOTE = '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.';
+const FLAME_NOTE = '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 발사 전 점화 시간은 더하고, 재장전 시간은 넣지 않습니다.';
 export const weaponProfiles = {
   'meltagun': {
     ...reviewedImpact('40-K_Meltagun', [
@@ -697,11 +697,11 @@ export const weaponProfiles = {
   // Fire build-up: the particle's Fire status (2, Cremator 3) times the particles the wiki DPS implies (150 / 2,
   // 225 / 3 per second) = 150 and 225 per second.
   'flamethrower': {
-    ...profile('FLAM-40_Flamethrower', [streamMode('불길 유지', 150, 150, 4, 'spray', { fire: true, ignite: 150 })], FLAME_NOTE),
+    ...profile('FLAM-40_Flamethrower', [streamMode('불길 유지', 150, 150, 4, 'spray', { fire: true, ignite: 150, warmUp: support.find(item => item.id === 'flamethrower').warmUp })], FLAME_NOTE),
     sourceRevision: 140360, checkedAt: '2026-11-26',
   },
   'cremator': {
-    ...profile('B/FLAM-80_Cremator', [streamMode('불길 유지', 225, 225, 4, 'spray', { fire: true, ignite: 225 })], FLAME_NOTE),
+    ...profile('B/FLAM-80_Cremator', [streamMode('불길 유지', 225, 225, 4, 'spray', { fire: true, ignite: 225, warmUp: support.find(item => item.id === 'cremator').warmUp })], FLAME_NOTE),
     sourceRevision: 141857, checkedAt: '2026-11-26',
   },
   'railgun': profile('Railgun', [

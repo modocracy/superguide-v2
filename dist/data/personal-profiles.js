@@ -437,7 +437,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/FLAM-66_Torcher',
     checkedAt: '2026-11-08',
     sourceRevision: 141873,
-    note: '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.',
+    note: '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 발사 전 점화 시간은 더하고, 재장전 시간은 넣지 않습니다.',
     modes: [
       {
         id: 'standard',
@@ -459,6 +459,7 @@ export const personalProfiles = {
           burn: { perSecond: 100, ap: 4 },
           ignite: 150,
           capacity: { kind: 'fuel', seconds: 12.4 },
+          warmUp: 0.7,
         },
       },
     ],
@@ -1421,6 +1422,7 @@ export const personalProfiles = {
           fire: true,
           burn: { perSecond: 100, ap: 4 },
           ignite: 150,
+          warmUp: 0.7,
         },
         note: '하부 화염방사기를 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다.',
       },
@@ -2075,7 +2077,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-72_Crisper',
     checkedAt: '2026-11-08',
     sourceRevision: 140485,
-    note: '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.',
+    note: '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 발사 전 점화 시간은 더하고, 재장전 시간은 넣지 않습니다.',
     modes: [
       {
         id: 'standard',
@@ -2097,6 +2099,7 @@ export const personalProfiles = {
           burn: { perSecond: 100, ap: 4 },
           ignite: 150,
           capacity: { kind: 'fuel', seconds: 6.1 },
+          warmUp: 0.7,
         },
       },
     ],

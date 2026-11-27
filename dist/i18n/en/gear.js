@@ -1,6 +1,7 @@
 // English for the Korean text of personal-weapons.js and personal-profiles.js (both generated; edit the English here),
 // looked up by the exact Korean string (see core/i18n.js).
 export default {
+  "하부 화염방사기 · 첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음": "Underbarrel flamethrower \u00b7 before the first shot \u00b7 stays lit about 10 s after the last",
   "최대 충전": "Max charge",
   "주 총열": "Main barrel",
   "부착물 없음": "No Attachment",
