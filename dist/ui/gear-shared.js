@@ -12,7 +12,7 @@ export const GROUPS = [
 export const groupOf = id => GROUPS.find(group => group.id === id);
 const TYPE_NAMES = L({
   'assault-rifles': '돌격소총', 'marksman-rifles': '지정사수소총', 'sniper-rifles': '저격소총', shotguns: '산탄총', 'submachine-guns': '기관단총',
-  'energy-based': '에너지', explosives: '폭발형', special: '특수', pistols: '권총', melee: '근접', standard: '표준',
+  'energy-based': '에너지', explosives: '폭발성', special: '특수', pistols: '권총', melee: '근접', standard: '표준',
 }, {
   'assault-rifles': 'Assault rifles', 'marksman-rifles': 'Marksman rifles', 'sniper-rifles': 'Sniper rifles', shotguns: 'Shotguns', 'submachine-guns': 'SMGs',
   'energy-based': 'Energy', explosives: 'Explosive', special: 'Special', pistols: 'Pistols', melee: 'Melee', standard: 'Standard',

@@ -29,7 +29,9 @@ import { L, T, lang } from '../../core/i18n.js';
 
 const DOT_ICON = { gas: 'gas', fire: 'fire', arc: 'arc', electric: 'arc' };
 const ELEMENTS = { fire: L('화상', 'Fire'), gas: L('가스', 'Gas'), arc: L('아크', 'Arc'), electric: L('아크', 'Arc') };
-const TRAIT_BADGES = { fire: L('화상', 'Fire'), guided: L('유도', 'Guided'), arc: L('아크', 'Arc'), stun: L('기절', 'Stun'), 'one-handed': L('한손', 'One-handed') };
+// Chip words, the game's trait names (user requests 2026-11-27): fire is '인화성' (INCENDIARY) on chips, while damage
+// labels keep ELEMENTS; arc stays '아크' (ARC).
+const TRAIT_BADGES = { fire: L('인화성', 'Incendiary'), guided: L('유도', 'Guided'), arc: L('아크', 'Arc'), stun: L('기절', 'Stun'), 'one-handed': L('한손', 'One-handed') };
 const SORTS = [
   { id: '', name: L('기본 순서', 'Default order') },
   { id: 'damage', name: L('피해 순', 'Damage'), value: w => w.direct != null ? w.direct * (w.pellets || 1) : w.splash },
@@ -144,16 +146,38 @@ export function gearStats(w) {
 
 const statRow = w => html`<dl class="stat-row">${gearStats(w).map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}" title="${stat.dim ? stat.text : ''}">${lang === 'en' && stat.dim && stat.text === 'Unverified' ? '?' : stat.text}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd></div>`)}</dl>`;
 
+// How loud it is (user request 2026-11-27): the attack datamine's weapon noise 'supressor_small' (the wiki's Suppressed
+// trait: heard within about 12-13 m) or 'none' (melee, Caltrops, Stim Pistol), and the wiki pages for the Throwing
+// Knife ('thrown silently'), the Urchin ('no noise when pulsing') and the Re-Educator (heard within 1-2 m, but a miss
+// alerts enemies). The Grenade Pistol (datamine 'weapon_small', loud blast) and the Constitution (only its bayonet is
+// silent) get none.
+// '소음' is the game's word for the SUPPRESSED trait (user request 2026-11-27).
+const QUIET = L('소음', 'Suppressed'), SILENT = L('무음', 'Silent');
+const SUPPRESSED_TIP = L('소음기 무기입니다. 약 12~13m 안에서만 들리고, 빗나간 탄에 적이 덜 반응합니다.', 'Suppressed: heard within about 12-13 m, and missed shots alert enemies less.');
+const SOUND = {
+  suppressor: [QUIET, SUPPRESSED_TIP], smg: [QUIET, SUPPRESSED_TIP], censor: [QUIET, SUPPRESSED_TIP], pistol: [QUIET, SUPPRESSED_TIP],
+  're-educator': [QUIET, L('약 1~2m 안에서만 들립니다. 다만 빗나가면 적이 알아챕니다.', 'Heard within about 1-2 m, but a miss alerts enemies.')],
+  'throwing-knife': [SILENT, L('소리 없이 던집니다. 빗나가도 주변 적이 알아채지 않습니다.', 'Thrown silently; a miss does not alert nearby enemies.')],
+  urchin: [SILENT, L('작동할 때 소리가 나지 않습니다.', 'Makes no noise when it pulses.')],
+  caltrops: [SILENT, L('소리를 내지 않습니다.', 'Makes no noise.')],
+  'stim-pistol': [SILENT, L('소리를 내지 않습니다.', 'Makes no noise.')],
+};
+const soundOf = w => SOUND[w.id] ?? (w.type === 'melee' ? [SILENT, L('근접 공격은 소리를 내지 않습니다.', 'Melee attacks make no noise.')] : null);
+
 export function traits(w) {
   const list = [];
+  const sound = soundOf(w);
+  if (sound) list.push(html`<span class="badge" title="${sound[1]}">${sound[0]}</span>`);
   const hole = holeTier(w);
   if (hole) list.push(html`<span class="badge outline hole-tag" title="${holeText(w, hole)}">${HOLE[hole][0]}</span>`);
-  if (w.dot?.element) list.push(badge(ELEMENTS[w.dot.element] || w.dot.element, 'bleed'));
+  // Gas reads '부식성', the game's word for the CAUSTIC trait (user request 2026-11-27).
+  if (w.dot?.element) list.push(badge(w.dot.element === 'fire' ? TRAIT_BADGES.fire : w.dot.element === 'gas' ? L('부식성', 'Caustic') : ELEMENTS[w.dot.element] || w.dot.element, 'bleed'));
   // Wiki infobox traits (traitTags); not repeated when the over-time damage badge already shows that effect.
   const dotTag = { fire: 'fire', arc: 'arc', electric: 'arc' }[w.dot?.element];
-  for (const tag of w.traitTags || []) if (tag !== dotTag) list.push(badge(TRAIT_BADGES[tag], tag === 'fire' ? 'bleed' : ''));
+  // Every secondary is one-handed, so it does not say so (user request 2026-11-27).
+  for (const tag of w.traitTags || []) if (tag !== dotTag && !(tag === 'one-handed' && w.category === 'secondary')) list.push(badge(TRAIT_BADGES[tag], tag === 'fire' ? 'bleed' : ''));
   // Weapons of the explosive type already say so with their type badge, so only the others get this one.
-  if (w.category !== 'throwable' && w.type !== 'explosives' && w.splash > 0) list.push(badge(L('폭발', 'Explosive')));
+  if (w.category !== 'throwable' && w.type !== 'explosives' && w.splash > 0) list.push(badge(L('폭발성', 'Explosive')));
   if (w.heatCapacity?.raw) list.push(badge(L('과열식', 'Heat-based')));
   if (w.pellets > 1) list.push(badge(L('산탄', 'Pellets')));
   // Selectable firing modes only: variants are damage components (an impact
@@ -279,7 +303,7 @@ function detailRows(w) {
   if (w.shrapnelCount) add(L('파편', 'Fragments'), num(w.shrapnelCount), L('개', ''), L('폭발 1회당 · 다 맞지는 않음', 'Per explosion · not all of them hit'));
   extra('damage');
   // A flame spray's wiki damage is its spray (above), so its burn is the Fire status instead.
-  if (w.dot?.perSecond != null && kind !== 'spray') add(L(`${ELEMENTS[w.dot.element] || '지속'} 피해`, `${ELEMENTS[w.dot.element] || 'Over-time'} damage`), num(w.dot.perSecond), perSecond, w.dot.duration != null ? L(`${num(w.dot.duration)}초 동안`, `For ${num(w.dot.duration)}s`) : L('불이 붙어 있는 동안', 'While it burns'));
+  if (w.dot?.perSecond != null && kind !== 'spray') add(L(`${ELEMENTS[w.dot.element] || '지속'} 피해`, `${ELEMENTS[w.dot.element] || 'Over-time'} damage`), num(w.dot.perSecond), perSecond, w.dot.duration != null ? L(`${num(w.dot.duration)}초 동안`, `For ${num(w.dot.duration)}s`) : w.dot.element === 'gas' ? L('중독되어 있는 동안', 'While poisoned') : L('불이 붙어 있는 동안', 'While it burns'));
   // Gas and arc damage rows carry the wiki damage icon.
   if (w.dot?.perSecond != null && kind !== 'spray' && DOT_ICON[w.dot.element]) rows.at(-1).icon = DOT_ICON[w.dot.element];
   if (burns(w)) {
@@ -752,7 +776,7 @@ export function mount(container, context) {
         <label class="field">${icon('search', 18)}<span class="sr-only">${L('장비 검색', 'Search gear')}</span><input class="input" id="gear-q" type="search" placeholder="${L('이름·코드 검색 — 초성도 됩니다 (예: ㄹㅂㄹㅇㅌ, AR-23)', 'Search by name or code (e.g. Liberator, AR-23)')}" autocomplete="off"></label>
         <label><span class="sr-only">${L('정렬', 'Sort')}</span><select class="select" id="gear-sort">${SORTS.map(sort => html`<option value="${sort.id}">${sort.name}</option>`)}</select></label>
       </div>
-      <div class="segmented gear-groups" role="group" aria-label="${L('분류', 'Group')}">${GROUPS.map(group => html`<button type="button" data-cat="${group.id}" style="--dot:${group.color}"><span class="dot"></span>${group.name} <span class="count">${count(group.id)}</span></button>`)}</div>
+      <div class="chip-row"><div class="segmented gear-groups" role="group" aria-label="${L('분류', 'Group')}">${GROUPS.map(group => html`<button type="button" data-cat="${group.id}" style="--dot:${group.color}"><span class="dot"></span>${group.name} <span class="count">${count(group.id)}</span></button>`)}</div></div>
       <div class="chips" id="gear-types" role="group" aria-label="${L('세부 종류', 'Type')}"></div>
     </div>
     <div class="arsenal-meta"><span id="gear-count" role="status"></span></div>

@@ -185,13 +185,14 @@ for (const weapon of ['stoker', 'missile-pistol', 'warrant', 'variable'].map(id 
 const embeddedWeapon = String(await itemDetailContent('ironclad-democracy', 'gear/arbitrator', 'underbarrel'));
 ok(embeddedWeapon.includes('data-variant="underbarrel" aria-pressed="true"'), 'embedded weapon selects URL mode');
 ok(embeddedWeapon.includes('href="#/gear/arbitrator?m=underbarrel"'), 'full-page link preserves weapon mode');
-// Effect badges from the wiki infobox trait list: each traitTags entry shows once, burn never twice.
+// Effect badges from the wiki infobox trait list: each traitTags entry shows once, burn never twice. Fire reads
+// '인화성', and secondaries (all one-handed) leave out '한손' (user request 2026-11-27).
 {
-  const LABELS = { fire: '화상', guided: '유도', arc: '아크', stun: '기절', 'one-handed': '한손' };
+  const LABELS = { fire: '인화성', guided: '유도', arc: '아크', stun: '기절', 'one-handed': '한손' };
   for (const w of weaponById.values()) {
     const chips = String(weaponDetail(w)).match(/<div class="chips"[\s\S]*?<\/div>/)?.[0] ?? '';
-    for (const tag of w.traitTags ?? []) ok(chips.includes(`>${LABELS[tag]}</span>`), `${w.id}: ${LABELS[tag]} badge shown`);
-    ok((chips.match(/>화상<\/span>/g) || []).length <= 1, `${w.id}: one burn badge at most`);
+    for (const tag of w.traitTags ?? []) ok(tag === 'one-handed' && w.category === 'secondary' ? !chips.includes('>한손</span>') : chips.includes(`>${LABELS[tag]}</span>`), `${w.id}: ${LABELS[tag]} badge ${tag === 'one-handed' && w.category === 'secondary' ? 'left out' : 'shown'}`);
+    ok((chips.match(/>인화성<\/span>/g) || []).length <= 1, `${w.id}: one burn badge at most`);
   }
   const base = (await import('../db/weapons.js')).weapons.find(w => w.id === 'liberator');
   eq(playerDetails(base, { throwable_traits: 'Sticky {{*}} Stun' }).traitTags, ['stun'], 'trait list read from the infobox');

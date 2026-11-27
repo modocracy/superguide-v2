@@ -168,8 +168,11 @@ const portrait = (enemy, cls = '', eager = false) => {
   const image = pickerEnemyImages[enemy.id];
   return image?.src ? html`<img class="${cls}" src="${image.src}" alt="" loading="${eager ? 'eager' : 'lazy'}" decoding="async">` : html`<span class="${cls}"></span>`;
 };
+// A very tall or very long picture (the Throwing Knife, the Stun Lance) lies diagonally in the small square, where it
+// would otherwise shrink to a thin line (user request 2026-11-27).
+const thumbShape = image => image.height > image.width * 4 ? ' tall' : image.width > image.height * 4 ? ' long' : '';
 const weaponIcon = (id, size = 34) => weaponImages[id]
-  ? html`<span class="w-thumb" style="width:${size}px;height:${size}px"><img src="${weaponImages[id].src}" alt="" loading="lazy" decoding="async"></span>`
+  ? html`<span class="w-thumb${thumbShape(weaponImages[id])}" style="width:${size}px;height:${size}px"><img src="${weaponImages[id].src}" alt="" loading="lazy" decoding="async"${thumbShape(weaponImages[id]) === ' tall' ? raw(` style="height:${Math.round(size * 1.25)}px"`) : ''}></span>`
   : html`<img class="strat-icon" style="width:${size}px;height:${size}px" src="${wikiIcons[id]?.src}" alt="" width="${size}" height="${size}" loading="lazy">`;
 
 function renderPicker() {
@@ -432,7 +435,8 @@ function rankRow(entry, selected, large = false, noFatal = false) {
       : entry.mode?.stream?.capacity ? capacityText(entry.mode.stream.capacity, entry.best.fireSeconds ?? entry.best.seconds ?? entry.best.hits)
       : entry.defaulted ? defaultLabel(entry.mode) : assumptionTag(entry.mode);
     part = html`<span>${entry.best.target.name}</span>${aside ? html`<small>${aside}</small>` : ''}`;
-    hits = html`<span class="hits">${num(entry.best.hits)}<small>${unit}${entry.best.lowerBound ? '+' : ''}</small></span>`;
+    // A fire grenade whose blast kills on its own (best.blastKill) says so rather than '0 s'.
+    hits = entry.best.blastKill ? html`<span class="hits">${L('폭발로 즉시', 'Blast')}</span>` : html`<span class="hits">${num(entry.best.hits)}<small>${unit}${entry.best.lowerBound ? '+' : ''}</small></span>`;
     tag = badge(outcome.label, outcome.tone);
   } else if (status === 'assume') {
     part = html`<span class="faint">${L('명중 수 가정 필요', 'Pick a hit assumption')}</span>`; tag = badge(L('가정 선택', 'Assumption'), 'unknown');
@@ -504,8 +508,8 @@ function stageLines(row, enemy, mode) {
       return html`<div>${who}${deliveryOf(event.attack).hit} <code>${num(d.direct)}</code>${event.attack.stream ? L('/초', '/s') : ''}${ranged} · ${L('부위 폭발', 'part explosion')} <code>${num(d.explosion)}</code>${d.mainExplosion ? html` · ${L('본체 폭발', 'main explosion')} <code>${num(d.mainExplosion)}</code>` : ''}${blasts}</div>`;
     });
     const transfer = part.partOnly ? L('독립 장치 — 본체 전달 없음', 'Separate device — nothing passes to main') : `${L('본체 전달', 'To main')} ${num(part.toMain)}%${part.overflowCap == null ? L(' · 상한 미확인', ' · cap unverified') : part.overflowCap ? L(` · 누적 상한 ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`, ` · total cap ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`) : L(' · 상한 없음', ' · no cap')}`;
-    const contact = mode?.stream?.fire ? L('불길 접촉 약', 'Flame contact about') : L('광선 접촉 약', 'Beam contact about');
-    const burned = Number.isFinite(stage.burnTotal) && stage.burnTotal > 0 ? html` · ${L('화상', 'burning')} <code>${num(Math.round(stage.burnTotal))}</code>` : '';
+    const contact = mode?.stream?.gas ? L('가스 중독 약', 'Poisoned about') : mode?.stream?.fire ? L('불길 접촉 약', 'Flame contact about') : L('광선 접촉 약', 'Beam contact about');
+    const burned = Number.isFinite(stage.burnTotal) && stage.burnTotal > 0 ? html` · ${mode?.stream?.gas ? L('가스 피해', 'gas damage') : L('화상', 'burning')} <code>${num(Math.round(stage.burnTotal))}</code>` : '';
     const beam = Number.isFinite(stage.contactSeconds) ? html`<div>${contact} <code>${num(stage.contactSeconds)}${L('초', 's')}</code> · ${L('부위 누적', 'part total')} <code>${num(stage.partTotal)}</code> · ${L('본체 전달', 'to main')} <code>${num(stage.mainTotal)}</code>${burned}</div>` : '';
     const header = html`<b>${stageName(stage)}</b> — ${L('체력', 'health')} ${num(partPool(stage.part))}, ${L('장갑', 'armor')} ${num(stage.part.armor)}, ${L('내구도', 'durability')} ${pct(stage.part.durability)}${row.stages.length > 1 && !Number.isFinite(stage.contactSeconds) ? html` → <b>${num(stage.hits)}${unitOf(mode, stage.hits).unit}</b>` : ''}`;
     return html`<li>${header}${lines}${beam}<div class="faint">${transfer}${index === 0 ? L(` · 본체 체력 ${num(main.hp)}`, ` · main health ${num(main.hp)}`) : ''}</div></li>`;
@@ -522,7 +526,7 @@ function partCard(row, enemy, mode, isBest) {
   return html`<article class="panel part-card" ${isBest ? raw('data-best') : ''}>
     <div class="part-top">
       <div><h3>${target.name} ${badge(outcome.label, outcome.tone)}${isBest ? badge(L('최단', 'Fastest'), 'accent') : ''}${row.conditional ? badge(L('선행 조건', 'Prerequisite'), 'conditional') : ''}</h3>
-        <div class="part-count ${count ? '' : 'none'}">${count ? html`<b>${num(row.hits)}${row.lowerBound ? L('', '+') : ''}</b><span>${unitOf(mode, row.hits).unit}${row.lowerBound ? L(' 이상 · 재생 제외', ' · regen not included') : ''}${target.prerequisite ? L(` · ${target.prerequisite} 후`, ` · after: ${T(target.prerequisite)}`) : ''}</span>` : html`<b>${row.outcome === 'blocked' ? L('관통 불가', 'No penetration') : row.outcome === 'shield' ? L('보호막부터', 'Shield first') : L('계산 보류', 'Not calculated')}</b>`}</div></div>
+        <div class="part-count ${count ? '' : 'none'}">${count && row.blastKill ? html`<b>${L('폭발로 즉시', 'Blast')}</b>` : count ? html`<b>${num(row.hits)}${row.lowerBound ? L('', '+') : ''}</b><span>${unitOf(mode, row.hits).unit}${row.lowerBound ? L(' 이상 · 재생 제외', ' · regen not included') : ''}${target.prerequisite ? L(` · ${target.prerequisite} 후`, ` · after: ${T(target.prerequisite)}`) : ''}</span>` : html`<b>${row.outcome === 'blocked' ? L('관통 불가', 'No penetration') : row.outcome === 'shield' ? L('보호막부터', 'Shield first') : L('계산 보류', 'Not calculated')}</b>`}</div></div>
       ${photoButton(enemy, target)}
     </div>
     <dl class="part-stats">
@@ -602,7 +606,7 @@ function verdict(enemy, weapon, mode, matchup, reference) {
   if (best) {
     const outcome = outcomeOf(best);
     return html`<div class="verdict" data-tone="${outcome.tone}">${label}
-      <h3><span class="big">${num(best.hits)}${L('', best.lowerBound ? '+' : '')}${unitFor(best.hits)}</span>${best.lowerBound ? L(' 이상', '') : ''} · ${best.target.name} · ${outcome.label}</h3>
+      <h3><span class="big">${best.blastKill ? L('폭발로 즉시', 'Blast') : html`${num(best.hits)}${L('', best.lowerBound ? '+' : '')}${unitFor(best.hits)}`}</span>${best.lowerBound ? L(' 이상', '') : ''} · ${best.target.name} · ${outcome.label}</h3>
       <p>${best.stages.length > 1 ? best.stages.map(stage => Number.isFinite(stage.contactSeconds) ? stageName(stage) : `${stageName(stage)} ${num(stage.hits)}${unitFor(stage.hits)}`).join(' → ') + ' · ' : ''}${best.target.tip}</p>
       ${spear ? html`<p style="color:var(--bleed)">${L('스피어는 이 적에게 직접 락온할 수 없습니다. 다른 표적으로 쏜 미사일이 이 부위에 맞았을 때의 참고값입니다.', 'The Spear cannot lock on to this enemy directly. This is a reference value for when a missile fired at another target hits this part.')}</p>` : ''}
       ${best.lowerBound ? html`<p>${best.notes[0]}</p>` : ''}

@@ -82,7 +82,10 @@ for (const expected of golden.combat) {
   // Deliberate change (user request 2026-11-26): the De-Escalator's grenade hit (mode.carrier) now comes before its
   // arcs; the legacy engine left it out, so it is taken off here and checked on its own below the loop.
   const { carrier: _carrier, ...withoutCarrier } = currentMode;
-  const mode = legacyUnsupported[key] ? { ...withoutCarrier, unsupported: legacyUnsupported[key] } : withoutCarrier;
+  // Deliberate change (user request 2026-11-27): the speargun's gas blast (3, AP 6; test-support.mjs checks it against
+  // the datamine) was left out of the legacy profile, so it is taken off for the replay.
+  const legacyMode = key === 'speargun:direct' ? { ...withoutCarrier, explosion: 0, explosionAp: 0, explosionDurable: undefined, innerRadius: undefined, radius: undefined } : withoutCarrier;
+  const mode = legacyUnsupported[key] ? { ...legacyMode, unsupported: legacyUnsupported[key] } : legacyMode;
   const options = addedHitConditions.has(key) ? { ...expected.options, hitCount: 0 } : expected.options;
   // Deliberate change: a partly explosion-resistant part now passes the share it blocks to Main
   // (combat.js hitDamage, exdrRedirect). The legacy engine had no such share, so it is switched off

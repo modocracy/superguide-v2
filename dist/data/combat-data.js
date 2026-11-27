@@ -596,7 +596,8 @@ export const weaponProfiles = {
     shot('melee', '일반 찌르기', 200, 100, 3, 0, 0, { unit: '회', delivery: 'flag' }),
   ], '깃발 끝으로 이 부위를 찌르는 일반 공격 기준입니다. 깃발을 꽂는 동작과 방어구의 근접 피해 증가 효과는 빼고 계산합니다.'),
   'speargun': reviewedImpact('S-11_Speargun', [
-    shot('direct', '직격 기준 · 가스 피해 제외', 650, 275, 5, 0, 0, { delivery: 'harpoon', falloff: true }),
+    // The spear's blast that lets out the gas: datamine S-11_P_E, 3 (AP 6), radii 2 / 5 m (user request 2026-11-27).
+    shot('direct', '직격 기준 · 가스 피해 제외', 650, 275, 5, 3, 6, { delivery: 'harpoon', falloff: true, explosionDurable: 3, innerRadius: 2, radius: 5 }),
   ], '작살이 직접 맞는 피해만 계산합니다. 가스 구름과 중독 피해는 빼므로, 실제로는 더 적은 발로 처치될 수 있습니다.'),
   'de-escalator': reviewedImpact('GL-52_De-Escalator', [
     // carrier: the grenade's own hit before its arcs, the game data sheet's projectile (datamine GL-52_P), user request 2026-11-26.
@@ -629,9 +630,19 @@ export const weaponProfiles = {
     shot('standard', '일반 발사', 400, 200, 4, 500, 4, { explosionDurable: 500, innerRadius: 2.3, radius: 3, falloff: true }),
     shot('charged', '완전 충전 발사', 800, 400, 5, 800, 5, { explosionDurable: 800, innerRadius: 3, radius: 4, falloff: true }),
   ], '일반 발사와 완전 충전은 피해·관통·폭발 반경이 다르므로 모드를 골라 확인하세요. 과충전으로 터지는 자폭은 빼고 계산합니다.'),
-  'expendable-napalm': reviewedExplosive('EAT-700_Expendable_Napalm', [
+  'expendable-napalm': (napalm => ({ ...napalm, modes: [...napalm.modes, {
+    // The napalm in seconds (user request 2026-11-27): the missile's hit and blast (EAT-700_P, _P_IE) and 20% of its 20
+    // bomblets (EAT-700_P1: 200 / AP 0, its blast P1_IE 50 / AP 3; the enemy pages' default for bomblets) come off main
+    // health first, then burning and Burning Heavy, 100 + 200 a second at AP 4 times the fire multiplier (wiki status
+    // datamine Fire, BurningHeavy), while the enemy stays in the fire. The blast's Fire status is 100. How long the fire
+    // lasts is not given anywhere, so it is not limited.
+    id: 'fire', name: '불길 · 주탄·자탄 20% 포함', standard: 0, durable: 0, ap: 0, explosion: 0, explosionAp: 0, delivery: 'pool', unit: '초', magazine: null,
+    stream: { fire: true, burnOnly: true, burn: { perSecond: 300, ap: 4 }, ignite: 100, pool: null, poolName: '불길',
+      blast: { id: 'blast', name: '주탄', standard: 500, durable: 500, ap: 3, explosion: 250, explosionDurable: 250, explosionAp: 6, delivery: 'explosive' },
+      bomblets: { count: 4, of: 20, attack: { standard: 200, durable: 200, ap: 0, explosion: 50, explosionDurable: 50, explosionAp: 3 } } },
+  }] }))(reviewedExplosive('EAT-700_Expendable_Napalm', [
     shot('standard', '주탄 기준·자탄과 화염 제외', 500, 500, 3, 250, 6, { explosionDurable: 250, innerRadius: 1.6, radius: 8, explosionName: '주폭발' }),
-  ], '주탄의 직격과 주폭발만 계산합니다. 자탄 폭발(피해 50, 관통 3)과 불길은 몇 번 맞는지 알 수 없어 빼므로, 실제로는 더 적게 들 수 있습니다.'),
+  ], '주탄 기준은 주탄의 직격과 주폭발만 발 수로 셉니다. 불길 모드는 주탄과 자탄 20%를 먼저 빼고, 남은 본체 체력을 불길 안의 화상(초당 100)과 강한 화상(초당 200)으로 깎는 시간입니다. 불길이 얼마나 남는지는 자료가 없어 계산 시간 동안 남는다고 봅니다.')),
   'solo-silo': reviewedExplosive('MS-11_Solo_Silo', [
     shot('standard', '미사일 1발 · 충돌 폭발과 주폭발', 0, 0, 0, 0, 0, {
       directKind: 'none',

@@ -87,20 +87,58 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
       personalProfiles[weapon.id] = streamProfile(weapon);
       continue;
     }
-    // G-8 Immolation is counted in seconds of burning, not in grenades (user request 2026-11-27). Its blast's Fire
-    // status (datamine, 100) lights the enemy at once, and its pool burns for the wiki's 27 s (personal-display.mjs);
-    // burning takes 100 a second from main health. The blast's own 20 damage is left out.
-    if (weapon.id === 'immolation') {
-      const pool = EXTRA_STATS.immolation?.find(stat => stat.label === '불 지속 시간')?.value;
-      const status = fireStatus(weapon);
-      if (!Number.isFinite(pool) || !status) throw new Error('immolation: fire pool time or Fire status missing');
+    // Fire grenades are counted in seconds of burning, not in grenades (user requests 2026-11-27): G-8 Immolation,
+    // G-10 Incendiary, G-13 Incendiary Impact, G-142 Pyrotech. The blast's Fire status (datamine: 100, 50, 100, 100)
+    // lights every enemy at once (thresholds are 9 at most), the blast's own damage comes off first, and burning then
+    // takes 100 a second from main health (wiki status datamine) while the fire the wiki pages give lasts
+    // (personal-display.mjs). The Pyrotech showers sparks for 4 s (they light it, no damage) before its blast.
+    const FIRE_POOLS = {
+      immolation: { name: '불 웅덩이', pool: '불 지속 시간' },
+      incendiary: { name: '불길', pool: '불 지속 시간' },
+      'incendiary-impact': { name: '불길', pool: '불 지속 시간' },
+      pyrotech: { name: '불길', pool: '불 지속 시간', sparks: '불꽃 회전' },
+    };
+    if (FIRE_POOLS[weapon.id]) {
+      const spec = FIRE_POOLS[weapon.id], stat = label => EXTRA_STATS[weapon.id]?.find(item => item.label === label)?.value;
+      const blastAttack = weapon.attacks.find(a => a.type === 'explosion');
+      const blastRecord = data.damage[data.explosion[blastAttack?.name]?.damage_id];
+      const slot = [1, 2, 3].find(n => blastRecord?.[`Status_Name_${n}`] === 'Fire');
+      const status = slot ? blastRecord[`Status_Value_${slot}`] : null;
+      const after = stat(spec.pool), sparks = spec.sparks ? stat(spec.sparks) : 0;
+      const blast = makeMode(weapon, weapon, 'blast', '폭발');
+      if (!Number.isFinite(after) || !status || !(blast.explosion >= 0)) throw new Error(`${weapon.id}: fire time, Fire status or blast missing`);
+      const pool = after + (sparks || 0);
+      const lead = sparks ? `불꽃이 ${sparks}초 동안 튀며 불을 붙이고, 그 뒤 터지면서(폭발 피해 ${blast.explosion}) 불길이 ${after}초 더 남습니다.`
+        : `폭발(피해 ${blast.explosion})이 점화 수치 ${status}을 한 번에 쌓아 바로 불을 붙이고, ${spec.name}${spec.name === '불길' ? '이' : '가'} ${after}초 동안 남습니다.`;
       personalProfiles[weapon.id] = {
         source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
-        note: `적이 불 웅덩이 안에 머물며 타는 시간입니다. 폭발이 점화 수치 ${status}을 한 번에 쌓아 바로 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 불 웅덩이는 ${pool}초 동안 남습니다. 폭발 자체의 피해(20)는 넣지 않습니다.`,
+        note: `적이 ${spec.name} 안에 머물며 타는 시간입니다. ${lead} ${sparks ? `화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어가고, ${sparks}초 뒤 폭발 피해가 더해집니다.` : '폭발 피해를 먼저 빼고, 그다음 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다.'}`,
         modes: [{
-          id: 'standard', name: '불 웅덩이', standard: 0, durable: 0, ap: 0, explosion: 0, explosionDurable: 0, explosionAp: 0,
+          id: 'standard', name: spec.name, standard: 0, durable: 0, ap: 0, explosion: 0, explosionDurable: 0, explosionAp: 0,
           innerRadius: null, radius: null, delivery: 'pool', unit: '초', magazine: null, ammoPerShot: 1,
-          stream: { fire: true, burnOnly: true, burn: BURN, ignite: status, pool },
+          stream: { fire: true, burnOnly: true, burn: BURN, ignite: status, pool, poolName: spec.name,
+            blast: { id: 'blast', name: '폭발', standard: blast.standard, durable: blast.durable, ap: blast.ap, explosion: blast.explosion, explosionDurable: blast.explosionDurable, explosionAp: blast.explosionAp, delivery: 'explosive' },
+            ...(sparks ? { blastAt: sparks } : {}) },
+        }],
+      };
+      continue;
+    }
+    // G-4 Gas is counted in seconds of gas damage, not in grenades (user request 2026-11-27): its blast's Gas status
+    // poisons at once, the cloud lasts the datamine's aoe_duration, and gas takes the wiki DPS from main health through
+    // its AP. The wiki status datamine (Module:Decodedata-Attacks data.json, DPS_Gas) gives AP 6 and a 6 s poisoning.
+    if (weapon.id === 'gas') {
+      const blast = data.explosion[weapon.attacks.find(a => a.type === 'explosion')?.name];
+      const record = data.damage[blast?.damage_id];
+      const slot = [1, 2, 3].find(n => record?.[`Status_Name_${n}`] === 'Gas');
+      const pool = blast?.aoe_duration, perSecond = weapon.dot?.perSecond, linger = 6;
+      if (!slot || !(pool > 0) || !(perSecond > 0)) throw new Error('gas: Gas status, cloud time or damage per second missing');
+      personalProfiles[weapon.id] = {
+        source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
+        note: `적이 가스 구름 안에 머물며 중독되는 시간입니다. 폭발이 바로 중독시키고, 그때부터 가스가 본체 체력에 초당 ${perSecond}씩 들어갑니다. 가스 구름은 ${pool}초 동안 남고, 구름을 벗어나도 ${linger}초 동안 중독됩니다. 폭발 자체의 피해(3)는 넣지 않습니다.`,
+        modes: [{
+          id: 'standard', name: '가스 구름', standard: 0, durable: 0, ap: 0, explosion: 0, explosionDurable: 0, explosionAp: 0,
+          innerRadius: null, radius: null, delivery: 'pool', unit: '초', magazine: null, ammoPerShot: 1,
+          stream: { gas: true, burnOnly: true, burn: { perSecond, ap: 6 }, pool, linger },
         }],
       };
       continue;

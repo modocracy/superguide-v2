@@ -1026,7 +1026,9 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .gear-tabs button:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; border-radius: 4px; }
 .gear-head p { margin-top: 8px; }
 .gear-groups button .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dot); }
-.gear-groups button .count { font-size: 12px; opacity: .6; font-weight: 500; }
+/* Counts read like the chip rows' (user request 2026-11-27). */
+.gear-groups button .count { font: 700 15px/1 var(--cond); color: var(--text-3); }
+.gear-groups button[aria-pressed="true"] .count { color: var(--accent-ink); opacity: .7; }
 .gear-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
 .gear-card .card-open { gap: 9px; }
 .gear-art { display: grid; place-items: center; height: 96px; border-radius: 8px; overflow: hidden;
@@ -1043,6 +1045,8 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .gear-block { min-width: 0; }
 .w-thumb { display: grid; place-items: center; flex: none; border-radius: 7px; background: var(--surface-2); overflow: hidden; }
 .w-thumb img { max-width: 92%; max-height: 80%; object-fit: contain; }
+span.w-thumb.tall img { max-width: none; max-height: none; width: auto; transform: rotate(45deg); }
+span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: auto; transform: rotate(-45deg); }
 .group-tabs { margin: -4px 0 10px; }
 /* Armor tab: one clipped panel per passive, its effect lines, then the armor sets. */
 .armor-tools { display: grid; gap: 10px; }
@@ -1545,7 +1549,9 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
   .enemy-attack-table td.hits b { font-size: 17px; }
 }
 /* Gear browse: the one-handed filter sits after the type chips. */
-.chip-hand { margin-left: 8px; }
+/* The extra filters stand apart from the type chips; the hole filter too where there is no one-handed one (user request 2026-11-27). */
+.chip-hand, .chip-hole { margin-left: 8px; }
+.chip-hand + .chip-hole { margin-left: 0; }
 /* Armor passive: a worked example under the effect lines (Scout detection range). */
 .passive-note { margin: -6px 0 14px; padding: 8px 10px; font-size: 13.5px; color: var(--text-2); background: var(--surface-2); border-left: 3px solid var(--accent); }
 .passive-note .ext { margin-left: 4px; }

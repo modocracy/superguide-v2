@@ -366,7 +366,7 @@ function reloadCell(item) {
     : r.time != null && r.tactical != null ? (r.time === r.tactical ? L('전술 재장전 없음', 'No tactical reload') : L(`전술 재장전 ${num(v('tactical'))}초`, `Tactical reload ${num(v('tactical'))}s`)) : r.time == null ? L('전술 재장전', 'Tactical reload') : L('탄창을 비웠을 때', 'From empty'),
     r.clipFirst != null ? L(`클립 하나씩 장전 ${num(v('clipFirst'))}초, 다음 클립 ${num(v('clipRest'))}초`, `Clip by clip: ${num(v('clipFirst'))}s, then ${num(v('clipRest'))}s each`) : '',
     r.assisted != null ? L(`동료가 장전하면 ${num(r.assisted)}초`, `${num(r.assisted)}s when a teammate loads it`) : r.assistedPerClip != null ? L(`동료가 장전하면 클립당 ${num(r.assistedPerClip)}초`, `${num(r.assistedPerClip)}s a clip when a teammate loads it`) : '',
-    r.stationary ? L('정지 재장전', 'Stationary reload') : '',
+    // Stationary reload is a chip already (reloadBadges), not repeated here (user request 2026-11-27).
   ].filter(Boolean).join(' · ');
   const note = reloadModuleNote(item);
   return html`<div><dt>${note ? tipLabel(L('재장전', 'Reload'), note) : L('재장전', 'Reload')}</dt><dd>${num(v(main))}<small>${s}</small></dd><div class="caption">${parts}</div></div>`;

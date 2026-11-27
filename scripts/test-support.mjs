@@ -70,7 +70,8 @@ const engine = {
   'belt-fed-gl': { standard: shot('GL-28_P') },
   'airburst-launcher': { flak: shot('RL-77_P', { bomblet: 'RL-77_P1' }), cluster: shot('RL-77_P2', { bomblet: 'RL-77_P3' }) },
   wasp: { submunitions: shot('StA-X3_P1', { bomblet: 'StA-X3_P' }) },
-  speargun: { direct: shot('S-11_P') },
+  // The spear's gas blast hangs off explode_id, not explode_on_impact_id (user request 2026-11-27).
+  speargun: { direct: shot('S-11_P', { blast: 'S-11_P_E' }) },
   'arc-thrower': { 'first-target': { hit: ['arc', 'ARC-3 ARC THROWER_A'] } },
   'de-escalator': { arc: { hit: ['arc', 'GL-52_P_IE_A'], carrier: 'GL-52_P' } },
   meltagun: { near: { hit: ['beam', '40-K MELTAGUN_B'] } },
@@ -100,6 +101,7 @@ const table = {
 };
 
 const notCompared = {
+  'engine:expendable-napalm/fire': 'A burning time, not a shot; its missile and bomblets are checked against the datamine below.',
   'engine:meltagun/max-range': 'The 40% falloff at 15 m comes from the wiki page; the datamine has no range falloff.',
   'engine:solo-silo/standard': 'MS-11 Solo Silo is not in the datamine snapshot.',
   'table:solo-silo': 'MS-11 Solo Silo is not in the datamine snapshot.',
@@ -256,6 +258,16 @@ for (const item of support.filter(item => item.magazine != null || item.spareMag
   } else if (item.spareRounds != null && item.spareRounds !== spare.rounds) ammoWarnings.push(`${item.id}: spare rounds ${item.spareRounds}, datamine ${spare.rounds ?? 'none'}`);
 }
 for (const message of ammoWarnings) console.warn(`warning: support ammo: ${message}`);
+
+// The Expendable Napalm's burning mode (user request 2026-11-27): its missile and bomblet numbers are the datamine's.
+{
+  const { blast, bomblets } = weaponProfiles['expendable-napalm'].modes.find(mode => mode.id === 'fire').stream;
+  const where = 'engine:expendable-napalm/fire';
+  const same4 = (site, hit, boom, what) => ok(site.standard === hit.dmg && site.durable === hit.dmg2 && site.ap === hit.ap1 && site.explosion === boom.dmg && site.explosionAp === boom.ap1, `${where}: ${what} matches the datamine`);
+  same4(blast, hitOf(['projectile', 'EAT-700_P'], where), blastOf('EAT-700_P_IE', where), 'missile');
+  same4(bomblets.attack, hitOf(['projectile', 'EAT-700_P1'], where), blastOf('EAT-700_P1_IE', where), 'bomblet');
+  ok(explosion['EAT-700_P_IE'].shrapnel_count === bomblets.of, `${where}: ${bomblets.of} bomblets`);
+}
 
 assert(!failures.length, `${failures.length} support weapon checks failed:\n  ${failures.join('\n  ')}`);
 console.log(`PASS support: ${checks} checks; ${Object.keys(weaponProfiles).length} combat profiles and ${support.length} table rows against the wiki datamine (revision ${snapshot.revision}); ${Object.keys(reviewed).length} reviewed differences.`);
