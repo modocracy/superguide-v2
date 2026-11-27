@@ -60,7 +60,7 @@ export default {
   "인포박스에 명시된 탄체·폭발 1회": "Per projectile/explosion listed in the infobox",
   "타격 1회": "Per strike",
   "피해 항목 1회·시간 단위 미확인": "Per damage entry · time basis unverified",
-  "맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.": "Impact angle, ricochets, damage over time such as burning and effects such as stun are left out, and damage to several parts at once is not added up. Automatic and burst fire are counted one round at a time.",
+  "맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.": "Impact angle, ricochets, damage over time such as burning and effects such as stun are left out; damage to several parts at once is added only for the pieces of the same part chosen under Blast. Automatic and burst fire are counted one round at a time.",
   "기본은 펠릿의 절반(반올림)이 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.": "By default, half the pellets (rounded) are assumed to hit. Change the hit rate to recalculate.",
   "기본은 아크가 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있습니다.": "By default, all arcs are assumed to hit the same part. Lower the hit rate to recalculate.",
   "기본은 파편의 20%를 반올림한 개수가 같은 부위에 맞는다고 가정하며, 직접 맞혔을 때의 피해와 폭발 피해도 반영합니다. 명중률을 바꿔 다시 계산할 수 있으며, 파편 0개를 고르면 파편 피해는 제외합니다.": "By default, 20% of the shrapnel (rounded) is assumed to hit the same part, and direct-hit damage and explosion damage are also included. Change the hit rate to recalculate; choosing 0 fragments leaves out shrapnel damage.",

@@ -210,7 +210,20 @@ function solveImpacts(enemy, target, attack, options) {
   const fire = attack.fire && known(options.fireMult) && known(options.ignition?.value) && !target.isolated ? attack.fire : null;
   const burnGap = fire ? fire.burn.perSecond * options.fireMult * armorFactor(fire.burn.ap, main.armor) * fire.interval : 0;
   let build = 0, lit = false, burned = 0;
-  const fireNotes = () => burned > 0 ? { notes: [L(`점화 기준치 ${options.ignition.value}에 닿아 불이 붙고, 발 사이 화상이 본체 체력을 ${Math.round(burned)}만큼 더 깎았습니다.`, `It caught fire at the ignition threshold of ${options.ignition.value}; burning between shots took ${Math.round(burned)} more off main health.`)] } : {};
+  // One blast reaching other pieces of the same part (options.blastParts, user request 2026-11-27): a part with
+  // several pieces (the Fleshmob's six head chunks) whose blast is assumed to catch that many of them at once, as
+  // hd2armorinspector.com works out from its 3D models. Each extra piece takes the same blast on its own health and
+  // passes its share to main; the share an ExDR part blocks reaches main once per blast. Fatal and layered parts are
+  // left to the single-part count.
+  const spread = Math.min(Math.max(1, Math.floor(options.blastParts || 1)), part.count || 1);
+  const others = spread > 1 && !target.isolated && !part.next && !part.mainOnly && !FATAL.includes(part.effect)
+    ? Array.from({ length: spread - 1 }, () => ({ left: partPool(part), cap: transferCap(part) })) : [];
+  let spreadMain = 0;
+  const notesOf = () => [
+    ...(burned > 0 ? [L(`점화 기준치 ${options.ignition.value}에 닿아 불이 붙고, 발 사이 화상이 본체 체력을 ${Math.round(burned)}만큼 더 깎았습니다.`, `It caught fire at the ignition threshold of ${options.ignition.value}; burning between shots took ${Math.round(burned)} more off main health.`)] : []),
+    ...(spreadMain > 0 ? [L(`폭발이 같은 부위 ${spread}개에 함께 맞는다고 가정했습니다. 다른 ${spread - 1}개가 받은 폭발로 본체 체력이 ${Math.round(spreadMain)}만큼 더 깎였습니다.`, `Assumes the blast catches ${spread} pieces of this part at once; the blast on the other ${spread - 1} took ${Math.round(spreadMain)} more off main health.`)] : []),
+  ];
+  const fireNotes = () => notesOf().length ? { notes: notesOf() } : {};
 
   while (part) {
     const hits = events.map(event => ({ ...event, damage: hitDamage(event.attack, part, main, { ...options, directHit: event.directHit ?? options.directHit }) }));
@@ -246,6 +259,13 @@ function solveImpacts(enemy, target, attack, options) {
         mainLeft -= transfer + mainExplosion;
         // A sticky thermite charge burns on into main health once per shot (attack.mainDot; data audit 2026-11-27).
         if (attack.mainDot && applied === perShot && !target.isolated) mainLeft -= attack.mainDot.total;
+        for (const piece of others) {
+          if (piece.left <= 0 || !explosion) continue;
+          let passed = splitTransfer ? blasts.reduce((sum, blast) => sum + floor((blast.toPart || 0) * part.toMain / 100), 0) : floor(explosion * part.toMain / 100);
+          if (part.overflowCap) { passed = Math.min(passed, piece.cap); piece.cap -= passed; }
+          piece.left -= explosion;
+          mainLeft -= passed; spreadMain += passed;
+        }
         partLeft -= partDamage;
         if (partLeft <= 0) mainLeft -= part.destroyMainDamage || 0;
 

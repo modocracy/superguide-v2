@@ -194,16 +194,16 @@ export function assumptionText(mode) {
     : L('같은 부위에 광선을 계속 비추는 조건. 쌓인 점화 수치가 적의 점화 기준치에 도달하면 불이 붙는다고 봅니다.', 'Assumes the beam stays on the same part. It catches fire once the build-up reaches the enemy\'s ignition threshold.');
   if (c) return L('선택한 명중 수가 모두 해당 부위에 최대 피해로 들어가는 가정. 여러 부위 동시 피해는 더하지 않습니다.',
     'Assumes every chosen hit lands on the part at full damage. Damage to several parts at once is not added.');
-  if (mode?.delivery === 'adhesive') return L('장약 하나하나가 해당 부위에 최대 폭발 피해를 주는 조건. 여러 부위 동시 피해는 더하지 않습니다.',
-    'Assumes each charge deals full explosion damage to the part. Damage to several parts at once is not added.');
+  if (mode?.delivery === 'adhesive') return L('장약 하나하나가 해당 부위에 최대 폭발 피해를 주는 조건. 다른 부위 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다.',
+    'Assumes each charge deals full explosion damage to the part. Damage to other parts is added only for the pieces chosen under Blast.');
   if (mode?.delivery === 'melee' || mode?.delivery === 'flag') return L('같은 부위를 정면에서 계속 타격하는 조건. 방어구의 근접 피해 보너스는 제외합니다.',
     'Assumes repeated strikes on the same part from the front. Armor melee bonuses are left out.');
   if (mode?.delivery === 'guided') return L('미사일이 해당 부위에 직접 착탄하는 조건. 유도 궤적이 이 부위를 보장하지는 않습니다.',
     'Assumes the missile impacts this part directly. The guided path does not guarantee it.');
   if (mode?.delivery === 'arc') return L('아크가 해당 부위에 계속 닿는 조건. 아크는 부위를 골라 조준할 수 없습니다.',
     'Assumes the arc keeps hitting this part. Arcs cannot be aimed at a specific part.');
-  if (explosionsOf(mode || {}).length) return L('같은 부위에 직격과 최대 폭발 피해가 함께 들어가는 조건. 여러 부위 동시 피해는 더하지 않습니다.',
-    'Assumes the part takes the direct hit plus full explosion damage. Damage to several parts at once is not added.');
+  if (explosionsOf(mode || {}).length) return L('같은 부위에 직격과 최대 폭발 피해가 함께 들어가는 조건. 다른 부위 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다.',
+    'Assumes the part takes the direct hit plus full explosion damage. Damage to other parts is added only for the pieces chosen under Blast.');
   return L('같은 부위를 최대 피해로 계속 맞히는 조건. 거리·각도·빗맞음에 따라 실전에서는 더 필요합니다.',
     'Assumes every shot hits the same part at full damage. Range, angle and misses mean you will need more in a real fight.');
 }

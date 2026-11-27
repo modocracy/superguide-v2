@@ -41,7 +41,7 @@ export function recommend(unit, choice, enemy = findEnemy(unit.enemy), engineOpt
   // Fire multiplier and ignition threshold for a held beam or flame stream, as on the enemy view (no effect on shots).
   // A mode that needs a hit count (Autocannon flak fragments) takes the enemy page's default (user request 2026-11-27).
   const solved = mode.hitCondition && !mode.events ? withHitAssumption(mode, { hitCount: mode.hitCondition.default }) : mode;
-  const matchup = solveMatchup(enemy, solved, { shieldCleared: true, fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id), ...engineOptions, ...(approach ? { directHit: approach.directHit } : {}) });
+  const matchup = solveMatchup(enemy, solved, { shieldCleared: true, blastParts: noFatalPart(enemy) ? 2 : 1, fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id), ...engineOptions, ...(approach ? { directHit: approach.directHit } : {}) });
   const aims = (approach ? [approach.target] : pick?.targets || factionAimTargets[`${enemy.id}:${choice}`] || unit.targets).filter(Boolean);
   // Only the editor's aim points count: never silently swap in an easier-to-count part. A pick with no aim point
   // (a flak burst at a drone swarm) takes the quickest route; an enemy with no fatal part (the Fleshmob) the cumulative

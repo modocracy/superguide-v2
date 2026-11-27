@@ -263,7 +263,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     if (modes.every(mode => mode.unsupported)) personalUnsupported[weapon.id] = modes[0].unsupported;
     else personalProfiles[weapon.id] = withMainDot(weapon, {
       source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
-      note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+      note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
       modes,
     });
   }

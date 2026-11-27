@@ -51,7 +51,14 @@ const groupOf = id => GROUPS.find(group => group.id === id);
 const oneShot = entry => entry.status === 'route' && !entry.mode?.stream && entry.best?.hits === 1 && isFatal(entry.best) && !entry.best.lowerBound;
 // The enemy's wiki fire damage multiplier and ignition threshold, for held beams, flame streams and burning
 // (core/combat.js solveStream).
-const fireOptions = enemy => ({ fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id) });
+// Engine options from the enemy (fire multiplier, ignition threshold) and the blast-pieces choice below.
+const fireOptions = enemy => ({ fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id), blastParts: blastPartsOf(enemy) });
+// How many pieces of the same part one blast catches (user request 2026-11-27, after hd2armorinspector.com's 3D blasts):
+// an enemy made of several same pieces with no fatal part (the Fleshmob) starts at 2, others at 1; the user can change it.
+const BLAST_PARTS = [1, 2, 3];
+const hasBlastPieces = enemy => enemy.parts.some(part => (part.count || 1) > 1 && !part.next && !FATAL.includes(part.effect));
+const blastPartsOf = enemy => (hasBlastPieces(enemy) ? state.blastParts ?? (noFatalPart(enemy) ? 2 : 1) : 1);
+const blastControl = enemy => hasBlastPieces(enemy) ? html`<div class="segmented blast-tabs" role="group" aria-label="${L('폭발이 함께 맞는 같은 부위 수', 'Pieces of the same part one blast catches')}" title="${L('부위가 여러 개인 적(예: 플레시몹 덩어리)에서 폭발 한 번이 같은 부위 몇 개에 함께 맞는지 가정합니다. 위치 자료가 없어 직접 고르는 가정입니다.', 'For an enemy with several pieces of a part (Fleshmob chunks), how many of them one blast catches. An assumption you choose: there is no position data.')}"><span class="seg-label">${L('폭발 범위', 'Blast')}</span>${BLAST_PARTS.map(n => html`<button type="button" data-blast-parts="${n}" aria-pressed="${n === blastPartsOf(enemy)}">${L(`${n}부위`, `${n} ${n === 1 ? 'piece' : 'pieces'}`)}</button>`)}</div>` : '';
 // Enemies without a fatal part die from damage piled onto the main body across
 // several parts; such routes come from solveAccumulation (parts one after another).
 const stepName = step => L(step.partName.replace(/ 한 ?(개|쪽)$/, ''), T(step.partName).replace(/^One /, ''));
@@ -134,7 +141,7 @@ const PRIMARY_HITS = [['blast', L('주탄 폭발만', 'Main projectile explosion
 // --- Ranking ----------------------------------------------------------------------
 const rankCache = new Map();
 function rankWeapons(enemy, shieldCleared, group = state.group) {
-  const key = `${enemy.id}|${shieldCleared}|${group}|${state.distance}`;
+  const key = `${enemy.id}|${shieldCleared}|${group}|${state.distance}|${blastPartsOf(enemy)}`;
   if (rankCache.has(key)) return rankCache.get(key);
   const entries = weaponsOf[group].map((weapon, order) => {
     const profile = profileOf(weapon.id);
@@ -474,7 +481,7 @@ function ranking(enemy, entries, selectedId) {
   ${large ? html`<div class="one-shot-note ${singles ? '' : 'none'}">${L(singles ? html`<b>${SIZE_NAMES[enemySize(enemy)]} 적</b> · ${groupOf(state.group).name} 중 <b>${singles}종</b>이 한 발에 처치합니다. 강조된 줄을 먼저 보세요.` : html`<b>${SIZE_NAMES[enemySize(enemy)]} 적</b> · ${groupOf(state.group).name} 중 한 발에 처치하는 무기가 없습니다. 여러 발이 필요하니 주의하세요.`,
     singles ? html`<b>${SIZE_NAMES[enemySize(enemy)]} enemy</b> · <b>${singles}</b> ${groupOf(state.group).name.toLowerCase()} ${singles === 1 ? 'weapon kills' : 'weapons kill'} it in one shot. Check the highlighted rows first.` : html`<b>${SIZE_NAMES[enemySize(enemy)]} enemy</b> · no ${groupOf(state.group).name.toLowerCase()} weapon kills it in one shot. Expect to need several.`)}</div>` : ''}
   <div class="rank-filters"><div class="segmented group-tabs" role="group" aria-label="${L('무기 분류', 'Weapon group')}">${GROUPS.map(group => html`<button type="button" data-group-pick="${group.id}" aria-pressed="${group.id === state.group}">${group.name} <span class="count">${weaponsOf[group.id].length}</span></button>`)}</div>
-    <div class="segmented range-tabs" role="group" aria-label="${L('사격 거리', 'Shooting distance')}">${DISTANCES.map(d => html`<button type="button" data-distance="${d}" aria-pressed="${d === state.distance}">${d}m</button>`)}</div></div>
+    <div class="segmented range-tabs" role="group" aria-label="${L('사격 거리', 'Shooting distance')}">${DISTANCES.map(d => html`<button type="button" data-distance="${d}" aria-pressed="${d === state.distance}">${d}m</button>`)}</div>${blastControl(enemy)}</div>
   <div class="panel ranking">
     <div class="rank-head" aria-hidden="true"><span></span><span>${L('무기', 'Weapon')}</span><span>${L('노릴 부위', 'Aim for')}</span><span>${L('횟수', 'Shots')}</span><span>${L('결과', 'Result')}</span></div>
     ${main.map(row)}
@@ -752,7 +759,7 @@ function renderMain() {
   if (sheetView === 'matchup') showMatchupSheet(true);
 }
 
-const urlQuery = () => ({ g: state.group === 'support' ? null : state.group, w: state.weapon, m: state.weapon ? state.mode : null, shield: state.shield ? null : '0', r: state.distance || null });
+const urlQuery = () => ({ g: state.group === 'support' ? null : state.group, w: state.weapon, m: state.weapon ? state.mode : null, shield: state.shield ? null : '0', r: state.distance || null, b: state.blastParts ?? null });
 function syncUrl() {
   ctx.replace({ view: 'enemy', id: state.enemy, query: urlQuery() });
 }
@@ -784,7 +791,7 @@ function showMatchupSheet(keepScroll = false) {
   const picks = compare.picks.length;
   showSheet(html`<div class="sheet-top"><span>${enemy.name} · ${L('부위별 계산', 'Part by part')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content matchup-sheet">
-      <div class="rank-filters"><div class="segmented range-tabs" role="group" aria-label="${L('사격 거리', 'Shooting distance')}">${DISTANCES.map(d => html`<button type="button" data-distance="${d}" aria-pressed="${d === state.distance}">${d}m</button>`)}</div>
+      <div class="rank-filters"><div class="segmented range-tabs" role="group" aria-label="${L('사격 거리', 'Shooting distance')}">${DISTANCES.map(d => html`<button type="button" data-distance="${d}" aria-pressed="${d === state.distance}">${d}m</button>`)}</div>${blastControl(enemy)}
         ${picks ? html`<span class="sheet-compare">${L(`비교에 담은 무기 ${picks}/${MAX_COMPARE}`, `${picks}/${MAX_COMPARE} in the comparison`)} <button class="button small" type="button" data-compare-open ${picks < 2 ? raw('disabled') : ''}>${L('비교 보기', 'Compare')}</button></span>` : ''}</div>
       ${matchupSection(enemy, entries)}
     </div>`, L(`${enemy.name} 부위별 계산`, `${T(enemy.name)} part by part`), keepScroll);
@@ -902,6 +909,8 @@ function onClick(event) {
     ctx.go({ view: 'enemy', id: state.enemy, query: { ...urlQuery(), w: target.dataset.weapon, m: target.dataset.mode || null } });
   } else if (target.dataset.distance) {
     state.distance = Number(target.dataset.distance); renderMain(); syncUrl();
+  } else if (target.dataset.blastParts) {
+    state.blastParts = Number(target.dataset.blastParts); renderMain(); syncUrl();
   } else if (target.dataset.modePick) {
     state.weapon ||= selectedWeaponId(); state.mode = target.dataset.modePick; resetAssumption(); renderMain(); syncUrl();
   } else if (target.dataset.photo) openPhotos(target.dataset.photo);
@@ -943,6 +952,7 @@ export function update(route) {
     mode: modes.some(mode => mode.id === route.query.m) ? route.query.m : weapon ? state.weapon === weapon ? state.mode : null : null,
     shield: route.query.shield !== '0',
     distance: DISTANCES.includes(Number(route.query.r)) ? Number(route.query.r) : 0,
+    blastParts: BLAST_PARTS.includes(Number(route.query.b)) ? Number(route.query.b) : null,
   });
   renderMain();
   if (route.id !== enemy) syncUrl();
