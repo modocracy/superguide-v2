@@ -105,8 +105,8 @@ const table = {
 const notCompared = {
   'engine:expendable-napalm/standard': 'A burning time, not a shot; its missile and bomblets are checked against the datamine below.',
   'engine:meltagun/max-range': 'The 40% falloff at 15 m comes from the wiki page; the datamine has no range falloff.',
-  'engine:solo-silo/standard': 'MS-11 Solo Silo is not in the datamine snapshot.',
-  'table:solo-silo': 'MS-11 Solo Silo is not in the datamine snapshot.',
+  'engine:solo-silo/standard': 'A stratagem: its two blasts are checked against the stratagem datamine below.',
+  'table:solo-silo': 'A stratagem: its two blasts are checked against the stratagem datamine below.',
   'table:flamethrower': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
   'table:cremator': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
   'engine:flamethrower/standard': 'The held flame stream uses the wiki page DPS; the datamine stores one spray particle.',
@@ -270,6 +270,20 @@ for (const message of ammoWarnings) console.warn(`warning: support ammo: ${messa
   same4(blast, hitOf(['projectile', 'EAT-700_P'], where), blastOf('EAT-700_P_IE', where), 'missile');
   same4(bomblets.attack, hitOf(['projectile', 'EAT-700_P1'], where), blastOf('EAT-700_P1_IE', where), 'bomblet');
   ok(explosion['EAT-700_P_IE'].shrapnel_count === bomblets.of, `${where}: ${bomblets.of} bomblets`);
+}
+
+// The MS-11 Solo Silo is in the stratagem datamine (SOLO SILO_EImpact and SOLO SILO_E): its impact and main blasts,
+// in the engine and on the card, are the datamine's (data audit 2026-11-27).
+{
+  const data = JSON.parse(await readFile(new URL('../db/source/stratagems_data.json', import.meta.url), 'utf8')).data;
+  const blast = id => ({ ...data.damage[data.explosion[id].damage_id], r1: data.explosion[id].r1, r2: data.explosion[id].r2 });
+  const [impact, main] = [blast('SOLO SILO_EImpact'), blast('SOLO SILO_E')];
+  const { explosions } = weaponProfiles['solo-silo'].modes[0];
+  const same = (site, boom, what) => ok(site.standard === boom.dmg && site.durable === boom.dmg2 && site.ap === boom.ap1 && site.innerRadius === boom.r1 && site.radius === boom.r2, `engine:solo-silo/standard: ${what} matches the datamine`);
+  same(explosions.find(item => item.id === 'impact'), impact, 'impact blast');
+  same(explosions.find(item => item.id === 'main'), main, 'main blast');
+  const card = support.find(item => item.id === 'solo-silo');
+  ok(card.splash === main.dmg && card.splashAp === main.ap1 && card.innerRadius === main.r1 && card.radius === main.r2 && card.extraStats[0].value === impact.dmg, 'table:solo-silo: card blasts match the datamine');
 }
 
 assert(!failures.length, `${failures.length} support weapon checks failed:\n  ${failures.join('\n  ')}`);
