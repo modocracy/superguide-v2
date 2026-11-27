@@ -9,9 +9,13 @@
 // view is more than about 0.57 degrees to one side a kick back towards the middle is cut to 1/16.
 // The build PC's reference (db/source/game_sheets/recoil_reconstruction.md, 2026-11-25) found none of the site
 // estimates below, nor the stance multipliers, in the game data: they stay estimates.
-// The view climbs steadily and stays where it climbed (nobody pulls it down), and one recoil unit is 0.01 / 12 degrees
-// per round: real firing recorded in a mission (Stalwart, first person, 2026-11-25) climbed about 0.015 degrees a
-// round without levelling off. The spring fitted to the armory's recoil simulation view (recoil_reconstruction.md
+// The view climbs steadily and stays where it climbed (nobody pulls it down), and one recoil unit is 0.0013 degrees
+// per round: seven mission recordings on the build PC (Stalwart standing and prone at 700 and 1,150 RPM, Liberator
+// standing, crouched and prone; first person; recoil_reconstruction.md section 9, 2026-11-27) climbed 0.0011-0.0014
+// degrees per unit of vertical camera recoil a round, median 0.0013, straight for 250 rounds, with each round's climb
+// in within 20-40 ms and the stance ratios 0.9 / 0.6 / 0.4 (user decision 2026-11-27). Both weapons have a vertical
+// camera recoil of 20, so the unit's proportion to it is not proven; the horizontal climb stays as it was and the
+// recordings drift to the side more than it does. The spring fitted to the armory's recoil simulation view (recoil_reconstruction.md
 // section 8) climbed and held instead; that view does not draw the real view (user decision 2026-11-25: follow the
 // mission recording, still an estimate from one weapon, and show no angles on the page).
 // Site estimates (the game data does not give them): the unit above, drift settles with a 0.12 s time constant, a
@@ -27,7 +31,7 @@ import { L } from '../core/i18n.js';
 import { html, raw } from './dom.js';
 import { detailDisclosure } from './item-detail.js';
 
-const UNIT = 0.01 / 12, DRIFT_TAU = 0.12, CLIMB_TAU = 0.01, TURN = 0.57, STEP = 1 / 240;
+const UNIT = 0.0013, DRIFT_TAU = 0.12, CLIMB_TAU = 0.01, TURN = 0.57, STEP = 1 / 240;
 const MRAD = 180 / Math.PI / 1000; // degrees per milliradian
 const PULL = 0.15, PASSIVE = 0.7; // seconds between trigger pulls (estimate); the recoil passive's multiplier
 const STANCES = [['stand', 0.9, () => L('서서', 'Standing')], ['crouch', 0.6, () => L('앉아서', 'Crouched')], ['prone', 0.4, () => L('엎드려서', 'Prone')]];
@@ -181,8 +185,8 @@ class RecoilSim extends Base {
       <p class="caption">${L('십자 = 조준점(고정)<br>점 = 탄착군(노란색 = 방금 쏜 탄, 산탄총은 펠릿마다 작은 점)<br>선 = 총구 궤적<br>원 = 총구 방향<br>표 배율은 모든 무기가 같고, 탄착이 넘칠 때만 줄어듭니다.',
         'Cross = aim point (fixed)<br>Dots = hit group (yellow = just fired; a shotgun shows a small dot per pellet)<br>Line = muzzle path<br>Circle = muzzle direction<br>Every weapon uses the same scale; it shrinks only when a burst would not fit.')}</p>
       <p class="caption">${L('반동·탄퍼짐·부착물·패시브 배율은 게임 자료이고, 한 발 크기와 꾸준히 오르는 모양은 추정입니다.', 'Recoil, spread, attachment and passive multipliers are game data; the size of a round and the steady climb are estimates.')}
-        <span class="col-tip" tabindex="0" data-tip="${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 자체 연구 값이고, 화면은 직접 내리지 않으면 돌아오지 않고 꾸준히 오르며, 한 발의 크기는 추정입니다. 게임 무기고의 반동 시뮬레이션 화면은 실제 시야를 그대로 그리지 않는 것으로 보여 따르지 않았습니다. 수평으로 움직이는 속도와 탄퍼짐 안에서 퍼지는 모양도 사이트 추정입니다(게임 데이터에서 찾지 못함). 총구·총열 하부 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
-        'The recoil values and spread are game data, the stance multipliers come from our own research, the view climbs steadily unless you pull it down, and the size of a round is an estimate; the recoil simulation view in the game armory does not seem to draw the real view, so it is not followed. The horizontal movement and how hits fall inside the spread are our estimate too (not found in the game data). The muzzle and underbarrel recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}">${L('자세히', 'Details')}</span></p></div>`;
+        <span class="col-tip" tabindex="0" role="button" data-tip="${L('반동 값과 탄퍼짐은 게임 자료, 자세 배율은 자체 연구 값이고, 화면은 직접 내리지 않으면 돌아오지 않고 꾸준히 오르며, 한 발의 크기는 실제 임무 화면에서 두 무기(스털워트·리버레이터)를 잰 값이라 아직 추정입니다. 게임 무기고의 반동 시뮬레이션 화면은 실제 시야를 그대로 그리지 않는 것으로 보여 따르지 않았습니다. 수평으로 움직이는 속도와 탄퍼짐 안에서 퍼지는 모양도 사이트 추정입니다(게임 데이터에서 찾지 못함). 총구·총열 하부 부착물의 반동·탄퍼짐 배율과 반동 30% 감소 패시브(공병 키트·강화, 0.7배)는 게임 자료이며, 이 패시브는 게임 설명과 달리 자세와 상관없이 적용됩니다. 단발·점사는 방아쇠를 0.15초마다 당긴다고 보았습니다(사이트 추정).',
+        'The recoil values and spread are game data, the stance multipliers come from our own research, the view climbs steadily unless you pull it down, and the size of a round is still an estimate, measured on the real mission view for two weapons (Stalwart, Liberator); the recoil simulation view in the game armory does not seem to draw the real view, so it is not followed. The horizontal movement and how hits fall inside the spread are our estimate too (not found in the game data). The muzzle and underbarrel recoil and spread multipliers and the 30% recoil passive (Engineering Kit, Fortified, 0.7) are game data; the passive works in every stance, unlike its in-game text. Semi and burst fire pull the trigger every 0.15 s (our estimate).')}">${L('자세히', 'Details')}</span></p></div>`;
     this.grid = this.querySelector('.grid');
     this.trail = this.querySelector('.trail');
     this.hitLayer = this.querySelector('.hits');

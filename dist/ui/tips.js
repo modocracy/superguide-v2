@@ -4,7 +4,8 @@
 import { html } from './dom.js';
 
 // A label with its note (the col-tip look: dotted underline, focusable).
-export const tipLabel = (label, tip) => html`<span class="col-tip" tabindex="0" data-tip="${tip}">${label}</span>`;
+// Keyboard-focusable with a role, and the tip itself in hidden text so screen readers read it too (user request 2026-11-27).
+export const tipLabel = (label, tip) => html`<span class="col-tip" tabindex="0" role="button" data-tip="${tip}">${label}<span class="sr-only">: ${tip}</span></span>`;
 
 function showTip(event) {
   const head = event.target.closest?.('[data-tip]');
@@ -17,9 +18,12 @@ function showTip(event) {
   pop.textContent = head.dataset.tip;
   pop.hidden = false;
   head.setAttribute('aria-describedby', 'tip-pop');
-  const rect = head.getBoundingClientRect();
-  const left = Math.min(Math.max(8, rect.left), window.innerWidth - pop.offsetWidth - 8);
-  const below = rect.bottom + 6 + pop.offsetHeight <= window.innerHeight;
+  // With a text size step the page is zoomed: the box is placed in the page's own (unzoomed) pixels.
+  const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+  const box = head.getBoundingClientRect();
+  const rect = { left: box.left / zoom, top: box.top / zoom, bottom: box.bottom / zoom };
+  const left = Math.min(Math.max(8, rect.left), window.innerWidth / zoom - pop.offsetWidth - 8);
+  const below = rect.bottom + 6 + pop.offsetHeight <= window.innerHeight / zoom;
   pop.style.left = `${left}px`;
   pop.style.top = `${below ? rect.bottom + 6 : rect.top - pop.offsetHeight - 6}px`;
 }

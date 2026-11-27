@@ -4,7 +4,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-11_Arbitrator',
     checkedAt: '2026-11-08',
     sourceRevision: 142144,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -48,7 +48,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-2_Coyote',
     checkedAt: '2026-11-08',
     sourceRevision: 141898,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -66,6 +66,12 @@ export const personalProfiles = {
         magazine: 45,
         ammoPerShot: 1,
         record: 'AR-2_P',
+        fire: {
+          status: 2,
+          interval: 0.1,
+          burn: { perSecond: 100, ap: 4 },
+        },
+        note: '탄마다 점화 수치를 2씩 쌓아 적의 점화 기준치에 닿으면 불이 붙고, 그다음 발부터는 발과 발 사이(0.1초)마다 화상이 본체 체력에 초당 100씩 들어갑니다. 마지막 발 뒤에 타는 피해는 넣지 않습니다.',
       },
     ],
   },
@@ -73,7 +79,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-23_Liberator',
     checkedAt: '2026-11-08',
     sourceRevision: 141899,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -98,7 +104,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-23A_Liberator_Carbine',
     checkedAt: '2026-11-08',
     sourceRevision: 141900,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -123,7 +129,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-23C_Liberator_Concussive',
     checkedAt: '2026-11-08',
     sourceRevision: 141901,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -148,7 +154,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-23L_Liberator_Legacy',
     checkedAt: '2026-11-08',
     sourceRevision: 140750,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -173,7 +179,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-23P_Liberator_Penetrator',
     checkedAt: '2026-11-08',
     sourceRevision: 141902,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -198,7 +204,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-32_Pacifier',
     checkedAt: '2026-11-08',
     sourceRevision: 141903,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -223,7 +229,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-59_Suppressor',
     checkedAt: '2026-11-08',
     sourceRevision: 141904,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -248,7 +254,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR-61_Tenderizer',
     checkedAt: '2026-11-08',
     sourceRevision: 141905,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -273,7 +279,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/AR%2FGL-21_One-Two',
     checkedAt: '2026-11-08',
     sourceRevision: 141906,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -315,7 +321,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/ARC-12_Blitzer',
     checkedAt: '2026-11-08',
     sourceRevision: 141907,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -341,7 +347,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/BR-14_Adjudicator',
     checkedAt: '2026-11-08',
     sourceRevision: 141908,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -366,7 +372,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/CB-9_Exploding_Crossbow',
     checkedAt: '2026-11-08',
     sourceRevision: 141909,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -391,7 +397,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/DBS-2_Double_Freedom',
     checkedAt: '2026-11-08',
     sourceRevision: 141910,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -437,7 +443,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/FLAM-66_Torcher',
     checkedAt: '2026-11-08',
     sourceRevision: 141873,
-    note: '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.',
+    note: '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 발사 전 점화 시간은 더하고, 재장전 시간은 넣지 않습니다.',
     modes: [
       {
         id: 'standard',
@@ -459,6 +465,7 @@ export const personalProfiles = {
           burn: { perSecond: 100, ap: 4 },
           ignite: 150,
           capacity: { kind: 'fuel', seconds: 12.4 },
+          warmUp: 0.7,
         },
       },
     ],
@@ -467,7 +474,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/GL-15_Evictor',
     checkedAt: '2026-11-08',
     sourceRevision: 141628,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -492,7 +499,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/JAR-5_Dominator',
     checkedAt: '2026-11-08',
     sourceRevision: 141911,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -517,7 +524,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/LAS-12_Sai',
     checkedAt: '2026-11-08',
     sourceRevision: 141912,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -542,7 +549,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/LAS-13_Trident',
     checkedAt: '2026-11-08',
     sourceRevision: 141913,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -575,7 +582,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/LAS-16_Sickle',
     checkedAt: '2026-11-08',
     sourceRevision: 141914,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -600,7 +607,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/LAS-5_Scythe',
     checkedAt: '2026-11-08',
     sourceRevision: 141916,
-    note: '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.',
+    note: '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 발사 전 예열 시간은 더하고, 방열판 교체 시간은 넣지 않습니다.',
     modes: [
       {
         id: 'standard',
@@ -621,6 +628,7 @@ export const personalProfiles = {
           burn: { perSecond: 100, ap: 4 },
           ignite: 1,
           capacity: { kind: 'heat', seconds: 8 },
+          warmUp: 0.3,
         },
       },
     ],
@@ -629,7 +637,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/M7S_SMG',
     checkedAt: '2026-11-08',
     sourceRevision: 140413,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -654,7 +662,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/M90A_Shotgun',
     checkedAt: '2026-11-08',
     sourceRevision: 140534,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -681,7 +689,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/MA5C_Assault_Rifle',
     checkedAt: '2026-11-08',
     sourceRevision: 140334,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -706,7 +714,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/MP-98_Knight',
     checkedAt: '2026-11-08',
     sourceRevision: 141917,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -731,7 +739,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/PLAS-1_Scorcher',
     checkedAt: '2026-11-08',
     sourceRevision: 141920,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -756,7 +764,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R-2_Amendment',
     checkedAt: '2026-11-08',
     sourceRevision: 141922,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -781,7 +789,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R-2124_Constitution',
     checkedAt: '2026-11-08',
     sourceRevision: 140447,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -806,7 +814,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R-36_Eruptor',
     checkedAt: '2026-11-08',
     sourceRevision: 141923,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -849,7 +857,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R-4_Hyena',
     checkedAt: '2026-11-08',
     sourceRevision: 141924,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -867,6 +875,12 @@ export const personalProfiles = {
         magazine: 15,
         ammoPerShot: 1,
         record: 'R-4_P',
+        fire: {
+          status: 3,
+          interval: 0.3157894736842105,
+          burn: { perSecond: 100, ap: 4 },
+        },
+        note: '탄마다 점화 수치를 3씩 쌓아 적의 점화 기준치에 닿으면 불이 붙고, 그다음 발부터는 발과 발 사이(0.32초)마다 화상이 본체 체력에 초당 100씩 들어갑니다. 마지막 발 뒤에 타는 피해는 넣지 않습니다.',
       },
     ],
   },
@@ -874,7 +888,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R-40_Sightliner',
     checkedAt: '2026-11-08',
     sourceRevision: 141991,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -899,7 +913,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R-6_Deadeye',
     checkedAt: '2026-11-08',
     sourceRevision: 141926,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -924,7 +938,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R-63_Diligence',
     checkedAt: '2026-11-08',
     sourceRevision: 141927,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -949,7 +963,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R-63CS_Diligence_Counter_Sniper',
     checkedAt: '2026-11-08',
     sourceRevision: 141928,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -974,7 +988,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R-72_Censor',
     checkedAt: '2026-11-08',
     sourceRevision: 141929,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -999,7 +1013,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/R%2F40-K_Hot-Shot_Marksman_Rifle',
     checkedAt: '2026-11-08',
     sourceRevision: 141930,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1024,7 +1038,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-20_Halt',
     checkedAt: '2026-11-08',
     sourceRevision: 141931,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'flechette',
@@ -1070,7 +1084,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-225_Breaker',
     checkedAt: '2026-11-08',
     sourceRevision: 141932,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1097,7 +1111,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-225IE_Breaker_Incendiary',
     checkedAt: '2026-11-08',
     sourceRevision: 141933,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1116,7 +1130,12 @@ export const personalProfiles = {
         ammoPerShot: 1,
         record: 'SG-225IE_P',
         hitCondition: { kind: 'pellets', min: 1, max: 12, defaultPct: 50, default: 6 },
-        note: '기본은 펠릿의 절반(반올림)이 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
+        note: '기본은 펠릿의 절반(반올림)이 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다. 탄마다 점화 수치를 0.6씩 쌓아 적의 점화 기준치에 닿으면 불이 붙고, 그다음 발부터는 발과 발 사이(0.2초)마다 화상이 본체 체력에 초당 100씩 들어갑니다. 마지막 발 뒤에 타는 피해는 넣지 않습니다.',
+        fire: {
+          status: 0.600000024,
+          interval: 0.2,
+          burn: { perSecond: 100, ap: 4 },
+        },
       },
     ],
   },
@@ -1124,7 +1143,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-225SP_Breaker_Spray%26Pray',
     checkedAt: '2026-11-08',
     sourceRevision: 141934,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1151,7 +1170,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-451_Cookout',
     checkedAt: '2026-11-08',
     sourceRevision: 141935,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1170,7 +1189,12 @@ export const personalProfiles = {
         ammoPerShot: 1,
         record: 'SG-451_P',
         hitCondition: { kind: 'pellets', min: 1, max: 20, defaultPct: 50, default: 10 },
-        note: '기본은 펠릿의 절반(반올림)이 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다.',
+        note: '기본은 펠릿의 절반(반올림)이 맞는다고 계산합니다. 명중률을 바꿔 다시 계산할 수 있습니다. 탄마다 점화 수치를 0.6씩 쌓아 적의 점화 기준치에 닿으면 불이 붙고, 그다음 발부터는 발과 발 사이(0.75초)마다 화상이 본체 체력에 초당 100씩 들어갑니다. 마지막 발 뒤에 타는 피해는 넣지 않습니다.',
+        fire: {
+          status: 0.600000024,
+          interval: 0.75,
+          burn: { perSecond: 100, ap: 4 },
+        },
       },
     ],
   },
@@ -1178,7 +1202,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-8_Punisher',
     checkedAt: '2026-11-08',
     sourceRevision: 141936,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1205,7 +1229,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-8P_Punisher_Plasma',
     checkedAt: '2026-11-08',
     sourceRevision: 141937,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1230,7 +1254,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-8S_Slugger',
     checkedAt: '2026-11-08',
     sourceRevision: 141938,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1255,7 +1279,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-97_Sweeper',
     checkedAt: '2026-11-08',
     sourceRevision: 141939,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1282,7 +1306,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SMG-203_Gallant',
     checkedAt: '2026-11-08',
     sourceRevision: 141940,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1307,7 +1331,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SMG-32_Reprimand',
     checkedAt: '2026-11-08',
     sourceRevision: 141941,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1332,7 +1356,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SMG-37_Defender',
     checkedAt: '2026-11-08',
     sourceRevision: 141942,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1357,7 +1381,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SMG-72_Pummeler',
     checkedAt: '2026-11-08',
     sourceRevision: 141943,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1382,7 +1406,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SMG%2FFLAM-34_Stoker',
     checkedAt: '2026-11-08',
     sourceRevision: 141944,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1420,6 +1444,7 @@ export const personalProfiles = {
           fire: true,
           burn: { perSecond: 100, ap: 4 },
           ignite: 150,
+          warmUp: 0.7,
         },
         note: '하부 화염방사기를 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다.',
       },
@@ -1429,7 +1454,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/StA-11_SMG',
     checkedAt: '2026-11-08',
     sourceRevision: 142033,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1454,7 +1479,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/StA-52_Assault_Rifle',
     checkedAt: '2026-11-08',
     sourceRevision: 140347,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1479,7 +1504,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/VG-70_Variable',
     checkedAt: '2026-11-08',
     sourceRevision: 142085,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1556,7 +1581,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/CQC-19_Stun_Lance',
     checkedAt: '2026-11-08',
     sourceRevision: 140466,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1581,7 +1606,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/CQC-2_Saber',
     checkedAt: '2026-11-08',
     sourceRevision: 140467,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1606,7 +1631,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/CQC-30_Stun_Baton',
     checkedAt: '2026-11-08',
     sourceRevision: 140468,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1631,7 +1656,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/CQC-42_Machete',
     checkedAt: '2026-11-08',
     sourceRevision: 140469,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1656,7 +1681,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/CQC-5_Combat_Hatchet',
     checkedAt: '2026-11-08',
     sourceRevision: 140470,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1681,7 +1706,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/CQC-73_Entrenchment_Tool',
     checkedAt: '2026-11-08',
     sourceRevision: 140490,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1706,7 +1731,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/GP-20_Ultimatum',
     checkedAt: '2026-11-08',
     sourceRevision: 140471,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1731,7 +1756,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/GP-31_Grenade_Pistol',
     checkedAt: '2026-11-08',
     sourceRevision: 141567,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1756,7 +1781,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/LAS-58_Talon',
     checkedAt: '2026-11-08',
     sourceRevision: 140473,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1781,7 +1806,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/LAS-7_Dagger',
     checkedAt: '2026-11-08',
     sourceRevision: 141654,
-    note: '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.',
+    note: '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 발사 전 예열 시간은 더하고, 방열판 교체 시간은 넣지 않습니다.',
     modes: [
       {
         id: 'standard',
@@ -1802,6 +1827,7 @@ export const personalProfiles = {
           burn: { perSecond: 100, ap: 4 },
           ignite: 1,
           capacity: { kind: 'heat', seconds: 6.67 },
+          warmUp: 0.25,
         },
       },
     ],
@@ -1810,7 +1836,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/M6C%2FSOCOM_Pistol',
     checkedAt: '2026-11-08',
     sourceRevision: 140475,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1835,7 +1861,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-113_Verdict',
     checkedAt: '2026-11-08',
     sourceRevision: 141918,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1860,7 +1886,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-19_Redeemer',
     checkedAt: '2026-11-08',
     sourceRevision: 140478,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1885,7 +1911,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-2_Peacemaker',
     checkedAt: '2026-11-08',
     sourceRevision: 141919,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1910,7 +1936,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-33_Missile_Pistol',
     checkedAt: '2026-11-08',
     sourceRevision: 140479,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'unguided',
@@ -1936,7 +1962,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-34_Breacher',
     checkedAt: '2026-11-08',
     sourceRevision: 140789,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1965,7 +1991,8 @@ export const personalProfiles = {
             radius: 2.5,
           },
         ],
-        note: '맞은 부위에 붙은 탄이 잠시 뒤 그 자리에서 터지는 지연 폭발까지 계산합니다. 붙은 뒤 적이 움직여도 같은 부위에서 터진다고 가정하며, 계속 타는 피해는 뺍니다.',
+        note: '맞은 부위에 붙은 탄이 잠시 뒤 그 자리에서 터지는 지연 폭발까지 계산합니다. 붙은 뒤 적이 움직여도 같은 부위에서 터진다고 가정합니다. 붙은 탄이 타는 피해(초당 150 × 4초 = 600)는 한 발마다 본체 체력에 더합니다.',
+        mainDot: { perSecond: 150, duration: 4, total: 600 },
       },
     ],
   },
@@ -1973,7 +2000,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-35_Re-Educator',
     checkedAt: '2026-11-08',
     sourceRevision: 140481,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -1998,7 +2025,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-4_Senator',
     checkedAt: '2026-11-08',
     sourceRevision: 140482,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2023,7 +2050,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-44_Mist',
     checkedAt: '2026-11-08',
     sourceRevision: 141993,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2048,7 +2075,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-69_Veto',
     checkedAt: '2026-11-08',
     sourceRevision: 141551,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2073,7 +2100,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-72_Crisper',
     checkedAt: '2026-11-08',
     sourceRevision: 140485,
-    note: '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.',
+    note: '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 발사 전 점화 시간은 더하고, 재장전 시간은 넣지 않습니다.',
     modes: [
       {
         id: 'standard',
@@ -2095,6 +2122,7 @@ export const personalProfiles = {
           burn: { perSecond: 100, ap: 4 },
           ignite: 150,
           capacity: { kind: 'fuel', seconds: 6.1 },
+          warmUp: 0.7,
         },
       },
     ],
@@ -2103,7 +2131,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P-92_Warrant',
     checkedAt: '2026-11-08',
     sourceRevision: 140486,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'unguided',
@@ -2129,7 +2157,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/P%2F40-K_Bolt_Pistol',
     checkedAt: '2026-11-08',
     sourceRevision: 141876,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2154,7 +2182,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/SG-22_Bushwhacker',
     checkedAt: '2026-11-08',
     sourceRevision: 140527,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2200,49 +2228,43 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-10_Incendiary',
     checkedAt: '2026-11-08',
     sourceRevision: 141990,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '적이 불길 안에 머물며 타는 시간입니다. 폭발(피해 300)이 점화 수치 50을 한 번에 쌓아 바로 불을 붙이고, 불길이 20초 동안 남습니다. 폭발 피해를 먼저 빼고, 그다음 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다.',
     modes: [
       {
         id: 'standard',
-        name: '폭발 1회',
+        name: '불길',
         standard: 0,
         durable: 0,
         ap: 0,
-        explosion: 300,
-        explosionDurable: 300,
-        explosionAp: 3,
-        innerRadius: 1,
-        radius: 7,
-        delivery: 'explosive',
-        unit: '개',
-        unitLabel: '수류탄',
+        explosion: 0,
+        explosionDurable: 0,
+        explosionAp: 0,
+        innerRadius: null,
+        radius: null,
+        delivery: 'pool',
+        unit: '초',
         magazine: null,
         ammoPerShot: 1,
-      },
-    ],
-  },
-  caltrops: {
-    source: 'https://helldivers.wiki.gg/wiki/G-11_Caltrops',
-    checkedAt: '2026-11-08',
-    sourceRevision: 141140,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
-    modes: [
-      {
-        id: 'standard',
-        name: '폭발 1회',
-        standard: 0,
-        durable: 0,
-        ap: 0,
-        explosion: 50,
-        explosionDurable: 10,
-        explosionAp: 3,
-        innerRadius: 1,
-        radius: 10,
-        delivery: 'explosive',
-        unit: '개',
-        unitLabel: '수류탄',
-        magazine: null,
-        ammoPerShot: 1,
+        stream: {
+          fire: true,
+          burnOnly: true,
+          burn: { perSecond: 100, ap: 4 },
+          ignite: 50,
+          pool: 20,
+          poolName: '불길',
+          countUnit: '개',
+          blast: {
+            id: 'blast',
+            name: '폭발',
+            standard: 0,
+            durable: 0,
+            ap: 0,
+            explosion: 300,
+            explosionDurable: 300,
+            explosionAp: 3,
+            delivery: 'explosive',
+          },
+        },
       },
     ],
   },
@@ -2250,7 +2272,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-12_High_Explosive',
     checkedAt: '2026-11-08',
     sourceRevision: 140495,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2275,7 +2297,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-123_Thermite',
     checkedAt: '2026-11-08',
     sourceRevision: 140496,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2293,6 +2315,8 @@ export const personalProfiles = {
         unitLabel: '수류탄',
         magazine: null,
         ammoPerShot: 1,
+        mainDot: { perSecond: 150, duration: 6.5, total: 975 },
+        note: '붙은 수류탄이 타는 피해(초당 150 × 6.5초 = 975)를 폭발 뒤 본체 체력에 더합니다(위키: 본체 체력에 직접 들어감).',
       },
     ],
   },
@@ -2300,24 +2324,43 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-13_Incendiary_Impact',
     checkedAt: '2026-11-08',
     sourceRevision: 141989,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '적이 불길 안에 머물며 타는 시간입니다. 폭발(피해 150)이 점화 수치 100을 한 번에 쌓아 바로 불을 붙이고, 불길이 15초 동안 남습니다. 폭발 피해를 먼저 빼고, 그다음 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다.',
     modes: [
       {
         id: 'standard',
-        name: '폭발 1회',
+        name: '불길',
         standard: 0,
         durable: 0,
         ap: 0,
-        explosion: 150,
-        explosionDurable: 150,
-        explosionAp: 3,
-        innerRadius: 1,
-        radius: 7,
-        delivery: 'explosive',
-        unit: '개',
-        unitLabel: '수류탄',
+        explosion: 0,
+        explosionDurable: 0,
+        explosionAp: 0,
+        innerRadius: null,
+        radius: null,
+        delivery: 'pool',
+        unit: '초',
         magazine: null,
         ammoPerShot: 1,
+        stream: {
+          fire: true,
+          burnOnly: true,
+          burn: { perSecond: 100, ap: 4 },
+          ignite: 100,
+          pool: 15,
+          poolName: '불길',
+          countUnit: '개',
+          blast: {
+            id: 'blast',
+            name: '폭발',
+            standard: 0,
+            durable: 0,
+            ap: 0,
+            explosion: 150,
+            explosionDurable: 150,
+            explosionAp: 3,
+            delivery: 'explosive',
+          },
+        },
       },
     ],
   },
@@ -2325,25 +2368,44 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-142_Pyrotech',
     checkedAt: '2026-11-08',
     sourceRevision: 141988,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '적이 불길 안에 머물며 타는 시간입니다. 불꽃이 4초 동안 튀며 불을 붙이고, 그 뒤 터지면서(폭발 피해 50) 불길이 6초 더 남습니다. 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어가고, 4초 뒤 폭발 피해가 더해집니다.',
     modes: [
       {
         id: 'standard',
-        name: '폭발 1회',
+        name: '불길',
         standard: 0,
         durable: 0,
         ap: 0,
-        explosion: 50,
-        explosionDurable: 50,
-        explosionAp: 3,
-        innerRadius: 2.5,
-        radius: 5,
-        delivery: 'explosive',
-        unit: '개',
-        unitLabel: '수류탄',
+        explosion: 0,
+        explosionDurable: 0,
+        explosionAp: 0,
+        innerRadius: null,
+        radius: null,
+        delivery: 'pool',
+        unit: '초',
         magazine: null,
         ammoPerShot: 1,
-        note: '처음 터지는 폭발만 계산합니다. 남은 불길에 계속 닿아서 받는 피해는 더하지 않습니다.',
+        stream: {
+          fire: true,
+          burnOnly: true,
+          burn: { perSecond: 100, ap: 4 },
+          ignite: 100,
+          pool: 10,
+          poolName: '불길',
+          countUnit: '개',
+          blast: {
+            id: 'blast',
+            name: '폭발',
+            standard: 0,
+            durable: 0,
+            ap: 0,
+            explosion: 50,
+            explosionDurable: 50,
+            explosionAp: 3,
+            delivery: 'explosive',
+          },
+          blastAt: 4,
+        },
       },
     ],
   },
@@ -2351,7 +2413,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-16_Impact',
     checkedAt: '2026-11-08',
     sourceRevision: 140499,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2372,28 +2434,61 @@ export const personalProfiles = {
       },
     ],
   },
-  gas: {
-    source: 'https://helldivers.wiki.gg/wiki/G-4_Gas',
+  arc: {
+    source: 'https://helldivers.wiki.gg/wiki/G-31_Arc',
     checkedAt: '2026-11-08',
-    sourceRevision: 140503,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    sourceRevision: 140502,
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
-        name: '폭발 1회',
-        standard: 0,
-        durable: 0,
-        ap: 0,
-        explosion: 3,
-        explosionDurable: 3,
-        explosionAp: 6,
-        innerRadius: 2,
-        radius: 7,
-        delivery: 'explosive',
+        name: '아크',
+        standard: 100,
+        durable: 70,
+        ap: 4,
+        explosion: 0,
+        explosionDurable: 0,
+        explosionAp: 0,
+        innerRadius: null,
+        radius: null,
+        delivery: 'arc',
         unit: '개',
         unitLabel: '수류탄',
         magazine: null,
         ammoPerShot: 1,
+        hitCondition: { kind: 'arcs', min: 1, max: 10, default: 10, defaultPct: 100 },
+        note: '기본은 아크가 모두 같은 부위에 맞는다고 가정합니다. 명중률을 낮춰 다시 계산할 수 있습니다.',
+      },
+    ],
+  },
+  gas: {
+    source: 'https://helldivers.wiki.gg/wiki/G-4_Gas',
+    checkedAt: '2026-11-08',
+    sourceRevision: 140503,
+    note: '적이 가스 구름 안에 머물며 중독되는 시간입니다. 폭발이 바로 중독시키고, 그때부터 가스가 본체 체력에 초당 25씩 들어갑니다. 가스 구름은 15초 동안 남고, 구름을 벗어나도 6초 동안 중독됩니다. 폭발 자체의 피해(3)는 넣지 않습니다.',
+    modes: [
+      {
+        id: 'standard',
+        name: '가스 구름',
+        standard: 0,
+        durable: 0,
+        ap: 0,
+        explosion: 0,
+        explosionDurable: 0,
+        explosionAp: 0,
+        innerRadius: null,
+        radius: null,
+        delivery: 'pool',
+        unit: '초',
+        magazine: null,
+        ammoPerShot: 1,
+        stream: {
+          gas: true,
+          burnOnly: true,
+          burn: { perSecond: 25, ap: 6 },
+          pool: 15,
+          linger: 6,
+        },
       },
     ],
   },
@@ -2401,7 +2496,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-48_Giga_Grenade',
     checkedAt: '2026-11-08',
     sourceRevision: 140504,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2426,7 +2521,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-50_Seeker',
     checkedAt: '2026-11-08',
     sourceRevision: 140505,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2451,7 +2546,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-6_Frag',
     checkedAt: '2026-11-08',
     sourceRevision: 140506,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2495,7 +2590,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-60_Anti-Tank_Seeker',
     checkedAt: '2026-11-08',
     sourceRevision: 140507,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2520,7 +2615,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-7_Pineapple',
     checkedAt: '2026-11-08',
     sourceRevision: 140508,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2564,24 +2659,43 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G-8_Immolation',
     checkedAt: '2026-11-08',
     sourceRevision: 141986,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '적이 불 웅덩이 안에 머물며 타는 시간입니다. 폭발(피해 20)이 점화 수치 100을 한 번에 쌓아 바로 불을 붙이고, 불 웅덩이가 27초 동안 남습니다. 폭발 피해를 먼저 빼고, 그다음 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다.',
     modes: [
       {
         id: 'standard',
-        name: '폭발 1회',
+        name: '불 웅덩이',
         standard: 0,
         durable: 0,
         ap: 0,
-        explosion: 20,
-        explosionDurable: 20,
+        explosion: 0,
+        explosionDurable: 0,
         explosionAp: 0,
-        innerRadius: 4,
-        radius: 10,
-        delivery: 'explosive',
-        unit: '개',
-        unitLabel: '수류탄',
+        innerRadius: null,
+        radius: null,
+        delivery: 'pool',
+        unit: '초',
         magazine: null,
         ammoPerShot: 1,
+        stream: {
+          fire: true,
+          burnOnly: true,
+          burn: { perSecond: 100, ap: 4 },
+          ignite: 100,
+          pool: 27,
+          poolName: '불 웅덩이',
+          countUnit: '개',
+          blast: {
+            id: 'blast',
+            name: '폭발',
+            standard: 0,
+            durable: 0,
+            ap: 0,
+            explosion: 20,
+            explosionDurable: 20,
+            explosionAp: 0,
+            delivery: 'explosive',
+          },
+        },
       },
     ],
   },
@@ -2589,7 +2703,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/G%2F40-K_Melta_Mine',
     checkedAt: '2026-11-08',
     sourceRevision: 141875,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2611,11 +2725,36 @@ export const personalProfiles = {
       },
     ],
   },
+  'throwing-knife': {
+    source: 'https://helldivers.wiki.gg/wiki/K-2_Throwing_Knife',
+    checkedAt: '2026-11-08',
+    sourceRevision: 140512,
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
+    modes: [
+      {
+        id: 'standard',
+        name: '투척 1회',
+        standard: 300,
+        durable: 150,
+        ap: 3,
+        explosion: 0,
+        explosionDurable: 0,
+        explosionAp: 0,
+        innerRadius: null,
+        radius: null,
+        delivery: 'damage',
+        unit: '개',
+        unitLabel: '나이프',
+        magazine: null,
+        ammoPerShot: 1,
+      },
+    ],
+  },
   dynamite: {
     source: 'https://helldivers.wiki.gg/wiki/TED-63_Dynamite',
     checkedAt: '2026-11-08',
     sourceRevision: 140513,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2640,7 +2779,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/TM-1_Lure_Mine',
     checkedAt: '2026-11-08',
     sourceRevision: 140514,
-    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+    note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
     modes: [
       {
         id: 'standard',
@@ -2688,10 +2827,9 @@ export const personalUnsupported = {
   'stim-pistol': '치료용 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
   loyalist: '충전했을 때의 정확한 피해가 확인되지 않아 계산하지 않습니다.',
   urchin: '직접 주는 피해가 없는 지원 장비입니다. 적을 기절시키는 등의 효과를 피해로 바꿔 계산하지 않습니다.',
+  caltrops: '땅에 떨어지면 작은 기절 지뢰 여러 개로 흩어져, 적이 몇 개를 밟는지 알 수 없어 계산하지 않습니다.',
   stun: '직접 주는 피해가 없는 지원 장비입니다. 적을 기절시키는 등의 효과를 피해로 바꿔 계산하지 않습니다.',
   smoke: '연막을 펼치는 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
-  arc: '던진 뒤 아크가 몇 번 발생하고 같은 부위에 몇 번 맞는지 확인되지 않아 계산하지 않습니다.',
   smokescreen: '연막을 펼치는 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
   shield: '방어막을 만드는 장비로, 처치 횟수는 계산하지 않습니다.',
-  'throwing-knife': '칼 한 개를 던져 맞혔을 때의 정확한 피해를 확인하지 못해 계산하지 않습니다.',
 };

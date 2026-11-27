@@ -51,7 +51,14 @@ const groupOf = id => GROUPS.find(group => group.id === id);
 const oneShot = entry => entry.status === 'route' && !entry.mode?.stream && entry.best?.hits === 1 && isFatal(entry.best) && !entry.best.lowerBound;
 // The enemy's wiki fire damage multiplier and ignition threshold, for held beams, flame streams and burning
 // (core/combat.js solveStream).
-const fireOptions = enemy => ({ fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id) });
+// Engine options from the enemy (fire multiplier, ignition threshold) and the blast-pieces choice below.
+const fireOptions = enemy => ({ fireMult: enemyPages[enemy.id]?.fireMult, ignition: ignitionOf(enemy.id), blastParts: blastPartsOf(enemy) });
+// How many pieces of the same part one blast catches (user request 2026-11-27, after hd2armorinspector.com's 3D blasts):
+// an enemy made of several same pieces with no fatal part (the Fleshmob) starts at 2, others at 1; the user can change it.
+const BLAST_PARTS = [1, 2, 3];
+const hasBlastPieces = enemy => enemy.parts.some(part => (part.count || 1) > 1 && !part.next && !FATAL.includes(part.effect));
+const blastPartsOf = enemy => (hasBlastPieces(enemy) ? state.blastParts ?? (noFatalPart(enemy) ? 2 : 1) : 1);
+const blastControl = enemy => hasBlastPieces(enemy) ? html`<div class="segmented blast-tabs" role="group" aria-label="${L('폭발이 함께 맞는 같은 부위 수', 'Pieces of the same part one blast catches')}" title="${L('부위가 여러 개인 적(예: 플레시몹 덩어리)에서 폭발 한 번이 같은 부위 몇 개에 함께 맞는지 가정합니다. 위치 자료가 없어 직접 고르는 가정입니다.', 'For an enemy with several pieces of a part (Fleshmob chunks), how many of them one blast catches. An assumption you choose: there is no position data.')}"><span class="seg-label">${L('폭발 범위', 'Blast')}</span>${BLAST_PARTS.map(n => html`<button type="button" data-blast-parts="${n}" aria-pressed="${n === blastPartsOf(enemy)}">${L(`${n}부위`, `${n} ${n === 1 ? 'piece' : 'pieces'}`)}</button>`)}</div>` : '';
 // Enemies without a fatal part die from damage piled onto the main body across
 // several parts; such routes come from solveAccumulation (parts one after another).
 const stepName = step => L(step.partName.replace(/ 한 ?(개|쪽)$/, ''), T(step.partName).replace(/^One /, ''));
@@ -134,7 +141,7 @@ const PRIMARY_HITS = [['blast', L('주탄 폭발만', 'Main projectile explosion
 // --- Ranking ----------------------------------------------------------------------
 const rankCache = new Map();
 function rankWeapons(enemy, shieldCleared, group = state.group) {
-  const key = `${enemy.id}|${shieldCleared}|${group}|${state.distance}`;
+  const key = `${enemy.id}|${shieldCleared}|${group}|${state.distance}|${blastPartsOf(enemy)}`;
   if (rankCache.has(key)) return rankCache.get(key);
   const entries = weaponsOf[group].map((weapon, order) => {
     const profile = profileOf(weapon.id);
@@ -168,8 +175,11 @@ const portrait = (enemy, cls = '', eager = false) => {
   const image = pickerEnemyImages[enemy.id];
   return image?.src ? html`<img class="${cls}" src="${image.src}" alt="" loading="${eager ? 'eager' : 'lazy'}" decoding="async">` : html`<span class="${cls}"></span>`;
 };
+// A very tall or very long picture (the Throwing Knife, the Stun Lance) lies diagonally in the small square, where it
+// would otherwise shrink to a thin line (user request 2026-11-27).
+const thumbShape = image => image.height > image.width * 4 ? ' tall' : image.width > image.height * 4 ? ' long' : '';
 const weaponIcon = (id, size = 34) => weaponImages[id]
-  ? html`<span class="w-thumb" style="width:${size}px;height:${size}px"><img src="${weaponImages[id].src}" alt="" loading="lazy" decoding="async"></span>`
+  ? html`<span class="w-thumb${thumbShape(weaponImages[id])}" style="width:${size}px;height:${size}px"><img src="${weaponImages[id].src}" alt="" loading="lazy" decoding="async"${thumbShape(weaponImages[id]) === ' tall' ? raw(` style="height:${Math.round(size * 1.25)}px"`) : ''}></span>`
   : html`<img class="strat-icon" style="width:${size}px;height:${size}px" src="${wikiIcons[id]?.src}" alt="" width="${size}" height="${size}" loading="lazy">`;
 
 function renderPicker() {
@@ -324,7 +334,7 @@ function anatomyPhoto(enemy, row, index) {
   const label = L(`${enemy.name} ${anatomyName(enemy, row)} 상세 보기`, `${T(enemy.name)} ${row.name} details`);
   if (!photo) return html`<button class="part-photo no-photo" type="button" data-anatomy="${index}" aria-label="${label}">${L(html`사진<br>없음`, html`No<br>photo`)}</button>`;
   const tw = photo.thumbnailWidth || 320, th = photo.thumbnailHeight || 213;
-  return html`<button class="part-photo" type="button" data-anatomy="${index}" style="aspect-ratio:${tw}/${th}" aria-label="${label}"><img src="${photo.thumbnail}" alt="" width="${tw}" height="${th}" loading="lazy" decoding="async" style="width:100%;height:100%;left:0;top:0"><span class="zoom">${icon('expand', 14)}</span></button>`;
+  return html`<button class="part-photo" type="button" data-anatomy="${index}" style="aspect-ratio:${tw}/${th}" aria-label="${label}" title="${label}"><img src="${photo.thumbnail}" alt="" width="${tw}" height="${th}" loading="lazy" decoding="async" style="width:100%;height:100%;left:0;top:0"><span class="zoom">${icon('expand', 14)}</span></button>`;
 }
 const tipHead = tipLabel;
 export function partInfo(enemy) {
@@ -352,6 +362,9 @@ const DAMAGE_TYPES = {
   fire: L('화염', 'fire'), corrosive: L('부식', 'corrosive'), web: L('거미줄', 'web'), splash: L('튀김', 'splash'),
 };
 const RATINGS = [[50, L('경량', 'Light')], [100, L('일반', 'Medium')], [150, L('중량', 'Heavy')]];
+// The hit counts' basis, a tooltip on the column head (user request 2026-11-27).
+const hitsTip = () => L(`횟수 칸은 몸통 기준입니다. 헬다이버 체력(${helldiverArmor.health})을 공격 한 번의 피해와 방어구 배율(50은 ${helldiverArmor.factors[50]}배, 100은 ${helldiverArmor.factors[100]}배, 150은 ${helldiverArmor.factors[150]}배)을 곱한 값으로 나눠 올렸습니다. 머리는 ${helldiverArmor.head}배, 팔다리는 ${num(Math.round(helldiverArmor.arm * 100) / 100)}배로 맞습니다. ‘-’는 횟수를 세지 않은 공격입니다. 폭발이 섞인 공격(거리와 맞는 부위에 따라 피해가 달라짐), 화염·부식·거미줄처럼 계속 피해를 주는 공격, 피해가 여러 값으로 적힌 공격이 해당합니다.`,
+  `The hit counts are for torso hits: Helldiver health ${helldiverArmor.health} divided by one hit's damage times the armor factor (50: x${helldiverArmor.factors[50]}, 100: x${helldiverArmor.factors[100]}, 150: x${helldiverArmor.factors[150]}), rounded up. Head hits take x${helldiverArmor.head}, limbs x${num(Math.round(helldiverArmor.arm * 100) / 100)}. A "-" is an attack that is not counted: one with an explosion (its damage depends on distance and which parts it hits), one that keeps burning like fire, acid or webs, or one listed with several damage values.`);
 function attacks(enemy) {
   const info = enemyWeapons[enemy.id];
   if (!info?.attacks.length) return '';
@@ -366,13 +379,11 @@ function attacks(enemy) {
   return html`<details class="panel fold enemy-details enemy-attacks" data-attacks ${state.attacksOpen ? raw('open') : ''}><summary><h2>${L('공격 패턴', 'Attacks')}</h2><span class="count">${info.attacks.length}</span></summary>
     <div class="compare-scroll" role="region" aria-label="${L('적 공격표', 'Enemy attacks')}" tabindex="0"><table class="compare-table enemy-attack-table">
       <colgroup><col class="col-attack"><col class="col-damage">${RATINGS.map(() => html`<col class="col-hits">`)}</colgroup>
-      <thead><tr><th scope="col" rowspan="2">${L('공격', 'Attack')}</th><th scope="col" rowspan="2">${L('피해', 'Damage')}</th><th scope="colgroup" colspan="${RATINGS.length}" class="hits-head">${L('쓰러질 때까지 맞는 횟수 (몸통 기준)', 'Hits until downed (torso)')}</th></tr>
+      <thead><tr><th scope="col" rowspan="2">${L('공격', 'Attack')}</th><th scope="col" rowspan="2">${L('피해', 'Damage')}</th><th scope="colgroup" colspan="${RATINGS.length}" class="hits-head">${tipLabel(L('쓰러질 때까지 맞는 횟수', 'Hits until downed'), hitsTip())}</th></tr>
         <tr>${RATINGS.map(([rating, label]) => html`<th scope="col" class="hits">${label} <small>${L(`장갑 ${rating}`, `armor ${rating}`)}</small></th>`)}</tr></thead>
       <tbody>${info.attacks.map(attack => html`<tr><th scope="row">${L(attack.name, attack.en)}${lang === 'en' || attack.name === attack.en ? '' : html`<small>${attack.en}</small>`}</th><td>${damageCell(attack)}</td>
         ${RATINGS.map(([rating]) => attack.hits ? html`<td class="hits"><b>${attack.hits[rating]}</b>${L('회', '')}</td>` : html`<td class="hits none">-</td>`)}</tr>`)}</tbody>
     </table></div>
-    <p class="note">${L(html`횟수 칸은 <b>몸통 기준</b>입니다. 헬다이버 체력(${helldiverArmor.health})을 공격 한 번의 피해와 방어구 배율(50은 ${helldiverArmor.factors[50]}배, 100은 ${helldiverArmor.factors[100]}배, 150은 ${helldiverArmor.factors[150]}배)을 곱한 값으로 나눠 올렸습니다. 머리는 ${helldiverArmor.head}배, 팔다리는 ${num(Math.round(helldiverArmor.arm * 100) / 100)}배로 맞습니다. ‘-’는 횟수를 세지 않은 공격입니다. 폭발이 섞인 공격(거리와 맞는 부위에 따라 피해가 달라짐), 화염·부식·거미줄처럼 계속 피해를 주는 공격, 피해가 여러 값으로 적힌 공격이 해당합니다.`,
-      html`The hit counts are <b>for torso hits</b>: Helldiver health ${helldiverArmor.health} divided by one hit's damage times the armor factor (50: x${helldiverArmor.factors[50]}, 100: x${helldiverArmor.factors[100]}, 150: x${helldiverArmor.factors[150]}), rounded up. Head hits take x${helldiverArmor.head}, limbs x${num(Math.round(helldiverArmor.arm * 100) / 100)}. A "-" is an attack that is not counted: one with an explosion (its damage depends on distance and which parts it hits), one that keeps burning like fire, acid or webs, or one listed with several damage values.`)}</p>
     <p class="sources">${external(wiki, L('위키 Weapons Loadout', 'Wiki Weapons Loadout'))}${external(helldiverArmor.source.page, L('위키 방어구 배율표', 'Wiki armor rating table'))}</p>
   </details>`;
 }
@@ -428,10 +439,11 @@ function rankRow(entry, selected, large = false, noFatal = false) {
       : entry.spear ? L('직접 락온 불가 · 참고값', 'No direct lock-on · reference only')
       : entry.best.accumulated ? L('누적 처치 · 덩어리를 차례로 터뜨림', 'Cumulative kill · pop the lumps in turn')
       : conditional && conditional.hits < entry.best.hits ? conditionalText(conditional, entry.mode)
-      : entry.mode?.stream?.capacity ? capacityText(entry.mode.stream.capacity, entry.best.seconds ?? entry.best.hits)
+      : entry.mode?.stream?.capacity ? capacityText(entry.mode.stream.capacity, entry.best.fireSeconds ?? entry.best.seconds ?? entry.best.hits)
       : entry.defaulted ? defaultLabel(entry.mode) : assumptionTag(entry.mode);
     part = html`<span>${entry.best.target.name}</span>${aside ? html`<small>${aside}</small>` : ''}`;
-    hits = html`<span class="hits">${num(entry.best.hits)}<small>${unit}${entry.best.lowerBound ? '+' : ''}</small></span>`;
+    // A fire grenade or napalm whose blast kills on its own (best.blastKill) counts one grenade or shot, not '0 s'.
+    hits = entry.best.blastKill ? html`<span class="hits">1<small>${L(entry.mode?.stream?.countUnit ?? '개', entry.mode?.stream?.countUnit === '발' ? ' shot' : ' grenade')}</small></span>` : html`<span class="hits">${num(entry.best.hits)}<small>${unit}${entry.best.lowerBound ? '+' : ''}</small></span>`;
     tag = badge(outcome.label, outcome.tone);
   } else if (status === 'assume') {
     part = html`<span class="faint">${L('명중 수 가정 필요', 'Pick a hit assumption')}</span>`; tag = badge(L('가정 선택', 'Assumption'), 'unknown');
@@ -469,7 +481,7 @@ function ranking(enemy, entries, selectedId) {
   ${large ? html`<div class="one-shot-note ${singles ? '' : 'none'}">${L(singles ? html`<b>${SIZE_NAMES[enemySize(enemy)]} 적</b> · ${groupOf(state.group).name} 중 <b>${singles}종</b>이 한 발에 처치합니다. 강조된 줄을 먼저 보세요.` : html`<b>${SIZE_NAMES[enemySize(enemy)]} 적</b> · ${groupOf(state.group).name} 중 한 발에 처치하는 무기가 없습니다. 여러 발이 필요하니 주의하세요.`,
     singles ? html`<b>${SIZE_NAMES[enemySize(enemy)]} enemy</b> · <b>${singles}</b> ${groupOf(state.group).name.toLowerCase()} ${singles === 1 ? 'weapon kills' : 'weapons kill'} it in one shot. Check the highlighted rows first.` : html`<b>${SIZE_NAMES[enemySize(enemy)]} enemy</b> · no ${groupOf(state.group).name.toLowerCase()} weapon kills it in one shot. Expect to need several.`)}</div>` : ''}
   <div class="rank-filters"><div class="segmented group-tabs" role="group" aria-label="${L('무기 분류', 'Weapon group')}">${GROUPS.map(group => html`<button type="button" data-group-pick="${group.id}" aria-pressed="${group.id === state.group}">${group.name} <span class="count">${weaponsOf[group.id].length}</span></button>`)}</div>
-    <div class="segmented range-tabs" role="group" aria-label="${L('사격 거리', 'Shooting distance')}">${DISTANCES.map(d => html`<button type="button" data-distance="${d}" aria-pressed="${d === state.distance}">${d}m</button>`)}</div></div>
+    <div class="segmented range-tabs" role="group" aria-label="${L('사격 거리', 'Shooting distance')}">${DISTANCES.map(d => html`<button type="button" data-distance="${d}" aria-pressed="${d === state.distance}">${d}m</button>`)}</div>${blastControl(enemy)}</div>
   <div class="panel ranking">
     <div class="rank-head" aria-hidden="true"><span></span><span>${L('무기', 'Weapon')}</span><span>${L('노릴 부위', 'Aim for')}</span><span>${L('횟수', 'Shots')}</span><span>${L('결과', 'Result')}</span></div>
     ${main.map(row)}
@@ -485,7 +497,7 @@ function photoButton(enemy, target) {
   const tw = photo.thumbnailWidth || 320, th = photo.thumbnailHeight || 213;
   const [x, y, w, h] = photo.thumbnailCrop || [0, 0, tw, th];
   const style = `width:${tw / w * 100}%;height:${th / h * 100}%;left:${-x / w * 100}%;top:${-y / h * 100}%`;
-  return html`<button class="part-photo" type="button" data-photo="${target.id}" style="aspect-ratio:${w}/${h}" aria-label="${L(`${enemy.name} ${target.name} 위치 사진 크게 보기`, `Enlarge ${T(enemy.name)} ${T(target.name)} photo`)}">
+  return html`<button class="part-photo" type="button" data-photo="${target.id}" style="aspect-ratio:${w}/${h}" aria-label="${L(`${enemy.name} ${target.name} 위치 사진 크게 보기`, `Enlarge ${T(enemy.name)} ${T(target.name)} photo`)}" title="${L(`${enemy.name} ${target.name} 위치 사진 크게 보기`, `Enlarge ${T(enemy.name)} ${T(target.name)} photo`)}">
     <img src="${photo.thumbnail}" alt="" width="${tw}" height="${th}" loading="lazy" decoding="async" style="${style}"><span class="zoom">${icon('expand', 14)}</span></button>`;
 }
 
@@ -503,8 +515,8 @@ function stageLines(row, enemy, mode) {
       return html`<div>${who}${deliveryOf(event.attack).hit} <code>${num(d.direct)}</code>${event.attack.stream ? L('/초', '/s') : ''}${ranged} · ${L('부위 폭발', 'part explosion')} <code>${num(d.explosion)}</code>${d.mainExplosion ? html` · ${L('본체 폭발', 'main explosion')} <code>${num(d.mainExplosion)}</code>` : ''}${blasts}</div>`;
     });
     const transfer = part.partOnly ? L('독립 장치 — 본체 전달 없음', 'Separate device — nothing passes to main') : `${L('본체 전달', 'To main')} ${num(part.toMain)}%${part.overflowCap == null ? L(' · 상한 미확인', ' · cap unverified') : part.overflowCap ? L(` · 누적 상한 ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`, ` · total cap ${num(partPool(part) + (part.constitution || 0) + (part.transferExtraHealth || 0))}`) : L(' · 상한 없음', ' · no cap')}`;
-    const contact = mode?.stream?.fire ? L('불길 접촉 약', 'Flame contact about') : L('광선 접촉 약', 'Beam contact about');
-    const burned = Number.isFinite(stage.burnTotal) && stage.burnTotal > 0 ? html` · ${L('화상', 'burning')} <code>${num(Math.round(stage.burnTotal))}</code>` : '';
+    const contact = mode?.stream?.gas ? L('가스 중독 약', 'Poisoned about') : mode?.delivery === 'saw' ? L('톱날 접촉 약', 'Blade contact about') : mode?.stream?.fire ? L('불길 접촉 약', 'Flame contact about') : L('광선 접촉 약', 'Beam contact about');
+    const burned = Number.isFinite(stage.burnTotal) && stage.burnTotal > 0 ? html` · ${mode?.stream?.gas ? L('가스 피해', 'gas damage') : L('화상', 'burning')} <code>${num(Math.round(stage.burnTotal))}</code>` : '';
     const beam = Number.isFinite(stage.contactSeconds) ? html`<div>${contact} <code>${num(stage.contactSeconds)}${L('초', 's')}</code> · ${L('부위 누적', 'part total')} <code>${num(stage.partTotal)}</code> · ${L('본체 전달', 'to main')} <code>${num(stage.mainTotal)}</code>${burned}</div>` : '';
     const header = html`<b>${stageName(stage)}</b> — ${L('체력', 'health')} ${num(partPool(stage.part))}, ${L('장갑', 'armor')} ${num(stage.part.armor)}, ${L('내구도', 'durability')} ${pct(stage.part.durability)}${row.stages.length > 1 && !Number.isFinite(stage.contactSeconds) ? html` → <b>${num(stage.hits)}${unitOf(mode, stage.hits).unit}</b>` : ''}`;
     return html`<li>${header}${lines}${beam}<div class="faint">${transfer}${index === 0 ? L(` · 본체 체력 ${num(main.hp)}`, ` · main health ${num(main.hp)}`) : ''}</div></li>`;
@@ -521,7 +533,7 @@ function partCard(row, enemy, mode, isBest) {
   return html`<article class="panel part-card" ${isBest ? raw('data-best') : ''}>
     <div class="part-top">
       <div><h3>${target.name} ${badge(outcome.label, outcome.tone)}${isBest ? badge(L('최단', 'Fastest'), 'accent') : ''}${row.conditional ? badge(L('선행 조건', 'Prerequisite'), 'conditional') : ''}</h3>
-        <div class="part-count ${count ? '' : 'none'}">${count ? html`<b>${num(row.hits)}${row.lowerBound ? L('', '+') : ''}</b><span>${unitOf(mode, row.hits).unit}${row.lowerBound ? L(' 이상 · 재생 제외', ' · regen not included') : ''}${target.prerequisite ? L(` · ${target.prerequisite} 후`, ` · after: ${T(target.prerequisite)}`) : ''}</span>` : html`<b>${row.outcome === 'blocked' ? L('관통 불가', 'No penetration') : row.outcome === 'shield' ? L('보호막부터', 'Shield first') : L('계산 보류', 'Not calculated')}</b>`}</div></div>
+        <div class="part-count ${count ? '' : 'none'}">${count && row.blastKill ? html`<b>1</b><span>${L(mode?.stream?.countUnit ?? '개', mode?.stream?.countUnit === '발' ? ' shot' : ' grenade')}</span>` : count ? html`<b>${num(row.hits)}${row.lowerBound ? L('', '+') : ''}</b><span>${unitOf(mode, row.hits).unit}${row.lowerBound ? L(' 이상 · 재생 제외', ' · regen not included') : ''}${target.prerequisite ? L(` · ${target.prerequisite} 후`, ` · after: ${T(target.prerequisite)}`) : ''}</span>` : html`<b>${row.outcome === 'blocked' ? L('관통 불가', 'No penetration') : row.outcome === 'shield' ? L('보호막부터', 'Shield first') : L('계산 보류', 'Not calculated')}</b>`}</div></div>
       ${photoButton(enemy, target)}
     </div>
     <dl class="part-stats">
@@ -601,7 +613,7 @@ function verdict(enemy, weapon, mode, matchup, reference) {
   if (best) {
     const outcome = outcomeOf(best);
     return html`<div class="verdict" data-tone="${outcome.tone}">${label}
-      <h3><span class="big">${num(best.hits)}${L('', best.lowerBound ? '+' : '')}${unitFor(best.hits)}</span>${best.lowerBound ? L(' 이상', '') : ''} · ${best.target.name} · ${outcome.label}</h3>
+      <h3><span class="big">${best.blastKill ? L(`1${mode?.stream?.countUnit ?? '개'}`, mode?.stream?.countUnit === '발' ? '1 shot' : '1 grenade') : html`${num(best.hits)}${L('', best.lowerBound ? '+' : '')}${unitFor(best.hits)}`}</span>${best.lowerBound ? L(' 이상', '') : ''} · ${best.target.name} · ${outcome.label}</h3>
       <p>${best.stages.length > 1 ? best.stages.map(stage => Number.isFinite(stage.contactSeconds) ? stageName(stage) : `${stageName(stage)} ${num(stage.hits)}${unitFor(stage.hits)}`).join(' → ') + ' · ' : ''}${best.target.tip}</p>
       ${spear ? html`<p style="color:var(--bleed)">${L('스피어는 이 적에게 직접 락온할 수 없습니다. 다른 표적으로 쏜 미사일이 이 부위에 맞았을 때의 참고값입니다.', 'The Spear cannot lock on to this enemy directly. This is a reference value for when a missile fired at another target hits this part.')}</p>` : ''}
       ${best.lowerBound ? html`<p>${best.notes[0]}</p>` : ''}
@@ -712,7 +724,7 @@ function compareContent() {
     const label = { assume: L('명중 수 가정 필요', 'Needs a hit assumption'), none: L('처치 경로 없음', 'No kill route'), unsupported: L('계산 미지원', 'Not supported') }[entry.status] || L('계산 보류', 'Not calculated');
     return html`<td><span class="faint">${label}</span>${entry.reason ? html`<small>${entry.reason}</small>` : ''}</td>`;
   };
-  return html`<div class="sheet-top"><span>${L('같은 적 기준 비교', 'Compare against one enemy')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  return html`<div class="sheet-top"><span>${L('같은 적 기준 비교', 'Compare against one enemy')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
   <div class="sheet-content">
     ${sheetView ? backToMatchup() : ''}
     <h2 id="sheet-title" style="font-size:22px">${enemy.name} · ${L(`무기 ${result.entries.length}개 비교`, `${result.entries.length} weapons compared`)}</h2>
@@ -747,7 +759,7 @@ function renderMain() {
   if (sheetView === 'matchup') showMatchupSheet(true);
 }
 
-const urlQuery = () => ({ g: state.group === 'support' ? null : state.group, w: state.weapon, m: state.weapon ? state.mode : null, shield: state.shield ? null : '0', r: state.distance || null });
+const urlQuery = () => ({ g: state.group === 'support' ? null : state.group, w: state.weapon, m: state.weapon ? state.mode : null, shield: state.shield ? null : '0', r: state.distance || null, b: state.blastParts ?? null });
 function syncUrl() {
   ctx.replace({ view: 'enemy', id: state.enemy, query: urlQuery() });
 }
@@ -777,9 +789,9 @@ function showMatchupSheet(keepScroll = false) {
   const entries = rankWeapons(enemy, state.shield);
   sheetView = 'matchup';
   const picks = compare.picks.length;
-  showSheet(html`<div class="sheet-top"><span>${enemy.name} · ${L('부위별 계산', 'Part by part')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  showSheet(html`<div class="sheet-top"><span>${enemy.name} · ${L('부위별 계산', 'Part by part')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content matchup-sheet">
-      <div class="rank-filters"><div class="segmented range-tabs" role="group" aria-label="${L('사격 거리', 'Shooting distance')}">${DISTANCES.map(d => html`<button type="button" data-distance="${d}" aria-pressed="${d === state.distance}">${d}m</button>`)}</div>
+      <div class="rank-filters"><div class="segmented range-tabs" role="group" aria-label="${L('사격 거리', 'Shooting distance')}">${DISTANCES.map(d => html`<button type="button" data-distance="${d}" aria-pressed="${d === state.distance}">${d}m</button>`)}</div>${blastControl(enemy)}
         ${picks ? html`<span class="sheet-compare">${L(`비교에 담은 무기 ${picks}/${MAX_COMPARE}`, `${picks}/${MAX_COMPARE} in the comparison`)} <button class="button small" type="button" data-compare-open ${picks < 2 ? raw('disabled') : ''}>${L('비교 보기', 'Compare')}</button></span>` : ''}</div>
       ${matchupSection(enemy, entries)}
     </div>`, L(`${enemy.name} 부위별 계산`, `${T(enemy.name)} part by part`), keepScroll);
@@ -790,7 +802,7 @@ function openPhotos(targetId) {
   const target = enemy.parts.find(part => part.id === targetId);
   const photos = combatImages[enemy.id]?.[targetId] || [];
   sheetView = 'photo';
-  showSheet(html`<div class="sheet-top"><span>${L('부위 위치', 'Part location')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  showSheet(html`<div class="sheet-top"><span>${L('부위 위치', 'Part location')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content image-viewer">${backToMatchup()}<h2 id="sheet-title" style="font-size:20px">${enemy.name} · ${target.name}</h2><p class="muted">${target.tip}${enemy.id === 'harvester' ? L(' 좌우는 적의 몸 기준입니다.', ' Left and right are from the enemy\'s point of view.') : ''}</p>
     ${photos.map(photo => { const caption = photo.caption || (target.next ? (photo.stage === 'initial' ? L('① 장갑이 남아 있는 상태', '① With the armor still on') : L('② 장갑을 벗긴 뒤 드러난 부위', '② Exposed once the armor is off')) : target.name);
       return html`<figure><figcaption>${caption}</figcaption><img src="${photo.src}" alt="${L(`${enemy.name} ${caption} — 색칠된 영역이 조준 부위`, `${T(enemy.name)} ${T(caption)} — the colored area is where to aim`)}" width="${photo.width}" height="${photo.height}" decoding="async"><span class="sources">${external(photo.source, L('위키 원본 이미지', 'Original wiki image'))}</span></figure>`; })}</div>`, `${T(enemy.name)} ${T(target.name)} ${L('사진', 'photos')}`);
@@ -804,7 +816,7 @@ function openAnatomy(index) {
   const tips = [...new Set(anatomyLayers(enemy, row).map(layer => layer.tip).filter(Boolean))], photo = rowPhoto(enemy.id, row), cells = anatomyCells(enemy, row), notes = anatomyNotes(enemy, row);
   const name = `${anatomyName(enemy, row)}${row.count ? ` ×${row.count}` : ''}`;
   sheetView = 'photo';
-  showSheet(html`<div class="sheet-top"><span>${L('부위 정보', 'Part info')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  showSheet(html`<div class="sheet-top"><span>${L('부위 정보', 'Part info')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content image-viewer"><h2 id="sheet-title" style="font-size:20px">${enemy.name} · ${name}</h2>
     ${lang === 'en' ? '' : html`<p class="faint">${L('위키 이름', 'Wiki name')}: ${row.name}${row.count ? ` (${row.count})` : ''}</p>`}
     ${tips.map(tip => html`<p class="muted">${tip}</p>`)}${notes.map(note => html`<p class="muted">${note}</p>`)}
@@ -897,6 +909,8 @@ function onClick(event) {
     ctx.go({ view: 'enemy', id: state.enemy, query: { ...urlQuery(), w: target.dataset.weapon, m: target.dataset.mode || null } });
   } else if (target.dataset.distance) {
     state.distance = Number(target.dataset.distance); renderMain(); syncUrl();
+  } else if (target.dataset.blastParts) {
+    state.blastParts = Number(target.dataset.blastParts); renderMain(); syncUrl();
   } else if (target.dataset.modePick) {
     state.weapon ||= selectedWeaponId(); state.mode = target.dataset.modePick; resetAssumption(); renderMain(); syncUrl();
   } else if (target.dataset.photo) openPhotos(target.dataset.photo);
@@ -938,6 +952,7 @@ export function update(route) {
     mode: modes.some(mode => mode.id === route.query.m) ? route.query.m : weapon ? state.weapon === weapon ? state.mode : null : null,
     shield: route.query.shield !== '0',
     distance: DISTANCES.includes(Number(route.query.r)) ? Number(route.query.r) : 0,
+    blastParts: BLAST_PARTS.includes(Number(route.query.b)) ? Number(route.query.b) : null,
   });
   renderMain();
   if (route.id !== enemy) syncUrl();

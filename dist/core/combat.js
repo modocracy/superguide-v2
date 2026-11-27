@@ -205,6 +205,25 @@ function solveImpacts(enemy, target, attack, options) {
   let shots = 0;
   let part = target;
   let copy = 1;
+  // Incendiary rounds (attack.fire): each projectile adds its Fire build-up; once it reaches the enemy's ignition
+  // threshold, burning takes its damage per second from main health for the time between shots (data audit 2026-11-27).
+  const fire = attack.fire && known(options.fireMult) && known(options.ignition?.value) && !target.isolated ? attack.fire : null;
+  const burnGap = fire ? fire.burn.perSecond * options.fireMult * armorFactor(fire.burn.ap, main.armor) * fire.interval : 0;
+  let build = 0, lit = false, burned = 0;
+  // One blast reaching other pieces of the same part (options.blastParts, user request 2026-11-27): a part with
+  // several pieces (the Fleshmob's six head chunks) whose blast is assumed to catch that many of them at once, as
+  // hd2armorinspector.com works out from its 3D models. Each extra piece takes the same blast on its own health and
+  // passes its share to main; the share an ExDR part blocks reaches main once per blast. Fatal and layered parts are
+  // left to the single-part count.
+  const spread = Math.min(Math.max(1, Math.floor(options.blastParts || 1)), part.count || 1);
+  const others = spread > 1 && !target.isolated && !part.next && !part.mainOnly && !FATAL.includes(part.effect)
+    ? Array.from({ length: spread - 1 }, () => ({ left: partPool(part), cap: transferCap(part) })) : [];
+  let spreadMain = 0;
+  const notesOf = () => [
+    ...(burned > 0 ? [L(`점화 기준치 ${options.ignition.value}에 닿아 불이 붙고, 발 사이 화상이 본체 체력을 ${Math.round(burned)}만큼 더 깎았습니다.`, `It caught fire at the ignition threshold of ${options.ignition.value}; burning between shots took ${Math.round(burned)} more off main health.`)] : []),
+    ...(spreadMain > 0 ? [L(`폭발이 같은 부위 ${spread}개에 함께 맞는다고 가정했습니다. 다른 ${spread - 1}개가 받은 폭발로 본체 체력이 ${Math.round(spreadMain)}만큼 더 깎였습니다.`, `Assumes the blast catches ${spread} pieces of this part at once; the blast on the other ${spread - 1} took ${Math.round(spreadMain)} more off main health.`)] : []),
+  ];
+  const fireNotes = () => notesOf().length ? { notes: notesOf() } : {};
 
   while (part) {
     const hits = events.map(event => ({ ...event, damage: hitDamage(event.attack, part, main, { ...options, directHit: event.directHit ?? options.directHit }) }));
@@ -222,7 +241,12 @@ function solveImpacts(enemy, target, attack, options) {
     let capLeft = transferCap(part);
     let advanced = false;
     for (let shot = 0; shot < MAX_HITS && !advanced; shot++) {
+      if (lit && burnGap > 0) {
+        mainLeft -= burnGap; burned += burnGap;
+        if (mainLeft <= 0) return { ...base, stages, hits: shots, outcome: main.constitution && mainLeft > -main.constitution ? 'bleed' : 'kill', via: 'main', ...fireNotes() };
+      }
       shots++; stage.hits++;
+      if (fire && !lit) { build += fire.status * perShot; lit = build >= options.ignition.value; }
       let applied = 0;
       eventsInShot: for (const event of hits) for (let i = 0; i < event.times; i++) {
         applied++;
@@ -233,10 +257,19 @@ function solveImpacts(enemy, target, attack, options) {
           : floor(partDamage * part.toMain / 100);
         if (part.overflowCap) { transfer = Math.min(transfer, capLeft); capLeft -= transfer; }
         mainLeft -= transfer + mainExplosion;
+        // A sticky thermite charge burns on into main health once per shot (attack.mainDot; data audit 2026-11-27).
+        if (attack.mainDot && applied === perShot && !target.isolated) mainLeft -= attack.mainDot.total;
+        for (const piece of others) {
+          if (piece.left <= 0 || !explosion) continue;
+          let passed = splitTransfer ? blasts.reduce((sum, blast) => sum + floor((blast.toPart || 0) * part.toMain / 100), 0) : floor(explosion * part.toMain / 100);
+          if (part.overflowCap) { passed = Math.min(passed, piece.cap); piece.cap -= passed; }
+          piece.left -= explosion;
+          mainLeft -= passed; spreadMain += passed;
+        }
         partLeft -= partDamage;
         if (partLeft <= 0) mainLeft -= part.destroyMainDamage || 0;
 
-        const done = { ...base, stages, hits: shots };
+        const done = { ...base, stages, hits: shots, ...fireNotes() };
         // A fatal part kills outright, skipping the main bleed-out pool.
         if (partLeft <= 0 && part.effect === 'kill' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };
         if (partLeft <= -(part.constitution || Infinity) && part.effect === 'bleed' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };
@@ -323,6 +356,8 @@ function solveBeam(enemy, target, attack, options) {
 // damage per second to main health only (wiki SG-451 Cookout: 'burning damage is inflicted to the main body of
 // the target'), through the main armor at its AP. The build-up is assumed not to fade while the stream is held.
 // A beam on an enemy with no fire multiplier leaves burning out; a flame stream there is not counted.
+// A beam that warms up before it fires (stream.warmUp, user request 2026-11-27) adds that time in front: `seconds`
+// and `hits` include it, `fireSeconds` (heat sinks, fuel) does not.
 const STREAM_STEP = 10; // results in tenths of a second, rounded up
 const streamSeconds = seconds => Math.max(1, Math.ceil(seconds * STREAM_STEP - EPSILON)) / STREAM_STEP;
 const MAX_STREAM_SECONDS = 600;
@@ -331,6 +366,11 @@ const NO_IGNITION = L('점화 기준치가 주어지지 않아 화상 피해는 
 const OVER_BEFORE_BURN = L('그 전에 끝나므로 화상 피해는 들어가지 않습니다.', 'It is over before that, so no burning damage is added.');
 const armorStopsBurn = (armor, ap) => L(`본체 장갑이 ${armor}라 화상(관통 ${ap})은 본체에 들어가지 않습니다.`, `Main armor ${armor} stops burning (AP ${ap}), so it adds no damage.`);
 const tenths = value => Math.round(value * 10) / 10;
+// A flamethrower's pilot light (stream.fire) is counted from the first ignition: it stays lit about 10 s after the last
+// shot (datamine lighter_time_to_shutoff; user request 2026-11-27).
+const warmNote = (warm, flame) => flame
+  ? L(`첫 점화 기준으로 점화 ${tenths(warm)}초를 더했습니다. 점화기는 마지막으로 쏜 뒤 약 10초 동안 켜져 있어 그동안은 바로 쏠 수 있습니다.`, `Counts the first ignition: ${tenths(warm)} s for the pilot light. It stays lit about 10 s after the last shot, and fires at once until then.`)
+  : L(`발사 전 예열 ${tenths(warm)}초를 더했습니다.`, `Includes the ${tenths(warm)} s warm-up before firing.`);
 function ignitionNote(ignition, ignite, after) {
   // A flame stream lights within a tenth of a second; say so rather than 'about 0 s'.
   const soon = after < 0.1;
@@ -363,6 +403,7 @@ function solveStream(enemy, target, attack, options) {
   const base = pending(target);
   const main = target.main || enemy.main;
   const { stream } = attack;
+  if (stream.gas) return solveGas(base, target, main, stream, attack, options);
   const fire = options.fireMult;
   if (stream.fire && !known(fire)) return { ...base, reason: 'fire-mult-missing' };
   const own = stream.fire ? { ...attack, standard: attack.standard * fire, durable: attack.durable * fire } : attack;
@@ -372,8 +413,11 @@ function solveStream(enemy, target, attack, options) {
   const burn = burnKnown && !target.isolated ? stream.burn.perSecond * fire * armorFactor(stream.burn.ap, main.armor) : 0;
   const armorStops = burnKnown && !target.isolated && burn === 0;
   const notes = !stream.burn ? [] : !known(fire) ? [BURN_LEFT_OUT] : after == null ? [NO_IGNITION]
-    : armorStops ? [armorStopsBurn(main.armor, stream.burn.ap)] : burn > 0 ? [ignitionNote(ignition, stream.ignite, after)] : [];
+    : armorStops ? [armorStopsBurn(main.armor, stream.burn.ap)] : burn > 0 && !stream.burnOnly ? [ignitionNote(ignition, stream.ignite, after)] : [];
   const bleedOrKill = main.constitution ? 'bleed' : 'kill';
+  const warm = stream.warmUp || 0;
+  if (warm) notes.push(warmNote(warm, stream.fire));
+  if (stream.burnOnly) return solveBurn(base, target, main, stream, ignition, burn, armorStops, notes, bleedOrKill, options, own);
   const stages = [];
   let mainLeft = main.hp;
   let time = 0;
@@ -388,7 +432,7 @@ function solveStream(enemy, target, attack, options) {
     }
     if (damage.direct === 0) {
       return part === target ? { ...base, stages, notes, outcome: 'blocked', reason: 'stream-blocked' }
-        : { ...base, stages, notes, hits: streamSeconds(time), outcome: 'armor', reason: 'no-damage-after-armor' };
+        : { ...base, stages, notes, hits: streamSeconds(warm + time), outcome: 'armor', reason: 'no-damage-after-armor' };
     }
     const partTime = part.mainOnly ? Infinity : partPool(part) / damage.direct;
     const transfer = target.isolated ? 0 : damage.direct * part.toMain / 100;
@@ -401,7 +445,7 @@ function solveStream(enemy, target, attack, options) {
     time += span;
     Object.assign(stage, { hits: streamSeconds(span), contactSeconds: span, partTotal: damage.direct * span, mainTotal: transferred, burnTotal: burned });
     // Over before the fire catches: say no burning was added.
-    const done = { ...base, stages, notes: burn > 0 && time < after ? [...notes, OVER_BEFORE_BURN] : notes, hits: streamSeconds(time), seconds: time, ignitedAt: burn > 0 ? after : null };
+    const done = { ...base, stages, notes: burn > 0 && time < after ? [...notes, OVER_BEFORE_BURN] : notes, hits: streamSeconds(warm + time), seconds: warm + time, fireSeconds: time, ignitedAt: burn > 0 ? warm + after : null };
     if (partTime <= mainTime && part.effect === 'kill' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };
     if (partTime <= mainTime && mainLeft - transferred - burned - (part.destroyMainDamage || 0) <= EPSILON) return { ...done, outcome: bleedOrKill, via: 'main' };
     if (mainTime < partTime) return { ...done, outcome: bleedOrKill, via: 'main' };
@@ -412,6 +456,78 @@ function solveStream(enemy, target, attack, options) {
     part = part.next;
   }
   return base;
+}
+
+// A fire pool (G-8 Immolation; user request 2026-11-27): only burning, to main health. One blast's Fire status
+// (`ignite`, given all at once) lights the enemy if it reaches the ignition threshold; a kill that takes longer than
+// the pool lasts is said in a note (one grenade is not enough).
+const poolShort = (pool, name = '불 웅덩이') => L(`${name}(${pool}초)보다 오래 걸려 수류탄 하나로는 모자랍니다.`, `It takes longer than the fire lasts (${pool} s), so one grenade is not enough.`);
+// What one grenade's blast takes from main health on this part: its transfer and any blast on main (stream.blast).
+// The blast and the bomblets that land (stream.bomblets.count, a fixed share; the Expendable Napalm) hit the part one
+// after another, as solveImpacts counts shots: each passes its share to main, and once the part breaks the rest stop
+// (what reaches the layer under it is unknown). A broken fatal part, or main health gone, ends it there.
+function blastPhase(stream, target, main, options) {
+  if (!stream.blast || target.isolated) return { loss: 0 };
+  const hits = [stream.blast, ...Array(stream.bomblets?.count ?? 0).fill(stream.bomblets?.attack)];
+  let partLeft = target.mainOnly ? Infinity : partPool(target), capLeft = transferCap(target), loss = 0;
+  for (const attack of hits) {
+    const d = hitDamage(attack, target, main, options);
+    if (![d.direct, d.explosion, d.mainExplosion].every(known)) return { loss };
+    let transfer = Math.floor((d.direct + d.explosion) * (target.toMain ?? 100) / 100);
+    if (target.overflowCap) { transfer = Math.min(transfer, capLeft); capLeft -= transfer; }
+    loss += transfer + d.mainExplosion;
+    partLeft -= d.direct + d.explosion;
+    if (loss >= main.hp) return { loss: main.hp, outcome: main.constitution && loss < main.hp + main.constitution ? 'bleed' : 'kill', via: 'main' };
+    if (partLeft <= 0) {
+      loss += target.destroyMainDamage || 0;
+      return FATAL.includes(target.effect) && !target.next ? { loss, outcome: target.effect, via: 'part' } : { loss };
+    }
+  }
+  return { loss };
+}
+function solveBurn(base, target, main, stream, ignition, burn, armorStops, notes, bleedOrKill, options, own) {
+  // A blast that kills on its own (one grenade, before any burning) says so instead of a time (user request 2026-11-27).
+  const phase = blastPhase(stream, target, main, options);
+  if (phase.outcome && !stream.blastAt) {
+    const stage = { part: target, hits: 0, damage: hitDamage(stream.blast, target, main, options), events: [], contactSeconds: 0, partTotal: 0, mainTotal: phase.loss, burnTotal: 0 };
+    return { ...base, stages: [stage], notes: [L('폭발 한 번으로 처치됩니다.', 'The blast alone kills it.')], hits: 0, seconds: 0, blastKill: true, outcome: phase.outcome, via: phase.via };
+  }
+  if (target.isolated) return { ...base, notes, outcome: 'blocked', reason: 'stream-blocked' };
+  if (!known(options.fireMult)) return { ...base, notes, reason: 'fire-mult-missing' };
+  if (!known(ignition?.value) || !known(main.hp) || !known(main.armor)) return { ...base, notes, reason: 'beam-data-missing' };
+  if (stream.ignite < ignition.value) return { ...base, notes: [L(`폭발이 쌓는 점화 수치(${stream.ignite})가 이 적의 점화 기준치(${ignition.value})에 못 미쳐 불이 붙지 않습니다.`, `The blast's fire build-up of ${stream.ignite} is below this enemy's ignition threshold of ${ignition.value}, so it does not catch fire.`)], outcome: 'blocked', reason: 'stream-blocked' };
+  if (armorStops || burn <= 0) return { ...base, notes, outcome: 'blocked', reason: 'stream-blocked' };
+  // The blast takes its share off main health first; the Pyrotech's comes after its sparks (stream.blastAt).
+  const blastLoss = Math.min(main.hp, phase.loss), at = stream.blastAt || 0;
+  const seconds = at && main.hp / burn <= at ? main.hp / burn : at && main.hp - burn * at - blastLoss <= 0 ? at : Math.max(0, main.hp - blastLoss) / burn;
+  if (seconds > MAX_STREAM_SECONDS) return { ...base, notes, reason: 'too-many-hits' };
+  const blastNote = blastLoss > 0 ? [L(`폭발이 본체 체력을 먼저 ${Math.round(blastLoss)}만큼 깎습니다.`, `The blast takes ${Math.round(blastLoss)} off main health first.`)] : [];
+  const lit = ignition.estimated
+    ? L(`폭발이 점화 수치를 한 번에 ${stream.ignite}만큼 쌓아 바로 불이 붙습니다. 이 적의 점화 기준치는 알려지지 않아 ${ignition.value}로 추정했습니다.`, `The blast builds up ${stream.ignite} at once, so it catches fire at once. This enemy's ignition threshold is unknown, estimated at ${ignition.value}.`)
+    : L(`폭발이 점화 수치를 한 번에 ${stream.ignite}만큼 쌓아 점화 기준치(${ignition.value})를 넘기므로 바로 불이 붙습니다.`, `The blast builds up ${stream.ignite} at once, past the threshold of ${ignition.value}, so it catches fire at once.`);
+  const damage = hitDamage(own, target, main, options);
+  const stage = { part: target, hits: streamSeconds(seconds), damage, events: [], contactSeconds: seconds, partTotal: 0, mainTotal: blastLoss, burnTotal: main.hp - blastLoss };
+  const bombletNote = stream.bomblets ? [L(`자탄 ${stream.bomblets.of}개 중 ${stream.bomblets.count}개(20%)가 맞는다고 보았습니다.`, `${stream.bomblets.count} of the ${stream.bomblets.of} bomblets (20%) are assumed to hit.`)] : [];
+  const poolNote = stream.pool == null ? [L('불길이 얼마나 남는지는 자료가 없어 계산 시간 동안 남는다고 보았습니다.', 'How long the fire lasts is unknown; it is assumed to last as long as needed.')]
+    : seconds > stream.pool ? [poolShort(stream.pool, stream.poolName)] : [];
+  return { ...base, stages: [stage], notes: [lit, ...blastNote, ...bombletNote, ...poolNote], hits: streamSeconds(seconds), seconds, ignitedAt: 0, outcome: bleedOrKill, via: 'main' };
+}
+
+// A gas cloud (G-4 Gas; user request 2026-11-27): its blast poisons at once and gas takes `burn.perSecond` from main
+// health through the main armor at its AP, whatever the part. No fire multiplier or ignition threshold applies; any
+// enemy resistance to gas is not known and left out. Past the cloud's time one grenade is not enough (a note).
+const cloudShort = pool => L(`가스 구름(${pool}초)보다 오래 걸려 수류탄 하나로는 모자랍니다.`, `It takes longer than the gas cloud lasts (${pool} s), so one grenade is not enough.`);
+function solveGas(base, target, main, stream, attack, options) {
+  if (target.isolated) return { ...base, outcome: 'blocked', reason: 'stream-blocked' };
+  if (!known(main.hp) || !known(main.armor)) return { ...base, reason: 'beam-data-missing' };
+  const rate = stream.burn.perSecond * armorFactor(stream.burn.ap, main.armor);
+  if (rate <= 0) return { ...base, notes: [L(`본체 장갑이 ${main.armor}라 가스(관통 ${stream.burn.ap})가 본체에 들어가지 않습니다.`, `Main armor ${main.armor} stops the gas (AP ${stream.burn.ap}).`)], outcome: 'blocked', reason: 'stream-blocked' };
+  const seconds = main.hp / rate;
+  if (seconds > MAX_STREAM_SECONDS) return { ...base, reason: 'too-many-hits' };
+  const damage = hitDamage({ ...attack, standard: 0, durable: 0 }, target, main, options);
+  const stage = { part: target, hits: streamSeconds(seconds), damage, events: [], contactSeconds: seconds, partTotal: 0, mainTotal: 0, burnTotal: main.hp };
+  const bleedOrKill = main.constitution ? 'bleed' : 'kill';
+  return { ...base, stages: [stage], notes: seconds > stream.pool ? [cloudShort(stream.pool)] : [], hits: streamSeconds(seconds), seconds, outcome: bleedOrKill, via: 'main' };
 }
 
 // --- Matchups ------------------------------------------------------------------

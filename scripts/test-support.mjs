@@ -63,14 +63,15 @@ const engine = {
   spear: { impact: shot('FAF-14_P') },
   commando: { standard: shot('MLS-4X_P') },
   leveller: { standard: shot('EAT-411_P') },
-  'expendable-napalm': { standard: shot('EAT-700_P') },
   railgun: { safe: shot('RS-422_P'), 'unsafe-max': shot('RS-422_P', { mult: chargeMultiplier('RS-422 RAILGUN') }) },
   epoch: { standard: shot('PLAS-45_P'), charged: shot('P3', { mult: chargeMultiplier('PLAS-45 EPOCH') }) },
   'grenade-launcher': { standard: shot('GL-21_P') },
   'belt-fed-gl': { standard: shot('GL-28_P') },
   'airburst-launcher': { flak: shot('RL-77_P', { bomblet: 'RL-77_P1' }), cluster: shot('RL-77_P2', { bomblet: 'RL-77_P3' }) },
   wasp: { submunitions: shot('StA-X3_P1', { bomblet: 'StA-X3_P' }) },
-  speargun: { direct: shot('S-11_P') },
+  // The spear's gas blast hangs off explode_id, not explode_on_impact_id (user request 2026-11-27).
+  speargun: { direct: shot('S-11_P', { blast: 'S-11_P_E' }) },
+  'defoliation-tool': { standard: { hit: ['damage', 'CQC-9 DEFOLIATION TOOL_dm'] } },
   'arc-thrower': { 'first-target': { hit: ['arc', 'ARC-3 ARC THROWER_A'] } },
   'de-escalator': { arc: { hit: ['arc', 'GL-52_P_IE_A'], carrier: 'GL-52_P' } },
   meltagun: { near: { hit: ['beam', '40-K MELTAGUN_B'] } },
@@ -97,12 +98,15 @@ const table = {
   // The table's direct hit is the grenade itself (game data sheet, user request 2026-11-26); the arcs are the engine mode.
   'de-escalator': shot('GL-52_P'),
   'defoliation-tool': { hit: ['damage', 'CQC-9 DEFOLIATION TOOL_dm'] },
+  // The table row is the missile; the engine mode is a burning time (user request 2026-11-27).
+  'expendable-napalm': shot('EAT-700_P'),
 };
 
 const notCompared = {
+  'engine:expendable-napalm/standard': 'A burning time, not a shot; its missile and bomblets are checked against the datamine below.',
   'engine:meltagun/max-range': 'The 40% falloff at 15 m comes from the wiki page; the datamine has no range falloff.',
-  'engine:solo-silo/standard': 'MS-11 Solo Silo is not in the datamine snapshot.',
-  'table:solo-silo': 'MS-11 Solo Silo is not in the datamine snapshot.',
+  'engine:solo-silo/standard': 'A stratagem: its two blasts are checked against the stratagem datamine below.',
+  'table:solo-silo': 'A stratagem: its two blasts are checked against the stratagem datamine below.',
   'table:flamethrower': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
   'table:cremator': 'The table shows the wiki page DPS; the datamine stores one spray particle.',
   'engine:flamethrower/standard': 'The held flame stream uses the wiki page DPS; the datamine stores one spray particle.',
@@ -117,6 +121,7 @@ const reviewed = {
   'table:grenade-launcher.hit.direct': { site: 0, datamine: 20, why: 'Same as the engine: 0 direct damage per the wiki page.' },
   'table:grenade-launcher.hit.ap': { site: 3, datamine: 0, why: 'The table shows the explosion AP 3 for a weapon with no direct damage.' },
   'table:defoliation-tool.hit.ap': { site: 5, datamine: 3, why: 'AP rises from 3 to 5 over 0.5 s of contact (wiki page); the datamine holds the starting 3.' },
+  'engine:defoliation-tool/standard.hit.ap': { site: 5, datamine: 3, why: 'AP rises from 3 to 5 over 0.5 s of contact (wiki page); the datamine holds the starting 3.' },
 };
 
 // --- Comparison ----------------------------------------------------------------------------
@@ -256,6 +261,30 @@ for (const item of support.filter(item => item.magazine != null || item.spareMag
   } else if (item.spareRounds != null && item.spareRounds !== spare.rounds) ammoWarnings.push(`${item.id}: spare rounds ${item.spareRounds}, datamine ${spare.rounds ?? 'none'}`);
 }
 for (const message of ammoWarnings) console.warn(`warning: support ammo: ${message}`);
+
+// The Expendable Napalm's burning mode (user request 2026-11-27): its missile and bomblet numbers are the datamine's.
+{
+  const { blast, bomblets } = weaponProfiles['expendable-napalm'].modes.find(mode => mode.id === 'standard').stream;
+  const where = 'engine:expendable-napalm/standard';
+  const same4 = (site, hit, boom, what) => ok(site.standard === hit.dmg && site.durable === hit.dmg2 && site.ap === hit.ap1 && site.explosion === boom.dmg && site.explosionAp === boom.ap1, `${where}: ${what} matches the datamine`);
+  same4(blast, hitOf(['projectile', 'EAT-700_P'], where), blastOf('EAT-700_P_IE', where), 'missile');
+  same4(bomblets.attack, hitOf(['projectile', 'EAT-700_P1'], where), blastOf('EAT-700_P1_IE', where), 'bomblet');
+  ok(explosion['EAT-700_P_IE'].shrapnel_count === bomblets.of, `${where}: ${bomblets.of} bomblets`);
+}
+
+// The MS-11 Solo Silo is in the stratagem datamine (SOLO SILO_EImpact and SOLO SILO_E): its impact and main blasts,
+// in the engine and on the card, are the datamine's (data audit 2026-11-27).
+{
+  const data = JSON.parse(await readFile(new URL('../db/source/stratagems_data.json', import.meta.url), 'utf8')).data;
+  const blast = id => ({ ...data.damage[data.explosion[id].damage_id], r1: data.explosion[id].r1, r2: data.explosion[id].r2 });
+  const [impact, main] = [blast('SOLO SILO_EImpact'), blast('SOLO SILO_E')];
+  const { explosions } = weaponProfiles['solo-silo'].modes[0];
+  const same = (site, boom, what) => ok(site.standard === boom.dmg && site.durable === boom.dmg2 && site.ap === boom.ap1 && site.innerRadius === boom.r1 && site.radius === boom.r2, `engine:solo-silo/standard: ${what} matches the datamine`);
+  same(explosions.find(item => item.id === 'impact'), impact, 'impact blast');
+  same(explosions.find(item => item.id === 'main'), main, 'main blast');
+  const card = support.find(item => item.id === 'solo-silo');
+  ok(card.splash === main.dmg && card.splashAp === main.ap1 && card.innerRadius === main.r1 && card.radius === main.r2 && card.extraStats[0].value === impact.dmg, 'table:solo-silo: card blasts match the datamine');
+}
 
 assert(!failures.length, `${failures.length} support weapon checks failed:\n  ${failures.join('\n  ')}`);
 console.log(`PASS support: ${checks} checks; ${Object.keys(weaponProfiles).length} combat profiles and ${support.length} table rows against the wiki datamine (revision ${snapshot.revision}); ${Object.keys(reviewed).length} reviewed differences.`);

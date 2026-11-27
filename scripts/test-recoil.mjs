@@ -57,11 +57,13 @@ const saiFocus = configure(sai, { slots: { muzzle: focus } });
 ok(saiFocus.rpm === 600 && saiFocus.spread[0] < sai.spread[0], 'sai: the Focus Lens fires at 600 RPM with a tighter spread');
 ok(configure(sai, { slots: { magazine: slotOf(sai, 'magazine').options.findIndex(o => o.en === 'High Capacity Heatsink') } }).magazine > sai.magazine, 'sai: the high capacity heatsink fires more rounds before overheating');
 ok(configure(lib, { slots: { magazine: slotOf(lib, 'magazine').options.findIndex(o => o.en === 'Drum Magazine') } }).magazine === 60, 'liberator: the drum magazine fires 60 rounds');
-// The view climbs steadily (no recovery) by about 0.015 degrees a round for the Stalwart standing, as real firing
-// in a mission did (2026-11-25), and firing faster or slower climbs the same per round.
+// The view climbs steadily (no recovery) by 0.0013 degrees per unit of vertical camera recoil a round, times the
+// standing 0.9 (vertical random off here), as the mission recordings did (recoil_reconstruction.md section 9,
+// 2026-11-27), and firing faster or slower climbs the same per round.
 const stalwart = { ...weaponRecoil['arsenal/stalwart'].sim, random: [[0, 1], [0, 1]], drift: [0, 0] };
 const steady = simulate(stalwart, 0.9).hits.map(h => h.y);
-ok(steady.every((y, i) => i === 0 || y > steady[i - 1]) && Math.abs(steady.at(-1) / (steady.length - 1) - 0.015) < 0.002, `stalwart: climbs steadily about 0.015 degrees a round (${(steady.at(-1) / (steady.length - 1)).toFixed(4)})`);
+const expectedRound = 0.0013 * stalwart.climb[1] * 0.9;
+ok(steady.every((y, i) => i === 0 || y > steady[i - 1]) && Math.abs(steady.at(-1) / (steady.length - 1) / expectedRound - 1) < 0.02, `stalwart: climbs steadily 0.0013 degrees per recoil unit a round (${(steady.at(-1) / (steady.length - 1)).toFixed(4)})`);
 const perRound = rpm => { const ys = simulate({ ...stalwart, rpm }, 0.9).hits.map(h => h.y); return ys.at(-1) / (ys.length - 1); };
 ok(Math.abs(perRound(700) / perRound(1150) - 1) < 0.05, 'stalwart: the same climb per round at 700 and 1150 RPM');
 

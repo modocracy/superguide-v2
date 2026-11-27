@@ -1,7 +1,8 @@
 // Small icons for the firing mode tabs, redrawn after the in-game weapon wheel (the wiki's weapon wheel screenshots,
 // e.g. File:AC-8_Autocannon_WW.png, File:AR-11_Arbitrator_WW.png; user request 2026-11-25). One colour
-// (currentColor), so they follow the button's text in both themes and when picked. No icon where the wiki has no
-// screenshot (exosuits, SEAF Artillery) or where the wheel shows none (Epoch). The Airburst Rocket Launcher's and the
+// (currentColor), so they follow the button's text in both themes and when picked. The Patriot and Lumberer
+// exosuits follow their in-game HUD (user screenshots 2026-11-27). No icon where neither is at hand (Emancipator,
+// Breakthrough, SEAF Artillery) or where the wheel shows none (Epoch). The Airburst Rocket Launcher's and the
 // W.A.S.P.'s wheel modes (Cluster / Flak, Burst / Artillery) mark their firing mode block, not their stat tabs.
 import { raw } from './dom.js';
 
@@ -49,6 +50,10 @@ const ICONS = {
   // three standing rounds for the machine guns, each over a base line.
   shellUp: fill('M9.5 7.5L12 3l2.5 4.5V19h-5zM8.5 20.5h7V22h-7z'),
   roundsUp: fill(['M4.5 9L6.5 5l2 4v10h-4z', 'M10 9l2-4 2 4v10h-4z', 'M15.5 9l2-4 2 4v10h-4z'].join('') + 'M4 20.5h16V22H4z'),
+  // Exosuit HUD (EXO-45 Patriot, EXO-51 Lumberer): a standing rocket with fins and a split tail, and an angular
+  // flame with a diamond on a stem cut out of its foot.
+  rocketUp: fill('M9.5 5.5L12 2l2.5 3.5V21h-1.8v-6.5h-1.4V21H9.5zM8.7 14.5L5 21h3.7zM15.3 14.5L19 21h-3.7z'),
+  flameHud: fill('M9.6 2.5l5.1 7 1.2-.7 2.6 4.7V17l-4.7 4.5H13v-3.3l2-1.9-2.8-2.9-2.8 2.9 2 1.9v3.3h-.8L5.4 16.5V13l4.2-4z'),
   // CLUSTER: a broken ring with a centre and two crossing lines.
   cluster: '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="7" stroke-dasharray="6.5 4.5"/><path d="M5 3l13 17M19 3L7.5 18"/></g><circle cx="12" cy="12.5" r="2.6"/>',
   // Burst (W.A.S.P.): three rockets on a rail.
@@ -74,6 +79,8 @@ const MODES = {
   'arsenal/recoilless': { heat: 'heat', he: 'burst' },
   'arsenal/railgun': { safe: 'round', 'unsafe-max': 'unsafe' },
   'arsenal/bastion': { main: 'shellUp', coax: 'roundsUp' },
+  'arsenal/patriot': { rocket: 'rocketUp', mg: 'roundsUp' },
+  'arsenal/lumberer': { cannon: 'shellUp', flame: 'flameHud' },
   // Firing mode blocks (item.firingModes).
   'arsenal/airburst-launcher': { cluster: 'cluster', flak: 'jet' },
   'arsenal/wasp': { burst: 'rockets', artillery: 'artillery' },

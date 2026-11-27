@@ -40,7 +40,9 @@ export const $ = (selector, root = document) => root.querySelector(selector);
 export const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 export function render(root, content) { root.innerHTML = piece(content); }
 
-export const external = (url, label) => html`<a class="ext" href="${url}" target="_blank" rel="noopener noreferrer">${label}<span aria-hidden="true"> ↗</span></a>`;
+// context: what the link belongs to, so same-named links on a list of cards tell themselves apart; the name always says
+// it opens a new tab (user request 2026-11-27).
+export const external = (url, label, context = '') => html`<a class="ext" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${label}${context ? ` · ${context}` : ''} ${L('(새 탭)', '(new tab)')}">${label}<span aria-hidden="true"> ↗</span></a>`;
 
 // Stroke icons, 24px grid.
 const ICONS = {
@@ -79,6 +81,8 @@ const ICONS = {
   // CC BY-NC-SA 4.0): its rifle outline (x 2120-2328, y 631-729) fitted 22 units wide, in the text colour.
   gear: '<path transform="translate(-1.54 -1.56) scale(.1058) translate(-2095.99 -552)" stroke="none" fill="currentColor" d="M2169 685h-3v4h-30l-6 7h-10v-43h94v-4h24v-4h-12v-14h41v18h54v11h7v7h-7v21h-7v14h-25v-14h-26l-30 41-33-14 13-30h-24v8c0 8 2 19 6 29l-20 7c-3-11-6-26-6-34zm61 3-11 28 8 5 19-26-7-7z"/>',
   search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/>',
+  // Text size: a large and a small letter A.
+  textsize: '<path d="m2.5 19 6-14 6 14M4.7 14h7.6"/><path d="m14.5 19 3.5-8 3.5 8M15.8 16.2h4.4"/>',
   info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
   close: '<path d="M6 6l12 12M18 6 6 18"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',

@@ -46,7 +46,7 @@ function slotTile(slot) {
       <span class="lo-slot-text"><small>${slot.label}</small><b>${item ? nameOf(id) : L('비어 있음', 'Empty')}</b>
         ${item && stratagemById.has(id) && !support ? html`<em>${L('계산 대상 아님', 'Not calculated')}</em>` : ''}</span>
     </button>
-    ${item ? html`<button type="button" class="icon-button lo-clear" data-clear="${slot.key}" aria-label="${slot.label} ${L('비우기', 'clear')}">${icon('close', 14)}</button>` : ''}
+    ${item ? html`<button type="button" class="icon-button lo-clear" data-clear="${slot.key}" aria-label="${slot.label} ${L('비우기', 'clear')}" title="${slot.label} ${L('비우기', 'clear')}">${icon('close', 14)}</button>` : ''}
   </div>`;
 }
 
@@ -90,7 +90,7 @@ function kindChips(slot) {
 function openPicker(slot) {
   const { ctx } = env;
   picker.kind = '';
-  ctx.openSheet(html`<div class="sheet-top"><span>${L(`${slot.label} 고르기`, `Choose: ${slot.label}`)}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  ctx.openSheet(html`<div class="sheet-top"><span>${L(`${slot.label} 고르기`, `Choose: ${slot.label}`)}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content lo-picker">
       <h2 id="sheet-title" style="font-size:20px">${slot.label}</h2>
       ${slot.stratagem != null ? html`<p class="muted">${L('지원 무기 스트라타젬만 적 대응 계산에 들어갑니다. 나머지는 로드아웃에 담기만 합니다.', 'Only support weapon stratagems are included in the shots-to-kill check; the rest are just part of the loadout.')}</p>` : ''}

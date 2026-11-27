@@ -40,12 +40,27 @@ let root, ctx;
 // In-game permit (menu colour) from each stratagem's wiki page (stratagem-stats.js).
 const PERMITS = [
   { id: 'offensive', name: L('공격', 'Offensive'), color: '#e0533f' }, { id: 'defensive', name: L('방어', 'Defensive'), color: '#5fae4f' },
-  { id: 'supply', name: L('지원', 'Supply'), color: '#3f8fd8' }, { id: 'mission', name: L('임무', 'Mission'), color: '#e6b627' },
+  { id: 'supply', name: L('보급', 'Supply'), color: '#3f8fd8' }, { id: 'mission', name: L('임무', 'Mission'), color: '#e6b627' },
 ];
 const permitOf = item => stratagemStats[item.id]?.permit;
+// The category filter: each catalogue category, with two cuts of the support weapons after it (user request
+// 2026-11-27): those that come with a backpack, and the expendables the game files under EXPENDABLE ('소모품').
+// Several can be picked at once and show everything any of them takes in.
+const EXPENDABLE = new Set(['expendable-at', 'leveller', 'expendable-napalm', 'solo-silo', 'commando', 'bullet-storm']);
+const KINDS = categories.flatMap(cat => [
+  { id: cat.id, name: cat.name, color: cat.color, test: item => item.category === cat.id },
+  ...(cat.id === 'support' ? [
+    { id: 'support-backpack', name: L('지원 배낭', 'With backpack'), color: cat.color, test: item => item.category === 'support' && item.tags?.includes('배낭 필요') },
+    { id: 'expendable', name: L('소모품', 'Expendable'), color: cat.color, test: item => EXPENDABLE.has(item.id) },
+  ] : []),
+]);
+const kindOf = id => KINDS.find(kind => kind.id === id);
+const matchKinds = (item, ids = state.c) => !ids.length || ids.some(id => kindOf(id).test(item));
+// Categories with nothing in the picked type are let go (they are hidden under it).
+const keepKindsInPermit = () => { if (state.p) state.c = state.c.filter(id => stratagems.some(item => kindOf(id).test(item) && permitOf(item) === state.p)); };
 // AP bands offered as filters ("unverified AP" is not one).
 const AP_FILTERS = apBands.filter(band => band.id !== 'unknown');
-const state = { c: '', ap: '', p: '', q: '', sort: '', mod: true, compare: new Set(), detail: null, variant: '', expanded: false };
+const state = { c: [], ap: '', p: '', q: '', sort: '', mod: true, compare: new Set(), detail: null, variant: '', expanded: false };
 
 const subtitle = item => lang === 'en' ? (item.code && !item.en.startsWith(item.code) ? item.code : '') : item.en;
 export const iconOf = item => html`<img class="strat-icon" src="${wikiIcons[item.id]?.src}" alt="" width="44" height="44" loading="lazy" decoding="async">`;
@@ -79,15 +94,49 @@ function stats(item) {
 
 // Card cells are narrow: an unverified value shows as "?" there in English.
 const cellText = stat => lang === 'en' && stat.dim && stat.text === 'Unverified' ? '?' : stat.text;
-// A weapon with no reach to show (the HMG Emplacement, a support weapon whose reach is unverified; user requests
-// 2026-11-26) drops that cell on its card and detail.
-const hiddenReach = (item, reach) => item.noReach || item.category === 'support' && reach.dim && reach.text === L('미확인', 'Unverified');
+// A card shows only numbers that say something (user request 2026-11-27): no 'none' blast cell, no direct 0 on a
+// pure blast, no reach that is unverified or only a word. Room left goes to the fire rate and the capacity. Gear with no
+// attack shows its own numbers (extra stats, call-in time, limited uses, health) and no row when it has none.
 const statRow = item => {
+  if (item.utility) return statRowOf(utilityCells(item));
   const charge = CHARGE_RANGE.has(item.id) && item.variants?.length > 1 ? [stats(withVariant(item, item.variants[0])), stats(withVariant(item, item.variants.at(-1)))] : null;
-  const cells = stats(item).map((stat, index) => charge ? { ...stat, text: rangeText(charge[0][index].text, charge[1][index].text) } : stat);
-  return statRowOf(item, cells);
+  const [hit, blast, ap, reach] = stats(item).map((stat, index) => charge ? { ...stat, text: rangeText(charge[0][index].text, charge[1][index].text) } : stat);
+  // A cell that is only words ('탄종별 상이', '가스 효과') is cut off on a card: left to the details.
+  const numeric = text => /\d/.test(text ?? '');
+  const hasBlast = numeric(item.splashText) || !item.splashText && item.splash > 0 || charge != null && !blast.dim;
+  const hasHit = item.directText ? numeric(item.directText) : item.direct > 0 || charge != null;
+  const cells = [
+    ...(hasHit ? [hit] : []),
+    ...(hasBlast ? [blast] : []),
+    ap,
+    ...(reach.unit && !reach.dim && !item.noReach ? [reach] : []),
+  ];
+  // Selectable fire rates show their highest (the card cell is too narrow for the range).
+  const modes = item.rpmModes?.length > 1;
+  const rate = modes ? item.rpmModes.at(-1) : item.rpm;
+  if (cells.length < 4 && rate != null) cells.push({ label: modes ? L('최대 연사', 'Max rate') : L('연사', 'Fire rate'), text: num(rate), unit: L('/분', '/min') });
+  // The Breakthrough's shield bash (user request 2026-11-27).
+  const bash = item.extraStats?.find(stat => stat.label === '방패 타격');
+  if (cells.length < 4 && bash) cells.push({ label: L('방패 타격', 'Shield bash'), text: num(bash.value) });
+  if (cells.length < 4 && item.magazine > 1) cells.push({ label: item.fuel ? L('연료', 'Fuel') : item.gas ? L('가스', 'Gas') : L('용량', 'Capacity'), text: num(item.magazine), unit: item.fuel || item.gas || item.countUnit ? '' : L('발', '') });
+  return statRowOf(cells);
 };
-const statRowOf = (item, cells) => html`<dl class="stat-row">${cells.filter((stat, index) => !(index === 3 && hiddenReach(item, stat))).map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}" title="${stat.dim ? stat.text : ''}">${cellText(stat)}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd></div>`)}</dl>`;
+// Jump and hover packs show their recharge, shields what they hold (user request 2026-11-27): an energy shield's
+// capacity, a ballistic shield's own health.
+function utilityCells(item) {
+  const timing = timingOf(item), body = stratagemStats[item.id]?.body, recharge = stratagemStats[item.id]?.times?.recharge;
+  const guard = item.defense?.type === 'energy' ? { label: L('보호막 용량', 'Shield capacity'), value: item.defense.shield?.capacity }
+    : item.defense?.type === 'ballistic' ? { label: L('방패 체력', 'Shield health'), value: item.defense.body?.hp } : null;
+  return [
+    ...(item.extraStats ?? []).filter(stat => typeof stat.value === 'number').slice(0, 2).map(stat => ({ label: T(stat.label), text: num(stat.value), unit: T(stat.unit ?? '') })),
+    ...(recharge != null ? [{ label: L('재충전', 'Recharge'), text: num(recharge), unit: L('초', 's') }] : []),
+    ...(guard?.value != null ? [{ label: guard.label, text: num(guard.value) }] : []),
+    ...(timing?.callIn > 0 ? [{ label: L('호출', 'Call-in'), text: num(timing.callIn), unit: L('초', 's') }] : []),
+    ...(typeof timing?.uses === 'number' ? [{ label: L('사용 횟수', 'Uses'), text: num(timing.uses), unit: L('회', '') }] : []),
+    ...(body?.health != null && !body.drone ? [{ label: L('체력', 'Health'), text: num(body.health) }] : []),
+  ].slice(0, 4);
+}
+const statRowOf = cells => cells.length ? html`<dl class="stat-row" style="--cols:${cells.length}">${cells.map(stat => html`<div><dt>${stat.label}</dt><dd class="${stat.dim ? 'dim' : ''}" title="${stat.dim ? stat.text : ''}">${cellText(stat)}${stat.unit ? html`<small>${stat.unit}</small>` : ''}</dd></div>`)}</dl>` : '';
 
 // One-line numbers for a mode, used on cards and in the comparison table.
 function variantBrief(item, variant) {
@@ -137,7 +186,7 @@ function card(item) {
 // --- Filtering -------------------------------------------------------------------
 function visibleItems() {
   const band = AP_FILTERS.find(item => item.id === state.ap);
-  let items = stratagems.filter(item => (!state.c || item.category === state.c) && (!band || band.test(chargeTop(item))) && (!state.p || permitOf(item) === state.p));
+  let items = stratagems.filter(item => matchKinds(item) && (!band || band.test(chargeTop(item))) && (!state.p || permitOf(item) === state.p));
   items = search(items, state.q, item => { const fields = stratagemFields(item); return { ...fields, keywords: collabKeywords(warbondSources[`arsenal/${item.id}`]?.id) }; });
   const sort = SORTS.find(item => item.id === state.sort);
   if (sort?.value) items = [...items].sort((a, b) => (sort.value(b) ?? -1) - (sort.value(a) ?? -1));
@@ -146,7 +195,7 @@ function visibleItems() {
 
 function syncUrl() {
   if (state.tab === 'modules') { ctx.replace({ view: 'arsenal', query: { tab: 'modules', u: shipModule.focus } }); return; }
-  ctx.replace({ view: 'arsenal', id: state.detail, query: { c: state.c, ap: state.ap, p: state.p, q: state.q, sort: state.sort, mod: state.mod ? '' : 'off', m: state.detail ? state.variant : '', full: state.expanded ? '1' : '' } });
+  ctx.replace({ view: 'arsenal', id: state.detail, query: { c: state.c.join(','), ap: state.ap, p: state.p, q: state.q, sort: state.sort, mod: state.mod ? '' : 'off', m: state.detail ? state.variant : '', full: state.expanded ? '1' : '' } });
 }
 
 // --- Tabs: the catalogue and the ship modules (ship-modules.js, loaded on demand) ----------------
@@ -182,40 +231,28 @@ function showTab() {
 
 function renderList() {
   const items = visibleItems();
-  // Count categories and permit types in a single scan over stratagems.
-  const catCounts = new Map(), permitCounts = new Map();
-  let total = 0, permitAll = 0, catAll = 0;
+  // The type (permit) comes first: the categories under it count only its stratagems, and a category with none of
+  // them is hidden (user request 2026-11-27).
+  const catCounts = new Map();
+  let total = 0, catAll = 0;
   for (const item of stratagems) {
-    const matchCat = !state.c || item.category === state.c;
-    const permit = permitOf(item);
-    const matchPermit = !state.p || permit === state.p;
-    if (matchCat && matchPermit) total++;
-    if (matchPermit) {
-      catAll++;
-      catCounts.set(item.category, (catCounts.get(item.category) || 0) + 1);
-    }
-    if (matchCat) {
-      permitAll++;
-      permitCounts.set(permit, (permitCounts.get(permit) || 0) + 1);
-    }
+    if (state.p && permitOf(item) !== state.p) continue;
+    catAll++;
+    if (matchKinds(item)) total++;
+    for (const kind of KINDS) if (kind.test(item)) catCounts.set(kind.id, (catCounts.get(kind.id) || 0) + 1);
   }
   for (const chip of $$('[data-cat]', root)) {
     const n = chip.dataset.cat ? (catCounts.get(chip.dataset.cat) || 0) : catAll;
     chip.querySelector('.count').textContent = n;
-    chip.classList.toggle('is-empty', !n);
-  }
-  for (const chip of $$('[data-permit]', root)) {
-    const n = chip.dataset.permit ? (permitCounts.get(chip.dataset.permit) || 0) : permitAll;
-    if (chip.dataset.permit) chip.querySelector('.count').textContent = n;
-    chip.classList.toggle('is-empty', !n);
+    chip.hidden = !n;
   }
   $('#arsenal-count').innerHTML = html`<span>${L(html`<b>${items.length}</b>개 표시 · 전체 ${total}개`, html`Showing <b>${items.length}</b> of ${total}`)}</span>`.toString();
   render($('#arsenal-grid'), items.length ? items.map(card) : html`<div class="empty" style="grid-column:1/-1"><h3>${L('맞는 스트라타젬이 없습니다', 'No matching stratagems')}</h3><p>${L('검색어를 줄이거나 필터를 해제해 보세요.', 'Try a shorter search or clear the filters.')}</p><button class="button" type="button" data-reset>${L('필터 초기화', 'Reset filters')}</button></div>`);
-  for (const chip of $$('[data-cat]', root)) chip.setAttribute('aria-pressed', String(chip.dataset.cat === state.c));
+  for (const chip of $$('[data-cat]', root)) chip.setAttribute('aria-pressed', String(chip.dataset.cat ? state.c.includes(chip.dataset.cat) : !state.c.length));
   for (const chip of $$('[data-ap]', root)) chip.setAttribute('aria-pressed', String(chip.dataset.ap === state.ap));
   for (const chip of $$('[data-permit]', root)) chip.setAttribute('aria-pressed', String(chip.dataset.permit === state.p));
   for (const chip of $$('[data-mod]', root)) chip.setAttribute('aria-pressed', String((chip.dataset.mod === 'on') === state.mod));
-  $('[data-reset-inline]', root).hidden = !state.c && !state.ap && !state.p && !state.q && !state.sort;
+  $('[data-reset-inline]', root).hidden = !state.c.length && !state.ap && !state.p && !state.q && !state.sort;
   renderTray();
 }
 
@@ -329,7 +366,7 @@ function reloadCell(item) {
     : r.time != null && r.tactical != null ? (r.time === r.tactical ? L('전술 재장전 없음', 'No tactical reload') : L(`전술 재장전 ${num(v('tactical'))}초`, `Tactical reload ${num(v('tactical'))}s`)) : r.time == null ? L('전술 재장전', 'Tactical reload') : L('탄창을 비웠을 때', 'From empty'),
     r.clipFirst != null ? L(`클립 하나씩 장전 ${num(v('clipFirst'))}초, 다음 클립 ${num(v('clipRest'))}초`, `Clip by clip: ${num(v('clipFirst'))}s, then ${num(v('clipRest'))}s each`) : '',
     r.assisted != null ? L(`동료가 장전하면 ${num(r.assisted)}초`, `${num(r.assisted)}s when a teammate loads it`) : r.assistedPerClip != null ? L(`동료가 장전하면 클립당 ${num(r.assistedPerClip)}초`, `${num(r.assistedPerClip)}s a clip when a teammate loads it`) : '',
-    r.stationary ? L('정지 재장전', 'Stationary reload') : '',
+    // Stationary reload is a chip already (reloadBadges), not repeated here (user request 2026-11-27).
   ].filter(Boolean).join(' · ');
   const note = reloadModuleNote(item);
   return html`<div><dt>${note ? tipLabel(L('재장전', 'Reload'), note) : L('재장전', 'Reload')}</dt><dd>${num(v(main))}<small>${s}</small></dd><div class="caption">${parts}</div></div>`;
@@ -474,9 +511,9 @@ const DIRECT_KINDS = ['direct', 'beam', 'arc', 'spray'];
 // Explosions (the blast, an overcharge, a backblast) carry the blast icon in front of their name.
 const BLAST_KINDS = ['blast', 'overcharge', 'backblast', 'wreck'];
 // What a continuous attack is made of: gas (items with a gas damage cell), fire (the 화염 tag) or a laser
-// (a beam in the datamine attacks, the 레이저 tag, or the Orbital Laser, whose datamine attack is a spray).
+// (a beam in the datamine attacks, or the Orbital Laser, whose datamine attack is a spray).
 const streamOf = item => item.extraStats?.some(cell => cell.icon === 'gas') ? 'gas' : item.tags?.includes('화염') ? 'fire'
-  : item.tags?.includes('레이저') || item.id === 'orbital-laser' || stratagemStats[item.id]?.forces?.some(group => group.parts.some(part => part.kind === 'beam')) ? 'laser' : '';
+  : item.id === 'orbital-laser' || stratagemStats[item.id]?.forces?.some(group => group.parts.some(part => part.kind === 'beam')) ? 'laser' : '';
 // What the main hit is, for its labels (user request 2026-11-26): a spray particle (a mode whose unit says so), a
 // direct hit, an arc (a datamine arc, or an arc weapon with no datamine record: Tesla Tower), a laser beam (the
 // Orbital Laser's datamine attack is a spray) or a spray.
@@ -689,7 +726,7 @@ export function stratagemDetail(item, { demolition = false, force = null, header
       ${expandable && !item.input ? itemDetailToggle(expanded) : ''}</div>
     ${item.input ? html`<div class="item-detail-actions item-detail-strat-bar"><div class="block"><h3>${L('호출 코드', 'Stratagem code')}</h3>${keycaps(item.input, 'large')}</div>${expandable ? itemDetailToggle(expanded) : ''}</div>` : ''}
     <p class="item-detail-summary" style="font-size:16px">${item.summary}</p>`;
-  return html`${header ?? html`<div class="sheet-top"><span>${cat.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
+  return html`${header ?? html`<div class="sheet-top"><span>${cat.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
   <div class="sheet-content">
     ${expanded ? html`<div class="item-detail-strat-head" style="--cat:${cat.color}">${heroHead}</div>` : heroHead}
     ${statsLayout}
@@ -788,7 +825,7 @@ function openCompare() {
     return html`<tr><th scope="row">${label}</th>${items.map(item => { const stat = stats(item)[index]; return html`<td class="${top != null && pick(item) === top ? 'best' : ''}">${stat.text}${stat.unit || ''}${stat.caption ? html`<small>${stat.caption}</small>` : ''}</td>`; })}</tr>`;
   };
   const textRow = (label, pick) => html`<tr><th scope="row">${label}</th>${items.map(item => html`<td>${pick(item) || html`<span class="faint">—</span>`}</td>`)}</tr>`;
-  ctx.openSheet(html`<div class="sheet-top"><span>${L('나란히 비교', 'Side by side')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  ctx.openSheet(html`<div class="sheet-top"><span>${L('나란히 비교', 'Side by side')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
   <div class="sheet-content">
     <h2 id="sheet-title" style="font-size:22px">${items.map(item => T(item.name)).join(' vs ')}</h2>
     <div class="compare-scroll" role="region" aria-label="${L('비교표', 'Comparison table')}" tabindex="0"><table class="compare-table">
@@ -824,7 +861,6 @@ export function mount(container, context) {
   root = container; ctx = context;
   // A fresh visit has no open detail; leaving through a link skips the close handler that clears it.
   Object.assign(state, { detail: null, variant: '', expanded: false, panelSnapshot: null });
-  const count = id => stratagems.filter(item => item.category === id).length;
   LEDES.browse = L('스트라타젬마다 피해와 관통, 범위, 그리고 쓰는 법을 정리했습니다. 카드를 누르면 자세한 수치와 그 기준이 열립니다.', 'The damage, penetration, reach and use of every stratagem. Open a card for the detailed numbers and what they are based on.');
   // Two tabs as on the gear view: the catalogue and the ship modules (moved from the gear view, user request 2026-11-26).
   render(root, html`<div class="page-head gear-head"><div><div class="eyebrow">Stratagem Arsenal</div>
@@ -838,12 +874,14 @@ export function mount(container, context) {
       <label><span class="sr-only">${L('정렬', 'Sort')}</span><select class="select" id="arsenal-sort">${SORTS.map(sort => html`<option value="${sort.id}">${sort.name}</option>`)}</select></label>
     </div>
     <div class="chip-row">
-      <div class="chips" role="group" aria-label="${L('종류', 'Category')}"><button class="chip" type="button" data-cat="">${L('전체', 'All')} <span class="count">${stratagems.length}</span></button>${categories.map(cat => html`<button class="chip" type="button" data-cat="${cat.id}" style="--dot:${cat.color}"><span class="dot"></span>${cat.name} <span class="count">${count(cat.id)}</span></button>`)}</div>
-      <div class="chips" role="group" aria-label="${L('함선 모듈', 'Ship modules')}"><button class="chip" type="button" data-mod="on">${L('함선 모듈 적용', 'Ship modules on')}</button><button class="chip" type="button" data-mod="off">${L('미적용', 'Off')}</button></div>
+    <div class="segmented gear-groups" role="group" aria-label="${L('스트라타젬 구분', 'Stratagem type')}"><button type="button" data-permit="">${L('전체', 'All')} <span class="count">${stratagems.length}</span></button>${PERMITS.map(permit => html`<button type="button" data-permit="${permit.id}" style="--dot:${permit.color}"><span class="dot"></span>${permit.name} <span class="count">${stratagems.filter(item => permitOf(item) === permit.id).length}</span></button>`)}</div>
+      <div class="segmented" role="group" aria-label="${L('함선 모듈', 'Ship modules')}"><button type="button" data-mod="on">${L('함선 모듈 적용', 'Ship modules on')}</button><button type="button" data-mod="off">${L('미적용', 'Off')}</button></div>
+    </div>
+    <div class="chip-row">
+      <div class="chips" role="group" aria-label="${L('종류', 'Category')}"><button class="chip" type="button" data-cat="">${L('전체', 'All')} <span class="count">${stratagems.length}</span></button>${KINDS.map(kind => html`<button class="chip" type="button" data-cat="${kind.id}" style="--dot:${kind.color}"><span class="dot"></span>${kind.name} <span class="count">${stratagems.filter(kind.test).length}</span></button>`)}</div>
     </div>
     <div class="chip-row">
       <div class="chips" role="group" aria-label="${L('관통력', 'Penetration')}"><button class="chip" type="button" data-ap="">${L('모든 관통력', 'Any penetration')}</button>${AP_FILTERS.map(band => html`<button class="chip" type="button" data-ap="${band.id}">${band.name} <span class="count">${band.label}</span></button>`)}</div>
-      <div class="chips" role="group" aria-label="${L('스트라타젬 구분', 'Stratagem type')}"><button class="chip" type="button" data-permit="">${L('전체', 'All')}</button>${PERMITS.map(permit => html`<button class="chip" type="button" data-permit="${permit.id}" style="--dot:${permit.color}"><span class="dot"></span>${permit.name} <span class="count">${stratagems.filter(item => permitOf(item) === permit.id).length}</span></button>`)}</div>
     </div>
   </div>
   <div class="arsenal-meta"><span id="arsenal-count" role="status"></span><button class="link" type="button" data-reset data-reset-inline>${L('필터 초기화', 'Reset filters')}</button></div>
@@ -860,15 +898,14 @@ export function mount(container, context) {
     if (!target) return;
     if (target.dataset.tabPick) { state.tab = target.dataset.tabPick; showTab(); syncUrl(); return; }
     if (target.dataset.cat != null) {
-      state.c = state.c === target.dataset.cat ? '' : target.dataset.cat;
-      // A type that has nothing in the new category is let go.
-      if (state.p && !stratagems.some(item => item.category === state.c && permitOf(item) === state.p) && state.c) state.p = '';
+      const id = target.dataset.cat;
+      state.c = !id ? [] : state.c.includes(id) ? state.c.filter(c => c !== id) : [...state.c, id];
       renderList(); syncUrl();
     }
     else if (target.dataset.ap != null) { state.ap = state.ap === target.dataset.ap ? '' : target.dataset.ap; renderList(); syncUrl(); }
     else if (target.dataset.permit != null) {
-      state.p = state.p === target.dataset.permit ? '' : target.dataset.permit;
-      if (state.c && state.p && !stratagems.some(item => item.category === state.c && permitOf(item) === state.p)) state.c = '';
+      state.p = target.dataset.permit;
+      keepKindsInPermit();
       renderList(); syncUrl();
     }
     else if (target.dataset.mod) { state.mod = target.dataset.mod === 'on'; setModulesOn(state.mod); renderList(); syncUrl(); }
@@ -876,7 +913,7 @@ export function mount(container, context) {
     else if (target.dataset.compare) toggleCompare(target.dataset.compare);
     else if (target.hasAttribute('data-compare-clear')) { state.compare.clear(); renderList(); }
     else if (target.hasAttribute('data-compare-open')) openCompare();
-    else if (target.hasAttribute('data-reset')) { Object.assign(state, { c: '', ap: '', p: '', q: '', sort: '' }); input.value = ''; $('#arsenal-sort', root).value = ''; renderList(); syncUrl(); }
+    else if (target.hasAttribute('data-reset')) { Object.assign(state, { c: [], ap: '', p: '', q: '', sort: '' }); input.value = ''; $('#arsenal-sort', root).value = ''; renderList(); syncUrl(); }
   });
   // Buttons inside the sheet live outside `root`; register that listener once.
   if (!sheetListener) {
@@ -892,15 +929,14 @@ export function update(route) {
   if (state.tab === 'modules') { shipModule.focus = q.u || ''; showTab(); return; }
   const prevMod = state.mod;
   Object.assign(state, {
-    c: categories.some(cat => cat.id === q.c) ? q.c : '',
+    c: [...new Set(String(q.c ?? '').split(',').filter(kindOf))],
     ap: AP_FILTERS.some(band => band.id === q.ap) ? q.ap : '',
     p: PERMITS.some(permit => permit.id === q.p) ? q.p : '',
     q: q.q || '', sort: SORTS.some(sort => sort.id === q.sort) ? q.sort : '',
     mod: q.mod !== 'off',
   });
-  // A category and type that cannot meet (from a link) drop the type, as a click would.
-  const conflict = state.c && state.p && !stratagems.some(item => item.category === state.c && permitOf(item) === state.p);
-  if (conflict) state.p = '';
+  // Categories a linked type has nothing in are dropped, as picking the type would.
+  keepKindsInPermit();
   setModulesOn(state.mod);
   $('#arsenal-q', root).value = state.q;
   $('#arsenal-sort', root).value = state.sort;

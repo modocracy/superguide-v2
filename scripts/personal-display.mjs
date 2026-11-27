@@ -165,7 +165,7 @@ const CAUTIONS = {
 // rev 140501, G-89 Smokescreen rev 140510, G-109 Urchin rev 141179, G-50 Seeker rev 140505, G-60 Anti-Tank Seeker
 // rev 140507, P-11 Stim Pistol rev 140476, FLAM-66 Torcher rev 141873, P-72 Crisper rev 140485, SMG/FLAM-34 Stoker
 // rev 141944, P/40-K Bolt Pistol rev 141876, GP-20 Ultimatum rev 140471). `after` places the cell with the damage, reach or ammo rows of the detail sheet.
-const EXTRA_STATS = {
+export const EXTRA_STATS = {
   // Charge times from the wiki pages (user request 2026-11-26): Purifier 'Maximum charge of 1 sec', Loyalist
   // 'Shorter charge-up time on full charge up from 1 sec to 0.75 sec'; the Accelerator Rifle page gives none.
   purifier: [{ label: '충전 시간', value: 1, unit: '초', caption: '최대 충전', after: 'ammo' }],
@@ -182,9 +182,10 @@ const EXTRA_STATS = {
   seeker: [{ label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' }],
   'anti-tank-seeker': [{ label: '탐지 반경', value: 50, unit: 'm', caption: '적을 찾아 날아가는 거리', after: 'reach' }],
   'stim-pistol': [{ label: '치유', value: 90, unit: '%', caption: '체력의 약 90% · 약 4초에 걸쳐', after: 'damage' }],
-  torcher: [{ label: '연속 분사', value: 12.4, unit: '초', caption: '연료통 하나', after: 'ammo' }],
-  crisper: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }],
-  stoker: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }],
+  // The pilot light: the attack datamine's lighter_lightup_time 0.7 s and lighter_time_to_shutoff 10 s (user request 2026-11-27).
+  torcher: [{ label: '연속 분사', value: 12.4, unit: '초', caption: '연료통 하나', after: 'ammo' }, { label: '점화', value: 0.7, unit: '초', caption: '첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음', after: 'ammo' }],
+  crisper: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }, { label: '점화', value: 0.7, unit: '초', caption: '첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음', after: 'ammo' }],
+  stoker: [{ label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' }, { label: '점화', value: 0.7, unit: '초', caption: '하부 화염방사기 · 첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음', after: 'ammo' }],
 };
 
 // Wiki infobox traits shown as badges on the gear page, in this order.

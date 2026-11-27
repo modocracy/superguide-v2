@@ -76,13 +76,21 @@ const legacyReplayed = new Set();
 let checked = 0, beamCarried = 0, addedRows = 0;
 for (const expected of golden.combat) {
   const enemy = legacyEnemy(enemies.find(item => item.id === expected.enemy));
-  const currentMode = weaponProfiles[expected.weapon].modes.find(item => item.id === expected.mode);
+  // Deliberate change (user request 2026-11-27): the Expendable Napalm's only mode is a burning time now; the recorded
+  // missile-only shot is replayed as it was (its numbers are checked against the datamine in test-support.mjs).
+  const currentMode = expected.weapon === 'expendable-napalm' && expected.mode === 'standard'
+    ? { id: 'standard', name: '주탄 기준·자탄과 화염 제외', standard: 500, durable: 500, ap: 3, explosion: 250, explosionAp: 6, explosionDurable: 250, innerRadius: 1.6, radius: 8, explosionName: '주폭발', reviewedExplosive: true }
+    : weaponProfiles[expected.weapon].modes.find(item => item.id === expected.mode);
   const key = `${expected.weapon}:${expected.mode}`;
   if (legacyUnsupported[key]) assert(expected.rows.every(row => row.h === null && row.o === 'unknown' && row.r === legacyUnsupported[key]), 'historical unsupported adapter must not bypass any numeric golden result');
   // Deliberate change (user request 2026-11-26): the De-Escalator's grenade hit (mode.carrier) now comes before its
   // arcs; the legacy engine left it out, so it is taken off here and checked on its own below the loop.
-  const { carrier: _carrier, ...withoutCarrier } = currentMode;
-  const mode = legacyUnsupported[key] ? { ...withoutCarrier, unsupported: legacyUnsupported[key] } : withoutCarrier;
+  // The thermite burn on main health (mainDot, data audit 2026-11-27) is new too: replayed without it.
+  const { carrier: _carrier, mainDot: _mainDot, fire: _fire, ...withoutCarrier } = currentMode;
+  // Deliberate change (user request 2026-11-27): the speargun's gas blast (3, AP 6; test-support.mjs checks it against
+  // the datamine) was left out of the legacy profile, so it is taken off for the replay.
+  const legacyMode = key === 'speargun:direct' ? { ...withoutCarrier, explosion: 0, explosionAp: 0, explosionDurable: undefined, innerRadius: undefined, radius: undefined } : withoutCarrier;
+  const mode = legacyUnsupported[key] ? { ...legacyMode, unsupported: legacyUnsupported[key] } : legacyMode;
   const options = addedHitConditions.has(key) ? { ...expected.options, hitCount: 0 } : expected.options;
   // Deliberate change: a partly explosion-resistant part now passes the share it blocks to Main
   // (combat.js hitDamage, exdrRedirect). The legacy engine had no such share, so it is switched off
@@ -149,15 +157,18 @@ const legacyVerdict = { pass: 'pass', short: 'insufficient', unknown: 'unknown',
 // where the legacy left it unknown while every force verdict stays the same.
 const healthAdded = { ...Object.fromEntries(Object.entries(stratagemAttackDamage).map(([id, modes]) => [id, Object.keys(modes)])),
   'arc-thrower': ['standard'], meltagun: ['standard'], 'grenade-launcher': ['standard'], 'belt-fed-gl': ['standard'],
-  'breaching-hammer': ['melee', 'charge'], leveller: ['standard'], speargun: ['standard'], 'solo-silo': ['standard'], autocannon: ['flak'] };
+  'breaching-hammer': ['melee', 'charge'], leveller: ['standard'], speargun: ['standard'], 'solo-silo': ['standard'], autocannon: ['flak'],
+  // Seconds for beams and flames, and per-hit damage from the stratagem table (user request 2026-11-27).
+  'laser-cannon': ['standard'], 'orbital-laser': ['standard'], 'de-escalator': ['standard'], 'at-emplacement': ['standard'], 'hmg-emplacement': ['standard'], 'tesla-tower': ['standard'], hellbomb: ['standard'], 'portable-hellbomb': ['standard'] };
 // Attacks the user confirmed to destroy the Grounded Warp Ship through its shield (2026-11-23): replayed without it.
 const shieldBypassAdded = { 'portable-hellbomb': ['standard'], hellbomb: ['standard'], leveller: ['standard'], 'solo-silo': ['standard'] };
 // Forces corrected after the recording, replayed with their recorded values (user request 2026-11-26: the Eagle 500kg's
 // direct hit is the datamine's 50; the summary table's 40, recorded as a 40-50 dispute, is its impact blast).
-const forceCorrected = { 'eagle-500kg': { standard: { direct: { min: 40, max: 50 } } } };
+// The Eagle Cluster Bomb's direct force 40 was its bomb, which splits in the air (data audit, user request 2026-11-27).
+const forceCorrected = { 'eagle-500kg': { standard: { direct: { min: 40, max: 50 } } }, 'eagle-cluster': { standard: { direct: 40 } } };
 assert.equal(demolitionProfiles['eagle-500kg'].modes[0].direct, 50, 'eagle-500kg: direct force 50');
 const legacyMode = (id, mode) => {
-  let out = healthAdded[id]?.includes(mode.id) ? { ...mode, damage: undefined } : mode;
+  let out = healthAdded[id]?.includes(mode.id) ? { ...mode, damage: undefined, hits: undefined } : mode;
   if (forceCorrected[id]?.[mode.id]) out = { ...out, ...forceCorrected[id][mode.id] };
   if (shieldBypassAdded[id]?.includes(mode.id)) { const { shieldBypass, ...rest } = out; out = rest; }
   return out;
@@ -165,8 +176,16 @@ const legacyMode = (id, mode) => {
 // Stratagems given a profile from the attack datamine after the recording (2026-11-23) had none then.
 // SEAF Artillery was recorded as a call-in a jammer blocks; the wiki says jammers cannot block it (2026-11-23).
 const callInRemoved = ['seaf-artillery'];
-const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id)).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] && !forceCorrected[id] ? profile
+// Support guns given their datamine force after the recording (user request 2026-11-27) were 'force checking' then:
+// replayed with the health-only profile they had (combat damage, force unknown).
+const forceAdded = ['machine-gun', 'stalwart', 'heavy-machine-gun', 'maxigun', 'bullet-storm', 'railgun'];
+const checkingProfile = id => ({ source: weaponProfiles[id].source, modes: weaponProfiles[id].modes.filter(item => !item.unsupported).map(item => ({ id: item.id, name: item.name, direct: null, explosion: null, damage: item, forceUnknown: true })) });
+const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id) || forceAdded.includes(id)).map(([id, profile]) => [id, forceAdded.includes(id) ? checkingProfile(id) : profile]).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] && !forceCorrected[id] ? profile
   : { ...profile, modes: profile.modes.map(mode => legacyMode(id, mode)) }]).map(([id, profile]) => [id, callInRemoved.includes(id) ? { ...profile, requiresCallIn: true } : profile]));
+// The Orbital Laser's note said its sustained damage was not counted until seconds were (user request 2026-11-27).
+// The Eagle Cluster Bomb's note changed with its direct force (data audit, user request 2026-11-27).
+legacyProfiles['eagle-cluster'] = { ...legacyProfiles['eagle-cluster'], note: '탄체의 직접 충돌과 공중에서 퍼지는 폭발을 구분해야 합니다. 표기 직격 수치만으로 일반적인 건물 철거를 보장하지 않습니다.' };
+legacyProfiles['orbital-laser'] = { ...legacyProfiles['orbital-laser'], note: '레이저가 시설을 실제로 훑는 조건입니다. 원하는 시설을 직접 조준할 수 없고 지속 피해의 탄수는 계산하지 않습니다.' };
 for (const id of callInRemoved) for (const mode of demolitionProfiles[id].modes) {
   const result = solveDemolition(structures.find(item => item.id === 'jammer'), demolitionProfiles[id], mode);
   assert(!result.conditions.some(item => item.kind === 'jammer'), `${id}/${mode.id}: a jammer does not block it`);
@@ -184,7 +203,9 @@ for (const [id, modeIds] of Object.entries(healthAdded)) if (legacyProfiles[id])
   // With jammers off, so a call-in rule changed since (SEAF Artillery) does not count as a health change.
   const current = solveDemolition(structure, demolitionProfiles[id], demolitionProfiles[id].modes.find(mode => mode.id === modeId), { jammerDisabled: true });
   const legacy = solveDemolition(structure, legacyProfiles[id], legacyProfiles[id].modes.find(mode => mode.id === modeId), { jammerDisabled: true });
-  assert(current.routes.every((row, index) => row.verdict === legacy.routes[index].verdict), `${structure.id} × ${id}/${modeId}: force verdicts unchanged`);
+  // A force corrected since (forceCorrected) changes its verdicts on purpose.
+  if (!forceCorrected[id]) assert(current.routes.every((row, index) => row.verdict === legacy.routes[index].verdict), `${structure.id} × ${id}/${modeId}: force verdicts unchanged`);
+  if (forceCorrected[id]) continue;
   if (legacy.reason === 'health-unknown') { assert(current.outcome !== 'unknown', `${structure.id} × ${id}/${modeId}: health damage resolves it`); healthResolved++; }
   else if (!current.health) assert.equal(current.outcome, legacy.outcome, `${structure.id} × ${id}/${modeId}: unchanged without health`);
 }
@@ -235,6 +256,8 @@ for (const expected of golden.selections) {
     const dropped = expected.entries.filter(entry => knownNot(entry[0], expected.structure));
     const counts = [...expected.counts];
     for (const entry of dropped) { counts[entry[1] === 'conditional' ? 1 : 0]--; counts[3]++; }
+    // Stratagems with no attack profile are no longer counted as unverified (user request 2026-11-27).
+    counts[2] -= legacyCatalogue.filter(item => !legacyProfiles[item.id]).length;
     assert.deepEqual(overview.entries.map(entry => [entry.weapon.id, entry.outcome, entry.attacks.map(attack => attack.mode.id)]).sort(byId), expected.entries.filter(entry => !dropped.includes(entry)).sort(byId), label);
     assert.deepEqual([overview.possible, overview.conditional, overview.unknown, overview.blocked], counts, label);
   } else {
@@ -254,7 +277,8 @@ const recorded = new Map(golden.factions.map(item => [`${item.guide}/${item.enem
 // replaced by the Orbital Railcannon Strike; the Quasar Cannon wherever the Nova also kills in one shot).
 const removedPicks = new Set(['cyborgs/vox-engine/recoilless', 'incineration/hulk-firebomber/quasar']);
 for (const key of removedPicks) assert(recorded.has(key), `${key}: not a recorded pick`);
-let picks = 0, addedPicks = 0;
+let picks = 0, addedPicks = 0, countedPicks = 0;
+const newlyCounted = new Set(['autocannon:flak']);
 for (const guide of factionGuides) for (const unit of guide.units) for (const choice of unit.weapons) {
   if (!recorded.has(`${guide.id}/${unit.enemy}/${choice}`)) {
     const pick = recommend(unit, choice, findEnemy(unit.enemy));
@@ -266,8 +290,11 @@ for (const guide of factionGuides) for (const unit of guide.units) for (const ch
   const expected = recorded.get(`${guide.id}/${unit.enemy}/${choice}`);
   picks++;
   const pick = recommend(unit, choice, legacyEnemy(findEnemy(unit.enemy)), { exdrRedirect: false });
+  // Flak picks recorded without a count are counted now with the default fragment hits (user request 2026-11-27).
+  const nowCounted = newlyCounted.has(choice) && expected.row === null && pick.route;
+  if (nowCounted) countedPicks++;
   assert.deepEqual({
-    adviceOnly: Boolean(pick.adviceOnly), mode: pick.mode?.id ?? null, row: pick.route ? view(pick.route) : null,
+    adviceOnly: Boolean(pick.adviceOnly), mode: pick.mode?.id ?? null, row: pick.route && !nowCounted ? view(pick.route) : null,
     alternatives: (pick.alternatives || []).map(view), reference: pick.reference ? [pick.reference.weapon, pick.reference.mode, pick.reference.hits] : null,
     approach: Boolean(pick.approach), tactic: Boolean(pick.tactic),
   }, {
@@ -284,4 +311,4 @@ for (const expected of golden.defense) {
   assert.deepEqual([0, cap / 2, cap, -1, undefined].map(value => shieldRecovery(item.defense, value)), expected.recovery, expected.id);
 }
 
-console.log(`PASS parity: ${golden.combat.length} matchups (${beamCarried} beam routes now carry past armor, ${addedRows} rows for re-checked anatomy, ${legacyReplayed.size} enemies replayed on legacy values), ${golden.demolition.length} demolition cases, ${golden.selections.length} overviews, ${picks} faction picks match ${golden.generatedFrom} (+${addedPicks} added since, ${removedPicks.size} removed by the user).`);
+console.log(`PASS parity: ${golden.combat.length} matchups (${beamCarried} beam routes now carry past armor, ${addedRows} rows for re-checked anatomy, ${legacyReplayed.size} enemies replayed on legacy values), ${golden.demolition.length} demolition cases, ${golden.selections.length} overviews, ${picks} faction picks match ${golden.generatedFrom} (+${addedPicks} added since, ${countedPicks} flak picks now counted, ${removedPicks.size} removed by the user).`);

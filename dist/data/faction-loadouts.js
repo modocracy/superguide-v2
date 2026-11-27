@@ -114,7 +114,7 @@ export const factionLoadouts = {
   ],
   'fleshmob': [
     pick('grenade-launcher', 'arm', '범위 폭발 · 여러 부위 활용', '큰 덩치에 폭발을 활용하는 위키 전술 추천입니다. 한 부위 이론값과 실전 전술 안내는 아래에서 구분합니다.'),
-    pick('autocannon:flak', 'head-chunk', '대공포탄 폭발·파편 · 배낭 필요', '작은 약점 한 점보다 폭발·파편을 활용합니다. 명중 파편 수를 고정하지 않으며 정지 재장전 부담이 있습니다.'),
+    pick('autocannon:flak', 'head-chunk', '대공포탄 폭발·파편 · 배낭 필요', '작은 약점 한 점보다 폭발·파편을 활용합니다. 파편은 기본 20%가 맞는다고 계산하며, 정지 재장전 부담이 있습니다.'),
   ],
   'harvester': harvester,
   'veracitor': [
@@ -170,15 +170,17 @@ export const factionLoadouts = {
   // Noxious Strain: its wiki page has no tactics yet. The official announcement (Steam, 2026-11-03, cited by the wiki
   // page) suggests shotguns, flamethrowers and grenades against the scavenger and the unarmored belly of the spewer.
   'noxious-scavenger': [
-    { ...pick('flamethrower', null, '공식 공지 추천 · 근거리 화염', '공식 공지가 녹셔스 스캐빈저에 화염방사기를 권합니다. 물리기 전에 몰려오는 무리를 태우세요.'), adviceOnly: true,
+    { ...pick('flamethrower', null, '공식 공지 추천 · 근거리 화염', '공식 공지가 녹셔스 스캐빈저에 화염방사기를 권합니다. 물리기 전에 몰려오는 무리를 태우세요.'), adviceOnly: true, fireMultFrom: 'scavenger',
       source: 'https://store.steampowered.com/news/app/553850/view/708913061799398450',
-      limitation: '위키에 이 적의 화염 피해 배율이 없어 처치 시간을 계산하지 않습니다. 공식 공지는 산탄총과 수류탄도 함께 권합니다.' },
+      limitation: '포자 스캐빈저처럼 참고 시간을 보여 줍니다. 위키에 이 적의 화염 피해 배율이 없어, 몸체가 같은 일반 스캐빈저의 배율(0.5)로 계산했습니다. 공식 공지는 산탄총과 수류탄도 함께 권합니다.' },
     pick('stalwart', 'body', '몸통 연사 · 이동 재장전', '무리를 넓게 쓸어내며 물러납니다. 물리면 독이 쌓이므로 거리를 유지하세요.'),
     pick('machine-gun', 'body', '몸통 연사 · 정지 재장전', '다가오기 전에 몸통에 연사합니다. 재장전할 때 멈추므로 엄폐를 확보하세요.'),
   ],
   'noxious-spewer': [
     pick('grenade-launcher', 'butt', '장갑 없는 복부 · 폭발', '공식 공지는 중장갑 머리 대신 장갑 없는 복부를 노리라고 합니다. 복부가 터지면 주변을 묶는 거미줄이 퍼지므로 거리를 두세요.'),
     pick('autocannon', 'butt', '장갑 없는 복부 · 직격', '복부를 직접 맞혀 터뜨립니다. 거미줄 폭발 범위 밖에서 쏘세요.'),
+    // One-shot option (user request 2026-11-27): the Anti-Materiel Rifle kills it with one head hit (combat-data.js).
+    pick('anti-materiel', 'head', '머리 한 발 · 원거리', '머리에 한 발을 맞혀 처치합니다. 복부를 터뜨리지 않고 멀리서 쓰러뜨리므로 거미줄 폭발에 휘말리지 않습니다.'),
   ],
 
   // Standard (base) forces, 2026-11-23: support weapon picks for regular units on Difficulty 10.
@@ -317,14 +319,20 @@ export const factionLoadouts = {
     pick('autocannon', 'gun-ports', '포문 집중 · 내려올 때', '한 발씩 정확히 맞힙니다. 탄약 배낭이 필요하고 재장전할 때 멈춰야 합니다.'),
   ],
 
+  // Leviathan (user request 2026-11-27): anti-tank picks on the parts that expose its inside.
+  'leviathan': [
+    pick('recoilless', 'rear-fin', '뒤쪽 지느러미 · 정지 재장전', '뒤쪽 지느러미를 부숴 드러난 내부에 이어서 쏩니다. 탄약 배낭이 필요하고 재장전할 때 멈춰야 하니 컬버린 사선을 피해 쏘세요.'),
+    pick('spear', 'tail', '꼬리 · 유도 미사일', '높이 떠 있는 표적을 잠가 맞힙니다. 꼬리를 부순 뒤 드러난 내부를 계속 노리세요.'),
+    pick('quasar', 'tail', '꼬리 · 탄약 보급 불필요', '탄약 걱정 없이 꾸준히 쏩니다. 같은 무기로 하부 포탑도 한 발에 부술 수 있습니다.'),
+  ],
   // Dragonroach and Hive Lord guide, 2026-11-23. Stratagem picks (user's play experience) are advice only:
   // stratagems are not combat-calculated, so they show no count.
   'dragonroach': [
     pick('recoilless', 'head', '머리 한 발 · 정지 재장전', '한 발 화력이 큽니다. 탄약 배낭이 필요하고 재장전할 때 멈춰야 하니 빗맞히지 않게 조준하세요.'),
     pick('spear', 'head', '머리 한 발 · 유도 미사일', '표적을 잠근 뒤 쏘면 미사일이 따라가 날아다니는 적도 맞힙니다. 탄약 배낭이 필요하고, 잠그는 동안 표적을 계속 겨눠야 합니다.'),
     pick('quasar', 'head', '머리 한 발 · 충전 대기', '탄약 보급이 필요 없습니다. 충전하는 동안 표적을 따라가야 하고 다음 발까지 냉각을 기다려야 합니다.'),
-    { ...pick('orbital-railcannon', null, '자동 조준 · 큰 한 방', '신호기 주변에서 가장 큰 적을 자동으로 골라 한 번에 큰 피해를 줍니다. 근처에 다른 대형 적이 있으면 그쪽을 맞힐 수 있으니 드래곤로치가 가까이 왔을 때 던지세요.'), adviceOnly: true,
-      source: 'https://helldivers.wiki.gg/wiki/Dragonroach', limitation: '스트라타젬은 사이트의 전투 계산 대상이 아니라 처치 횟수를 표시하지 않습니다. 실전 경험에 따른 추천입니다.' },
+    { ...pick('orbital-railcannon', null, '자동 조준 · 큰 한 방', '신호기 주변에서 가장 큰 적을 자동으로 골라 한 번에 큰 피해를 줍니다. 근처에 다른 대형 적이 있으면 그쪽을 맞힐 수 있으니 드래곤로치가 가까이 왔을 때 던지세요.'), adviceOnly: true, shownHits: 1,
+      source: 'https://helldivers.wiki.gg/wiki/Dragonroach', limitation: '스트라타젬은 사이트의 전투 계산 대상이 아닙니다. 직격 피해 10,000(관통 7)이 머리 체력 1,500(장갑 4)보다 훨씬 커서 머리에 맞으면 한 발로 처치되며, 실전 경험과도 맞습니다. 다만 몸통 장갑에 맞으면 한 번에 처치되지 않을 수 있습니다.' },
   ],
   'hive-lord': [
     { ...pick('eagle-strafing', null, '장갑판 깎기 · 짧은 재사용', '기총탄이 일렬로 쏟아져 같은 흉부 장갑을 여러 번 때립니다. 재사용 대기시간이 짧아 장갑을 떼어 낼 때까지 반복해서 부르기 좋습니다.'), adviceOnly: true,

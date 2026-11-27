@@ -110,13 +110,21 @@ for (const [structure, route] of userRoutes) {
 const options = [{}, { shieldCleared: true, jammerDisabled: true }];
 const network = byId.get('transmission-network');
 const unverified = { ...network, id: 'unverified-copy', routes: network.routes.map(({ thresholdSource, ...route }) => ({ ...route, threshold: null })) };
-for (const structure of [unverified, ...structures.filter(item => item.routes.some(route => route.threshold == null))]) {
+for (const structure of [unverified, ...structures.filter(item => item.routes.some(route => route.threshold == null && !route.healthOnly))]) {
   for (const profile of Object.values(demolitionProfiles)) for (const mode of profile.modes) for (const option of options) {
     const result = solveDemolition(structure, profile, mode, option);
     ok(result.method !== 'force' && result.outcome !== 'blocked', `${structure.id}: no force verdict without a threshold`);
     ok(result.routes.every(row => row.route.threshold != null || row.verdict === 'unknown'), `${structure.id}: route stays unknown`);
     if (!result.method) ok(result.reason === 'threshold-unknown', `${structure.id}: reason names the unverified threshold`);
   }
+}
+// A structure only its health brings down (the Command Bunker, user decision 2026-11-27): no force verdict, only health.
+for (const structure of structures.filter(item => item.routes.every(route => route.healthOnly))) {
+  for (const profile of Object.values(demolitionProfiles)) for (const mode of profile.modes) {
+    const result = solveDemolition(structure, profile, mode, { shieldCleared: true, jammerDisabled: true });
+    ok(result.method !== 'force' && result.routes.every(row => row.verdict !== 'pass' && row.verdict !== 'unknown'), `${structure.id}: no force route`);
+  }
+  ok(solveDemolition(structure, demolitionProfiles.hellbomb, demolitionProfiles.hellbomb.modes[0], { jammerDisabled: true }).outcome === 'health', `${structure.id}: the Hellbomb brings it down through health`);
 }
 // Megafactory Gates (800% durability): durable share at 87.5% or less does nothing.
 const gate = byId.get('megafactory-gate');

@@ -1,4 +1,5 @@
 import { supportProjectileRecords, propelledModes } from './support-records.js';
+import { support } from './data-support.js';
 import { expandedEnemies } from './combat-enemies-expanded.js';
 import { additionalEnemies } from './combat-enemies-additional.js';
 // Reviewed Wiki Anatomy and Detailed Weapon Statistics tables, 2026-09-16.
@@ -569,8 +570,8 @@ const reviewedImpact = (page, modes, note) => ({ ...profile(page, modes.map(mode
 // (`ignite` per second) reaches the enemy's ignition threshold (data/enemy-ignition.js).
 export const STREAM_BURN = { perSecond: 100, ap: 4 };
 const streamMode = (name, dps, durable, ap, delivery, stream) => shot('standard', name, dps, durable, ap, 0, 0, { unit: '초', delivery, magazine: null, stream: { burn: STREAM_BURN, ...stream } });
-const BEAM_NOTE = '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.';
-const FLAME_NOTE = '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.';
+const BEAM_NOTE = '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 발사 전 예열 시간은 더하고, 방열판 교체 시간은 넣지 않습니다.';
+const FLAME_NOTE = '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 발사 전 점화 시간은 더하고, 재장전 시간은 넣지 않습니다.';
 export const weaponProfiles = {
   'meltagun': {
     ...reviewedImpact('40-K_Meltagun', [
@@ -594,8 +595,14 @@ export const weaponProfiles = {
   'one-true-flag': reviewedImpact('CQC-1_One_True_Flag', [
     shot('melee', '일반 찌르기', 200, 100, 3, 0, 0, { unit: '회', delivery: 'flag' }),
   ], '깃발 끝으로 이 부위를 찌르는 일반 공격 기준입니다. 깃발을 꽂는 동작과 방어구의 근접 피해 증가 효과는 빼고 계산합니다.'),
+  // The Defoliation Tool's blade held on a part, in seconds (data audit, user request 2026-11-27): the datamine's
+  // CQC-9 DEFOLIATION TOOL_dm 450 / durable 225 a second; AP 5, which the wiki page says it reaches after 0.5 s of contact
+  // (the datamine holds the starting 3). No burning.
+  'defoliation-tool': profile('CQC-9_Defoliation_Tool', [shot('standard', '톱날 유지', 450, 225, 5, 0, 0, { unit: '초', delivery: 'saw', magazine: null, stream: { burn: null } })],
+    '톱날을 같은 부위에 계속 대고 있을 때 걸리는 시간입니다. 관통은 0.5초 동안 닿은 뒤의 AP 5 기준이고, 처음 0.5초의 낮은 관통은 반영하지 않습니다.'),
   'speargun': reviewedImpact('S-11_Speargun', [
-    shot('direct', '직격 기준 · 가스 피해 제외', 650, 275, 5, 0, 0, { delivery: 'harpoon', falloff: true }),
+    // The spear's blast that lets out the gas: datamine S-11_P_E, 3 (AP 6), radii 2 / 5 m (user request 2026-11-27).
+    shot('direct', '직격 기준 · 가스 피해 제외', 650, 275, 5, 3, 6, { delivery: 'harpoon', falloff: true, explosionDurable: 3, innerRadius: 2, radius: 5 }),
   ], '작살이 직접 맞는 피해만 계산합니다. 가스 구름과 중독 피해는 빼므로, 실제로는 더 적은 발로 처치될 수 있습니다.'),
   'de-escalator': reviewedImpact('GL-52_De-Escalator', [
     // carrier: the grenade's own hit before its arcs, the game data sheet's projectile (datamine GL-52_P), user request 2026-11-26.
@@ -628,9 +635,17 @@ export const weaponProfiles = {
     shot('standard', '일반 발사', 400, 200, 4, 500, 4, { explosionDurable: 500, innerRadius: 2.3, radius: 3, falloff: true }),
     shot('charged', '완전 충전 발사', 800, 400, 5, 800, 5, { explosionDurable: 800, innerRadius: 3, radius: 4, falloff: true }),
   ], '일반 발사와 완전 충전은 피해·관통·폭발 반경이 다르므로 모드를 골라 확인하세요. 과충전으로 터지는 자폭은 빼고 계산합니다.'),
-  'expendable-napalm': reviewedExplosive('EAT-700_Expendable_Napalm', [
-    shot('standard', '주탄 기준·자탄과 화염 제외', 500, 500, 3, 250, 6, { explosionDurable: 250, innerRadius: 1.6, radius: 8, explosionName: '주폭발' }),
-  ], '주탄의 직격과 주폭발만 계산합니다. 자탄 폭발(피해 50, 관통 3)과 불길은 몇 번 맞는지 알 수 없어 빼므로, 실제로는 더 적게 들 수 있습니다.'),
+  // The napalm in seconds, its only mode (user requests 2026-11-27): the missile's hit and blast (EAT-700_P, _P_IE) and
+  // 20% of its 20 bomblets (EAT-700_P1: 200 / AP 0, its blast P1_IE 50 / AP 3; the enemy pages' default for bomblets)
+  // hit the part first, then burning and Burning Heavy, 100 + 200 a second at AP 4 times the fire multiplier (wiki
+  // status datamine Fire, BurningHeavy), while the enemy stays in the fire. The blast's Fire status is 100. How long the
+  // fire lasts is not given anywhere, so it is not limited. A missile that kills on its own counts as one shot.
+  'expendable-napalm': { ...profile('EAT-700_Expendable_Napalm', [{
+    id: 'standard', name: '불길 · 주탄·자탄 20% 포함', standard: 0, durable: 0, ap: 0, explosion: 0, explosionAp: 0, delivery: 'pool', unit: '초', magazine: null,
+    stream: { fire: true, burnOnly: true, burn: { perSecond: 300, ap: 4 }, ignite: 100, pool: null, poolName: '불길', countUnit: '발',
+      blast: { id: 'blast', name: '주탄', standard: 500, durable: 500, ap: 3, explosion: 250, explosionDurable: 250, explosionAp: 6, delivery: 'explosive' },
+      bomblets: { count: 4, of: 20, attack: { standard: 200, durable: 200, ap: 0, explosion: 50, explosionDurable: 50, explosionAp: 3 } } },
+  }], '주탄과 자탄 20%를 먼저 빼고, 남은 본체 체력을 불길 안의 화상(초당 100)과 강한 화상(초당 200)으로 깎는 시간입니다. 주탄과 자탄만으로 처치되면 1발로 셉니다. 불길이 얼마나 남는지는 자료가 없어 계산 시간 동안 남는다고 봅니다.'), checkedAt: '2026-09-16', combatOnly: true },
   'solo-silo': reviewedExplosive('MS-11_Solo_Silo', [
     shot('standard', '미사일 1발 · 충돌 폭발과 주폭발', 0, 0, 0, 0, 0, {
       directKind: 'none',
@@ -688,7 +703,7 @@ export const weaponProfiles = {
   // Datamine LAS-98 LASER CANNON_B_dm: 350 per second (durable 200), AP 4, Fire status 1.5 per second;
   // heat 8 per second to 100 = the wiki 12.5 s.
   'laser-cannon': {
-    ...profile('LAS-98_Laser_Cannon', [streamMode('광선 유지', 350, 200, 4, 'beam', { ignite: 1.5, capacity: { kind: 'heat', seconds: 12.5 } })], BEAM_NOTE),
+    ...profile('LAS-98_Laser_Cannon', [streamMode('광선 유지', 350, 200, 4, 'beam', { ignite: 1.5, capacity: { kind: 'heat', seconds: 12.5 }, warmUp: support.find(item => item.id === 'laser-cannon').warmUp })], BEAM_NOTE),
     sourceRevision: 141653, checkedAt: '2026-11-26', extraSource: wiki('Module:Decodedata-Attacks/weapons_data.json'),
   },
   // The wiki infobox damage per second (Flamethrower 150, Cremator 225), AP 4. Flame particles deal the same
@@ -696,11 +711,11 @@ export const weaponProfiles = {
   // Fire build-up: the particle's Fire status (2, Cremator 3) times the particles the wiki DPS implies (150 / 2,
   // 225 / 3 per second) = 150 and 225 per second.
   'flamethrower': {
-    ...profile('FLAM-40_Flamethrower', [streamMode('불길 유지', 150, 150, 4, 'spray', { fire: true, ignite: 150 })], FLAME_NOTE),
+    ...profile('FLAM-40_Flamethrower', [streamMode('불길 유지', 150, 150, 4, 'spray', { fire: true, ignite: 150, warmUp: support.find(item => item.id === 'flamethrower').warmUp })], FLAME_NOTE),
     sourceRevision: 140360, checkedAt: '2026-11-26',
   },
   'cremator': {
-    ...profile('B/FLAM-80_Cremator', [streamMode('불길 유지', 225, 225, 4, 'spray', { fire: true, ignite: 225 })], FLAME_NOTE),
+    ...profile('B/FLAM-80_Cremator', [streamMode('불길 유지', 225, 225, 4, 'spray', { fire: true, ignite: 225, warmUp: support.find(item => item.id === 'cremator').warmUp })], FLAME_NOTE),
     sourceRevision: 141857, checkedAt: '2026-11-26',
   },
   'railgun': profile('Railgun', [

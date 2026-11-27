@@ -32,7 +32,8 @@ function checkForce(route, attack) {
   const parts = ['direct', 'explosion'].map(kind => {
     const force = forceRange(attack[kind]);
     let verdict = 'short';
-    if (route.explosiveOnly && kind === 'direct') verdict = 'n/a';
+    // A structure only its health brings down (route.healthOnly): no force counts.
+    if (route.healthOnly || route.explosiveOnly && kind === 'direct') verdict = 'n/a';
     else if (attack.forceUnknown || route.threshold == null) verdict = 'unknown';
     else if (force?.min >= route.threshold) verdict = 'pass';
     else if (force?.max >= route.threshold) verdict = 'unknown'; // conflicting sources straddle the threshold
@@ -45,12 +46,29 @@ function checkForce(route, attack) {
   return { route, parts, via: winner?.kind ?? null, verdict: winner ? 'pass' : parts.some(part => part.verdict === 'unknown') ? 'unknown' : 'short' };
 }
 
-export function healthDamage(structure, attack) {
-  if (!structure.health || !attack?.damage) return null;
+// Hits that land for a hit rate, as on the enemy pages: at least `min`, else the rounded share of `max`.
+export const hitCountOf = (hits, pct) => pct <= 0 && hits.min === 0 ? 0 : Math.max(hits.min, Math.round(hits.max * pct / 100));
+const DAMAGE_KEYS = ['standard', 'durable', 'ap', 'explosion', 'explosionAp'];
+export function healthDamage(structure, attack, { hitPct } = {}) {
+  if (!structure.health || !(attack?.damage || attack?.hits)) return null;
+  // Pellets, arcs, bomblets or fragments: what lands once per shot plus the hits the rate gives (user request 2026-11-27).
+  if (attack.hits) {
+    const h = attack.hits, pct = hitPct?.[attack.hitKey] ?? h.defaultPct, count = hitCountOf(h, pct);
+    const parts = [h.base, h.each].filter(Boolean);
+    if (!parts.every(d => DAMAGE_KEYS.every(key => known(d[key] ?? (key.startsWith('explosion') ? 0 : null))))) return null;
+    const of = d => d ? hitDamage({ explosion: 0, explosionAp: 0, ...d }, structure.health, structure.health) : { direct: 0, explosion: 0 };
+    const base = of(h.base), each = of(h.each);
+    const direct = base.direct + count * each.direct, explosion = base.explosion + count * each.explosion, total = direct + explosion;
+    return { direct, explosion, total, hitCount: count, hitPct: pct, hits: total > 0 ? Math.ceil(structure.health.hp / total) : null };
+  }
   const d = attack.damage;
+  // Gear that deals no damage at all (smoke, stun, shields; damage.none) wears nothing down.
+  if (d.none) return { direct: 0, explosion: 0, total: 0, hits: null };
   if (!['standard', 'durable', 'ap', 'explosion', 'explosionAp'].every(key => known(d[key]))) return null;
   const { direct, explosion } = hitDamage(d, structure.health, structure.health);
   const total = direct + explosion;
+  // A beam or flame stream (damage per second) counts seconds, rounded up to a tenth, after its warm-up.
+  if (d.perSecond) return { direct, explosion, total, perSecond: true, warmUp: d.warmUp ?? 0, hits: total > 0 ? Math.ceil((structure.health.hp / total + (d.warmUp ?? 0)) * 10 - 1e-9) / 10 : null };
   return { direct, explosion, total, hits: total > 0 ? Math.ceil(structure.health.hp / total) : null };
 }
 
@@ -58,14 +76,14 @@ export function healthDamage(structure, attack) {
  * outcome: demolish | health | conditional | blocked | unknown
  * conditions: [{ kind: 'opening'|'aim'|'shield'|'jammer', text? }]
  */
-export function solveDemolition(structure, profile, attack, { shieldCleared = false, jammerDisabled = false } = {}) {
+export function solveDemolition(structure, profile, attack, { shieldCleared = false, jammerDisabled = false, hitPct } = {}) {
   const base = { structure, outcome: 'unknown', method: null, route: null, via: null, hits: null, unit: attack?.unit || '발', conditions: [], routes: [], health: null };
   if (!profile || !attack) return { ...base, reason: 'no-data' };
   // A structure the stratagem is known not to destroy, whatever its numbers say (profile.notOn).
   if (profile.notOn?.includes(structure.id)) return { ...base, outcome: 'blocked', reason: 'blocked-known' };
 
   const routes = structure.routes.map(route => checkForce(route, attack));
-  const health = healthDamage(structure, attack);
+  const health = healthDamage(structure, attack, { hitPct });
   const outer = routes.find(row => row.verdict === 'pass' && !row.route.opening);
   const opening = routes.find(row => row.verdict === 'pass' && row.route.opening);
   const result = { ...base, routes, health };
@@ -74,11 +92,12 @@ export function solveDemolition(structure, profile, attack, { shieldCleared = fa
   // reach: how far from the explosion's center the route still falls (blastReach), where the blast's radii are known.
   if (outer) Object.assign(result, { outcome: 'demolish', method: 'force', route: outer.route, via: outer.via, reason: outer.via === 'explosion' ? 'force-blast' : 'force-direct',
     reach: outer.via === 'explosion' ? blastReach(attack, outer.route.threshold) : null });
-  else if (health?.hits) Object.assign(result, { outcome: 'health', method: 'health', hits: health.hits, reason: 'health' });
+  else if (health?.hits) Object.assign(result, { outcome: 'health', method: 'health', hits: health.hits, reason: 'health', ...(attack.perCall && { perCall: attack.perCall }) });
   else if (opening) Object.assign(result, { outcome: 'demolish', method: 'force', route: opening.route, via: opening.via, reason: 'force-opening' });
   else if (routes.some(row => row.verdict === 'unknown')) result.reason = structure.routes.every(route => route.threshold == null) ? 'threshold-unknown' : 'force-unknown';
-  else if (structure.health && !health) result.reason = 'health-unknown';
-  else Object.assign(result, { outcome: 'blocked', reason: health ? 'blocked-armor' : 'blocked-force' });
+  // Why the health path is left out, where the data says (attack.healthNote; user request 2026-11-27).
+  else if (structure.health && !health) Object.assign(result, { reason: 'health-unknown', ...(attack.healthNote && { healthNote: attack.healthNote }) });
+  else Object.assign(result, { outcome: 'blocked', reason: attack.damage?.none && structure.health ? 'blocked-no-damage' : health ? 'blocked-armor' : 'blocked-force' });
 
   if (result.method) {
     if (result.route?.opening) result.conditions.push({ kind: 'opening', route: result.route });
@@ -96,6 +115,9 @@ export function structureOverview(structure, stratagems, profiles, options = {})
   let unknown = 0, blocked = 0;
   for (const weapon of stratagems) {
     const profile = profiles[weapon.id];
+    // Gear with no attack at all (supply, mobility, mission stratagems) is neither unverified nor blocked: left out
+    // (user request 2026-11-27).
+    if (!profile) continue;
     // Each firing mode stands alone; an unverified mode is never lifted by another.
     const attacks = (profile?.modes || []).map(mode => ({ mode, result: solveDemolition(structure, profile, mode, options) }));
     const viable = attacks.filter(attack => isPossible(attack.result));

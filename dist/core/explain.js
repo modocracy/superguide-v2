@@ -103,7 +103,10 @@ export const reasonText = row => ['unsupported', 'shield', 'part-unknown'].inclu
 export function deliveryOf(mode) {
   if (mode?.hitCondition?.kind === 'pellets') return { hit: L(`${projectile(mode)} 1개`, `1 ${projectile(mode, 1)}`), verb: L('명중', 'Hit') };
   if (mode?.delivery === 'explosive') return { hit: L('폭발', 'Explosion'), verb: L('기폭', 'Detonation') };
+  if (mode?.stream?.gas) return { hit: L('가스', 'Gas'), verb: L('가스 구름', 'Gas cloud') };
+  if (mode?.stream?.burnOnly) return { hit: L('화상', 'Burning'), verb: mode.stream.poolName === '불길' ? L('불길', 'Fire') : L('불 웅덩이', 'Fire pool') };
   if (mode?.beam) return { hit: L('광선', 'Beam'), verb: L('광선 유지', 'Beam held') };
+  if (mode?.stream && mode.delivery === 'saw') return { hit: L('톱날', 'Blade'), verb: L('톱날 유지', 'Blade held') };
   if (mode?.stream) return mode.delivery === 'spray' ? { hit: L('불길', 'Flames'), verb: L('불길 유지', 'Flames held') } : { hit: L('광선', 'Beam'), verb: L('광선 유지', 'Beam held') };
   if (mode?.delivery === 'arc') return { hit: L('아크', 'Arc'), verb: L('아크 명중', 'Arc hit') };
   if (mode?.delivery === 'guided') return { hit: L('착탄', 'Impact'), verb: L('착탄', 'Impact') };
@@ -127,12 +130,24 @@ export function attackStats(mode, { distance = 0 } = {}) {
   ];
   if (mode.stream) {
     const { burn, capacity } = mode.stream;
+    if (mode.stream.gas) return [
+      { label: L('가스', 'Gas'), icon: 'gas', value: `${num(burn.perSecond)}${L('/초', '/s')}`, note: L(`AP ${burn.ap} · 본체 체력 · 벗어나도 ${num(mode.stream.linger)}초 중독`, `AP ${burn.ap} · main health · poisoned ${num(mode.stream.linger)} s after leaving`) },
+      { label: L('가스 구름', 'Gas cloud'), value: `${num(mode.stream.pool)}${L('초', 's')}` },
+    ];
+    if (mode.stream.burnOnly) return [
+      ...(mode.stream.blast ? [{ label: L('폭발 피해', 'Blast damage'), icon: 'blast', value: num(mode.stream.blast.explosion), note: `AP ${mode.stream.blast.explosionAp}` }] : []),
+      { label: L('화상', 'Burning'), icon: 'fire', value: `${num(burn.perSecond)}${L('/초', '/s')}`, note: L(`AP ${burn.ap} · 본체 체력 · 폭발 점화 수치 ${num(mode.stream.ignite)}`, `AP ${burn.ap} · main health · blast fire build-up ${num(mode.stream.ignite)}`) },
+      ...(mode.stream.bomblets ? [{ label: L('자탄', 'Bomblets'), icon: 'blast', value: `${num(mode.stream.bomblets.count)}/${num(mode.stream.bomblets.of)}`, note: L(`20% 명중 가정 · 직격 ${num(mode.stream.bomblets.attack.standard)} + 폭발 ${num(mode.stream.bomblets.attack.explosion)}`, `20% assumed · ${num(mode.stream.bomblets.attack.standard)} hit + ${num(mode.stream.bomblets.attack.explosion)} blast`) }] : []),
+      { label: mode.stream.poolName === '불길' ? L('불길', 'Fire') : L('불 웅덩이', 'Fire pool'), value: mode.stream.pool == null ? L('미확인', 'Unverified') : `${num(mode.stream.pool)}${L('초', 's')}`, ...(mode.stream.blastAt ? { note: L(`불꽃 ${num(mode.stream.blastAt)}초 + 폭발 뒤 ${num(mode.stream.pool - mode.stream.blastAt)}초`, `${num(mode.stream.blastAt)} s of sparks + ${num(mode.stream.pool - mode.stream.blastAt)} s after the blast`) } : {}) },
+    ];
     return [
-      { label: L('초당 피해', 'Damage per second'), icon: mode.stream.fire ? 'fire' : 'laser', value: num(mode.standard), note: `${durable(num(mode.durable))} · AP ${mode.ap}` },
+      { label: L('초당 피해', 'Damage per second'), icon: mode.stream.fire ? 'fire' : mode.delivery === 'saw' ? '' : 'laser', value: num(mode.standard), note: `${durable(num(mode.durable))} · AP ${mode.ap}` },
       ...(burn ? [{ label: L('화상', 'Burning'), icon: 'fire', value: `${num(burn.perSecond)}${L('/초', '/s')}`, note: L(`AP ${burn.ap} · 본체 체력 · 점화 수치 초당 ${num(mode.stream.ignite)}`, `AP ${burn.ap} · main health · fire build-up ${num(mode.stream.ignite)}/s`) }] : []),
+      ...(mode.stream.warmUp ? [{ label: L('발사 전 예열', 'Warm-up'), value: `${num(mode.stream.warmUp)}${L('초', 's')}` }] : []),
       ...(capacity ? [{ label: capacity.kind === 'heat' ? L('과열까지', 'Until overheating') : L('연료 1통', 'One fuel canister'), value: `${num(capacity.seconds)}${L('초', 's')}` }] : []),
     ];
   }
+  const burnOn = mode.mainDot ? [{ label: L('붙은 뒤 타는 피해', 'Burn after sticking'), icon: 'fire', value: num(mode.mainDot.total), note: L(`초당 ${num(mode.mainDot.perSecond)} × ${num(mode.mainDot.duration)}초 · 본체 체력`, `${num(mode.mainDot.perSecond)}/s × ${num(mode.mainDot.duration)} s · main health`) }] : [];
   const stats = [];
   if (mode.directKind !== 'none' && !(mode.standard === 0 && mode.durable === 0)) {
     const arc = mode.delivery === 'arc';
@@ -150,6 +165,7 @@ export function attackStats(mode, { distance = 0 } = {}) {
         note: `${durable(num(b.durable))} · AP ${num(b.ap)}${b.explosion > 0 ? L(` · 폭발 AP ${num(b.explosionAp)}`, ` · explosion AP ${num(b.explosionAp)}`) : ''}` });
     } else stats.push({ label: L('자탄 1개', '1 bomblet'), value: `${num(b.standard)}${plusBlast(num(b.explosion))}`, note: `AP ${b.ap}/${b.explosionAp} · ${radii(b.innerRadius, b.radius)}` });
   }
+  stats.push(...burnOn);
   return stats;
 }
 
@@ -170,21 +186,24 @@ export function assumptionText(mode) {
     'Assumes the part takes full explosion damage on each detonation. Damage to several parts at once is not added.');
   if (mode?.beam) return L('같은 부위에 광선을 계속 유지하는 조건. 한 발은 약 1.4초 분량으로 환산합니다.',
     'Assumes the beam stays on the same part. One shot counts as about 1.4 seconds of beam.');
+  if (mode?.stream?.gas) return L('적이 가스 구름 안에 머물며 계속 중독되는 조건. 가스는 부위와 상관없이 본체 체력에 들어갑니다.', 'Assumes the enemy stays in the gas cloud and stays poisoned. Gas goes to main health whatever the part.');
+  if (mode?.stream?.burnOnly) return L(`적이 ${mode.stream.poolName ?? '불 웅덩이'} 안에 머물며 계속 타는 조건. 화상은 부위와 상관없이 본체 체력에 들어갑니다.`, 'Assumes the enemy stays in the fire and keeps burning. Burning goes to main health whatever the part.');
+  if (mode?.stream && mode.delivery === 'saw') return L('같은 부위에 톱날을 계속 대고 있는 조건.', 'Assumes the blade stays on the same part.');
   if (mode?.stream) return mode.delivery === 'spray'
     ? L('같은 부위에 불길이 모두 계속 닿는 조건. 쌓인 점화 수치가 적의 점화 기준치에 도달하면 불이 붙는다고 봅니다.', 'Assumes the whole flame stream stays on the same part. It catches fire once the build-up reaches the enemy\'s ignition threshold.')
     : L('같은 부위에 광선을 계속 비추는 조건. 쌓인 점화 수치가 적의 점화 기준치에 도달하면 불이 붙는다고 봅니다.', 'Assumes the beam stays on the same part. It catches fire once the build-up reaches the enemy\'s ignition threshold.');
   if (c) return L('선택한 명중 수가 모두 해당 부위에 최대 피해로 들어가는 가정. 여러 부위 동시 피해는 더하지 않습니다.',
     'Assumes every chosen hit lands on the part at full damage. Damage to several parts at once is not added.');
-  if (mode?.delivery === 'adhesive') return L('장약 하나하나가 해당 부위에 최대 폭발 피해를 주는 조건. 여러 부위 동시 피해는 더하지 않습니다.',
-    'Assumes each charge deals full explosion damage to the part. Damage to several parts at once is not added.');
+  if (mode?.delivery === 'adhesive') return L('장약 하나하나가 해당 부위에 최대 폭발 피해를 주는 조건. 다른 부위 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다.',
+    'Assumes each charge deals full explosion damage to the part. Damage to other parts is added only for the pieces chosen under Blast.');
   if (mode?.delivery === 'melee' || mode?.delivery === 'flag') return L('같은 부위를 정면에서 계속 타격하는 조건. 방어구의 근접 피해 보너스는 제외합니다.',
     'Assumes repeated strikes on the same part from the front. Armor melee bonuses are left out.');
   if (mode?.delivery === 'guided') return L('미사일이 해당 부위에 직접 착탄하는 조건. 유도 궤적이 이 부위를 보장하지는 않습니다.',
     'Assumes the missile impacts this part directly. The guided path does not guarantee it.');
   if (mode?.delivery === 'arc') return L('아크가 해당 부위에 계속 닿는 조건. 아크는 부위를 골라 조준할 수 없습니다.',
     'Assumes the arc keeps hitting this part. Arcs cannot be aimed at a specific part.');
-  if (explosionsOf(mode || {}).length) return L('같은 부위에 직격과 최대 폭발 피해가 함께 들어가는 조건. 여러 부위 동시 피해는 더하지 않습니다.',
-    'Assumes the part takes the direct hit plus full explosion damage. Damage to several parts at once is not added.');
+  if (explosionsOf(mode || {}).length) return L('같은 부위에 직격과 최대 폭발 피해가 함께 들어가는 조건. 다른 부위 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다.',
+    'Assumes the part takes the direct hit plus full explosion damage. Damage to other parts is added only for the pieces chosen under Blast.');
   return L('같은 부위를 최대 피해로 계속 맞히는 조건. 거리·각도·빗맞음에 따라 실전에서는 더 필요합니다.',
     'Assumes every shot hits the same part at full damage. Range, angle and misses mean you will need more in a real fight.');
 }
@@ -291,6 +310,9 @@ export function assumptionTag(mode) {
     return mode.assumption && mode.assumption.count === c.default ? L(`${name} ${c.defaultPct}% 기본 가정`, `Default ${c.defaultPct}% ${name}`)
       : L(`${name} 명중 수 ${chosen}`, `Hits (${name}): ${chosen}`);
   }
+  if (mode?.stream?.gas) return L('가스 구름 안 가정', 'Assumes it stays in the cloud');
+  if (mode?.stream?.burnOnly) return L(`${mode.stream.poolName ?? '불 웅덩이'} 안 가정`, 'Assumes it stays in the fire');
+  if (mode?.stream && mode.delivery === 'saw') return L('톱날 유지 가정', 'Assumes the blade is held');
   if (mode?.stream) return mode.delivery === 'spray' ? L('불길 유지 가정', 'Assumes flames held') : L('광선 유지 가정', 'Assumes beam held');
   if (!mode?.conditionalImpact) return '';
   if (mode.beam) return L('광선 유지 가정', 'Assumes beam held');

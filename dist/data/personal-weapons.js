@@ -1120,6 +1120,7 @@ export const personalWeapons = [
     traitTags: ['fire'],
     extraStats: [
       { label: '연속 분사', value: 12.4, unit: '초', caption: '연료통 하나', after: 'ammo' },
+      { label: '점화', value: 0.7, unit: '초', caption: '첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음', after: 'ammo' },
     ],
     image: 'FLAM-66 Torcher Primary Render.png',
     sourceRevision: 141873,
@@ -4045,6 +4046,7 @@ export const personalWeapons = [
     traitTags: ['fire', 'one-handed'],
     extraStats: [
       { label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' },
+      { label: '점화', value: 0.7, unit: '초', caption: '하부 화염방사기 · 첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음', after: 'ammo' },
     ],
     modeDetails: {
       underbarrel: {
@@ -5815,6 +5817,7 @@ export const personalWeapons = [
     traitTags: ['fire', 'one-handed'],
     extraStats: [
       { label: '연속 분사', value: 6.1, unit: '초', caption: '연료통 하나', after: 'ammo' },
+      { label: '점화', value: 0.7, unit: '초', caption: '첫 발사 전 · 마지막 발사 후 약 10초 켜져 있음', after: 'ammo' },
     ],
     image: 'P-72 Crisper Secondary Render.png',
     sourceRevision: 140485,

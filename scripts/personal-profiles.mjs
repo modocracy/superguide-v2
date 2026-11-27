@@ -1,3 +1,5 @@
+import { EXTRA_STATS, actionDetails } from './personal-display.mjs';
+
 // Offline projection only. Selection rules below are reviewed against wiki_pages;
 // attack.level is a dependency depth, never proof of a selectable firing mode.
 export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
@@ -6,8 +8,8 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
   const sprayReason = '불꽃이 몇 번 닿는지 확인되지 않아 발 단위로 계산하지 않습니다.';
   const specialReasons = {
     'double-edge-sickle': '총이 뜨거워지면 피해가 달라집니다. 피해가 바뀌는 정확한 조건을 확인하지 못해 계산하지 않습니다.',
-    arc: '던진 뒤 아크가 몇 번 발생하고 같은 부위에 몇 번 맞는지 확인되지 않아 계산하지 않습니다.',
-    'throwing-knife': '칼 한 개를 던져 맞혔을 때의 정확한 피해를 확인하지 못해 계산하지 않습니다.',
+    // A field of small stun mines (wiki G-11 Caltrops); how many an enemy steps on is unknown (data audit 2026-11-27).
+    caltrops: '땅에 떨어지면 작은 기절 지뢰 여러 개로 흩어져, 적이 몇 개를 밟는지 알 수 없어 계산하지 않습니다.',
     'stim-pistol': '치료용 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
     smoke: '연막을 펼치는 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
     smokescreen: '연막을 펼치는 장비입니다. 적에게 주는 피해를 확인하지 못해 처치 횟수는 계산하지 않습니다.',
@@ -28,7 +30,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
       innerRadius: stats.innerRadius, radius: stats.radius,
       delivery: pureBlast ? 'explosive' : stats.delivery,
       unit: weapon.category === 'throwable' ? '개' : stats.delivery === 'melee' ? '회' : '발',
-      ...(weapon.category === 'throwable' ? { unitLabel: ['melta-mine', 'lure-mine'].includes(weapon.id) ? '지뢰' : weapon.id === 'dynamite' ? '다이너마이트' : '수류탄' } : {}),
+      ...(weapon.category === 'throwable' ? { unitLabel: ['melta-mine', 'lure-mine'].includes(weapon.id) ? '지뢰' : weapon.id === 'dynamite' ? '다이너마이트' : weapon.id === 'throwing-knife' ? '나이프' : '수류탄' } : {}),
       magazine: weapon.category === 'throwable' ? null : magazine,
       ammoPerShot: 1,
       // Range falloff applies to the projectile's own hit (dist/core/ballistics.js).
@@ -50,6 +52,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
   // Fire build-up per second (dist/data/enemy-ignition.js): a beam's Fire status value is per second like its
   // damage; a flame particle's value times the particles the wiki DPS implies (DPS / particle damage).
   const BURN = { perSecond: 100, ap: 4 };
+  const lighterOf = record => record?.lighter_lightup_time > 0 ? Math.round(record.lighter_lightup_time * 100) / 100 : undefined;
   const fireStatus = weapon => {
     const attack = weapon.attacks.find(a => a.level === 1);
     const record = data.damage[data[attack?.type]?.[attack?.name]?.damage_id];
@@ -64,21 +67,91 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     const durable = beam ? weapon.durable : dps * weapon.durable / weapon.direct;
     const status = fireStatus(weapon);
     const ignite = status == null ? null : beam ? status : status * dps / weapon.direct;
+    // A beam's warm-up before it fires, from its wiki page (Scythe 0.3 s, Dagger 0.25 s), and a flamethrower's pilot
+    // light ignition, the datamine's lighter_lightup_time (user requests 2026-11-27).
+    const warmUp = beam ? actionDetails({}, pages[weapon.en].wikitext).warmUp : lighterOf(data.weapons[weapon.dataKey ?? weapon.name_o ?? weapon.datamineName]);
     return {
       source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
-      note: beam ? '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.'
-        : '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.',
+      note: beam ? '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 발사 전 예열 시간은 더하고, 방열판 교체 시간은 넣지 않습니다.'
+        : '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 발사 전 점화 시간은 더하고, 재장전 시간은 넣지 않습니다.',
       modes: [{
         id: 'standard', name: beam ? '광선 유지' : '불길 유지', standard: dps, durable, ap: weapon.ap,
         explosion: 0, explosionDurable: 0, explosionAp: 0, innerRadius: null, radius: null, delivery: weapon.delivery, unit: '초', magazine: null, ammoPerShot: 1,
         stream: { ...(beam ? {} : { fire: true }), burn: ignite ? BURN : null, ...(ignite ? { ignite } : {}),
-          ...(Number.isFinite(seconds) ? { capacity: { kind: beam ? 'heat' : 'fuel', seconds } } : {}) },
+          ...(Number.isFinite(seconds) ? { capacity: { kind: beam ? 'heat' : 'fuel', seconds } } : {}), ...(warmUp ? { warmUp } : {}) },
       }],
     };
+  };
+  // A sticky thermite charge (G-123 Thermite, P-34 Breacher) burns on after its blast: the wiki infobox gives '150/s over
+  // 6.5s' and '150/s over 4s', and the Thermite page says the burn goes straight to main health. Each grenade or shot adds
+  // that total to main health (mainDot; data audit, user request 2026-11-27).
+  const MAIN_DOT_NOTES = { thermite: '붙은 수류탄이 타는 피해(초당 150 × 6.5초 = 975)를 폭발 뒤 본체 체력에 더합니다(위키: 본체 체력에 직접 들어감).' };
+  const withMainDot = (weapon, profile) => {
+    const dot = weapon.dot;
+    if (!['thermite', 'breacher'].includes(weapon.id)) return profile;
+    if (dot?.element !== 'fire' || !(dot.perSecond > 0) || !(dot.duration > 0)) throw new Error(`${weapon.id}: thermite burn missing from the wiki infobox`);
+    const mainDot = { perSecond: dot.perSecond, duration: dot.duration, total: Math.round(dot.perSecond * dot.duration) };
+    return { ...profile, modes: profile.modes.map(mode => ({ ...mode, mainDot, ...(MAIN_DOT_NOTES[weapon.id] ? { note: [mode.note, MAIN_DOT_NOTES[weapon.id]].filter(Boolean).join(' ') } : {}) })) };
   };
   for (const weapon of weapons) {
     if (weapon.delivery === 'beam' && weapon.damageKind === 'dps' || weapon.delivery === 'spray' && Number.isFinite(weapon.dot?.perSecond)) {
       personalProfiles[weapon.id] = streamProfile(weapon);
+      continue;
+    }
+    // Fire grenades are counted in seconds of burning, not in grenades (user requests 2026-11-27): G-8 Immolation,
+    // G-10 Incendiary, G-13 Incendiary Impact, G-142 Pyrotech. The blast's Fire status (datamine: 100, 50, 100, 100)
+    // lights every enemy at once (thresholds are 9 at most), the blast's own damage comes off first, and burning then
+    // takes 100 a second from main health (wiki status datamine) while the fire the wiki pages give lasts
+    // (personal-display.mjs). The Pyrotech showers sparks for 4 s (they light it, no damage) before its blast.
+    const FIRE_POOLS = {
+      immolation: { name: '불 웅덩이', pool: '불 지속 시간' },
+      incendiary: { name: '불길', pool: '불 지속 시간' },
+      'incendiary-impact': { name: '불길', pool: '불 지속 시간' },
+      pyrotech: { name: '불길', pool: '불 지속 시간', sparks: '불꽃 회전' },
+    };
+    if (FIRE_POOLS[weapon.id]) {
+      const spec = FIRE_POOLS[weapon.id], stat = label => EXTRA_STATS[weapon.id]?.find(item => item.label === label)?.value;
+      const blastAttack = weapon.attacks.find(a => a.type === 'explosion');
+      const blastRecord = data.damage[data.explosion[blastAttack?.name]?.damage_id];
+      const slot = [1, 2, 3].find(n => blastRecord?.[`Status_Name_${n}`] === 'Fire');
+      const status = slot ? blastRecord[`Status_Value_${slot}`] : null;
+      const after = stat(spec.pool), sparks = spec.sparks ? stat(spec.sparks) : 0;
+      const blast = makeMode(weapon, weapon, 'blast', '폭발');
+      if (!Number.isFinite(after) || !status || !(blast.explosion >= 0)) throw new Error(`${weapon.id}: fire time, Fire status or blast missing`);
+      const pool = after + (sparks || 0);
+      const lead = sparks ? `불꽃이 ${sparks}초 동안 튀며 불을 붙이고, 그 뒤 터지면서(폭발 피해 ${blast.explosion}) 불길이 ${after}초 더 남습니다.`
+        : `폭발(피해 ${blast.explosion})이 점화 수치 ${status}을 한 번에 쌓아 바로 불을 붙이고, ${spec.name}${spec.name === '불길' ? '이' : '가'} ${after}초 동안 남습니다.`;
+      personalProfiles[weapon.id] = {
+        source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
+        note: `적이 ${spec.name} 안에 머물며 타는 시간입니다. ${lead} ${sparks ? `화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어가고, ${sparks}초 뒤 폭발 피해가 더해집니다.` : '폭발 피해를 먼저 빼고, 그다음 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다.'}`,
+        modes: [{
+          id: 'standard', name: spec.name, standard: 0, durable: 0, ap: 0, explosion: 0, explosionDurable: 0, explosionAp: 0,
+          innerRadius: null, radius: null, delivery: 'pool', unit: '초', magazine: null, ammoPerShot: 1,
+          stream: { fire: true, burnOnly: true, burn: BURN, ignite: status, pool, poolName: spec.name, countUnit: '개',
+            blast: { id: 'blast', name: '폭발', standard: blast.standard, durable: blast.durable, ap: blast.ap, explosion: blast.explosion, explosionDurable: blast.explosionDurable, explosionAp: blast.explosionAp, delivery: 'explosive' },
+            ...(sparks ? { blastAt: sparks } : {}) },
+        }],
+      };
+      continue;
+    }
+    // G-4 Gas is counted in seconds of gas damage, not in grenades (user request 2026-11-27): its blast's Gas status
+    // poisons at once, the cloud lasts the datamine's aoe_duration, and gas takes the wiki DPS from main health through
+    // its AP. The wiki status datamine (Module:Decodedata-Attacks data.json, DPS_Gas) gives AP 6 and a 6 s poisoning.
+    if (weapon.id === 'gas') {
+      const blast = data.explosion[weapon.attacks.find(a => a.type === 'explosion')?.name];
+      const record = data.damage[blast?.damage_id];
+      const slot = [1, 2, 3].find(n => record?.[`Status_Name_${n}`] === 'Gas');
+      const pool = blast?.aoe_duration, perSecond = weapon.dot?.perSecond, linger = 6;
+      if (!slot || !(pool > 0) || !(perSecond > 0)) throw new Error('gas: Gas status, cloud time or damage per second missing');
+      personalProfiles[weapon.id] = {
+        source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
+        note: `적이 가스 구름 안에 머물며 중독되는 시간입니다. 폭발이 바로 중독시키고, 그때부터 가스가 본체 체력에 초당 ${perSecond}씩 들어갑니다. 가스 구름은 ${pool}초 동안 남고, 구름을 벗어나도 ${linger}초 동안 중독됩니다. 폭발 자체의 피해(3)는 넣지 않습니다.`,
+        modes: [{
+          id: 'standard', name: '가스 구름', standard: 0, durable: 0, ap: 0, explosion: 0, explosionDurable: 0, explosionAp: 0,
+          innerRadius: null, radius: null, delivery: 'pool', unit: '초', magazine: null, ammoPerShot: 1,
+          stream: { gas: true, burnOnly: true, burn: { perSecond, ap: 6 }, pool, linger },
+        }],
+      };
       continue;
     }
     let reason = specialReasons[weapon.id];
@@ -90,10 +163,18 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
     if (weapon.delivery === 'beam' && !burst) reason = '광선을 얼마나 오래 비추는지에 따라 피해가 달라져 발 단위로 계산하지 않습니다.';
     if (weapon.delivery === 'spray') reason = sprayReason;
     if (reason) { personalUnsupported[weapon.id] = reason; continue; }
-    let modes = [makeMode(weapon, weapon, 'standard', weapon.category === 'throwable' ? '폭발 1회' : '기본 사격')];
+    let modes = [makeMode(weapon, weapon, 'standard', weapon.id === 'throwing-knife' ? '투척 1회' : weapon.category === 'throwable' ? '폭발 1회' : '기본 사격')];
     if (burst) Object.assign(modes[0], { hitCondition: { kind: 'pellets', min: 1, max: weapon.beams, projectileName: '광선' },
       note: '광선이 옆으로 넓게 퍼져 작은 부위에 모두 맞히기 어렵습니다. 거리에 따라 피해가 줄지 않습니다.' });
     if (weapon.id === 'halt') modes = weapon.variants.map((v, i) => makeMode(weapon, v, i ? 'stun' : 'flechette', i ? '기절탄' : '플레셰트탄', 8));
+    // The G-31 Arc lets out arcs like the De-Escalator: the wiki infobox gives 100 per arc '(x10)', so up to 10 arcs, all
+    // of them by default as the enemy pages count arcs (data audit, user request 2026-11-27).
+    if (weapon.id === 'arc') {
+      const arcs = Number(weapon.infoboxRaw?.damage?.match(/\(x(\d+)\)/)?.[1]);
+      const arc = weapon.variants.find(v => v.delivery === 'arc');
+      if (!arc || !(arcs > 0)) throw new Error('arc: arc record or arc count missing');
+      modes = [{ ...makeMode(weapon, arc, 'standard', '아크'), delivery: 'arc', hitCondition: { kind: 'arcs', min: 1, max: arcs, default: arcs, defaultPct: 100 } }];
+    }
     if (weapon.linkedAttacks.length) {
       modes = [makeMode(weapon, weapon, 'standard', '주 총열')];
       for (const linked of weapon.linkedAttacks) {
@@ -110,7 +191,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
           const ignite = slot ? record[`Status_Value_${slot}`] * dps / variant.direct : null;
           modes.push({ id: 'underbarrel', name: '하부 부착 무기', standard: dps, durable: dps * variant.durable / variant.direct, ap: variant.ap,
             explosion: 0, explosionDurable: 0, explosionAp: 0, innerRadius: null, radius: null, delivery: 'spray', unit: '초', magazine: null, ammoPerShot: 1,
-            stream: { fire: true, burn: ignite ? BURN : null, ...(ignite ? { ignite } : {}) },
+            stream: { fire: true, burn: ignite ? BURN : null, ...(ignite ? { ignite } : {}), ...(lighterOf(data.weapons[linked.dataKey]) ? { warmUp: lighterOf(data.weapons[linked.dataKey]) } : {}) },
             note: '하부 화염방사기를 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다.' });
           continue;
         }
@@ -153,7 +234,7 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
       if (modes[0].explosionDurable == null) Object.assign(modes[0], { explosion: 0, explosionDurable: 0, explosionAp: 0 });
       const [blast] = delayed;
       modes[0].explosions = [{ id: 'delayed', name: '지연 폭발', standard: blast.splash, durable: blast.splashDurable, ap: blast.splashAp, innerRadius: blast.innerRadius, radius: blast.radius }];
-      modes[0].note = '맞은 부위에 붙은 탄이 잠시 뒤 그 자리에서 터지는 지연 폭발까지 계산합니다. 붙은 뒤 적이 움직여도 같은 부위에서 터진다고 가정하며, 계속 타는 피해는 뺍니다.';
+      modes[0].note = '맞은 부위에 붙은 탄이 잠시 뒤 그 자리에서 터지는 지연 폭발까지 계산합니다. 붙은 뒤 적이 움직여도 같은 부위에서 터진다고 가정합니다. 붙은 탄이 타는 피해(초당 150 × 4초 = 600)는 한 발마다 본체 체력에 더합니다.';
     }
     if (['pyrotech', 'melta-mine'].includes(weapon.id)) modes[0].note = '처음 터지는 폭발만 계산합니다. 남은 불길에 계속 닿아서 받는 피해는 더하지 않습니다.';
     for (const mode of modes) {
@@ -173,12 +254,18 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
       if (![mode.standard, mode.durable, mode.ap, mode.explosion, mode.explosionDurable, mode.explosionAp].every(finite)) mode.unsupported = '피해량이나 장갑을 뚫는 능력이 정확히 확인되지 않아 계산하지 않습니다.';
       else if (mode.standard + mode.durable + mode.explosion + mode.explosionDurable === 0) mode.unsupported = '직접 주는 피해가 없는 지원 장비입니다. 적을 기절시키는 등의 효과를 피해로 바꿔 계산하지 않습니다.';
     }
+    // Incendiary rounds (AR-2 Coyote 2, R-4 Hyena 3, SG-225IE Breaker Incendiary and SG-451 Cookout 0.6 a pellet: the
+    // datamine projectile's Fire status) light an enemy once their build-up reaches its ignition threshold; burning then
+    // runs between shots, the time one shot takes at the fire rate (data audit, user request 2026-11-27).
+    const status = weapon.rpm > 0 && data.damage ? fireStatus(weapon) : null;
+    if (status) for (const mode of modes) if (!mode.unsupported && mode.delivery === 'projectile') mode.fire = { status, interval: 60 / weapon.rpm, burn: BURN };
+    if (modes.some(mode => mode.fire)) for (const mode of modes) if (mode.fire) mode.note = [mode.note, `탄마다 점화 수치를 ${Math.round(status * 10) / 10}씩 쌓아 적의 점화 기준치에 닿으면 불이 붙고, 그다음 발부터는 발과 발 사이(${Math.round(6000 / weapon.rpm) / 100}초)마다 화상이 본체 체력에 초당 100씩 들어갑니다. 마지막 발 뒤에 타는 피해는 넣지 않습니다.`].filter(Boolean).join(' ');
     if (modes.every(mode => mode.unsupported)) personalUnsupported[weapon.id] = modes[0].unsupported;
-    else personalProfiles[weapon.id] = {
+    else personalProfiles[weapon.id] = withMainDot(weapon, {
       source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
-      note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 합치지 않습니다. 연사·점사도 한 발씩 셉니다.',
+      note: '맞는 각도와 도탄, 화상 같은 지속 피해, 기절 같은 효과는 빼고 계산하며, 여러 부위에 함께 들어가는 피해는 ‘폭발 범위’에서 고른 같은 부위만 더합니다. 연사·점사도 한 발씩 셉니다.',
       modes,
-    };
+    });
   }
   return { personalProfiles, personalUnsupported };
 }

@@ -12,7 +12,7 @@ import { personalWeapons } from '../../data/personal-weapons.js';
 import { weaponImages } from '../../data/weapon-images.js';
 // A url() inside a custom property resolves against the stylesheet, so pass an absolute URL.
 const iconUrl = id => globalThis.location ? new URL(subfactionIcons[id].src, globalThis.location.href).href : subfactionIcons[id].src;
-const iconSpan = (id, side, large = false) => subfactionIcons[id] ? html`<span class="subfaction-icon${large ? ' large' : ''}" data-tint="${side}" style="--icon:url('${iconUrl(id)}')" aria-hidden="true"></span>` : '';
+const iconSpan = (id, side, large = false) => subfactionIcons[id] ? html`<span class="subfaction-icon${large ? ' large' : ''}" data-tint="${side}" data-icon="${id}" style="--icon:url('${iconUrl(id)}')" aria-hidden="true"></span>` : '';
 // A guide named after its enemies (Dragonroach · Hive Lord) shows each enemy's icon before its name.
 const guideLabel = (guide, large = false) => guide.parts
   ? guide.parts.map((part, index) => html`${index ? ' · ' : ''}${iconSpan(part.icon, guide.side, large)}${T(part.name)}`)
@@ -51,7 +51,7 @@ function streamReference({ streamRoute: route, streamMode: mode, enemy, weaponId
   const lit = route.ignitedAt != null && route.ignitedAt <= route.seconds;
   return html`<p>${L(`참고: 같은 부위(${route.target.name})에 불길을 계속 맞히면 약 ${num(route.hits)}초 걸립니다(${outcomeOf(route).label}). ${lit ? '불은 그보다 먼저 붙습니다.' : '불이 붙기 전에 죽을 수 있습니다.'}`,
     `Reference: flames held on the same part (${T(route.target.name)}) take about ${num(route.hits)} s (${outcomeOf(route).label.toLowerCase()}). ${lit ? 'It catches fire before that.' : 'It may die before it catches fire.'}`)}</p>
-    <div class="links"><a class="button small" href="#/enemy/${enemy.id}?w=${weaponId}&m=${mode.id}">${L('적 대응에서 자세히 →', 'Full details in Enemies →')}</a></div>`;
+    <div class="links"><a class="button small" href="#/enemy/${enemy.id}?w=${weaponId}&m=${mode.id}" aria-label="${L(`적 대응에서 자세히 · ${enemy.name}`, `Full details in Enemies · ${T(enemy.name)}`)}">${L('적 대응에서 자세히 →', 'Full details in Enemies →')}</a></div>`;
 }
 function pickRow(unit, choice, index) {
   const pick = recommend(unit, choice);
@@ -64,23 +64,26 @@ function pickRow(unit, choice, index) {
         <p class="sources">${external(pick.pick.source, L('적 특성·전술', 'Enemy traits and tactics'))}${external(weapon.source, L('장비', 'Weapon'))}<span>${L('확인', 'Checked')} ${guideCheckedAt(state.guide)}</span></p></div></details>`;
   }
   const { route, mode, reference, tactic, enemy, alternatives, profile } = pick;
-  const unitWord = unitOf(mode, route?.hits).unit;
-  const outcome = route ? outcomeOf(route) : null;
+  // The headline count: a wiki tactic's own count (tactic.hits, or a wiki reference below the single-part count) comes
+  // before the single-part calculation (user request 2026-11-27: Vox Engine Leveller and Solo Silo 1, Fleshmob 4).
+  const shownHits = tactic?.hits ?? (reference && route && reference.hits < route.hits ? reference.hits : route?.hits);
+  const unitWord = unitOf(mode, shownHits).unit;
+  const outcome = route ? outcomeOf(tactic?.hits != null || shownHits !== route.hits ? { ...route, outcome: reference?.outcome ?? route.outcome } : route) : null;
   const shield = enemy.shield?.partial ? L('조종사 보호막과 기체를 구분하세요. 아래 기체 부위는 보호막 밖 경로입니다.', 'Tell the pilot\'s shield apart from the machine. The machine parts below are routes outside the shield.')
     : enemy.shield ? L(`${enemy.shield.kind === 'energy' ? '보호막을' : '방패를'} 제거·우회한 상태 기준입니다. 그 공격은 횟수에 넣지 않습니다.`, `Assumes the shield has been removed or bypassed; those attacks are not counted.`) : '';
   const advice = tactic || (reference ? { title: L(`${reference.target} 명중 시 ${num(reference.hits)}${unitWord} ${outcomeOf({ outcome: reference.outcome, target: {} }).label} (위키 전술)`, `${num(reference.hits)}${unitOf(mode, reference.hits).unit} on ${T(reference.target)} · ${outcomeOf({ outcome: reference.outcome, target: {} }).label} (wiki tactic)`), body: reference.note, source: reference.source } : null);
   return html`<details class="pick"><summary><span class="rank-num">${index + 1}</span>${weaponIcon(weapon.id)}
     <span><b>${weapon.name}</b><small>${profile.modes.length > 1 ? html`${mode.name} · ` : ''}${pick.pick?.label || ''}</small></span>
-    <span class="pick-result">${route ? html`<b>${num(route.hits)}<small style="display:inline;font-size:12px;color:var(--text-3)">${unitWord}${route.lowerBound ? '+' : ''}</small></b><small>${badge(outcome.label, outcome.tone)}</small>` : badge(mode.unsupported ? L('계산 미지원', 'Not supported') : L('계산 보류', 'Not calculated'), 'unknown')}</span></summary>
+    <span class="pick-result">${route ? html`<b>${num(shownHits)}<small style="display:inline;font-size:12px;color:var(--text-3)">${unitWord}${route.lowerBound ? '+' : ''}</small></b><small>${badge(outcome.label, outcome.tone)}</small>` : badge(mode.unsupported ? L('계산 미지원', 'Not supported') : L('계산 보류', 'Not calculated'), 'unknown')}</span></summary>
     <div class="pick-body">
       ${pick.pick?.note ? html`<p class="how">${pick.pick.note}</p>` : ''}
       ${shield ? html`<p class="note" style="color:var(--bleed)">${shield}</p>` : ''}
       ${advice ? html`<div class="callout info"><h3>${advice.title}</h3><p>${advice.body} ${external(advice.source, L('출처', 'Source'))}</p></div>` : ''}
       ${route ? (advice ? html`<details class="disclosure"><summary>${L('단일 부위 계산 보기', 'Single-part calculation')}</summary><div>${routeBlock(pick)}</div></details>` : routeBlock(pick)) : html`<p>${mode.unsupported || L('확인된 처치 경로가 없어 계산을 보류했습니다.', 'No verified kill route, so it was not calculated.')}</p>`}
       ${!advice && alternatives.length ? html`<details class="disclosure"><summary>${L(`다른 조준 위치 ${alternatives.length}곳`, `${alternatives.length} other aim ${alternatives.length === 1 ? 'point' : 'points'}`)}</summary><div>${alternatives.map(other => routeBlock({ ...pick, route: other, approach: null }))}</div></details>` : ''}
-      <div class="links"><a class="button small" href="#/enemy/${enemy.id}?w=${weapon.id}&m=${mode.id}">${L('적 대응에서 자세히 →', 'Full details in Enemies →')}</a></div>
+      <div class="links"><a class="button small" href="#/enemy/${enemy.id}?w=${weapon.id}&m=${mode.id}" aria-label="${L(`적 대응에서 자세히 · ${enemy.name} · ${weapon.name}`, `Full details in Enemies · ${T(enemy.name)} · ${T(weapon.name)}`)}">${L('적 대응에서 자세히 →', 'Full details in Enemies →')}</a></div>
       ${pick.approach ? html`<p class="faint" style="font-size:12.5px">${L('적 대응 화면은 선택 부위에 직접 맞히는 기준이라, 위의 정면 폭발 계산(제트팩 직격 제외)과 다를 수 있습니다.', 'The Enemies screen counts direct hits on the chosen part, so it can differ from the frontal-blast math above (which leaves out direct hits on the jetpack).')}</p>` : ''}
-      <p class="sources">${external(profile.source, L('무기 수치', 'Weapon stats'))}${external(enemy.source, L('적 수치', 'Enemy stats'))}<span>${L('확인', 'Checked')} ${profile.checkedAt || combatCheckedAt}</span></p>
+      <p class="sources">${external(profile.source, L('무기 수치', 'Weapon stats'), `${T(weapon.name)} · ${T(enemy.name)}`)}${external(enemy.source, L('적 수치', 'Enemy stats'), `${T(enemy.name)} · ${T(weapon.name)}`)}<span>${L('확인', 'Checked')} ${profile.checkedAt || combatCheckedAt}</span></p>
     </div></details>`;
 }
 
@@ -115,7 +118,7 @@ function unitCard(unit) {
   return html`<article class="panel unit">
     <header class="unit-head">${photo?.src ? html`<img src="${photo.src}" alt="" loading="lazy">` : html`<span></span>`}
       <div><h3>${unit.name || enemy.name}</h3>${base ? html`<span class="base">${L(`일반 ${josa(base.name, ['과', '와'])} 비교`, `Compared with the regular ${T(base.name)}`)}</span>` : ''}<p>${unit.change}</p>
-      <p class="sources" style="margin-top:6px">${external(enemy.source, L('유닛 자료', 'Unit data'))}${enemies.some(item => item.id === enemy.id) ? html`<a class="ext" href="#/enemy/${enemy.id}">${L('모든 무기 비교', 'Compare every weapon')}</a>` : ''}</p></div>
+      <p class="sources" style="margin-top:6px">${external(enemy.source, L('유닛 자료', 'Unit data'), T(unit.name || enemy.name))}${enemies.some(item => item.id === enemy.id) ? html`<a class="ext" href="#/enemy/${enemy.id}" aria-label="${L(`적 대응 · ${unit.name || enemy.name}`, `Enemies · ${T(unit.name || enemy.name)}`)}">${L('적 대응', 'Enemies')}</a>` : ''}</p></div>
     </header>
     <div>${unit.weapons.map((choice, index) => pickRow(unit, choice, index))}</div>
   </article>`;

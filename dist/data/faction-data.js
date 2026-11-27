@@ -27,17 +27,19 @@ export const factionAimTargets = {
 export const factionTactics = {
   'obtruder:autocannon:flak': {
     title: '대공포탄 모드로 비행 드론 무리 대응',
-    body: '위키가 효과적인 대응으로 제시합니다. 파편 명중 수·사망 시 연쇄 폭발에 따라 결과가 달라 고정 처치 탄수를 표시하지 않습니다.',
+    body: '위키가 효과적인 대응으로 제시합니다. 처치 탄수는 파편 30개 중 기본 20%(6개)가 맞는다고 본 값이며, 사망 시 연쇄 폭발은 넣지 않습니다.',
     source: wiki('Obtruder#Tactical_Information'),
   },
+  // hits: the count the card headline shows, the wiki tactic's (user request 2026-11-27).
   'fleshmob:grenade-launcher': {
+    hits: 4,
     title: '유탄 발사기 4발 처치 안내 · 위키 전술 기준',
     body: '여러 부위가 폭발에 맞는 실전 대응 안내입니다. 위키는 정확한 명중 위치·겹쳐 맞는 부위 수를 제시하지 않으므로, 어느 부위든 4발 처치를 보장하거나 단일 부위 계산으로 검증된 값으로 표시하지 않습니다.',
     source: wiki('Fleshmob#Tactical_Information'),
   },
   'fleshmob:autocannon:flak': {
     title: '대공포탄 모드로 폭발·파편 피해 활용',
-    body: '위키가 효과적인 대응 무기로 제시한 모드입니다. 근접 신관·파편의 명중 수와 여러 부위 동시 피해가 달라 고정 처치 탄수는 계산하지 않습니다.',
+    body: '위키가 효과적인 대응 무기로 제시한 모드입니다. 처치 탄수는 파편 30개 중 기본 20%(6개)가 같은 부위에 맞는다고 본 값이며, 여러 부위에 함께 맞는 피해는 더하지 않습니다.',
     source: wiki('Fleshmob#Tactical_Information'),
   },
 };
@@ -131,6 +133,12 @@ export const factionGuides = [
     intro: '무권자·플레시몹이 없는 편성입니다. 조종형 병기의 연결부와 보호막 밖 약점을 노릴 무기를 준비하세요.',
     coverage: '옵트루더·버레이시터·게이트키퍼 세 전용 유닛을 모두 안내합니다.',
     units: [unit('obtruder', '무리 지어 플라스마를 발사하는 와처 변종입니다. 증원을 부르지 않으며 본체 체력은 400으로 일반 와처 600보다 낮고, 몸체 장갑도 1로 일반 와처의 2보다 낮습니다. 작은 눈 대신 몸체 연사나 대공포탄으로 대응하세요.', ['body'], 'watcher'), unit('veracitor', '조종사 보호막과 기체를 구분하세요. 기체 연결부는 조종사 보호막 밖의 처치 경로입니다.', ['chassis', 'hip']), unit('gatekeeper', '버레이시터보다 기체 중앙 장갑이 두껍습니다. 대전차 화력 또는 후방 약점을 비교하세요.', ['chassis', 'rear-weakspot'], 'veracitor')] },
+  // Leviathan (wiki Leviathan rev 140064): not a sub-faction in the game but its own threat on planets with the Leviathan
+  // Blockade operation modifier; shown as one (user request 2026-11-27).
+  { id: 'leviathan', side: 'illuminate', name: '리바이어던', en: 'Leviathan', source: wiki('Leviathan'), checkedAt: '2026-11-27',
+    intro: '작전 제한 조건 리바이어던 봉쇄가 걸린 행성의 메가시티 상공을 떠다니는 거대 전함입니다. 난이도 8 이상에서 최대 5대까지 나오며, 배 아래 분해 컬버린 4문과 플라스마 폭탄으로 공격합니다.',
+    coverage: '리바이어던 한 종을 안내합니다. 본체 체력 15,000이라 대전차 무기로 지느러미나 꼬리를 부숴 드러난 내부를 노리는 경로를 표시합니다.',
+    units: [unit('leviathan', '분해 컬버린 하나가 반 초 만에 헬다이버를 쓰러뜨리니 계속 움직이세요. 포탑은 관통 4 이상 지원 무기로 부술 수 있고, 퀘이사 캐넌과 일회성 대전차는 한 발에 부숩니다. 처치하려면 뒤쪽 지느러미나 꼬리를 부숴 드러난 내부를 노립니다.', ['rear-fin', 'tail'])] },
   { id: 'invasion', side: 'illuminate', name: '침공 함대', en: 'Invasion Fleet', source: wiki('Invasion_Fleet'),
     intro: '일반 일루미닛 혼성 편성의 주요 위협입니다. 보병과 보호막을 가진 대형 병기의 대응 무기를 함께 확인하세요.',
     coverage: '주요 대표 유닛이며 전체 출현 목록은 아닙니다. 이 편성에만 적용되는 체력 보정은 가정하지 않습니다.',
