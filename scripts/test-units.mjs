@@ -62,7 +62,9 @@ for (const guide of factionGuides) for (const unit of guide.units) for (const ch
   // Calculated picks are support weapons; other stratagems come only as advice (Dragonroach and Hive Lord guide).
   ok(byId.get(choice.split(':')[0])?.category === 'support' || pick?.adviceOnly && byId.has(choice), `${choice}: faction picks are support weapons, or stratagems as advice`);
   const result = recommend(unit, choice);
-  if (result.route) ok(pick.targets.includes(result.route.target.id), `${unit.enemy}/${choice}: never swaps the editor's aim point`);
+  // A pick with no aim point takes the quickest route, and one on an enemy with no fatal part the cumulative one.
+  const anyAim = !pick.targets.some(Boolean) || result.route?.accumulated;
+  if (result.route) ok(anyAim || pick.targets.includes(result.route.target.id), `${unit.enemy}/${choice}: never swaps the editor's aim point`);
 }
 
 // --- Engine sanity (independent of the legacy fixture) -----------------------------------

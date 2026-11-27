@@ -405,6 +405,8 @@ main[aria-busy] { opacity: .5; transition: opacity .2s .15s; }
 .subfaction-icon[data-tint="automaton"] { background: #ff6161; }
 .subfaction-icon[data-tint="illuminate"] { background: #cd8aea; }
 .subfaction-icon.large { width: 26px; height: 26px; margin-right: 8px; vertical-align: -4px; }
+/* The Leviathan Blockade PNG fills only about 75% of its square (transparent margin): enlarge it to match the SVG icons. */
+.subfaction-icon[data-icon="leviathan"] { -webkit-mask-size: 132%; mask-size: 132%; }
 .subfaction-chip { display: inline-flex; align-items: center; }
 [data-faction="공용 시설"] { --fc: var(--text-2); }
 

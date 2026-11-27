@@ -277,7 +277,8 @@ const recorded = new Map(golden.factions.map(item => [`${item.guide}/${item.enem
 // replaced by the Orbital Railcannon Strike; the Quasar Cannon wherever the Nova also kills in one shot).
 const removedPicks = new Set(['cyborgs/vox-engine/recoilless', 'incineration/hulk-firebomber/quasar']);
 for (const key of removedPicks) assert(recorded.has(key), `${key}: not a recorded pick`);
-let picks = 0, addedPicks = 0;
+let picks = 0, addedPicks = 0, countedPicks = 0;
+const newlyCounted = new Set(['autocannon:flak']);
 for (const guide of factionGuides) for (const unit of guide.units) for (const choice of unit.weapons) {
   if (!recorded.has(`${guide.id}/${unit.enemy}/${choice}`)) {
     const pick = recommend(unit, choice, findEnemy(unit.enemy));
@@ -289,8 +290,11 @@ for (const guide of factionGuides) for (const unit of guide.units) for (const ch
   const expected = recorded.get(`${guide.id}/${unit.enemy}/${choice}`);
   picks++;
   const pick = recommend(unit, choice, legacyEnemy(findEnemy(unit.enemy)), { exdrRedirect: false });
+  // Flak picks recorded without a count are counted now with the default fragment hits (user request 2026-11-27).
+  const nowCounted = newlyCounted.has(choice) && expected.row === null && pick.route;
+  if (nowCounted) countedPicks++;
   assert.deepEqual({
-    adviceOnly: Boolean(pick.adviceOnly), mode: pick.mode?.id ?? null, row: pick.route ? view(pick.route) : null,
+    adviceOnly: Boolean(pick.adviceOnly), mode: pick.mode?.id ?? null, row: pick.route && !nowCounted ? view(pick.route) : null,
     alternatives: (pick.alternatives || []).map(view), reference: pick.reference ? [pick.reference.weapon, pick.reference.mode, pick.reference.hits] : null,
     approach: Boolean(pick.approach), tactic: Boolean(pick.tactic),
   }, {
@@ -307,4 +311,4 @@ for (const expected of golden.defense) {
   assert.deepEqual([0, cap / 2, cap, -1, undefined].map(value => shieldRecovery(item.defense, value)), expected.recovery, expected.id);
 }
 
-console.log(`PASS parity: ${golden.combat.length} matchups (${beamCarried} beam routes now carry past armor, ${addedRows} rows for re-checked anatomy, ${legacyReplayed.size} enemies replayed on legacy values), ${golden.demolition.length} demolition cases, ${golden.selections.length} overviews, ${picks} faction picks match ${golden.generatedFrom} (+${addedPicks} added since, ${removedPicks.size} removed by the user).`);
+console.log(`PASS parity: ${golden.combat.length} matchups (${beamCarried} beam routes now carry past armor, ${addedRows} rows for re-checked anatomy, ${legacyReplayed.size} enemies replayed on legacy values), ${golden.demolition.length} demolition cases, ${golden.selections.length} overviews, ${picks} faction picks match ${golden.generatedFrom} (+${addedPicks} added since, ${countedPicks} flak picks now counted, ${removedPicks.size} removed by the user).`);

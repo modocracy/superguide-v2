@@ -98,5 +98,12 @@ export const subfactionIcons = {
   "revision": 139241,
   "source": "https://helldivers.wiki.gg/wiki/File:Hive_Lord_Icon.svg",
   "sha256": "4bfc6474acc01274ff57cdd4e8a056c14637f1c34f09141c48e5e769765cdccf"
+ },
+ "leviathan": {
+  "src": "./assets/subfactions/leviathan.png",
+  "page": "Leviathan Blockade",
+  "revision": 128814,
+  "source": "https://helldivers.wiki.gg/wiki/File:Leviathan_Blockade.png",
+  "sha256": "7923bb89acdc6c6f4a9be7b319d8cfaccf28deb9c5730394f48ecef65f4ae285"
  }
 };
