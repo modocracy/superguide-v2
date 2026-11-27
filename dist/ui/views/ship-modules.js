@@ -22,7 +22,7 @@ function affectedList(module) {
   const items = (module.affected ?? []).map(id => stratagemById.get(id)).filter(Boolean);
   if (!items.length) return '';
   return html`<details class="module-affected"><summary>${L(`영향받는 스트라타젬 ${items.length}종`, `${items.length} ${items.length === 1 ? 'stratagem' : 'stratagems'} affected`)}</summary>
-    <ul>${items.map(item => html`<li><a href="#/arsenal/${item.id}">${T(item.name)}</a></li>`)}</ul></details>`;
+    <ul>${items.map(item => html`<li><a href="#/arsenal/${item.id}" aria-label="${T(item.name)} · ${L(module.name, module.en)}">${T(item.name)}</a></li>`)}</ul></details>`;
 }
 
 function moduleItem(module, focus) {
@@ -32,7 +32,7 @@ function moduleItem(module, focus) {
       <h4>${L(module.name, module.en)}</h4>${lang === 'en' || module.name === module.en ? '' : html`<p class="en">${module.en}</p>`}
       <p class="info-desc">${lang === 'en' ? module.effectEn : module.effect}</p>
       <p class="module-cost">${costLine(module.cost)}</p>
-      ${module.stratagemModule ? html`<p class="module-applied"><a href="#/arsenal">${L('스트라타젬 도감의 재사용 시간에 반영', 'Applied to cooldowns in the stratagem catalogue')}</a></p>` : ''}
+      ${module.stratagemModule ? html`<p class="module-applied"><a href="#/arsenal" aria-label="${L(`스트라타젬 도감의 재사용 시간에 반영 · ${module.name}`, `Applied to cooldowns in the stratagem catalogue · ${module.en}`)}">${L('스트라타젬 도감의 재사용 시간에 반영', 'Applied to cooldowns in the stratagem catalogue')}</a></p>` : ''}
       ${affectedList(module)}
     </div>
   </li>`;

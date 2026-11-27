@@ -4,7 +4,8 @@
 import { html } from './dom.js';
 
 // A label with its note (the col-tip look: dotted underline, focusable).
-export const tipLabel = (label, tip) => html`<span class="col-tip" tabindex="0" data-tip="${tip}">${label}</span>`;
+// Keyboard-focusable with a role, and the tip itself in hidden text so screen readers read it too (user request 2026-11-27).
+export const tipLabel = (label, tip) => html`<span class="col-tip" tabindex="0" role="button" data-tip="${tip}">${label}<span class="sr-only">: ${tip}</span></span>`;
 
 function showTip(event) {
   const head = event.target.closest?.('[data-tip]');

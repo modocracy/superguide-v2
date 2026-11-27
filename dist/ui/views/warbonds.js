@@ -215,7 +215,7 @@ function detailContent(warbond) {
   const notes = warbondDiscrepancies.filter(d => d.warbondId === warbond.id);
   const image = warbondImages[warbond.id];
   const fact = (label, value, caption = '') => html`<div><dt>${label}</dt><dd class="${typeof value === 'string' ? 'dim' : ''}">${value}</dd>${caption ? html`<div class="caption">${caption}</div>` : ''}</div>`;
-  return html`<div class="sheet-top"><span>${tierName(warbond.tier)} · ${L('전쟁 채권', 'Warbond')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  return html`<div class="sheet-top"><span>${tierName(warbond.tier)} · ${L('전쟁 채권', 'Warbond')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
   <div class="sheet-content">
     <div class="wb-hero">${cover(warbond, 'wb-hero-cover')}<div><h2 id="sheet-title">${warbond.name}</h2>${lang === 'en' ? '' : html`<p>${warbond.en}</p>`}
       <div class="chips" style="margin-top:6px">${badge(tierName(warbond.tier), 'outline')}${badge(L(`${warbond.pages.length}페이지 · ${warbond.itemCount}개`, `${warbond.pages.length} pages · ${warbond.itemCount} items`))}</div></div></div>

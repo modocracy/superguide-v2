@@ -189,7 +189,7 @@ export function traits(w) {
 
 function card(w) {
   return html`<article class="card gear-card" style="--cat:${groupOf(w.category).color}" data-id="${w.id}">
-    <button class="card-open" type="button" data-open="${w.id}" aria-label="${displayName(w)} ${L('자세히 보기', 'details')}">
+    <button class="card-open" type="button" data-open="${w.id}" aria-label="${displayName(w)}${w.code ? ` ${w.code}` : ''} ${L('자세히 보기', 'details')}">
       ${weaponArt(w)}
       <div class="gear-title"><h3>${displayName(w)}</h3><p class="en">${lang === 'en' ? '' : w.en}</p></div>
       <div class="chips gear-traits">${badge(typeName(w.type), 'outline')}${traits(w)}</div>
@@ -633,7 +633,7 @@ export function weaponDetail(w, { header = null, titleId = 'sheet-title', varian
   const identity = html`<div class="detail-id gear-id${expandable ? ' item-detail-actions' : ''}"><div><h2 id="${titleId}">${displayName(w)}</h2><p>${lang === 'en' ? '' : w.en}</p>
       <div class="chips" style="margin-top:6px">${badge(group.name, 'outline')}${badge(typeName(w.type))}${warbondChip('gear', w.id)}${apBadge(w)}${traits(w)}</div>${holeTier(w) === 'conditional' ? html`<p class="note" style="margin-top:6px">${HOLE_CONDITIONS[w.id]}</p>` : ''}</div>
       ${expandable ? itemDetailToggle(expanded) : ''}</div>`;
-  return html`${header ?? html`<div class="sheet-top"><span>${group.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
+  return html`${header ?? html`<div class="sheet-top"><span>${group.name} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`}
   <div class="sheet-content">
     ${expanded ? html`<div class="item-detail-gear-head" data-group="${w.category}">${art}${identity}</div>` : html`${art}${identity}`}
     ${stats}
@@ -709,7 +709,7 @@ async function openArmor() {
   const module = await armorUi;
   const item = module.armorById(armor.detail);
   if (!item || state.tab !== 'armor') { armor.detail = ''; return; }
-  const header = html`<div class="sheet-top"><span>${L('방어구', 'Armor')} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`;
+  const header = html`<div class="sheet-top"><span>${L('방어구', 'Armor')} · ${L('상세', 'Details')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>`;
   ctx.openSheet(module.armorDetail(item, { header, inGear: true }), {
     label: `${T(item.name)} ${L('상세', 'details')}`,
     onClose: () => { if (armor.detail === item.id) { armor.detail = ''; syncUrl(); } },

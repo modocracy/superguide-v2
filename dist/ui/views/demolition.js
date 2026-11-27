@@ -311,7 +311,7 @@ function resultCard(row, profile, mode) {
 function gearTiles(list) {
   return GROUPS.map(group => {
     const items = list.filter(w => w.category === group.id);
-    return items.length ? html`<div><div class="picker-group" style="padding:0 0 6px">${group.name}</div><div class="tile-grid">${items.map(w => html`<button class="tile" type="button" data-gear="${w.id}" aria-current="${w.id === state.gear}">${gearIcon(w)}<span><b>${displayName(w)}</b><small class="faint">${typeName(w.type)}</small></span></button>`)}</div></div>` : '';
+    return items.length ? html`<div><div class="picker-group" style="padding:0 0 6px">${group.name}</div><div class="tile-grid">${items.map(w => html`<button class="tile" type="button" data-gear="${w.id}" aria-current="${w.id === state.gear}" aria-label="${displayName(w)}${w.code ? ` ${w.code}` : ''} · ${typeName(w.type)}">${gearIcon(w)}<span><b>${displayName(w)}</b><small class="faint">${typeName(w.type)}</small></span></button>`)}</div></div>` : '';
   });
 }
 

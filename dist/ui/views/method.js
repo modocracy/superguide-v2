@@ -105,7 +105,7 @@ const english = () => html`
       <p class="sources" style="margin-top:8px">${external(damageSource, 'Damage rules')}${external(COMBAT_PAGE, 'Combat rules')}${external(helldiverArmor.source.page, 'Armor rating table')}${external('https://helldivers.wiki.gg/wiki/Demolition', 'Demolition force')}${external('https://helldivers.wiki.gg/wiki/Stratagems', 'Stratagem list')}</p></section>`;
 
 export function openMethod(ctx) {
-  ctx.openSheet(html`<div class="sheet-top"><span>${L('계산 방식', 'How the numbers work')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  ctx.openSheet(html`<div class="sheet-top"><span>${L('계산 방식', 'How the numbers work')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
   <div class="sheet-content method">${L(korean, english)()}
   </div>`, { label: L('계산 방식', 'How the numbers work') });
 }

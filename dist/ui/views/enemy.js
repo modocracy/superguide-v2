@@ -327,7 +327,7 @@ function anatomyPhoto(enemy, row, index) {
   const label = L(`${enemy.name} ${anatomyName(enemy, row)} 상세 보기`, `${T(enemy.name)} ${row.name} details`);
   if (!photo) return html`<button class="part-photo no-photo" type="button" data-anatomy="${index}" aria-label="${label}">${L(html`사진<br>없음`, html`No<br>photo`)}</button>`;
   const tw = photo.thumbnailWidth || 320, th = photo.thumbnailHeight || 213;
-  return html`<button class="part-photo" type="button" data-anatomy="${index}" style="aspect-ratio:${tw}/${th}" aria-label="${label}"><img src="${photo.thumbnail}" alt="" width="${tw}" height="${th}" loading="lazy" decoding="async" style="width:100%;height:100%;left:0;top:0"><span class="zoom">${icon('expand', 14)}</span></button>`;
+  return html`<button class="part-photo" type="button" data-anatomy="${index}" style="aspect-ratio:${tw}/${th}" aria-label="${label}" title="${label}"><img src="${photo.thumbnail}" alt="" width="${tw}" height="${th}" loading="lazy" decoding="async" style="width:100%;height:100%;left:0;top:0"><span class="zoom">${icon('expand', 14)}</span></button>`;
 }
 const tipHead = tipLabel;
 export function partInfo(enemy) {
@@ -490,7 +490,7 @@ function photoButton(enemy, target) {
   const tw = photo.thumbnailWidth || 320, th = photo.thumbnailHeight || 213;
   const [x, y, w, h] = photo.thumbnailCrop || [0, 0, tw, th];
   const style = `width:${tw / w * 100}%;height:${th / h * 100}%;left:${-x / w * 100}%;top:${-y / h * 100}%`;
-  return html`<button class="part-photo" type="button" data-photo="${target.id}" style="aspect-ratio:${w}/${h}" aria-label="${L(`${enemy.name} ${target.name} 위치 사진 크게 보기`, `Enlarge ${T(enemy.name)} ${T(target.name)} photo`)}">
+  return html`<button class="part-photo" type="button" data-photo="${target.id}" style="aspect-ratio:${w}/${h}" aria-label="${L(`${enemy.name} ${target.name} 위치 사진 크게 보기`, `Enlarge ${T(enemy.name)} ${T(target.name)} photo`)}" title="${L(`${enemy.name} ${target.name} 위치 사진 크게 보기`, `Enlarge ${T(enemy.name)} ${T(target.name)} photo`)}">
     <img src="${photo.thumbnail}" alt="" width="${tw}" height="${th}" loading="lazy" decoding="async" style="${style}"><span class="zoom">${icon('expand', 14)}</span></button>`;
 }
 
@@ -717,7 +717,7 @@ function compareContent() {
     const label = { assume: L('명중 수 가정 필요', 'Needs a hit assumption'), none: L('처치 경로 없음', 'No kill route'), unsupported: L('계산 미지원', 'Not supported') }[entry.status] || L('계산 보류', 'Not calculated');
     return html`<td><span class="faint">${label}</span>${entry.reason ? html`<small>${entry.reason}</small>` : ''}</td>`;
   };
-  return html`<div class="sheet-top"><span>${L('같은 적 기준 비교', 'Compare against one enemy')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  return html`<div class="sheet-top"><span>${L('같은 적 기준 비교', 'Compare against one enemy')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
   <div class="sheet-content">
     ${sheetView ? backToMatchup() : ''}
     <h2 id="sheet-title" style="font-size:22px">${enemy.name} · ${L(`무기 ${result.entries.length}개 비교`, `${result.entries.length} weapons compared`)}</h2>
@@ -782,7 +782,7 @@ function showMatchupSheet(keepScroll = false) {
   const entries = rankWeapons(enemy, state.shield);
   sheetView = 'matchup';
   const picks = compare.picks.length;
-  showSheet(html`<div class="sheet-top"><span>${enemy.name} · ${L('부위별 계산', 'Part by part')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  showSheet(html`<div class="sheet-top"><span>${enemy.name} · ${L('부위별 계산', 'Part by part')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content matchup-sheet">
       <div class="rank-filters"><div class="segmented range-tabs" role="group" aria-label="${L('사격 거리', 'Shooting distance')}">${DISTANCES.map(d => html`<button type="button" data-distance="${d}" aria-pressed="${d === state.distance}">${d}m</button>`)}</div>
         ${picks ? html`<span class="sheet-compare">${L(`비교에 담은 무기 ${picks}/${MAX_COMPARE}`, `${picks}/${MAX_COMPARE} in the comparison`)} <button class="button small" type="button" data-compare-open ${picks < 2 ? raw('disabled') : ''}>${L('비교 보기', 'Compare')}</button></span>` : ''}</div>
@@ -795,7 +795,7 @@ function openPhotos(targetId) {
   const target = enemy.parts.find(part => part.id === targetId);
   const photos = combatImages[enemy.id]?.[targetId] || [];
   sheetView = 'photo';
-  showSheet(html`<div class="sheet-top"><span>${L('부위 위치', 'Part location')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  showSheet(html`<div class="sheet-top"><span>${L('부위 위치', 'Part location')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content image-viewer">${backToMatchup()}<h2 id="sheet-title" style="font-size:20px">${enemy.name} · ${target.name}</h2><p class="muted">${target.tip}${enemy.id === 'harvester' ? L(' 좌우는 적의 몸 기준입니다.', ' Left and right are from the enemy\'s point of view.') : ''}</p>
     ${photos.map(photo => { const caption = photo.caption || (target.next ? (photo.stage === 'initial' ? L('① 장갑이 남아 있는 상태', '① With the armor still on') : L('② 장갑을 벗긴 뒤 드러난 부위', '② Exposed once the armor is off')) : target.name);
       return html`<figure><figcaption>${caption}</figcaption><img src="${photo.src}" alt="${L(`${enemy.name} ${caption} — 색칠된 영역이 조준 부위`, `${T(enemy.name)} ${T(caption)} — the colored area is where to aim`)}" width="${photo.width}" height="${photo.height}" decoding="async"><span class="sources">${external(photo.source, L('위키 원본 이미지', 'Original wiki image'))}</span></figure>`; })}</div>`, `${T(enemy.name)} ${T(target.name)} ${L('사진', 'photos')}`);
@@ -809,7 +809,7 @@ function openAnatomy(index) {
   const tips = [...new Set(anatomyLayers(enemy, row).map(layer => layer.tip).filter(Boolean))], photo = rowPhoto(enemy.id, row), cells = anatomyCells(enemy, row), notes = anatomyNotes(enemy, row);
   const name = `${anatomyName(enemy, row)}${row.count ? ` ×${row.count}` : ''}`;
   sheetView = 'photo';
-  showSheet(html`<div class="sheet-top"><span>${L('부위 정보', 'Part info')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
+  showSheet(html`<div class="sheet-top"><span>${L('부위 정보', 'Part info')}</span><button class="icon-button" type="button" data-close aria-label="${L('닫기', 'Close')}" title="${L('닫기', 'Close')}">${icon('close', 18)}</button></div>
     <div class="sheet-content image-viewer"><h2 id="sheet-title" style="font-size:20px">${enemy.name} · ${name}</h2>
     ${lang === 'en' ? '' : html`<p class="faint">${L('위키 이름', 'Wiki name')}: ${row.name}${row.count ? ` (${row.count})` : ''}</p>`}
     ${tips.map(tip => html`<p class="muted">${tip}</p>`)}${notes.map(note => html`<p class="muted">${note}</p>`)}

@@ -55,7 +55,7 @@ function effectCard(item) {
       ${(lang === 'en' ? item.detailEn : item.detail)?.map(line => html`<p class="info-detail">${line}</p>`) ?? ''}
       ${item.tips ? html`<p class="info-tips-label">${L('실전 팁', 'Field tips')}</p>${(lang === 'en' ? item.tipsEn : item.tips).map(line => html`<p class="info-detail">${line}</p>`)}` : ''}
       ${item.biomes?.length ? html`<p class="armor-source">${L('나오는 생물군계', 'Biomes')}: ${item.biomes.map((id, i) => html`${i ? ' · ' : ''}<a href="#/planets?tab=biomes&b=${id}">${biomeById.get(id) ? title(biomeById.get(id)) : id}</a>`)}</p>` : ''}
-      <p class="armor-source">${external(item.wiki, L('위키', 'Wiki'))}</p>
+      <p class="armor-source">${external(item.wiki, L('위키', 'Wiki'), String(title(item)))}</p>
     </div>
   </li>`;
 }
@@ -114,7 +114,7 @@ function biomeCard(biome) {
       ${biome.description ? html`<p class="info-desc">${text(biome.description, biome.descriptionEn)}</p>` : ''}
       <p class="armor-source">${L('대표 환경 조건', 'Typical conditions')}: ${biome.conditions.length ? biome.conditions.map((id, i) => html`${i ? ' · ' : ''}${T(conditionById.get(id).name)}`) : L('없음', 'None')}</p>
       ${biome.planets.length ? html`<details class="biome-planets"><summary>${L(`행성 ${biome.planets.length}개`, `${biome.planets.length} ${biome.planets.length === 1 ? 'planet' : 'planets'}`)}</summary><p>${biome.planets.map((planet, i) => html`${i ? ' · ' : ''}${planetLink(planet)}`)}</p></details>` : ''}
-      <p class="armor-source">${external(biome.wiki, L('위키', 'Wiki'))}</p>
+      <p class="armor-source">${external(biome.wiki, L('위키', 'Wiki'), String(title(biome)))}</p>
     </div>
   </li>`;
 }
@@ -166,7 +166,7 @@ function statusTab() {
       <div class="info-body">
         <h3>${title(item)}</h3>${enLine(item)}
         ${(lang === 'en' ? item.detailEn : item.detail).map(line => html`<p class="info-detail">${line}</p>`)}
-        <p class="armor-source">${external(item.wiki, L('위키', 'Wiki'))}</p>
+        <p class="armor-source">${external(item.wiki, L('위키', 'Wiki'), String(title(item)))}</p>
       </div>
     </li>`)}</ul>`;
 }

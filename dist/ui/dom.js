@@ -40,7 +40,9 @@ export const $ = (selector, root = document) => root.querySelector(selector);
 export const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 export function render(root, content) { root.innerHTML = piece(content); }
 
-export const external = (url, label) => html`<a class="ext" href="${url}" target="_blank" rel="noopener noreferrer">${label}<span aria-hidden="true"> ↗</span></a>`;
+// context: what the link belongs to, so same-named links on a list of cards tell themselves apart; the name always says
+// it opens a new tab (user request 2026-11-27).
+export const external = (url, label, context = '') => html`<a class="ext" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${label}${context ? ` · ${context}` : ''} ${L('(새 탭)', '(new tab)')}">${label}<span aria-hidden="true"> ↗</span></a>`;
 
 // Stroke icons, 24px grid.
 const ICONS = {
