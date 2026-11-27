@@ -46,7 +46,8 @@ export const structures = [
   // Destroy Command Bunkers page: the wiki gives no demolition force for the bunker (its objective is a Hellbomb), so
   // the route stays unverified and the main body's health (Anatomy 'Main': 2,500, armor 6) is the path (user request
   // 2026-11-26: a structure, so on the demolition page; its turrets are the enemy page's Bunker Turret).
-  building('command-bunker', '지휘 벙커', '오토마톤', [route('bunker', '벙커 본체', null)], '임무에서는 지옥폭탄으로 부숩니다. 벙커 옆에 지옥폭탄을 불러 작동시키면 10초 뒤에 넓은 범위를 휩쓸며 터지니, 그 전에 멀리 피하세요. 지옥폭탄 없이 부수려면 관통 6 대전차 무기로 둘레의 벽이 아니라 벙커 본체(장갑 6)를 맞혀 체력을 깎아야 합니다.', { health: health(2500, 6), source: wiki('Destroy_Command_Bunkers'), healthSource: wiki('Destroy_Command_Bunkers'), page: 'Destroy Command Bunkers', revision: 137723, tactics: ['스피어, 솔로 사일로, 바스티온 Mk XVI 주포는 1발, 일회성 대전차, 퀘이사 캐넌, 얼티메이텀, 무반동포는 2발에 부서지고, C4 팩과 테르밋은 2개를 붙이면 부서집니다. 평탄화기는 본체 한 곳만 맞히면 2발이지만, 폭발이 여러 부위에 함께 맞으면 1발로도 부서집니다.', '대전차 거치포와 벌목꾼 엑소슈트 대포는 거리에 따라 3~4발, 애국자 엑소슈트 로켓과 코만도는 4발에 부서집니다.', "벙커 위의 포탑과 포곽은 먼 거리에서도 먼저 공격해 옵니다. 오토캐넌, 에포크 같은 관통 4 지원 무기로 멀리서 부수거나, 선택 목표 '오토마톤 방어 시스템 침해하기'를 완료하면 모두 멈춥니다."], note: '위키에 벙커의 필요 철거력이 없어 철거력으로는 판정하지 않고, 본체 체력으로만 계산합니다.' }),
+  // Only its health brings it down: no demolition force destroys it (user decision 2026-11-27).
+  building('command-bunker', '지휘 벙커', '오토마톤', [route('bunker', '벙커 본체', null, false, { healthOnly: true })], '임무에서는 지옥폭탄으로 부숩니다. 벙커 옆에 지옥폭탄을 불러 작동시키면 10초 뒤에 넓은 범위를 휩쓸며 터지니, 그 전에 멀리 피하세요. 지옥폭탄 없이 부수려면 관통 6 대전차 무기로 둘레의 벽이 아니라 벙커 본체(장갑 6)를 맞혀 체력을 깎아야 합니다.', { health: health(2500, 6), source: wiki('Destroy_Command_Bunkers'), healthSource: wiki('Destroy_Command_Bunkers'), page: 'Destroy Command Bunkers', revision: 137723, tactics: ['스피어, 솔로 사일로, 바스티온 Mk XVI 주포는 1발, 일회성 대전차, 퀘이사 캐넌, 얼티메이텀, 무반동포는 2발에 부서지고, C4 팩과 테르밋은 2개를 붙이면 부서집니다. 평탄화기는 본체 한 곳만 맞히면 2발이지만, 폭발이 여러 부위에 함께 맞으면 1발로도 부서집니다.', '대전차 거치포와 벌목꾼 엑소슈트 대포는 거리에 따라 3~4발, 애국자 엑소슈트 로켓과 코만도는 4발에 부서집니다.', "벙커 위의 포탑과 포곽은 먼 거리에서도 먼저 공격해 옵니다. 오토캐넌, 에포크 같은 관통 4 지원 무기로 멀리서 부수거나, 선택 목표 '오토마톤 방어 시스템 침해하기'를 완료하면 모두 멈춥니다."], note: '철거력으로는 부서지지 않고, 본체 체력을 깎아야만 부술 수 있습니다.' }),
   building('cooling-tower', '냉각 탑', '오토마톤', [route('tower', '냉각 탑 본체', 50)], '사이보그 생산 시설 임무의 하위 목표입니다. 지옥폭탄 외에도 철거력 50 공격(휴대용 지옥폭탄, 이글 500kg 폭탄, 궤도 포격 등)으로 부술 수 있습니다. 위키는 궤도 가스·EMS·연막 타격은 탄체를 직접 맞혀야 한다고 적고 있습니다.', { source: wiki('Halt_Cyborg_Production'), page: 'Halt Cyborg Production', revision: 130623 }),
   building('warp-ship', '착륙한 워프 함선', '일루미닛', [route('hull', '함선 외벽', 50, false, { nonExplosiveUncertain: true }), route('door', '열린 출입구 안쪽', 20, true, { opening: true })], '보호막을 제거하고 열린 출입구 안에 폭발을 넣는 것이 기본 경로입니다. 본체 폭발 피해는 2.5배입니다.', { health: health(5000, 5, 100, -150), source: wiki('Grounded_Warp_Ship'), healthSource: wiki('Grounded_Warp_Ship'), condition: 'shield', note: '외벽의 비폭발 공격 허용 여부는 위키 표끼리 다릅니다. 직접 파괴 사례가 확인된 궤도 지원 외에는 해당 경로를 확정하지 않습니다.', tactics: ['방어막은 총으로 쏘아 깨뜨릴 수 있고, 깨진 뒤 15초가 지나면 다시 생깁니다. 폭발물이 안에 있는 동안 방어막이 돌아오면 철거가 막힙니다.', '방어막은 가득 차 있으면 파란색이고, 깎일수록 떨리면서 보라색으로 바뀝니다.', '방어막이 있어도 궤도 가스 타격, 궤도 레이저, 궤도 정밀 타격, 궤도 레일캐넌 타격, 이글 500kg 폭탄은 부술 수 있습니다. 출입구 앞 경사로에 던지면 확실합니다.', '테르밋 하나, C4 팩 한 개, 얼티메이텀 한 발은 방어막이 있어도 어디에 맞든 부숩니다.'], tacticsRef: { page: 'Grounded Warp Ship', revision: 142053 }, tips: ['방어막 위에 붙은 테르밋은 방어막이 깨지면 떨어질 수 있습니다. 브리처도 테르밋을 쏘는 무기라 마찬가지입니다.', '지지대(다리)는 멜타건 2발이면 됩니다. 멜타마인은 다리 옆에 놓고 쏴서 터뜨리세요.', '브리처는 최대 약 400 m 거리에서도 함선을 맞혀 한 발에 부술 수 있어, 가까이 가지 않고 처리할 수 있습니다.'] }),
   building('warp-gate', '워프 게이트웨이', '일루미닛', [route('outer', '게이트 외부', 40), route('gateway', '열린 중앙 구멍 안쪽', 20, true, { opening: true })], '중앙 구멍이 열려 일루미닛이 나올 때 수류탄 등 폭발을 안에 넣으면 철거력 20으로 부서집니다. 바깥에서는 철거력 40 공격이나, 장갑 5를 뚫는 공격으로 체력 1,500을 깎아 부술 수 있습니다. 부서진 뒤 몇 초 후 크게 폭발해 헬다이버가 넘어지니 바로 피하세요.', { health: health(1500, 5, 100, 0), source: wiki('Warp_Gateway'), healthSource: wiki('Warp_Gateway'), page: 'Warp Gateway', revision: 135409, tips: ['테르밋과 브리처는 붙이기만 하면 되어 구멍이 열릴 때까지 기다리지 않아도 됩니다. 이글 기총소사로 체력을 깎아도 되고, 멜타마인은 던진 뒤 쏴서 터뜨리세요.'] }),
@@ -126,7 +127,7 @@ export const demolitionProfiles = {
   'apex': profile(shot(30, null, { damage: combatDamage('apex', 'standard') }), { source: wiki('Module:Decodedata-Attacks/weapons_data.json'), note: '철거력 30은 위키 데이터마이닝 값입니다(패치 1.007.202에서 15→30). 위키 철거 문서의 종합표에는 아직 이 무기가 없습니다.' }),
   'nova': profile(shot(17, null, { damage: combatDamage('nova', 'standard') }), { source: wiki('Module:Decodedata-Attacks/weapons_data.json'), note: '철거력 17은 위키 데이터마이닝 값입니다. 위키 철거 문서의 종합표에는 아직 이 무기가 없습니다.' }),
   'spear': profile(shot(40, 30, { damage: damage(4000, 4000, 7, 200, 3) }), { source: wiki('FAF-14_Spear'), conditionalAim: true, note: indirect }),
-  'laser-cannon': profile(shot(20, null, { directLabel: '광선', note: '광선이 실제로 닿아야 합니다. 지속 피해는 발 단위로 계산하지 않습니다.' })),
+  'laser-cannon': profile(shot(20, null, { directLabel: '광선', note: '광선이 실제로 닿아야 합니다.' })),
   'arc-thrower': profile(shot(20, null, { directLabel: '아크', damage: combatDamage('arc-thrower', 'first-target') }), { conditionalAim: true, note: indirect }),
   'meltagun': profile(shot(30, null, { directLabel: '광선', damage: combatDamage('meltagun', 'near') })),
   'grenade-launcher': profile(shot(null, 30, { damage: combatDamage('grenade-launcher', 'standard') })),
@@ -157,7 +158,7 @@ export const demolitionProfiles = {
   'orbital-walking': callIn(shot(50, 50, { name: '포탄', damage: damage(4000, 4000, 8, 1500, 6), shieldBypass: true })),
   'orbital-gatling': callIn(shot(30, 30, { name: '포탄' })),
   'orbital-napalm': callIn(shot(30, 30, { name: '포탄', note: '남는 불길의 지속 피해는 이 철거력 판정에 합산하지 않습니다.' })),
-  'orbital-laser': callIn(shot(50, null, { name: '시설에 닿은 광선', directLabel: '광선', shieldBypass: true }), { conditionalAim: true, note: '레이저가 시설을 실제로 훑는 조건입니다. 원하는 시설을 직접 조준할 수 없고 지속 피해의 탄수는 계산하지 않습니다.' }),
+  'orbital-laser': callIn(shot(50, null, { name: '시설에 닿은 광선', directLabel: '광선', shieldBypass: true }), { conditionalAim: true, note: '레이저가 시설을 실제로 훑는 조건입니다. 원하는 시설을 직접 조준할 수 없습니다.' }),
   'orbital-railcannon': callIn(shot(50, 50, { shieldBypass: true }), { conditionalAim: true, note: '레일캐넌은 자동으로 표적을 고릅니다. 수치 충족이 해당 시설을 자동 조준한다는 뜻은 아닙니다.' }),
   'orbital-gas': callIn(shot(50, 50, { name: '탄체·초기 효과', shieldBypass: true, note: '탄체 또는 초기 효과 중심부 기준입니다. 가스 지속 피해의 철거력은 0이며, 구름 전체가 철거력 50인 것은 아닙니다.' }), { source: wiki('Orbital_gas') }),
   'orbital-ems': callIn(shot(50, 30, { name: '탄체·초기 효과', note: '탄체 직격과 초기 효과를 구분합니다. 전기장에 오래 머문다고 철거력이 누적되지는 않습니다.' })),
@@ -225,6 +226,27 @@ for (const [id, modes] of Object.entries(stratagemAttackDamage)) {
     const target = demolitionProfiles[id]?.modes.find(item => item.id === modeId);
     if (target && !target.damage) target.damage = damage;
   }
+}
+
+// Beams and flame streams wear a structure's health down in seconds (user request 2026-11-27): the damage per second in
+// the stratagem table (data-support.js, data-equipment.js, data-offense.js), a flame's durable damage being its normal
+// damage, burning left out. The Flame Sentry, Hot Dog, Lumberer flamethrower and the gas sprays give no damage per
+// second and stay unverified.
+for (const id of ['laser-cannon', 'flamethrower', 'cremator', 'defoliation-tool', 'laser-sentry', 'rover', 'incinerator-frv', 'orbital-laser']) {
+  const item = stratagems.find(entry => entry.id === id);
+  const target = demolitionProfiles[id]?.modes.find(entry => entry.id === 'standard');
+  if (item?.damageKind !== 'dps' || !target || target.damage) throw new Error(`${id}: no damage per second for demolition`);
+  Object.assign(target, { unit: '초', damage: { standard: item.direct, durable: item.durable ?? item.direct, ap: item.ap, explosion: 0, explosionAp: 0, perSecond: true } });
+}
+
+// Per-hit damage from the stratagem table where the attack datamine has no record (user request 2026-11-27): the HMG
+// Emplacement's round, one Tesla Tower or K-9 arc, the Hellbomb blast. The Anti-Tank Emplacement's durable damage is
+// not given and stays unverified.
+for (const id of ['hmg-emplacement', 'tesla-tower', 'k9', 'hellbomb', 'portable-hellbomb']) {
+  const item = stratagems.find(entry => entry.id === id), target = demolitionProfiles[id].modes[0];
+  const direct = item.direct || 0;
+  if (target.damage || (direct && item.durable == null)) throw new Error(`${id}: structure damage already set or durable damage missing`);
+  target.damage = damage(direct, direct ? item.durable : 0, direct ? item.ap : 0, item.splash || 0, item.splash ? item.splashAp : 0);
 }
 
 for (const id of ['orbital-120', 'orbital-380', 'orbital-walking']) demolitionProfiles[id].damageSource = wiki('Damage_Comparison');

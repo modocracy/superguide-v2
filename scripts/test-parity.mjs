@@ -149,7 +149,9 @@ const legacyVerdict = { pass: 'pass', short: 'insufficient', unknown: 'unknown',
 // where the legacy left it unknown while every force verdict stays the same.
 const healthAdded = { ...Object.fromEntries(Object.entries(stratagemAttackDamage).map(([id, modes]) => [id, Object.keys(modes)])),
   'arc-thrower': ['standard'], meltagun: ['standard'], 'grenade-launcher': ['standard'], 'belt-fed-gl': ['standard'],
-  'breaching-hammer': ['melee', 'charge'], leveller: ['standard'], speargun: ['standard'], 'solo-silo': ['standard'], autocannon: ['flak'] };
+  'breaching-hammer': ['melee', 'charge'], leveller: ['standard'], speargun: ['standard'], 'solo-silo': ['standard'], autocannon: ['flak'],
+  // Seconds for beams and flames, and per-hit damage from the stratagem table (user request 2026-11-27).
+  'laser-cannon': ['standard'], 'orbital-laser': ['standard'], 'hmg-emplacement': ['standard'], 'tesla-tower': ['standard'], hellbomb: ['standard'], 'portable-hellbomb': ['standard'] };
 // Attacks the user confirmed to destroy the Grounded Warp Ship through its shield (2026-11-23): replayed without it.
 const shieldBypassAdded = { 'portable-hellbomb': ['standard'], hellbomb: ['standard'], leveller: ['standard'], 'solo-silo': ['standard'] };
 // Forces corrected after the recording, replayed with their recorded values (user request 2026-11-26: the Eagle 500kg's
@@ -171,6 +173,8 @@ const forceAdded = ['machine-gun', 'stalwart', 'heavy-machine-gun', 'maxigun', '
 const checkingProfile = id => ({ source: weaponProfiles[id].source, modes: weaponProfiles[id].modes.filter(item => !item.unsupported).map(item => ({ id: item.id, name: item.name, direct: null, explosion: null, damage: item, forceUnknown: true })) });
 const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id) || forceAdded.includes(id)).map(([id, profile]) => [id, forceAdded.includes(id) ? checkingProfile(id) : profile]).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] && !forceCorrected[id] ? profile
   : { ...profile, modes: profile.modes.map(mode => legacyMode(id, mode)) }]).map(([id, profile]) => [id, callInRemoved.includes(id) ? { ...profile, requiresCallIn: true } : profile]));
+// The Orbital Laser's note said its sustained damage was not counted until seconds were (user request 2026-11-27).
+legacyProfiles['orbital-laser'] = { ...legacyProfiles['orbital-laser'], note: '레이저가 시설을 실제로 훑는 조건입니다. 원하는 시설을 직접 조준할 수 없고 지속 피해의 탄수는 계산하지 않습니다.' };
 for (const id of callInRemoved) for (const mode of demolitionProfiles[id].modes) {
   const result = solveDemolition(structures.find(item => item.id === 'jammer'), demolitionProfiles[id], mode);
   assert(!result.conditions.some(item => item.kind === 'jammer'), `${id}/${mode.id}: a jammer does not block it`);

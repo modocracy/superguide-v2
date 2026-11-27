@@ -32,7 +32,8 @@ function checkForce(route, attack) {
   const parts = ['direct', 'explosion'].map(kind => {
     const force = forceRange(attack[kind]);
     let verdict = 'short';
-    if (route.explosiveOnly && kind === 'direct') verdict = 'n/a';
+    // A structure only its health brings down (route.healthOnly): no force counts.
+    if (route.healthOnly || route.explosiveOnly && kind === 'direct') verdict = 'n/a';
     else if (attack.forceUnknown || route.threshold == null) verdict = 'unknown';
     else if (force?.min >= route.threshold) verdict = 'pass';
     else if (force?.max >= route.threshold) verdict = 'unknown'; // conflicting sources straddle the threshold
@@ -51,6 +52,8 @@ export function healthDamage(structure, attack) {
   if (!['standard', 'durable', 'ap', 'explosion', 'explosionAp'].every(key => known(d[key]))) return null;
   const { direct, explosion } = hitDamage(d, structure.health, structure.health);
   const total = direct + explosion;
+  // A beam or flame stream (damage per second) counts seconds, rounded up to a tenth.
+  if (d.perSecond) return { direct, explosion, total, perSecond: true, hits: total > 0 ? Math.ceil(structure.health.hp / total * 10 - 1e-9) / 10 : null };
   return { direct, explosion, total, hits: total > 0 ? Math.ceil(structure.health.hp / total) : null };
 }
 
