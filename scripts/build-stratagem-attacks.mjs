@@ -25,6 +25,22 @@ export const ATTACKS = {
   'at-mines': { standard: [null, 'ANTI-TANK MINES_E'] },
   'personnel-mines': { standard: [null, 'ANTI-PERSONNEL MINEFIELD_E'] },
   'incendiary-mines': { standard: [null, 'INCENDIARY MINES_E'] },
+  // Per-shot attacks of the datamine-read profiles (user request 2026-11-27): the W.A.S.P.'s stronger rocket, the
+  // gas, smoke and EMS shells, the sentries' and Guard Dog's rounds, the Emancipator's cannon, the FRVs' guns.
+  'wasp': { standard: ['StA-X3_P', 'StA-X3_P_IE'] },
+  'eagle-smoke': { standard: ['S_P5', 'S_P5_IE'] },
+  'eagle-gas': { standard: ['S_P6', 'S_P6_IE'] },
+  'orbital-gas': { standard: ['S_P14', 'S_P14_IE'] },
+  'orbital-ems': { standard: ['S_P25', 'S_P25_IE'] },
+  'orbital-smoke': { standard: ['S_P24', 'S_P5_IE'] },
+  'machine-gun-sentry': { standard: ['MG-43_P', null] },
+  'gatling-sentry': { standard: ['MG-43_P', null] },
+  'gas-mortar': { standard: ['A/GM-17_P', 'A/GM-17_P_IE'] },
+  'gas-mines': { standard: [null, 'GAS MINES_E'] },
+  'guard-dog': { standard: ['AR-23P_P', null] },
+  'emancipator': { standard: ['P7', 'P7_IE'] },
+  'gunner-frv': { standard: ['MG-206_P', null] },
+  'supply-frv': { standard: ['AR-23P_P', null] },
   // Vehicles, one demolition mode per weapon tab (the tab's datamine record in data-equipment.js); the
   // Lumberer's flamethrower is a spray and left out.
   'maelstrom': { missile: [null, 'SWP_MAELSTROMIII_E'], gatling: ['P11', null] },

@@ -166,6 +166,7 @@
    "<i=1>Eagle Rearm</i> time is <i=1>#V_ONE%</i> slower.": "<i=1>이글 재무장</i> 시간이 <i=1>#V_ONE%</i>초 느려집니다.",
    "Barbed Wire": "철조망",
    "Explosive Barrel": "폭발성 통",
+   "DESPOTIC EXPLOSIVE": "폭군의 폭발물",
    "FORKLIFT": "지게차",
    "Number of reinforcements available per mission increased by #V_ONE.": "임무 당 사용 가능한 증원이 #V_ONE명 증가합니다.",
    "Number of reinforcements available per mission decreased by #V_ONE.": "임무 당 사용 가능한 증원이 #V_ONE명 감소합니다.",

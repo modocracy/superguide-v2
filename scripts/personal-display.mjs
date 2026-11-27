@@ -165,7 +165,7 @@ const CAUTIONS = {
 // rev 140501, G-89 Smokescreen rev 140510, G-109 Urchin rev 141179, G-50 Seeker rev 140505, G-60 Anti-Tank Seeker
 // rev 140507, P-11 Stim Pistol rev 140476, FLAM-66 Torcher rev 141873, P-72 Crisper rev 140485, SMG/FLAM-34 Stoker
 // rev 141944, P/40-K Bolt Pistol rev 141876, GP-20 Ultimatum rev 140471). `after` places the cell with the damage, reach or ammo rows of the detail sheet.
-const EXTRA_STATS = {
+export const EXTRA_STATS = {
   // Charge times from the wiki pages (user request 2026-11-26): Purifier 'Maximum charge of 1 sec', Loyalist
   // 'Shorter charge-up time on full charge up from 1 sec to 0.75 sec'; the Accelerator Rifle page gives none.
   purifier: [{ label: '충전 시간', value: 1, unit: '초', caption: '최대 충전', after: 'ammo' }],

@@ -372,8 +372,9 @@ function solveStream(enemy, target, attack, options) {
   const burn = burnKnown && !target.isolated ? stream.burn.perSecond * fire * armorFactor(stream.burn.ap, main.armor) : 0;
   const armorStops = burnKnown && !target.isolated && burn === 0;
   const notes = !stream.burn ? [] : !known(fire) ? [BURN_LEFT_OUT] : after == null ? [NO_IGNITION]
-    : armorStops ? [armorStopsBurn(main.armor, stream.burn.ap)] : burn > 0 ? [ignitionNote(ignition, stream.ignite, after)] : [];
+    : armorStops ? [armorStopsBurn(main.armor, stream.burn.ap)] : burn > 0 && !stream.burnOnly ? [ignitionNote(ignition, stream.ignite, after)] : [];
   const bleedOrKill = main.constitution ? 'bleed' : 'kill';
+  if (stream.burnOnly) return solveBurn(base, target, main, stream, ignition, burn, armorStops, notes, bleedOrKill, options, own);
   const stages = [];
   let mainLeft = main.hp;
   let time = 0;
@@ -412,6 +413,26 @@ function solveStream(enemy, target, attack, options) {
     part = part.next;
   }
   return base;
+}
+
+// A fire pool (G-8 Immolation; user request 2026-11-27): only burning, to main health. One blast's Fire status
+// (`ignite`, given all at once) lights the enemy if it reaches the ignition threshold; a kill that takes longer than
+// the pool lasts is said in a note (one grenade is not enough).
+const poolShort = pool => L(`불 웅덩이(${pool}초)보다 오래 걸려 수류탄 하나로는 모자랍니다.`, `It takes longer than the fire pool lasts (${pool} s), so one grenade is not enough.`);
+function solveBurn(base, target, main, stream, ignition, burn, armorStops, notes, bleedOrKill, options, own) {
+  if (target.isolated) return { ...base, notes, outcome: 'blocked', reason: 'stream-blocked' };
+  if (!known(options.fireMult)) return { ...base, notes, reason: 'fire-mult-missing' };
+  if (!known(ignition?.value) || !known(main.hp) || !known(main.armor)) return { ...base, notes, reason: 'beam-data-missing' };
+  if (stream.ignite < ignition.value) return { ...base, notes: [L(`폭발이 쌓는 점화 수치(${stream.ignite})가 이 적의 점화 기준치(${ignition.value})에 못 미쳐 불이 붙지 않습니다.`, `The blast's fire build-up of ${stream.ignite} is below this enemy's ignition threshold of ${ignition.value}, so it does not catch fire.`)], outcome: 'blocked', reason: 'stream-blocked' };
+  if (armorStops || burn <= 0) return { ...base, notes, outcome: 'blocked', reason: 'stream-blocked' };
+  const seconds = main.hp / burn;
+  if (seconds > MAX_STREAM_SECONDS) return { ...base, notes, reason: 'too-many-hits' };
+  const lit = ignition.estimated
+    ? L(`폭발이 점화 수치를 한 번에 ${stream.ignite}만큼 쌓아 바로 불이 붙습니다. 이 적의 점화 기준치는 알려지지 않아 ${ignition.value}로 추정했습니다.`, `The blast builds up ${stream.ignite} at once, so it catches fire at once. This enemy's ignition threshold is unknown, estimated at ${ignition.value}.`)
+    : L(`폭발이 점화 수치를 한 번에 ${stream.ignite}만큼 쌓아 점화 기준치(${ignition.value})를 넘기므로 바로 불이 붙습니다.`, `The blast builds up ${stream.ignite} at once, past the threshold of ${ignition.value}, so it catches fire at once.`);
+  const damage = hitDamage(own, target, main, options);
+  const stage = { part: target, hits: streamSeconds(seconds), damage, events: [], contactSeconds: seconds, partTotal: 0, mainTotal: 0, burnTotal: main.hp };
+  return { ...base, stages: [stage], notes: [lit, ...(seconds > stream.pool ? [poolShort(stream.pool)] : [])], hits: streamSeconds(seconds), seconds, ignitedAt: 0, outcome: bleedOrKill, via: 'main' };
 }
 
 // --- Matchups ------------------------------------------------------------------

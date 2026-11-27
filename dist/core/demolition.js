@@ -96,6 +96,9 @@ export function structureOverview(structure, stratagems, profiles, options = {})
   let unknown = 0, blocked = 0;
   for (const weapon of stratagems) {
     const profile = profiles[weapon.id];
+    // Gear with no attack at all (supply, mobility, mission stratagems) is neither unverified nor blocked: left out
+    // (user request 2026-11-27).
+    if (!profile) continue;
     // Each firing mode stands alone; an unverified mode is never lifted by another.
     const attacks = (profile?.modes || []).map(mode => ({ mode, result: solveDemolition(structure, profile, mode, options) }));
     const viable = attacks.filter(attack => isPossible(attack.result));

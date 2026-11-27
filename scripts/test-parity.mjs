@@ -165,7 +165,11 @@ const legacyMode = (id, mode) => {
 // Stratagems given a profile from the attack datamine after the recording (2026-11-23) had none then.
 // SEAF Artillery was recorded as a call-in a jammer blocks; the wiki says jammers cannot block it (2026-11-23).
 const callInRemoved = ['seaf-artillery'];
-const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id)).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] && !forceCorrected[id] ? profile
+// Support guns given their datamine force after the recording (user request 2026-11-27) were 'force checking' then:
+// replayed with the health-only profile they had (combat damage, force unknown).
+const forceAdded = ['machine-gun', 'stalwart', 'heavy-machine-gun', 'maxigun', 'bullet-storm', 'railgun'];
+const checkingProfile = id => ({ source: weaponProfiles[id].source, modes: weaponProfiles[id].modes.filter(item => !item.unsupported).map(item => ({ id: item.id, name: item.name, direct: null, explosion: null, damage: item, forceUnknown: true })) });
+const legacyProfiles = Object.fromEntries(Object.entries(demolitionProfiles).filter(([id]) => !datamineProfileIds.includes(id) || forceAdded.includes(id)).map(([id, profile]) => [id, forceAdded.includes(id) ? checkingProfile(id) : profile]).map(([id, profile]) => [id, !healthAdded[id] && !shieldBypassAdded[id] && !forceCorrected[id] ? profile
   : { ...profile, modes: profile.modes.map(mode => legacyMode(id, mode)) }]).map(([id, profile]) => [id, callInRemoved.includes(id) ? { ...profile, requiresCallIn: true } : profile]));
 for (const id of callInRemoved) for (const mode of demolitionProfiles[id].modes) {
   const result = solveDemolition(structures.find(item => item.id === 'jammer'), demolitionProfiles[id], mode);
@@ -235,6 +239,8 @@ for (const expected of golden.selections) {
     const dropped = expected.entries.filter(entry => knownNot(entry[0], expected.structure));
     const counts = [...expected.counts];
     for (const entry of dropped) { counts[entry[1] === 'conditional' ? 1 : 0]--; counts[3]++; }
+    // Stratagems with no attack profile are no longer counted as unverified (user request 2026-11-27).
+    counts[2] -= legacyCatalogue.filter(item => !legacyProfiles[item.id]).length;
     assert.deepEqual(overview.entries.map(entry => [entry.weapon.id, entry.outcome, entry.attacks.map(attack => attack.mode.id)]).sort(byId), expected.entries.filter(entry => !dropped.includes(entry)).sort(byId), label);
     assert.deepEqual([overview.possible, overview.conditional, overview.unknown, overview.blocked], counts, label);
   } else {

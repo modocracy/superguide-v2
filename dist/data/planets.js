@@ -946,7 +946,7 @@ export const hazards = [
  },
  {
   "id": "automaton-barrel",
-  "name": "오토마톤 폭발성 통",
+  "name": "폭군의 폭발물",
   "en": "Automaton Barrel",
   "detail": [
    "오토마톤 임무에서 대부분의 오토마톤 전초기지 안에 있는 배터리 통입니다.",

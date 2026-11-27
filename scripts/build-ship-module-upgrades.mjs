@@ -42,8 +42,9 @@ export async function buildShipModuleUpgrades() {
     'Streamlined Launch Process': { types: ['Support Weapon'] },
     'Donation Access License': { types: ['Support Weapon'], where: item => item.spareMags != null || item.spareRounds != null },
     'Payroll Management System': { types: ['Support Weapon'], where: item => statsOf(item)?.reload?.time != null || statsOf(item)?.reload?.tactical != null },
-    // Hand Carts page, Notes: the K-9 is not on the game's list of stratagems the upgrade affects.
-    'Hand Carts': { types: ['Backpack'], not: ['k9'] },
+    // The Hand Carts page's Notes say the K-9 is not on the game's list, but the game's list now starts with it
+    // (in-game screenshot, user request 2026-11-27).
+    'Hand Carts': { types: ['Backpack'] },
     'Zero-G Breech Loading': { types: ['Orbital'] },
     'Targeting Software Upgrade': { types: ['Orbital'] },
     'Liquid-Ventilated Cockpit': { types: ['Eagle'] },

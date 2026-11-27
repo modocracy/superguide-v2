@@ -1,3 +1,5 @@
+import { EXTRA_STATS } from './personal-display.mjs';
+
 // Offline projection only. Selection rules below are reviewed against wiki_pages;
 // attack.level is a dependency depth, never proof of a selectable firing mode.
 export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
@@ -79,6 +81,24 @@ export function buildPersonalProfiles(weapons, data, pages, checkedAt) {
   for (const weapon of weapons) {
     if (weapon.delivery === 'beam' && weapon.damageKind === 'dps' || weapon.delivery === 'spray' && Number.isFinite(weapon.dot?.perSecond)) {
       personalProfiles[weapon.id] = streamProfile(weapon);
+      continue;
+    }
+    // G-8 Immolation is counted in seconds of burning, not in grenades (user request 2026-11-27). Its blast's Fire
+    // status (datamine, 100) lights the enemy at once, and its pool burns for the wiki's 27 s (personal-display.mjs);
+    // burning takes 100 a second from main health. The blast's own 20 damage is left out.
+    if (weapon.id === 'immolation') {
+      const pool = EXTRA_STATS.immolation?.find(stat => stat.label === '불 지속 시간')?.value;
+      const status = fireStatus(weapon);
+      if (!Number.isFinite(pool) || !status) throw new Error('immolation: fire pool time or Fire status missing');
+      personalProfiles[weapon.id] = {
+        source: weapon.source, checkedAt, sourceRevision: pages[weapon.en].revision,
+        note: `적이 불 웅덩이 안에 머물며 타는 시간입니다. 폭발이 점화 수치 ${status}을 한 번에 쌓아 바로 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 불 웅덩이는 ${pool}초 동안 남습니다. 폭발 자체의 피해(20)는 넣지 않습니다.`,
+        modes: [{
+          id: 'standard', name: '불 웅덩이', standard: 0, durable: 0, ap: 0, explosion: 0, explosionDurable: 0, explosionAp: 0,
+          innerRadius: null, radius: null, delivery: 'pool', unit: '초', magazine: null, ammoPerShot: 1,
+          stream: { fire: true, burnOnly: true, burn: BURN, ignite: status, pool },
+        }],
+      };
       continue;
     }
     let reason = specialReasons[weapon.id];

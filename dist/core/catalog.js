@@ -15,7 +15,7 @@ export const categories = [
   { id: 'defense', name: L('방어 설비', 'Defensive'), hint: L('센트리·설치 무기·보호막', 'Sentries, emplacements, shields'), color: 'var(--c-defense)' },
   { id: 'support', name: L('지원 무기', 'Support Weapons'), hint: L('직접 들고 싸우는 세 번째 무기', 'The third weapon you carry into the fight'), color: 'var(--c-support)' },
   { id: 'backpack', name: L('배낭', 'Backpacks'), hint: L('생존·기동·보급', 'Survival, mobility, supply'), color: 'var(--c-backpack)' },
-  { id: 'vehicle', name: L('차량·엑소슈트', 'Vehicles & Exosuits'), hint: L('타고 싸우는 장비', 'Gear you ride into battle'), color: 'var(--c-vehicle)' },
+  { id: 'vehicle', name: L('탈것', 'Vehicles & Exosuits'), hint: L('타고 싸우는 장비', 'Gear you ride into battle'), color: 'var(--c-vehicle)' },
   { id: 'mission', name: L('임무·공용', 'Mission & Common'), hint: L('보급과 임무 목표', 'Resupply and objectives'), color: 'var(--c-mission)' },
 ];
 export const categoryOf = id => categories.find(item => item.id === id);

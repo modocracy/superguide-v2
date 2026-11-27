@@ -130,7 +130,8 @@ export const shipModuleSections = [
      "portable-hellbomb",
      "hover-pack",
      "warp-pack",
-     "hot-dog"
+     "hot-dog",
+     "k9"
     ]
    },
    {

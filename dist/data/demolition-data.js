@@ -207,7 +207,15 @@ export const demolitionProfiles = {
     'guard-dog': { automatic: true }, rover: { automatic: true, label: '광선' }, k9: { automatic: true }, 'hot-dog': { automatic: true }, 'dog-breath': { automatic: true, label: '분사' },
     patriot: { tabs: true }, emancipator: { many: true }, lumberer: { tabs: true }, breakthrough: { many: true }, 'gunner-frv': { many: true }, 'supply-frv': { many: true }, bastion: { tabs: true },
     'incinerator-frv': { many: true, label: '분사' },
+    // Support guns whose force was still 'checking' (user request 2026-11-27: clear the demolition 'unverified').
+    'machine-gun': { damage: 'standard' }, stalwart: { damage: 'standard' }, 'heavy-machine-gun': { damage: 'standard' },
+    maxigun: { damage: 'standard' }, 'bullet-storm': { damage: 'standard' },
   }),
+  // The Railgun's round (RS-422_P) in both modes; the unsafe overcharge self-destruct is left out, as before.
+  railgun: profile([
+    mode('safe', '안전 모드 · 기본 충전', strongestDemo(stratagemStats.railgun?.forces.find(group => group.attack === 'RS-422_P')?.parts ?? [], HIT_KINDS), null, { damage: combatDamage('railgun', 'safe') }),
+    mode('unsafe-max', '안전 해제 모드 · 최대 피해 충전', strongestDemo(stratagemStats.railgun?.forces.find(group => group.attack === 'RS-422_P')?.parts ?? [], HIT_KINDS), null, { damage: combatDamage('railgun', 'unsafe-max') }),
+  ], { source: wiki('Module:Decodedata-Attacks/weapons_data.json'), note: '과충전 자폭은 제외합니다.' }),
 };
 
 // Health path for stratagems: damage per shot from the wiki attack datamine (dist/data/stratagem-attacks.js,
