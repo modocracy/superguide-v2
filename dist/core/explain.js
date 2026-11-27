@@ -135,6 +135,7 @@ export function attackStats(mode, { distance = 0 } = {}) {
     return [
       { label: L('초당 피해', 'Damage per second'), icon: mode.stream.fire ? 'fire' : 'laser', value: num(mode.standard), note: `${durable(num(mode.durable))} · AP ${mode.ap}` },
       ...(burn ? [{ label: L('화상', 'Burning'), icon: 'fire', value: `${num(burn.perSecond)}${L('/초', '/s')}`, note: L(`AP ${burn.ap} · 본체 체력 · 점화 수치 초당 ${num(mode.stream.ignite)}`, `AP ${burn.ap} · main health · fire build-up ${num(mode.stream.ignite)}/s`) }] : []),
+      ...(mode.stream.warmUp ? [{ label: L('발사 전 예열', 'Warm-up'), value: `${num(mode.stream.warmUp)}${L('초', 's')}` }] : []),
       ...(capacity ? [{ label: capacity.kind === 'heat' ? L('과열까지', 'Until overheating') : L('연료 1통', 'One fuel canister'), value: `${num(capacity.seconds)}${L('초', 's')}` }] : []),
     ];
   }

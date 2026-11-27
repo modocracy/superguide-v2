@@ -323,6 +323,8 @@ function solveBeam(enemy, target, attack, options) {
 // damage per second to main health only (wiki SG-451 Cookout: 'burning damage is inflicted to the main body of
 // the target'), through the main armor at its AP. The build-up is assumed not to fade while the stream is held.
 // A beam on an enemy with no fire multiplier leaves burning out; a flame stream there is not counted.
+// A beam that warms up before it fires (stream.warmUp, user request 2026-11-27) adds that time in front: `seconds`
+// and `hits` include it, `fireSeconds` (heat sinks, fuel) does not.
 const STREAM_STEP = 10; // results in tenths of a second, rounded up
 const streamSeconds = seconds => Math.max(1, Math.ceil(seconds * STREAM_STEP - EPSILON)) / STREAM_STEP;
 const MAX_STREAM_SECONDS = 600;
@@ -331,6 +333,7 @@ const NO_IGNITION = L('점화 기준치가 주어지지 않아 화상 피해는 
 const OVER_BEFORE_BURN = L('그 전에 끝나므로 화상 피해는 들어가지 않습니다.', 'It is over before that, so no burning damage is added.');
 const armorStopsBurn = (armor, ap) => L(`본체 장갑이 ${armor}라 화상(관통 ${ap})은 본체에 들어가지 않습니다.`, `Main armor ${armor} stops burning (AP ${ap}), so it adds no damage.`);
 const tenths = value => Math.round(value * 10) / 10;
+const warmNote = warm => L(`발사 전 예열 ${tenths(warm)}초를 더했습니다.`, `Includes the ${tenths(warm)} s warm-up before firing.`);
 function ignitionNote(ignition, ignite, after) {
   // A flame stream lights within a tenth of a second; say so rather than 'about 0 s'.
   const soon = after < 0.1;
@@ -374,6 +377,8 @@ function solveStream(enemy, target, attack, options) {
   const notes = !stream.burn ? [] : !known(fire) ? [BURN_LEFT_OUT] : after == null ? [NO_IGNITION]
     : armorStops ? [armorStopsBurn(main.armor, stream.burn.ap)] : burn > 0 && !stream.burnOnly ? [ignitionNote(ignition, stream.ignite, after)] : [];
   const bleedOrKill = main.constitution ? 'bleed' : 'kill';
+  const warm = stream.warmUp || 0;
+  if (warm) notes.push(warmNote(warm));
   if (stream.burnOnly) return solveBurn(base, target, main, stream, ignition, burn, armorStops, notes, bleedOrKill, options, own);
   const stages = [];
   let mainLeft = main.hp;
@@ -389,7 +394,7 @@ function solveStream(enemy, target, attack, options) {
     }
     if (damage.direct === 0) {
       return part === target ? { ...base, stages, notes, outcome: 'blocked', reason: 'stream-blocked' }
-        : { ...base, stages, notes, hits: streamSeconds(time), outcome: 'armor', reason: 'no-damage-after-armor' };
+        : { ...base, stages, notes, hits: streamSeconds(warm + time), outcome: 'armor', reason: 'no-damage-after-armor' };
     }
     const partTime = part.mainOnly ? Infinity : partPool(part) / damage.direct;
     const transfer = target.isolated ? 0 : damage.direct * part.toMain / 100;
@@ -402,7 +407,7 @@ function solveStream(enemy, target, attack, options) {
     time += span;
     Object.assign(stage, { hits: streamSeconds(span), contactSeconds: span, partTotal: damage.direct * span, mainTotal: transferred, burnTotal: burned });
     // Over before the fire catches: say no burning was added.
-    const done = { ...base, stages, notes: burn > 0 && time < after ? [...notes, OVER_BEFORE_BURN] : notes, hits: streamSeconds(time), seconds: time, ignitedAt: burn > 0 ? after : null };
+    const done = { ...base, stages, notes: burn > 0 && time < after ? [...notes, OVER_BEFORE_BURN] : notes, hits: streamSeconds(warm + time), seconds: warm + time, fireSeconds: time, ignitedAt: burn > 0 ? warm + after : null };
     if (partTime <= mainTime && part.effect === 'kill' && copy >= (part.copies || 1)) return { ...done, outcome: 'kill', via: 'part' };
     if (partTime <= mainTime && mainLeft - transferred - burned - (part.destroyMainDamage || 0) <= EPSILON) return { ...done, outcome: bleedOrKill, via: 'main' };
     if (mainTime < partTime) return { ...done, outcome: bleedOrKill, via: 'main' };

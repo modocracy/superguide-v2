@@ -600,7 +600,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/LAS-5_Scythe',
     checkedAt: '2026-11-08',
     sourceRevision: 141916,
-    note: '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.',
+    note: '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 발사 전 예열 시간은 더하고, 방열판 교체 시간은 넣지 않습니다.',
     modes: [
       {
         id: 'standard',
@@ -621,6 +621,7 @@ export const personalProfiles = {
           burn: { perSecond: 100, ap: 4 },
           ignite: 1,
           capacity: { kind: 'heat', seconds: 8 },
+          warmUp: 0.3,
         },
       },
     ],
@@ -1781,7 +1782,7 @@ export const personalProfiles = {
     source: 'https://helldivers.wiki.gg/wiki/LAS-7_Dagger',
     checkedAt: '2026-11-08',
     sourceRevision: 141654,
-    note: '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.',
+    note: '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 발사 전 예열 시간은 더하고, 방열판 교체 시간은 넣지 않습니다.',
     modes: [
       {
         id: 'standard',
@@ -1802,6 +1803,7 @@ export const personalProfiles = {
           burn: { perSecond: 100, ap: 4 },
           ignite: 1,
           capacity: { kind: 'heat', seconds: 6.67 },
+          warmUp: 0.25,
         },
       },
     ],

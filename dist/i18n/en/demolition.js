@@ -1,6 +1,8 @@
 // English for the Korean text of demolition-data.js,
 // looked up by the exact Korean string (see core/i18n.js).
 export default {
+  "가스 무기는 시설 체력 계산을 하지 않습니다.": "Gas weapons are left out of the structure health math.",
+  "이 화염 무기는 시설 체력 계산을 하지 않습니다.": "This flame weapon is left out of the structure health math.",
   "과충전 자폭은 제외합니다.": "The overcharge self-destruct is left out.",
   "기본 공격": "Standard attack",
   "광선": "Beam",

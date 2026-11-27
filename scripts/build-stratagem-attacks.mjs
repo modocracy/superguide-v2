@@ -41,6 +41,12 @@ export const ATTACKS = {
   'emancipator': { standard: ['P7', 'P7_IE'] },
   'gunner-frv': { standard: ['MG-206_P', null] },
   'supply-frv': { standard: ['AR-23P_P', null] },
+  // One pellet, bomblet or fragment, counted by the hit rate on structures (user request 2026-11-27): the Breakthrough's
+  // pellet, the Eagle Cluster Bomb's bomblet blast (its impact is left out, as the enemy pages do), the Orbital
+  // Airburst's fragment and its impact blast.
+  'breakthrough': { standard: ['P9', null] },
+  'eagle-cluster': { standard: [null, 'P13_IE'] },
+  'orbital-airburst': { standard: ['P14', 'P14_IE'] },
   // Vehicles, one demolition mode per weapon tab (the tab's datamine record in data-equipment.js); the
   // Lumberer's flamethrower is a spray and left out.
   'maelstrom': { missile: [null, 'SWP_MAELSTROMIII_E'], gatling: ['P11', null] },

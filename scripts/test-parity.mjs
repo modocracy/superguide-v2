@@ -151,7 +151,7 @@ const healthAdded = { ...Object.fromEntries(Object.entries(stratagemAttackDamage
   'arc-thrower': ['standard'], meltagun: ['standard'], 'grenade-launcher': ['standard'], 'belt-fed-gl': ['standard'],
   'breaching-hammer': ['melee', 'charge'], leveller: ['standard'], speargun: ['standard'], 'solo-silo': ['standard'], autocannon: ['flak'],
   // Seconds for beams and flames, and per-hit damage from the stratagem table (user request 2026-11-27).
-  'laser-cannon': ['standard'], 'orbital-laser': ['standard'], 'hmg-emplacement': ['standard'], 'tesla-tower': ['standard'], hellbomb: ['standard'], 'portable-hellbomb': ['standard'] };
+  'laser-cannon': ['standard'], 'orbital-laser': ['standard'], 'de-escalator': ['standard'], 'at-emplacement': ['standard'], 'hmg-emplacement': ['standard'], 'tesla-tower': ['standard'], hellbomb: ['standard'], 'portable-hellbomb': ['standard'] };
 // Attacks the user confirmed to destroy the Grounded Warp Ship through its shield (2026-11-23): replayed without it.
 const shieldBypassAdded = { 'portable-hellbomb': ['standard'], hellbomb: ['standard'], leveller: ['standard'], 'solo-silo': ['standard'] };
 // Forces corrected after the recording, replayed with their recorded values (user request 2026-11-26: the Eagle 500kg's
@@ -159,7 +159,7 @@ const shieldBypassAdded = { 'portable-hellbomb': ['standard'], hellbomb: ['stand
 const forceCorrected = { 'eagle-500kg': { standard: { direct: { min: 40, max: 50 } } } };
 assert.equal(demolitionProfiles['eagle-500kg'].modes[0].direct, 50, 'eagle-500kg: direct force 50');
 const legacyMode = (id, mode) => {
-  let out = healthAdded[id]?.includes(mode.id) ? { ...mode, damage: undefined } : mode;
+  let out = healthAdded[id]?.includes(mode.id) ? { ...mode, damage: undefined, hits: undefined } : mode;
   if (forceCorrected[id]?.[mode.id]) out = { ...out, ...forceCorrected[id][mode.id] };
   if (shieldBypassAdded[id]?.includes(mode.id)) { const { shieldBypass, ...rest } = out; out = rest; }
   return out;

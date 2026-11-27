@@ -1,4 +1,5 @@
 import { supportProjectileRecords, propelledModes } from './support-records.js';
+import { support } from './data-support.js';
 import { expandedEnemies } from './combat-enemies-expanded.js';
 import { additionalEnemies } from './combat-enemies-additional.js';
 // Reviewed Wiki Anatomy and Detailed Weapon Statistics tables, 2026-09-16.
@@ -569,7 +570,7 @@ const reviewedImpact = (page, modes, note) => ({ ...profile(page, modes.map(mode
 // (`ignite` per second) reaches the enemy's ignition threshold (data/enemy-ignition.js).
 export const STREAM_BURN = { perSecond: 100, ap: 4 };
 const streamMode = (name, dps, durable, ap, delivery, stream) => shot('standard', name, dps, durable, ap, 0, 0, { unit: '초', delivery, magazine: null, stream: { burn: STREAM_BURN, ...stream } });
-const BEAM_NOTE = '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 예열과 방열판 교체 시간은 넣지 않습니다.';
+const BEAM_NOTE = '광선을 같은 부위에 계속 비출 때 걸리는 시간입니다. 광선이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 적의 화염 피해 배율을 곱해 본체 체력에 초당 100씩 들어갑니다. 발사 전 예열 시간은 더하고, 방열판 교체 시간은 넣지 않습니다.';
 const FLAME_NOTE = '불길을 같은 부위에 계속 맞힐 때 걸리는 시간입니다. 위키의 초당 피해는 불길이 모두 닿을 때의 값이라 실제로는 더 걸릴 수 있습니다. 불길이 쌓는 점화 수치가 적의 점화 기준치에 도달하면 불이 붙고, 그때부터 화상이 본체 체력에 초당 100씩 들어갑니다. 불길과 화상 모두 적의 화염 피해 배율을 곱합니다. 점화와 재장전 시간은 넣지 않습니다.';
 export const weaponProfiles = {
   'meltagun': {
@@ -688,7 +689,7 @@ export const weaponProfiles = {
   // Datamine LAS-98 LASER CANNON_B_dm: 350 per second (durable 200), AP 4, Fire status 1.5 per second;
   // heat 8 per second to 100 = the wiki 12.5 s.
   'laser-cannon': {
-    ...profile('LAS-98_Laser_Cannon', [streamMode('광선 유지', 350, 200, 4, 'beam', { ignite: 1.5, capacity: { kind: 'heat', seconds: 12.5 } })], BEAM_NOTE),
+    ...profile('LAS-98_Laser_Cannon', [streamMode('광선 유지', 350, 200, 4, 'beam', { ignite: 1.5, capacity: { kind: 'heat', seconds: 12.5 }, warmUp: support.find(item => item.id === 'laser-cannon').warmUp })], BEAM_NOTE),
     sourceRevision: 141653, checkedAt: '2026-11-26', extraSource: wiki('Module:Decodedata-Attacks/weapons_data.json'),
   },
   // The wiki infobox damage per second (Flamethrower 150, Cremator 225), AP 4. Flame particles deal the same

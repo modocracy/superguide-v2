@@ -906,6 +906,12 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 
 /* --- Demolition ---------------------------------------------------------------- */
 .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+/* Demolition structures: six to a row on a wide screen, name and force each on one line (user request 2026-11-27). */
+.structure-tiles { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.structure-tiles .tile { grid-template-columns: 48px 1fr; gap: 9px; }
+.structure-tiles .tile img { width: 48px; height: 48px; }
+.structure-tiles .tile b { font-size: 15px; white-space: nowrap; }
+.structure-tiles .tile small { font-size: 12.5px; white-space: nowrap; }
 .tile { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: center; padding: 10px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); }
 .tile:hover { border-color: var(--line-strong); }
 .tile[aria-current="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); background: var(--accent-soft); }

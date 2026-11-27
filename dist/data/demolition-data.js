@@ -230,18 +230,56 @@ for (const [id, modes] of Object.entries(stratagemAttackDamage)) {
 
 // Beams and flame streams wear a structure's health down in seconds (user request 2026-11-27): the damage per second in
 // the stratagem table (data-support.js, data-equipment.js, data-offense.js), a flame's durable damage being its normal
-// damage, burning left out. The Flame Sentry, Hot Dog, Lumberer flamethrower and the gas sprays give no damage per
+// damage, burning left out, a beam's warm-up before firing added (user request 2026-11-27). The Flame Sentry, Hot Dog, Lumberer flamethrower and the gas sprays give no damage per
 // second and stay unverified.
 for (const id of ['laser-cannon', 'flamethrower', 'cremator', 'defoliation-tool', 'laser-sentry', 'rover', 'incinerator-frv', 'orbital-laser']) {
   const item = stratagems.find(entry => entry.id === id);
   const target = demolitionProfiles[id]?.modes.find(entry => entry.id === 'standard');
   if (item?.damageKind !== 'dps' || !target || target.damage) throw new Error(`${id}: no damage per second for demolition`);
-  Object.assign(target, { unit: '초', damage: { standard: item.direct, durable: item.durable ?? item.direct, ap: item.ap, explosion: 0, explosionAp: 0, perSecond: true } });
+  Object.assign(target, { unit: '초', damage: { standard: item.direct, durable: item.durable ?? item.direct, ap: item.ap, explosion: 0, explosionAp: 0, perSecond: true, ...(item.warmUp && { warmUp: item.warmUp }) } });
 }
 
 // Per-hit damage from the stratagem table where the attack datamine has no record (user request 2026-11-27): the HMG
 // Emplacement's round, one Tesla Tower or K-9 arc, the Hellbomb blast. The Anti-Tank Emplacement's durable damage is
 // not given and stays unverified.
+// The Anti-Tank Emplacement's shell from the game data sheet (E/AT-12, game build 26568081: 1,300 / durable 1,300 / AP 6,
+// blast 150 / durable 150 / AP 3; user request 2026-11-27): the wiki gives no durable damage for it.
+demolitionProfiles['at-emplacement'].modes[0].damage = damage(1300, 1300, 6, 150, 3);
+// Left out of the health math altogether (user requests 2026-11-27): gas, as on the enemy pages, and flames with no
+// damage per second.
+const HEALTH_NOTES = {
+  sterilizer: '가스 무기는 시설 체력 계산을 하지 않습니다.', 'dog-breath': '가스 무기는 시설 체력 계산을 하지 않습니다.',
+  'flame-sentry': '이 화염 무기는 시설 체력 계산을 하지 않습니다.', 'hot-dog': '이 화염 무기는 시설 체력 계산을 하지 않습니다.', 'lumberer/flame': '이 화염 무기는 시설 체력 계산을 하지 않습니다.',
+};
+for (const [key, note] of Object.entries(HEALTH_NOTES)) {
+  const [id, modeId] = key.split('/');
+  const target = modeId ? demolitionProfiles[id].modes.find(entry => entry.id === modeId) : demolitionProfiles[id].modes[0];
+  if (!target || target.damage) throw new Error(`${key}: no mode, or it already has structure damage`);
+  target.healthNote = note;
+}
+// Pellets, arcs, bomblets and fragments: how many reach a structure is unknown, so a hit rate is assumed, the enemy
+// pages' defaults (pellets 50%, arcs 100%, bomblets and fragments 20%), and the player can change it (user request
+// 2026-11-27; core/demolition.js healthDamage). Counts from the attack datamine: P9 has 40 pellets, the Eagle Cluster
+// Bomb's S_P4_E lets out 8 bomblets, each Orbital Airburst shell's S_P15_IE 12 fragments; the De-Escalator's arcs and
+// grenade are its enemy page mode. `each` is one of them, `base` what lands once per shot.
+const deEscalator = combatDamage('de-escalator', 'arc');
+const HITS = {
+  breakthrough: { kind: 'pellets', min: 1, max: 40, defaultPct: 50 },
+  'eagle-cluster': { kind: 'bomblets', min: 0, max: 8, defaultPct: 20 },
+  'orbital-airburst': { kind: 'shrapnel', min: 0, max: 12, defaultPct: 20 },
+  'de-escalator': { ...deEscalator.hitCondition, each: deEscalator, base: deEscalator.carrier },
+};
+// Shells or bombs one call-in sends (user request 2026-11-27): the Orbital Airburst's 4 salvos of 1 shell (attack datamine
+// num_salvos 4, num_bombs 1; wiki patch note 'Salvoes increased from 3 to 4'), the Eagle Cluster Bomb's 8 bombs (wiki
+// page revision 142597: 8 submunitions each, 64 in all without upgrades).
+const PER_CALL = { 'orbital-airburst': 4, 'eagle-cluster': 8 };
+for (const [id, count] of Object.entries(PER_CALL)) demolitionProfiles[id].modes[0].perCall = count;
+for (const [id, hits] of Object.entries(HITS)) {
+  const target = demolitionProfiles[id].modes[0];
+  const each = hits.each ?? target.damage;
+  if (!each) throw new Error(`${id}: no per-hit damage for the hit rate`);
+  Object.assign(target, { hitKey: `${id}/${target.id}`, hits: { kind: hits.kind, min: hits.min, max: hits.max, defaultPct: hits.defaultPct, each, base: hits.base ?? null } });
+}
 for (const id of ['hmg-emplacement', 'tesla-tower', 'k9', 'hellbomb', 'portable-hellbomb']) {
   const item = stratagems.find(entry => entry.id === id), target = demolitionProfiles[id].modes[0];
   const direct = item.direct || 0;
