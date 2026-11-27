@@ -18,9 +18,12 @@ function showTip(event) {
   pop.textContent = head.dataset.tip;
   pop.hidden = false;
   head.setAttribute('aria-describedby', 'tip-pop');
-  const rect = head.getBoundingClientRect();
-  const left = Math.min(Math.max(8, rect.left), window.innerWidth - pop.offsetWidth - 8);
-  const below = rect.bottom + 6 + pop.offsetHeight <= window.innerHeight;
+  // With a text size step the page is zoomed: the box is placed in the page's own (unzoomed) pixels.
+  const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+  const box = head.getBoundingClientRect();
+  const rect = { left: box.left / zoom, top: box.top / zoom, bottom: box.bottom / zoom };
+  const left = Math.min(Math.max(8, rect.left), window.innerWidth / zoom - pop.offsetWidth - 8);
+  const below = rect.bottom + 6 + pop.offsetHeight <= window.innerHeight / zoom;
   pop.style.left = `${left}px`;
   pop.style.top = `${below ? rect.bottom + 6 : rect.top - pop.offsetHeight - 6}px`;
 }

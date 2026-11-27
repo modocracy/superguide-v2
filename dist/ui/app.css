@@ -96,9 +96,9 @@
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--bar-h) + 12px); }
 body {
-  margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+  margin: 0; min-height: calc(100vh / var(--zoom)); background: var(--bg); color: var(--text);
   font: 15px/1.6 var(--font); font-feature-settings: 'tnum' 1; letter-spacing: -.005em;
-  -webkit-font-smoothing: antialiased; display: flex; flex-direction: column;
+  -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; container: page / inline-size;
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; }
@@ -122,7 +122,7 @@ kbd { font: 600 11px/1 var(--mono); padding: 3px 5px; border: 1px solid var(--li
 /* --- Top bar ---------------------------------------------------------------- */
 .bar {
   position: sticky; top: 0; z-index: 30; height: var(--bar-h);
-  display: flex; align-items: center; gap: 24px; padding: 0 max(20px, calc((100vw - var(--page)) / 2 + 20px));
+  display: flex; align-items: center; gap: 24px; padding: 0 max(20px, calc((calc(100vw / var(--zoom)) - var(--page)) / 2 + 20px));
   background: var(--bg); border-bottom: 1px solid var(--line);
 }
 .bar::after { /* hazard stripe */
@@ -152,6 +152,24 @@ kbd { font: 600 11px/1 var(--mono); padding: 3px 5px; border: 1px solid var(--li
 .search-trigger kbd { margin-left: auto; }
 .icon-button { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--line-strong); background: var(--surface); color: var(--text-2); }
 .icon-button:hover { color: var(--text); border-color: var(--text-3); }
+/* Text size (header): the whole page scales, layout included (user request 2026-11-27). */
+/* Width rules are container queries on the page (body), which see the zoomed width; media queries would not. Viewport
+   units are divided by --zoom, since zoom scales them too. */
+:root { --zoom: 1; }
+:root[data-size="small"] { zoom: .9; --zoom: .9; }
+:root[data-size="large"] { zoom: 1.12; --zoom: 1.12; }
+:root[data-size="xlarge"] { zoom: 1.25; --zoom: 1.25; }
+.size-picker { position: relative; }
+.size-menu { position: absolute; top: calc(100% + 6px); right: 0; z-index: 60; min-width: 120px; display: grid; padding: 4px; border: 1px solid var(--line-strong); background: var(--surface); box-shadow: 0 8px 24px rgb(0 0 0 / .25); }
+.size-menu[hidden] { display: none; }
+.size-menu button { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 0; background: none; color: var(--text-2); text-align: left; font-size: 14px; white-space: nowrap; }
+.size-menu button::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+.size-menu button[aria-checked="true"] { color: var(--text); font-weight: 700; }
+.size-menu button[aria-checked="true"]::before { background: currentColor; }
+.size-menu button:hover, .size-menu button:focus-visible { background: var(--field); color: var(--text); }
+.size-scale { margin-left: auto; padding-left: 12px; font-size: 12px; font-weight: 600; color: var(--text-3); opacity: 0; }
+.size-menu button:hover .size-scale, .size-menu button:focus-visible .size-scale { opacity: 1; }
+@media (max-width: 820px) { :root { --bar-h: 54px; } }
 /* The English edition stays hidden for the moment it takes to swap the header
    text and load the dictionary (index.html reveals it after 4 s regardless). */
 :root[lang="en"]:not([data-i18n-ready]) body { visibility: hidden; }
@@ -293,19 +311,19 @@ a.wb-tile-body:hover .wb-tile-name b, .wb-tile-body[aria-current] .wb-tile-name 
 .wb-full-page { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; }
 /* The item pane sits left of the 980px warbond sheet only when 360px are free there (980 + 360 = 1340);
    narrower screens open it in place of the board, with a Back button. */
-@media (min-width: 1340px) {
+@container page (min-width: 1340px) {
   .wb-item-toolbar .wb-item-back { display: none; }
   /* A transform would contain/clip the fixed pane during a direct-link open. */
   .sheet[open].split { animation: none; }
   .wb-item-pane {
-    --wb-item-width: clamp(360px, calc(100vw - var(--sheet-width)), 560px);
+    --wb-item-width: clamp(360px, calc(calc(100vw / var(--zoom)) - var(--sheet-width)), 560px);
     position: fixed; top: 0; bottom: 0; z-index: 3; width: var(--wb-item-width);
     /* Sit beside the unchanged sheet, overlapping it only to stay on-screen. */
-    right: min(var(--sheet-width), calc(100vw - var(--wb-item-width)));
+    right: min(var(--sheet-width), calc(calc(100vw / var(--zoom)) - var(--wb-item-width)));
     border-left: 1px solid var(--line); box-shadow: var(--shadow);
   }
 }
-@media (max-width: 1339px) {
+@container page (max-width: 1339px) {
   .sheet.split .wb-bond-pane { display: none; }
   .wb-item-pane { border-right: 0; }
 }
@@ -493,7 +511,7 @@ details > summary::-webkit-details-marker { display: none; }
 .list .grid { grid-template-columns: 1fr; }
 .tray {
   position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 25; display: flex; align-items: center; gap: 12px;
-  padding: 10px 10px 10px 16px; background: var(--text); color: var(--bg); box-shadow: var(--shadow); max-width: calc(100vw - 24px); border-top: 3px solid var(--accent);
+  padding: 10px 10px 10px 16px; background: var(--text); color: var(--bg); box-shadow: var(--shadow); max-width: calc(calc(100vw / var(--zoom)) - 24px); border-top: 3px solid var(--accent);
 }
 .tray .names { font-size: 14px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tray .button { background: transparent; color: var(--bg); border-color: color-mix(in srgb, var(--bg) 30%, transparent); }
@@ -506,7 +524,7 @@ dialog { color: var(--text); }
 html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .sheet {
   --sheet-width: 560px;
-  margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; width: min(var(--sheet-width), 100%); max-width: 100%; padding: 0; border: 0; overflow: hidden;
+  margin: 0 0 0 auto; height: calc(100dvh / var(--zoom)); max-height: calc(100dvh / var(--zoom)); width: min(var(--sheet-width), 100%); max-width: 100%; padding: 0; border: 0; overflow: hidden;
   background: var(--bg-raise); border-left: 1px solid var(--line); box-shadow: var(--shadow);
 }
 .sheet.wide { --sheet-width: 980px; }
@@ -520,7 +538,7 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 /* The mode tabs' copy in the top bar (item-detail.js stickyModes): compact, next to the close button. */
 .sheet-top .sheet-top-modes { margin-left: auto; padding: 2px; }
 .sheet-top .sheet-top-modes button { padding: 4px 9px; font-size: 12.5px; }
-@media (max-width: 560px) { .sheet-top.has-modes > span { display: none; } }
+@container page (max-width: 560px) { .sheet-top.has-modes > span { display: none; } }
 .sheet-content { padding: 20px 20px 40px; display: grid; gap: 20px; }
 .detail-id { display: flex; gap: 14px; align-items: center; }
 .detail-id h2 { font-size: 24px; font-weight: 800; }
@@ -634,13 +652,13 @@ html:has(dialog:modal), html:has(dialog:modal) body { overflow: hidden; }
 .item-detail-card { flex: 1; background: var(--surface); border: 1px solid var(--line); padding: 16px 18px; }
 .item-detail-card > p:last-child { margin-top: 10px; }
 
-@media (min-width: 900px) {
+@container page (min-width: 900px) {
   .item-detail-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
   .item-detail-gear-head { grid-template-columns: minmax(280px, 390px) minmax(0, 1fr); }
   .item-detail-gear-head .gear-art.large { height: 100%; min-height: 210px; border-bottom: 0; border-right: 1px solid var(--line); }
   .item-detail-gear-head .detail-id { padding: 24px 28px; }
 }
-@media (min-width: 1040px) {
+@container page (min-width: 1040px) {
   .sheet.expanded .item-detail-key-stats > .detail-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sheet.expanded .item-detail-key-stats > .detail-grid > div:last-child:nth-child(odd) { grid-column: auto; }
   .sheet.expanded .item-detail-key-stats > .detail-grid > div:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
@@ -727,7 +745,7 @@ section.ballistic-block .ballistic > .detail-grid {
 section.ballistic-block .ballistic > .detail-grid > div:nth-child(2n) { border-right: 0; }
 section.ballistic-block .ballistic > .ballistic-charts { padding: 18px; }
 section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
-@media (min-width: 900px) {
+@container page (min-width: 900px) {
   section.ballistic-block .ballistic { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: stretch; }
   section.ballistic-block .ballistic > h4 { grid-column: 1 / -1; margin-bottom: -18px; }
   section.ballistic-block .ballistic > .detail-grid { grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -750,7 +768,7 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .compare-table.ballistic-table td, .compare-table.ballistic-table th { white-space: nowrap; padding: 7px 10px; }
 .compare-table.ballistic-table thead th { font-size: 13px; }
 .compare-table.ballistic-table tbody th { width: auto; }
-@media (max-width: 480px) {
+@container page (max-width: 480px) {
   section.ballistic-block .ballistic-table :is(th, td) { padding: 6px; white-space: normal; }
 }
 .links { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -766,11 +784,11 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 .compare-table td small { display: block; color: var(--text-3); font-size: 12px; font-weight: 500; }
 
 /* --- Palette ------------------------------------------------------------------ */
-.palette { margin: 10vh auto auto; width: min(640px, calc(100vw - 24px)); padding: 0; border: 1px solid var(--line-strong); border-top: 4px solid var(--accent); background: var(--bg-raise); box-shadow: var(--shadow); overflow: hidden; }
+.palette { margin: calc(10vh / var(--zoom)) auto auto; width: min(640px, calc(calc(100vw / var(--zoom)) - 24px)); padding: 0; border: 1px solid var(--line-strong); border-top: 4px solid var(--accent); background: var(--bg-raise); box-shadow: var(--shadow); overflow: hidden; }
 .palette-field { display: flex; align-items: center; gap: 10px; padding: 0 14px; border-bottom: 1px solid var(--line); color: var(--text-3); }
 .palette-field input { flex: 1; height: 54px; border: 0; background: transparent; font-size: 16px; color: var(--text); outline: none; }
 .palette-field input::-webkit-search-cancel-button { display: none; }
-.palette-results { list-style: none; margin: 0; padding: 6px; max-height: min(60vh, 520px); overflow-y: auto; }
+.palette-results { list-style: none; margin: 0; padding: 6px; max-height: min(calc(60vh / var(--zoom)), 520px); overflow-y: auto; }
 .palette-results li[role="option"] { display: flex; align-items: center; gap: 12px; padding: 8px 10px; cursor: pointer; }
 .palette-results li[aria-selected="true"] { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
 .palette-results .thumb { width: 36px; height: 36px; border-radius: 7px; object-fit: contain; background: #1a1d1a; flex: none; }
@@ -782,7 +800,7 @@ section.ballistic-block .ballistic > .compare-scroll { margin: 0 18px 18px; }
 
 /* --- Enemy view --------------------------------------------------------------- */
 .enemy-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: start; }
-.picker { position: sticky; top: calc(var(--bar-h) + 16px); max-height: calc(100vh - var(--bar-h) - 32px); display: flex; flex-direction: column; overflow: hidden; }
+.picker { position: sticky; top: calc(var(--bar-h) + 16px); max-height: calc(calc(100vh / var(--zoom)) - var(--bar-h) - 32px); display: flex; flex-direction: column; overflow: hidden; }
 .picker-head { padding: 12px; display: grid; gap: 10px; border-bottom: 1px solid var(--line); }
 .picker-head .segmented { display: flex; }
 .picker-head .segmented button { flex: 1; justify-content: center; padding: 6px 4px; font-size: 13px; }
@@ -1160,7 +1178,7 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
 .info-detail::before { content: ''; position: absolute; left: 0; top: .55em; width: 7px; height: 7px; background: var(--accent); }
 .info-item.plain { grid-template-columns: minmax(0, 1fr); }
 .info-tips-label { margin-top: 12px; font: 700 13px/1.2 var(--cond); letter-spacing: .06em; color: var(--text-2); }
-@media (max-width: 420px) { .info-list { grid-template-columns: 1fr; } .info-item { grid-template-columns: 48px minmax(0, 1fr); } .info-icon { width: 48px; height: 48px; } }
+@container page (max-width: 420px) { .info-list { grid-template-columns: 1fr; } .info-item { grid-template-columns: 48px minmax(0, 1fr); } .info-icon { width: 48px; height: 48px; } }
 .armor-item[data-focus] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 /* Armor in the warbond item pane: the render on a dark plate, like .gear-art.large. */
 .armor-item[data-armor-open] { cursor: pointer; }
@@ -1235,7 +1253,7 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
 .attach-slot-card.is-wide .gear-attach tr > :nth-child(2) { width: 11.5em; }
 .attach-slot-card.is-wide .gear-attach tr > :nth-child(3) { width: 7.5em; }
 .attach-slot-card .gear-attach tbody tr:last-child > * { border-bottom: 0; }
-@media (min-width: 980px) {
+@container page (min-width: 980px) {
   .attach-slot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 }
 .sheet.expanded .compare-scroll { background: var(--surface); }
@@ -1337,29 +1355,29 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
 /* Desktop header with six tabs: tighten step by step so it never overflows. English labels are the
    widest, so the search label goes earlier there. Tabs and brand never shrink; as a last resort
    the search label shortens with an ellipsis instead of pushing the buttons off-screen. */
-@media (min-width: 821px) {
+@container page (min-width: 821px) {
   .brand, .tabs { flex-shrink: 0; }
   .bar-actions { min-width: 0; }
   .search-trigger > .icon, .search-trigger kbd { flex-shrink: 0; }
   .search-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
-@media (max-width: 1400px) {
+@container page (max-width: 1400px) {
   .bar { gap: 16px; }
   .tabs a { padding: 0 10px; }
   .search-trigger { min-width: 0; }
 }
-@media (max-width: 1320px) { :root[lang="en"] .search-label { display: none; } }
-@media (max-width: 1180px) {
+@container page (max-width: 1320px) { :root[lang="en"] .search-label { display: none; } }
+@container page (max-width: 1180px) {
   .tabs a { padding: 0 8px; }
   .tabs a .icon { display: none; }
 }
-@media (min-width: 821px) and (max-width: 1000px) {
+@container page (min-width: 821px) and (max-width: 1000px) {
   .bar { gap: 12px; padding: 0 16px; }
   .tabs a { padding: 0 7px; }
   .bar-actions { gap: 6px; }
   .brand-text { display: none; } /* the yellow mark stays and still links home (aria-label) */
 }
-@media (max-width: 1080px) {
+@container page (max-width: 1080px) {
   .search-label { display: none; }
   .enemy-layout { grid-template-columns: minmax(0, 1fr); }
   .picker { position: static; max-height: none; }
@@ -1367,7 +1385,7 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
   .picker.collapsed .picker-list, .picker.collapsed .picker-head > :not(.picker-toggle) { display: none; }
   .picker-toggle { display: flex; }
 }
-@media (max-width: 820px) {
+@container page (max-width: 820px) {
   .gear-tabs, .store-tabs { gap: 16px; }
   .gear-tabs button, .store-tabs a { font-size: 22px; }
   .lo-slots { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1375,7 +1393,7 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
   .lo-rows { grid-template-columns: 1fr; }
   .lo-row { grid-template-columns: 84px minmax(0, 1fr); }
   .lo-enemy img, .lo-enemy > span { width: 60px; height: 48px; }
-  :root { --bar-h: 54px; }
+  body > * { --bar-h: 54px; }
   .tabs { display: none; }
   .bar { gap: 12px; }
   .tabbar {
@@ -1399,15 +1417,15 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
   .wb-latest-cover { aspect-ratio: 5 / 2; }
   .wb-latest-name h2 { font-size: 28px; }
   .tabbar a { display: grid; justify-items: center; gap: 2px; min-width: 0; padding: 6px 0; font-size: 11px; white-space: nowrap; font-weight: 650; color: var(--text-3); text-decoration: none; overflow: hidden; }
-  :root[lang="en"] .tabbar a { font-size: clamp(9px, 2.5vw, 11px); letter-spacing: -0.02em; }
+  :root[lang="en"] .tabbar a { font-size: clamp(9px, calc(2.5vw / var(--zoom)), 11px); letter-spacing: -0.02em; }
   .tabbar a[aria-current] { color: var(--accent-text); }
-  body { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+  .footer { margin-bottom: calc(68px + env(safe-area-inset-bottom)); }
   main { padding: 20px 16px 40px; }
   .footer { padding: 20px 16px 24px; }
   .page-head h1 { font-size: 28px; }
   .tray { bottom: calc(80px + env(safe-area-inset-bottom)); }
   .toast { bottom: calc(150px + env(safe-area-inset-bottom)); }
-  .sheet, .sheet.wide { --sheet-width: 100vw; margin: auto 0 0; width: 100%; height: 92dvh; max-height: 92dvh; border-left: 0; border-top: 3px solid var(--accent); }
+  .sheet, .sheet.wide { --sheet-width: calc(100vw / var(--zoom)); margin: auto 0 0; width: 100%; height: calc(92dvh / var(--zoom)); max-height: calc(92dvh / var(--zoom)); border-left: 0; border-top: 3px solid var(--accent); }
   @keyframes slide-in { from { transform: translateY(40px); opacity: 0; } }
   .rank-row, .rank-head { grid-template-columns: 34px minmax(0, 1fr) 70px; row-gap: 2px; }
   .rank-head span:nth-child(3), .rank-head span:nth-child(5) { display: none; }
@@ -1424,9 +1442,9 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
   .pick-body { padding-left: 16px; }
 }
 
-.sheet.expanded { margin: 0; width: 100%; height: 100dvh; max-height: 100dvh; border: 0; }
+.sheet.expanded { margin: 0; width: 100%; height: calc(100dvh / var(--zoom)); max-height: calc(100dvh / var(--zoom)); border: 0; }
 .sheet.expanded > .sheet-body > .sheet-content { width: min(100%, 1280px); margin-inline: auto; padding-inline: clamp(20px, 3.5vw, 44px); }
-@media (max-width: 480px) {
+@container page (max-width: 480px) {
   .gear-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .gear-card { padding: 10px; }
   .gear-card .gear-art { height: 70px; }
@@ -1516,7 +1534,7 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
 /* Column heads that explain themselves on hover or focus (one floating .tip-pop, placed by enemy.js). */
 .col-tip { border-bottom: 1px dotted var(--text-3); cursor: help; }
 .col-tip:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.tip-pop { position: fixed; z-index: 1000; max-width: min(320px, calc(100vw - 16px)); padding: 8px 10px; border-radius: 8px; background: var(--surface-3); color: var(--text); border: 1px solid var(--line-strong); font-size: 13px; line-height: 1.5; font-weight: 500; white-space: normal; box-shadow: 0 6px 18px rgba(0, 0, 0, .35); pointer-events: none; }
+.tip-pop { position: fixed; z-index: 1000; max-width: min(320px, calc(calc(100vw / var(--zoom)) - 16px)); padding: 8px 10px; border-radius: 8px; background: var(--surface-3); color: var(--text); border: 1px solid var(--line-strong); font-size: 13px; line-height: 1.5; font-weight: 500; white-space: normal; box-shadow: 0 6px 18px rgba(0, 0, 0, .35); pointer-events: none; }
 /* A part's details in the side sheet: the wiki image, then every value with what it means. */
 .anatomy-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin: 14px 0 0; }
 .anatomy-facts > div { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--surface-2); }
@@ -1526,7 +1544,7 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
 .anatomy-facts dd small { display: block; color: var(--text-3); font: 500 12.5px/1.4 inherit; }
 .anatomy-facts dd p { margin: 6px 0 0; font-size: 13px; color: var(--text-2); line-height: 1.5; }
 /* Phones: smaller photos so more of the row shows before the table scrolls sideways. */
-@media (max-width: 600px) {
+@container page (max-width: 600px) {
   .enemy-part-table { min-width: 720px; font-size: 13px; }
   .enemy-part-table td.photo, .enemy-part-table .part-photo { width: 56px; }
   .enemy-part-table th, .enemy-part-table td { padding: 6px 6px; }
@@ -1536,7 +1554,7 @@ span.w-thumb.long img { max-width: none; max-height: none; width: 125%; height: 
   .enemy-part-table thead th:first-child, .enemy-part-table thead th:nth-child(2) { background: var(--surface-2); z-index: 3; }
 }
 /* Phones: the table fits the screen instead of scrolling, so the hit counts stay in view. */
-@media (max-width: 600px) {
+@container page (max-width: 600px) {
   .enemy-details { padding: 14px 12px; }
   .enemy-attack-table { min-width: 0; font-size: 13px; }
   .enemy-attack-table .col-attack { width: 34%; }

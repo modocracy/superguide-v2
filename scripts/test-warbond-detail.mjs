@@ -76,7 +76,7 @@ const css = await readFile(new URL('../dist/ui/app.css', import.meta.url), 'utf8
 const rule = (source, selector) => [...source.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   .find(([, selectors]) => selectors.trim() === selector)?.[2] || '';
 // The side pane needs 360px left of the 980px sheet, so it starts at 1340px (user decision 2026-11-19).
-const desktopCss = css.match(/@media\s*\(min-width:\s*1340px\)\s*\{([\s\S]*?)\n\}/)?.[1] || '';
+const desktopCss = css.match(/@container page\s*\(min-width:\s*1340px\)\s*\{([\s\S]*?)\n\}/)?.[1] || '';
 ok(/display:\s*none/.test(rule(desktopCss, '.wb-item-toolbar .wb-item-back')), 'wide-screen Back button uses two classes to outrank .button and hide from display and keyboard focus at 1340px');
 ok(/overflow:\s*hidden/.test(rule(css, 'html:has(dialog:modal), html:has(dialog:modal) body')), 'all modal dialogs lock page scrolling, including the palette; closing the last modal releases the CSS lock');
 ok(/overflow:\s*hidden/.test(rule(css, '.sheet')), 'the dialog itself never owns a scrollbar');
@@ -90,14 +90,14 @@ ok(!/\.sheet[^{}]*\.split[^{}]*\{[^{}]*(?:width\s*:|grid-template-columns\s*:)/.
 ok(!/\.sheet\.split\s+\.wb-(?:hero|info|tile)/.test(css), 'opening an item does not compact the unchanged warbond board');
 const desktopPane = rule(desktopCss, '.wb-item-pane');
 ok(/position:\s*fixed/.test(desktopPane) && /top:\s*0/.test(desktopPane) && /bottom:\s*0/.test(desktopPane), 'desktop item pane escapes dialog clipping and spans the viewport height');
-ok(/--wb-item-width:\s*clamp\(360px,\s*calc\(100vw - var\(--sheet-width\)\),\s*560px\)/.test(desktopPane) && /width:\s*var\(--wb-item-width\)/.test(desktopPane), 'desktop item pane prefers the free space left of the sheet, clamped between 360px and 560px');
-ok(/right:\s*min\(var\(--sheet-width\),\s*calc\(100vw - var\(--wb-item-width\)\)\)/.test(desktopPane), 'item pane sits immediately left of the sheet and overlaps it when needed to stay on-screen');
+ok(/--wb-item-width:\s*clamp\(360px,\s*calc\((?:100vw|calc\(100vw \/ var\(--zoom\)\)) - var\(--sheet-width\)\),\s*560px\)/.test(desktopPane) && /width:\s*var\(--wb-item-width\)/.test(desktopPane), 'desktop item pane prefers the free space left of the sheet, clamped between 360px and 560px');
+ok(/right:\s*min\(var\(--sheet-width\),\s*calc\((?:100vw|calc\(100vw \/ var\(--zoom\)\)) - var\(--wb-item-width\)\)\)/.test(desktopPane), 'item pane sits immediately left of the sheet and overlaps it when needed to stay on-screen');
 ok(/z-index:\s*3/.test(desktopPane) && /border-left:/.test(desktopPane) && /box-shadow:/.test(desktopPane) && /background:\s*var\(--bg-raise\)/.test(rule(css, '.wb-item-pane')), 'item pane paints above the board with the sheet background, its own left border and shadow');
 ok(/animation:\s*none/.test(rule(desktopCss, '.sheet[open].split')), 'direct item links and early clicks remove the animated transform that would contain the fixed pane');
-const phoneCss = css.slice(css.indexOf('@media (max-width: 820px)'));
-ok(/--sheet-width:\s*100vw/.test(rule(phoneCss, '.sheet, .sheet.wide')) && /height:\s*92dvh/.test(rule(phoneCss, '.sheet, .sheet.wide')), 'bottom sheets keep their full width and 92dvh height');
+const phoneCss = css.slice(css.indexOf('@container page (max-width: 820px)'));
+ok(/--sheet-width:\s*(?:100vw|calc\(100vw \/ var\(--zoom\)\))/.test(rule(phoneCss, '.sheet, .sheet.wide')) && /height:\s*(?:92dvh|calc\(92dvh \/ var\(--zoom\)\))/.test(rule(phoneCss, '.sheet, .sheet.wide')), 'bottom sheets keep their full width and 92dvh height');
 ok(!/\.wb-item-pane\s*\{[^}]*top:\s*8dvh/.test(phoneCss), 'bottom sheets no longer carry a side-pane overlay: the item opens in place of the board');
-const narrowCss = css.match(/@media\s*\(max-width:\s*1339px\)\s*\{([\s\S]*?)\n\}/)?.[1] || '';
+const narrowCss = css.match(/@container page\s*\(max-width:\s*1339px\)\s*\{([\s\S]*?)\n\}/)?.[1] || '';
 ok(/display:\s*none/.test(rule(narrowCss, '.sheet.split .wb-bond-pane')) && !/position:\s*fixed/.test(rule(css, '.wb-item-pane')), 'below 1340px item details replace the board within the sheet instead of covering it');
 for (const language of ['ko', 'en']) {
   setLang(language);

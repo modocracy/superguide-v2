@@ -197,6 +197,41 @@ function toggleTheme() {
 showTheme();
 matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', showTheme);
 
+// --- Text size --------------------------------------------------------------------
+// The whole page (text and layout) scales by the chosen step; remembered in this browser only (index.html applies it
+// before the stylesheet paints). User request 2026-11-27.
+const SIZE_KEY = 'hd2-size';
+const SIZES = [['small', L('작게', 'Small'), 90], ['normal', L('보통', 'Normal'), 100], ['large', L('크게', 'Large'), 112], ['xlarge', L('아주 크게', 'Extra large'), 125]];
+const sizeButton = $('[data-action="size"]');
+const sizeMenu = $('#size-menu');
+const currentSize = () => document.documentElement.dataset.size || 'normal';
+function showSizes() {
+  // Each step shows its scale on hover or focus (user request 2026-11-27).
+  sizeMenu.innerHTML = SIZES.map(([id, label, percent]) => `<button type="button" role="menuitemradio" data-size="${id}" aria-checked="${id === currentSize()}" aria-label="${label} ${percent}%" title="${L(`화면 배율 ${percent}%`, `Page scale ${percent}%`)}" tabindex="-1">${label}<span class="size-scale" aria-hidden="true">${percent}%</span></button>`).join('');
+}
+function openSizes(open) {
+  sizeMenu.hidden = !open;
+  sizeButton.setAttribute('aria-expanded', String(open));
+  if (open) { showSizes(); sizeMenu.querySelector('[aria-checked="true"]').focus(); }
+}
+function setSize(id) {
+  if (id === 'normal') delete document.documentElement.dataset.size; else document.documentElement.dataset.size = id;
+  try { localStorage.setItem(SIZE_KEY, id); } catch {}
+  openSizes(false);
+  sizeButton.focus();
+}
+sizeMenu.addEventListener('keydown', event => {
+  const items = [...sizeMenu.querySelectorAll('button')];
+  const at = items.indexOf(document.activeElement);
+  if (event.key === 'Escape') { event.preventDefault(); openSizes(false); sizeButton.focus(); }
+  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); items[(at + (event.key === 'ArrowDown' ? 1 : items.length - 1)) % items.length].focus(); }
+});
+document.addEventListener('click', event => {
+  const choice = event.target.closest('[data-size]');
+  if (choice && sizeMenu.contains(choice)) setSize(choice.dataset.size);
+  else if (!event.target.closest('.size-picker')) openSizes(false);
+});
+
 // --- Global actions -------------------------------------------------------------
 document.addEventListener('click', event => {
   // The skip link must move focus, not change the routed hash.
@@ -206,6 +241,7 @@ document.addEventListener('click', event => {
   if (action === 'method') import('./views/method.js').then(module => module.openMethod(ctx));
   if (action === 'theme') toggleTheme();
   if (action === 'lang') switchLanguage();
+  if (action === 'size') openSizes(sizeMenu.hidden);
 });
 document.addEventListener('keydown', event => {
   const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
